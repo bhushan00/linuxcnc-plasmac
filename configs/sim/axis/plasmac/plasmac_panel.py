@@ -55,10 +55,11 @@ class HandlerClass:
         Global.materialList[0][1] = self.builder.get_object('pierceHeightAdj').get_value()
         Global.materialList[0][2] = self.builder.get_object('pierceDelayAdj').get_value()
         Global.materialList[0][3] = self.builder.get_object('puddleJumpDelayAdj').get_value()
-        Global.materialList[0][4] = self.builder.get_object('cutHeightAdj').get_value()
-        Global.materialList[0][5] = self.builder.get_object('cutFeedRateAdj').get_value()
-        Global.materialList[0][6] = self.builder.get_object('cutAmpsAdj').get_value()
-        Global.materialList[0][7] = self.builder.get_object('cutVoltsAdj').get_value()
+        Global.materialList[0][4] = self.builder.get_object('puddleJumpHeightAdj').get_value()
+        Global.materialList[0][5] = self.builder.get_object('cutHeightAdj').get_value()
+        Global.materialList[0][6] = self.builder.get_object('cutFeedRateAdj').get_value()
+        Global.materialList[0][7] = self.builder.get_object('cutAmpsAdj').get_value()
+        Global.materialList[0][8] = self.builder.get_object('cutVoltsAdj').get_value()
         self.builder.get_object('material').set_active(0)
 
     def on_reload_clicked(self,widget,data=None):
@@ -70,10 +71,11 @@ class HandlerClass:
         self.builder.get_object('pierceHeightAdj').set_value(Global.materialList[material][1])
         self.builder.get_object('pierceDelayAdj').set_value(Global.materialList[material][2])
         self.builder.get_object('puddleJumpDelayAdj').set_value(Global.materialList[material][3])
-        self.builder.get_object('cutHeightAdj').set_value(Global.materialList[material][4])
-        self.builder.get_object('cutFeedRateAdj').set_value(Global.materialList[material][5])
-        self.builder.get_object('cutAmpsAdj').set_value(Global.materialList[material][6])
-        self.builder.get_object('cutVoltsAdj').set_value(Global.materialList[material][7])
+        self.builder.get_object('puddleJumpHeightAdj').set_value(Global.materialList[material][4])
+        self.builder.get_object('cutHeightAdj').set_value(Global.materialList[material][5])
+        self.builder.get_object('cutFeedRateAdj').set_value(Global.materialList[material][6])
+        self.builder.get_object('cutAmpsAdj').set_value(Global.materialList[material][7])
+        self.builder.get_object('cutVoltsAdj').set_value(Global.materialList[material][8])
 
     def wait_for_completion(self):
         while self.lcnc.comd.wait_complete() == -1:
@@ -140,6 +142,8 @@ class HandlerClass:
         self.builder.get_object('pierceDelayAdj').configure(0.5,0,9,0.1,0,0)
         self.builder.get_object('puddleJumpDelay').set_digits(2)
         self.builder.get_object('puddleJumpDelayAdj').configure(0,0,9,0.01,0,0)
+        self.builder.get_object('puddleJumpHeight').set_digits(0)
+        self.builder.get_object('puddleJumpHeightAdj').configure(100,50,200,1,0,0)
         self.builder.get_object('thcEnable').set_active(1)
         self.builder.get_object('thcThreshold').set_digits(2)
         self.builder.get_object('thcThresholdAdj').configure(1,0.05,9,0.01,0,0)
@@ -196,7 +200,7 @@ class HandlerClass:
                 self.builder.get_object('arcVoltageOffset').show()
                 self.builder.get_object('arcVoltageOffsetLabel').set_text('Voltage Offset')
                 self.builder.get_object('autoBox').show()
-                self.builder.get_object('cutBlankLabel').show()
+                #self.builder.get_object('cutBlankLabel').show()
                 self.builder.get_object('heightFrame').show()
                 self.builder.get_object('kerfBox').show()
                 self.builder.get_object('kerfLabel').show()
@@ -221,7 +225,7 @@ class HandlerClass:
                 self.builder.get_object('arcVoltageOffset').show()
                 self.builder.get_object('arcVoltageOffsetLabel').set_text('Voltage Offset')
                 self.builder.get_object('autoBox').show()
-                self.builder.get_object('cutBlankLabel').show()
+                #self.builder.get_object('cutBlankLabel').show()
                 self.builder.get_object('heightFrame').show()
                 self.builder.get_object('kerfBox').show()
                 self.builder.get_object('kerfLabel').show()
@@ -246,7 +250,7 @@ class HandlerClass:
                 self.builder.get_object('arcVoltageOffset').hide()
                 self.builder.get_object('arcVoltageOffsetLabel').set_text('')
                 self.builder.get_object('autoBox').hide()
-                self.builder.get_object('cutBlankLabel').hide()
+                #self.builder.get_object('cutBlankLabel').hide()
                 self.builder.get_object('heightFrame').hide()
                 self.builder.get_object('kerfBox').hide()
                 self.builder.get_object('kerfLabel').hide()
@@ -288,6 +292,7 @@ class HandlerClass:
         p_height = self.builder.get_object('pierceHeightAdj').get_value()
         p_delay = self.builder.get_object('pierceDelayAdj').get_value()
         pj_delay = self.builder.get_object('puddleJumpDelayAdj').get_value()
+        pj_height = self.builder.get_object('puddleJumpHeightAdj').get_value()
         c_height = self.builder.get_object('cutHeightAdj').get_value()
         c_speed = self.builder.get_object('cutFeedRateAdj').get_value()
         c_amps = self.builder.get_object('cutAmpsAdj').get_value()
@@ -316,7 +321,7 @@ class HandlerClass:
                 print '\n*** MATERIAL FILE,', materialFile, ' IS INVALID ***\n'
         else:
             with open(materialFile, 'w') as f:
-                f.write('#   all fields must exist...\n#   Format =:\n#   name,   pierce height,   pierce-delay,   puddle-jump-delay, cut-height,   cut-speed,   cut-amps,   cut-volts\n#\n')
+                f.write('#   all fields must exist...\n#   Format =:\n#   name,   pierce height,   pierce-delay,   puddle-jump-delay, puddle-jump-height, cut-height,   cut-speed,   cut-amps,   cut-volts\n#\n')
             print '\n*** EMPTY MATERIAL FILE,', materialFile, ' CREATED ***\n'
         gobject.timeout_add(100, self.mode_check)
 

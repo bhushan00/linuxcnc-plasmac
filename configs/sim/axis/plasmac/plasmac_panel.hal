@@ -25,6 +25,7 @@ net p_run:pid-p-gain                gladevcp.pidPGain-f             =>  plasmac.
 net p_run:pierce-delay              gladevcp.pierceDelay-f          =>  plasmac.pierce-delay
 net p_run:pierce-height             gladevcp.pierceHeight-f         =>  plasmac.pierce-height
 net p_run:puddle-jump-delay         gladevcp.puddleJumpDelay-f      =>  plasmac.puddle-jump-delay
+net p_run:puddle-jump-height        gladevcp.puddleJumpHeight-f     =>  plasmac.puddle-jump-height
 net p_run:reverse-run               gladevcp.reverseRun             =>  plasmac.reverse-run
 net p_run:safe-height-is-limited    plasmac.safe-height-is-limited  =>  gladevcp.safeHeightIsLimited
 net p_run:thc-enable                gladevcp.thcEnable              =>  plasmac.thc-enable
