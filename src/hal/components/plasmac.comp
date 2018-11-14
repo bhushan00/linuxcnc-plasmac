@@ -6,13 +6,15 @@ A plasma cutting table control component for use with the linuxcnc master branch
 
 .I VERSIONS:
 .br
-V0.04 2018-11-10 make the description more comprehensive.
+V0.05 - 2018/11/14 - add puddle jump height.
 .br
-V0.03 2018-11-06 fix arc restart and add arc restart delay.
+V0.04 - 2018/11/10 - make the description more comprehensive.
 .br
-V0.02 2018-11-05 add dry run facility.
+V0.03 - 2018/11/06 - fix arc restart and add arc restart delay.
 .br
-V0.01 2018-11-01 initial release.
+V0.02 - 2018/11/05 - add dry run facility.
+.br
+V0.01 - 2018/11/01 - initial release.
 
 .I SUMMARY:
 .br
@@ -44,6 +46,8 @@ A spindle on signal (connected to the plasmac.spindle-on input pin) begins the s
 - start torch, retry if unsuccessful until too many attempts.
 .br
 - wait for pierce delay.
+.br
+- move up to puddle jump height.
 .br
 - release feedhold, X/Y motion begins.
 .br
@@ -197,6 +201,7 @@ pin in  bit     program_is_idle         "program is idle, connect to halui.progr
 pin in  bit     program_is_paused       "program is paused, connect to halui.program.is-paused";
 pin in  bit     program_is_running      "program is running, connect to halui.program.is-running";
 pin in  float   puddle_jump_delay       "delay move from pierce height to cut height (seconds)";
+pin in  float   puddle_jump_height      "puddle jump height (percentage of pierce height)";
 pin in  float   requested_velocity      "requested velocity, set by a known requested velocity or connnect to motion.requested-vel";
 pin in  float   restart_delay           "time from arc failure till next restart attempt";
 pin in  bit     reverse_run             "reverse run to start of cut";
@@ -240,6 +245,7 @@ variable bool   dry_run;                /* dry run in progress */
 variable float  dry_run_timer;          /* dry run latch timer */
 variable bool   initialized;            /* initialization flag */
 variable float  last_arc_voltage;       /* last sensed arc voltage */
+variable int    move_direction;         /* setup move direction */
 variable float  offset_datum;           /* datum for safe height calcs */
 variable float  offset_min;             /* minimum allowed offset */
 variable float  offset_max;             /* maximum allowed offset */
@@ -250,12 +256,13 @@ variable float  pid_output;             /* calculated pid output value */
 variable float  pierce_timer;           /* pierce delay timer */
 variable float  pierce_target;          /* pierce height target offset */
 variable float  probe_velocity;         /* probe down velocity */
+variable float  puddle_jump_target;     /* puddle jump height target offset */
 variable float  puddle_jump_timer;      /* puddle jump delay timer */
 variable float  requested_feed_rate;    /* requested feed rate */
 variable bool   reverse;                /* reverse run flag */
 variable float  reverse_timer;          /* reverse run timer */
 variable float  safe_min;               /* minimum safe height allowed */
-variable float  safe_preferred;         /* preffered safe height offset */
+variable float  safe_preferred;         /* preferred safe height offset */
 variable float  safe_target;            /* safe height target offset */
 variable float  target_volts[4];        /* target voltage for thc, set by arc voltage at cut height */
 variable int    thc_velocity;           /* velocity for thc moves */
@@ -285,6 +292,7 @@ typedef enum{IDLE,
              TORCH_ON,
              ARC_OK,
              PIERCE_DELAY,
+             PUDDLE_JUMP,
              CUT_HEIGHT,
              CUTTING,
              GOTO_SAFE_HEIGHT,
@@ -486,6 +494,7 @@ FUNCTION(_) {
                     if(fabs(offset_current - (zero_target * offset_scale)) < tolerance){
                         cut_target = offset_datum = offset_counts + (cut_height / offset_scale);
                         pierce_target = offset_counts + (pierce_height / offset_scale);
+                        puddle_jump_target = offset_counts + (pierce_height * (puddle_jump_height / 100) / offset_scale);
                         safe_min = (pierce_height + (1 * units_per_mm)) / offset_scale;
                         safe_preferred = safe_height / offset_scale;
                         offset_min = offset_counts - ((axis_position - axis_min_limit) / offset_scale);
@@ -565,32 +574,77 @@ FUNCTION(_) {
                 pierce_timer -= thread_period;
             }else{
                 puddle_jump_timer = puddle_jump_delay;
-                state = CUT_HEIGHT;
+                if(puddle_jump_height > 100){
+                    move_direction = 1;
+                }else if(puddle_jump_height < 100){
+                    move_direction = -1;
+                }else{
+                    move_direction = 0;
+                }
+                state = PUDDLE_JUMP;
+            }
+            break;
+        case PUDDLE_JUMP:
+            /* move to puddle_jump height */
+            feed_hold = TRUE;
+            if(move_direction == 1){
+                if((offset_counts - setup_velocity) > puddle_jump_target){
+                    offset_counts -= setup_velocity;
+                }else{
+                    offset_counts = puddle_jump_target;
+                }
+            }else if(move_direction == -1){
+                if((offset_counts + setup_velocity) < puddle_jump_target){
+                    offset_counts += setup_velocity;
+                }else{
+                    offset_counts = puddle_jump_target;
+                }
+            }
+            if(fabs(offset_current - (puddle_jump_target * offset_scale)) < tolerance){
+                count = 0;
+                if(puddle_jump_timer > 0){
+                    feed_hold = FALSE;
+                    puddle_jump_timer -= thread_period;
+                }else{
+                    puddle_jump_timer = 0;
+                    feed_hold = TRUE;
+                    if(pierce_height * puddle_jump_height / 100 < cut_height){
+                        move_direction = 1;
+                    }else if(pierce_height * puddle_jump_height / 100 > cut_height){
+                        move_direction = -1;
+                    }else{
+                        move_direction = 0;
+                    }
+                    state = CUT_HEIGHT;
+                }
             }
             break;
         case CUT_HEIGHT:
-            /* move down to cut height */
-            if(puddle_jump_timer > 0){
-                feed_hold = FALSE;
-                puddle_jump_timer -= thread_period;
-            }else{
-                feed_hold = TRUE;
+            /* move to cut height */
+            feed_hold = TRUE;
+            if(move_direction == 1){
+                if((offset_counts - setup_velocity) > cut_target){
+                    offset_counts -= setup_velocity;
+                }else{
+                    offset_counts = cut_target;
+                }
+            }else if(move_direction == -1){
                 if((offset_counts + setup_velocity) < cut_target){
                     offset_counts += setup_velocity;
                 }else{
                     offset_counts = cut_target;
                 }
-                if(fabs(offset_current - (cut_target * offset_scale)) < tolerance){
-                    count = 0;
+            }
+            if(fabs(offset_current - (cut_target * offset_scale)) < tolerance){
+                count = 0;
                 /* set feed rate for this cut */
                 if(cut_feed_rate > 0){
                     requested_feed_rate = cut_feed_rate;
                 }else{
                     requested_feed_rate = requested_velocity * 60;
                 }
-                    feed_hold = FALSE;
-                    state = CUTTING;
-                }
+                feed_hold = FALSE;
+                state = CUTTING;
             }
             break;
         case CUTTING:
