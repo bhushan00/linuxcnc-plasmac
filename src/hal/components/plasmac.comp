@@ -6,6 +6,7 @@ A plasma cutting table control component for use with the linuxcnc master branch
 
 .I VERSIONS:
 .br
+V0.06 - 2018/11/16 - make dry run facility full dry run rather than just x/y motion
 V0.05 - 2018/11/14 - add puddle jump height.
 .br
 V0.04 - 2018/11/10 - make the description more comprehensive.
@@ -179,7 +180,7 @@ pin in  float   current_velocity        "current machine velocity , connect to m
 pin in  float   cut_feed_rate           "cut feed rate, set to 0 to use feed rate from gcod file (machine units per minute)";
 pin in  float   cut_height              "cut height (machine units)";
 pin in  float   cut_volts               "cut voltage (volts)";
-pin in  bit     dry_run_start           "do a dry run, X & Y axii only, no torch or thc";
+pin in  bit     dry_run_start           "do a dry run, no torch or thc";
 pin in  bit     external_estop          "external estop input";
 pin in  float   feed_override           "feed override value from gui (connect to halui.feed-override.value)";
 pin in  bit     float_switch            "float switch input (can also act as breakaway if it actuates when torch breaks away)";
@@ -274,6 +275,9 @@ variable bool   touchdown;              /* float switch reached on initial down 
 variable float  velocity_scale;         /* the velocity multipler */
 variable float  zero_target;            /* target offset for top of stock*/
 
+/* DEBUGGING PINS */
+//pin out s32     state_out;
+
 function _;
 
 author "Phillip A Carter";
@@ -308,6 +312,9 @@ state_t state = IDLE;
 stop_type_t stop_type = NONE;
 
 FUNCTION(_) {
+
+    /* debugging stuff */
+    //state_out = state;
 
     /* do these first run only */
     if(!initialized && units_per_mm){
@@ -374,7 +381,7 @@ FUNCTION(_) {
             rtapi_print_msg(RTAPI_MSG_ERR,"breakaway activated\n"
                                           "program is paused...\n");
             state = GOTO_SAFE_HEIGHT;
-        }else if(state > ARC_OK && !arc_ok_out && stop_type != PAUSE){ ;
+        }else if(state > ARC_OK && !arc_ok_out && !dry_run && stop_type != PAUSE){ ;
             torch_on = FALSE;
             program_pause = TRUE;
             stop_type = PAUSE;
@@ -408,15 +415,27 @@ FUNCTION(_) {
         program_stop = FALSE;
     }
 
+    if(program_is_running){
+        program_run = FALSE;
+    }
+
     /* KLUDGE 1...
-     * Provides a workaround to a timing issue caused (I think) by
-     * using halui pins to test for pause after reverse run
-     * Doesn't seem to cause any issue except that the minimum
-     * run time for a reverse run has 0.15 seconds added */
+     * Provides a workaround to a timing issue that causes reverse run
+     *  to drop out if button press/release too quick */
     if(reverse_timer > 0){
         reverse_timer -= thread_period;
         if(reverse_timer <= 0){
             reverse_timer = 0;
+        }
+    }
+
+  /* KLUDGE 2...
+     * Provides a workaround to a timing issue that causes dry run 
+     * to drop out if button press/release too quick */
+    if(dry_run_timer > 0){
+        dry_run_timer -= thread_period;
+        if(dry_run_timer <= 0){
+            dry_run_timer = 0;
         }
     }
 
@@ -425,20 +444,21 @@ FUNCTION(_) {
         case IDLE:
             if(float_switch || breakaway){
                 feed_hold = FALSE;
-            }else if(dry_run_start && !dry_run && !cut_started){
-                dry_run = TRUE;
-                program_run = TRUE;
-                dry_run_timer = 0.15;  //see notes below about kludge 2
-                state = FINISH;
             }else if(reverse_run && stop_type == PAUSE){
                 if(!reverse){
+                    reverse_timer = 0.15;  //see KLUDGE 1
                     reverse = TRUE;
                     adaptive_feed = -1;
                     program_resume = TRUE;
                     feed_hold = FALSE;
-                    reverse_timer = 0.15;  //see notes above about kludge 1
                 }
-            }else if(!reverse_run && !reverse && !reverse_timer && (stop_type == NONE || stop_type == WAIT) && spindle_on){
+            }else if(dry_run_start && !reverse_run && !reverse && !reverse_timer && (stop_type == NONE || stop_type == WAIT)){
+                if(!dry_run){
+                    dry_run_timer = 0.25;  //see KLUDGE 2
+                    dry_run = TRUE;
+                    program_run = TRUE;
+                }
+            }else if(spindle_on && !reverse_run && !reverse && !reverse_timer && !dry_run_timer && (stop_type == NONE || stop_type == WAIT)){
                 feed_hold = TRUE;
                 stop_type = NONE;
                 touchdown = FALSE;
@@ -447,7 +467,7 @@ FUNCTION(_) {
                     safe_target = 0;
                 }
                 state = TOUCHOFF;
-            }else if(!reverse_run && !reverse && !reverse_timer && stop_type == PAUSE && !program_is_idle){
+            }else if(!program_is_idle && !reverse_run && !reverse && !reverse_timer && stop_type == PAUSE){
                 feed_hold = TRUE;
                 if(!program_is_paused){
                     stop_type = NONE;
@@ -533,7 +553,12 @@ FUNCTION(_) {
             }
             if(fabs(offset_current - (pierce_target * offset_scale)) < tolerance){
                 arc_starts = 0;
-                state = TORCH_ON;
+                if(dry_run){
+                    pierce_timer = pierce_delay;
+                    state = PIERCE_DELAY;
+                }else{
+                    state = TORCH_ON;
+                }
             }
             break;
         case TORCH_ON:
@@ -562,7 +587,6 @@ FUNCTION(_) {
                 arc_starts += 1;
                 state = TORCH_ON;
             }else if(arc_ok_out){
-                    arc_ok_out = TRUE;
                     pierce_timer = pierce_delay;
                     state = PIERCE_DELAY;
             }
@@ -648,138 +672,140 @@ FUNCTION(_) {
             }
             break;
         case CUTTING:
-            /* while cutting:
+            /* while cutting and it is not a dry run:
              * if thc is enabled then vary the torch height to keep the arc voltage constant
              * if corner lock enabled, only allow THC if current velocity is greater than the threshold percentage of requested velocity
              * if kerf crossing is enabled, only allow THC if the voltage change is less than the threshold voltage */
-            if(mode < 2){ /* thc control by arc voltage */
-                if(target_volts[0] == 0){
-                    /* wait until velocity is at least 99% of requested velocity before sampling arc voltage */
-                    if(use_auto_volts){
-                        if(current_velocity * 60 > requested_feed_rate * feed_override * 0.99){
-                            count += 1;
-                            target_volts[count] = arc_voltage;
-                            if(count == 3){
-                                target_volts[0] = (target_volts[1] + target_volts[2] + target_volts[3]) / 3;
-                                last_arc_voltage = target_volts[0];
+            if(!dry_run){
+                if(mode < 2){ /* thc control by arc voltage */
+                    if(target_volts[0] == 0){
+                        /* wait until velocity is at least 99% of requested velocity before sampling arc voltage */
+                        if(use_auto_volts){
+                            if(current_velocity * 60 > requested_feed_rate * feed_override * 0.99){
+                                count += 1;
+                                target_volts[count] = arc_voltage;
+                                if(count == 3){
+                                    target_volts[0] = (target_volts[1] + target_volts[2] + target_volts[3]) / 3;
+                                    last_arc_voltage = target_volts[0];
+                                }
                             }
+                        }else{
+                            target_volts[0] = cut_volts;
                         }
-                    }else{
-                        target_volts[0] = cut_volts;
-                    }
-                }else if(thc_enable){
-                    /* lock thc if velocity < requested velocity * cornerlock threshold percentage */
-                    if(cornerlock_enable == TRUE && current_velocity * 60 < requested_feed_rate * feed_override * cornerlock_threshold * 0.01){
-                        cornerlock_is_locked = TRUE;
-                    }else{
-                        cornerlock_is_locked = FALSE;
-                    }
-                    /* lock thc if voltage change > kerfcross threshold volts */
-                    if(kerfcross_enable == TRUE &&
-                       last_arc_voltage > 0 &&
-                       arc_voltage > last_arc_voltage + kerfcross_threshold){
-                        kerfcross_is_locked = TRUE;
-                    }else{
-                        kerfcross_is_locked = FALSE;
-                        last_arc_voltage = arc_voltage;
-                    }
-                    /* do thc */
-                    if(!cornerlock_is_locked && !kerfcross_is_locked){
-                        pid_error_now = (target_volts[0] + height_override - arc_voltage) * 0.1;
-                        if(fabs(pid_error_now) < fabs(thc_threshold * 0.1)){
-                            pid_error_now = 0;
-                        }
-                        pid_output = pid_error_now * pid_p_gain;
-                        pid_output += pid_error_now * pid_i_gain * thread_period;
-                        pid_output += (pid_error_now - pid_error_old) * pid_d_gain / thread_period;
-                        pid_error_old = pid_error_now;
-                        if(pid_output > thc_velocity){
-                            pid_output = thc_velocity;
-                        }else if(pid_output < -thc_velocity){
-                            pid_output = -thc_velocity;
-                        }
-                        if(offset_counts + pid_output <= offset_min){
-                            rtapi_print_msg(RTAPI_MSG_ERR,"bottom limit reached \n"
-                                                          "while THC moving down\n"
-                                                          "program is stopped......\n");
-                            torch_on = FALSE;
-                            stop_type = STOP;
-                            program_stop = TRUE;
-                            state = FINISH;
-                            pid_output = 0;
-                        }else if(offset_counts + pid_output >= offset_max){
-                            rtapi_print_msg(RTAPI_MSG_ERR,"top limit reached    \n"
-                                                          "while THC moving up  \n"
-                                                          "program is stopped......\n");
-                            torch_on = FALSE;
-                            stop_type = STOP;
-                            program_stop = TRUE;
-                            state = FINISH;
-                            pid_output = 0;
-                        }
-                        offset_counts += pid_output;
-                    }
-                    if(pid_output > 0){
-                        led_up = TRUE;
-                    }else if((pid_output) < 0){
-                        led_down = TRUE;
-                    }else{
-                        led_down = FALSE;
-                        led_up = FALSE;
-                    }
-                    pid_output = 0;
-                }
-            }else{ /* thc control by move-up and move-down inputs (FALSE kerf crossing in this mode) */
-                if(thc_enable){
-                    /* lock thc if velocity < requested velocity * cornerlock threshold percentage */
-                    if(cornerlock_enable == TRUE &&
-                       current_velocity * 60 < requested_feed_rate * feed_override * cornerlock_threshold * 0.01){
+                    }else if(thc_enable){
+                        /* lock thc if velocity < requested velocity * cornerlock threshold percentage */
+                        if(cornerlock_enable == TRUE && current_velocity * 60 < requested_feed_rate * feed_override * cornerlock_threshold * 0.01){
                             cornerlock_is_locked = TRUE;
-                    }else{
-                        cornerlock_is_locked = FALSE;
-                    }
-                    if(move_down && !cornerlock_is_locked){
-                        if(offset_counts - thc_velocity <= offset_min){
-                            rtapi_print_msg(RTAPI_MSG_ERR,"bottom limit reached \n"
-                                                          "while THC moving down\n"
-                                                          "program is stopped......\n");
-                            torch_on = FALSE;
-                            stop_type = STOP;
-                            program_stop = TRUE;
-                            state = FINISH;
-                        }else{ /* move down at requested velocity */
-                            offset_counts -= thc_velocity;
-                            led_down = TRUE;
+                        }else{
+                            cornerlock_is_locked = FALSE;
                         }
-                    }else if(move_up && !cornerlock_is_locked){
-                        if(offset_counts + thc_velocity + safe_min >= offset_max){
-                            rtapi_print_msg(RTAPI_MSG_ERR,"top limit reached    \n"
-                                                          "while THC moving up  \n"
-                                                          "program is stopped......\n");
-                            torch_on = FALSE;
-                            stop_type = STOP;
-                            program_stop = TRUE;
-                            state = FINISH;
-                        }else{ /* move up at requested velocity */
-                            offset_counts += thc_velocity;
+                        /* lock thc if voltage change > kerfcross threshold volts */
+                        if(kerfcross_enable == TRUE &&
+                           last_arc_voltage > 0 &&
+                           arc_voltage > last_arc_voltage + kerfcross_threshold){
+                            kerfcross_is_locked = TRUE;
+                        }else{
+                            kerfcross_is_locked = FALSE;
+                            last_arc_voltage = arc_voltage;
+                        }
+                        /* do thc */
+                        if(!cornerlock_is_locked && !kerfcross_is_locked){
+                            pid_error_now = (target_volts[0] + height_override - arc_voltage) * 0.1;
+                            if(fabs(pid_error_now) < fabs(thc_threshold * 0.1)){
+                                pid_error_now = 0;
+                            }
+                            pid_output = pid_error_now * pid_p_gain;
+                            pid_output += pid_error_now * pid_i_gain * thread_period;
+                            pid_output += (pid_error_now - pid_error_old) * pid_d_gain / thread_period;
+                            pid_error_old = pid_error_now;
+                            if(pid_output > thc_velocity){
+                                pid_output = thc_velocity;
+                            }else if(pid_output < -thc_velocity){
+                                pid_output = -thc_velocity;
+                            }
+                            if(offset_counts + pid_output <= offset_min){
+                                rtapi_print_msg(RTAPI_MSG_ERR,"bottom limit reached \n"
+                                                              "while THC moving down\n"
+                                                              "program is stopped......\n");
+                                torch_on = FALSE;
+                                stop_type = STOP;
+                                program_stop = TRUE;
+                                state = FINISH;
+                                pid_output = 0;
+                            }else if(offset_counts + pid_output >= offset_max){
+                                rtapi_print_msg(RTAPI_MSG_ERR,"top limit reached    \n"
+                                                              "while THC moving up  \n"
+                                                              "program is stopped......\n");
+                                torch_on = FALSE;
+                                stop_type = STOP;
+                                program_stop = TRUE;
+                                state = FINISH;
+                                pid_output = 0;
+                            }
+                            offset_counts += pid_output;
+                        }
+                        if(pid_output > 0){
                             led_up = TRUE;
+                        }else if((pid_output) < 0){
+                            led_down = TRUE;
+                        }else{
+                            led_down = FALSE;
+                            led_up = FALSE;
                         }
-                    }else{
-                        led_down = FALSE;
-                        led_up = FALSE;
+                        pid_output = 0;
+                    }
+                }else{ /* thc control by move-up and move-down inputs (FALSE kerf crossing in this mode) */
+                    if(thc_enable){
+                        /* lock thc if velocity < requested velocity * cornerlock threshold percentage */
+                        if(cornerlock_enable == TRUE &&
+                           current_velocity * 60 < requested_feed_rate * feed_override * cornerlock_threshold * 0.01){
+                                cornerlock_is_locked = TRUE;
+                        }else{
+                            cornerlock_is_locked = FALSE;
+                        }
+                        if(move_down && !cornerlock_is_locked){
+                            if(offset_counts - thc_velocity <= offset_min){
+                                rtapi_print_msg(RTAPI_MSG_ERR,"bottom limit reached \n"
+                                                              "while THC moving down\n"
+                                                              "program is stopped......\n");
+                                torch_on = FALSE;
+                                stop_type = STOP;
+                                program_stop = TRUE;
+                                state = FINISH;
+                            }else{ /* move down at requested velocity */
+                                offset_counts -= thc_velocity;
+                                led_down = TRUE;
+                            }
+                        }else if(move_up && !cornerlock_is_locked){
+                            if(offset_counts + thc_velocity + safe_min >= offset_max){
+                                rtapi_print_msg(RTAPI_MSG_ERR,"top limit reached    \n"
+                                                              "while THC moving up  \n"
+                                                              "program is stopped......\n");
+                                torch_on = FALSE;
+                                stop_type = STOP;
+                                program_stop = TRUE;
+                                state = FINISH;
+                            }else{ /* move up at requested velocity */
+                                offset_counts += thc_velocity;
+                                led_up = TRUE;
+                            }
+                        }else{
+                            led_down = FALSE;
+                            led_up = FALSE;
+                        }
                     }
                 }
-            }
-            /* check if safe height is below maximium offset */
-            if(offset_counts > offset_datum){
-                safe_target += offset_counts - offset_datum;
-                offset_datum = offset_counts;
-                if(safe_target > offset_max){
-                    safe_target = offset_max;
-                    if(!safe_height_is_limited){
-                        safe_height_is_limited = TRUE;
-                        rtapi_print_msg(RTAPI_MSG_ERR, "safe traverse height\n"
-                                                       "has been reduced...\n");
+                /* check if safe height is below maximium offset */
+                if(offset_counts > offset_datum){
+                    safe_target += offset_counts - offset_datum;
+                    offset_datum = offset_counts;
+                    if(safe_target > offset_max){
+                        safe_target = offset_max;
+                        if(!safe_height_is_limited){
+                            safe_height_is_limited = TRUE;
+                            rtapi_print_msg(RTAPI_MSG_ERR, "safe traverse height\n"
+                                                           "has been reduced...\n");
+                        }
                     }
                 }
             }
@@ -801,52 +827,29 @@ FUNCTION(_) {
             break;
         case FINISH:
             /* clean up and return to idle state */
-            if(dry_run){
-                if(float_switch || breakaway){
-                    feed_hold = TRUE;
-                }else{
-                    feed_hold = FALSE;
-                }
-                if(program_is_idle && !dry_run_start){
-                    /* KLUDGE 2...
-                     * Provides a workaround to a timing issue whereby
-                     * if the dry_run_start pin is toggled on/off quickly
-                     * the component goes into the normal run mode */
-                    if(dry_run_timer > 0){
-                        dry_run_timer -= thread_period;
-                        if(dry_run_timer <= 0){
-                            dry_run_timer = 0;
-                        }
+            target_volts[0] = 0;
+            cornerlock_is_locked = FALSE;
+            kerfcross_is_locked = FALSE;
+            led_down = FALSE;
+            led_up = FALSE;
+            if(stop_type == STOP){
+                if(program_is_idle){
+                    if(offset_counts < 0 && (offset_counts + setup_velocity) < 0){
+                        offset_counts += setup_velocity;
+                    }else if(offset_counts > 0 && (offset_counts - setup_velocity) > 0){
+                        offset_counts -= setup_velocity;
                     }else{
-                        program_run = FALSE;
-                        dry_run = 0;
-                        state = IDLE;
+                        offset_counts = 0;
+                    }
+                    if(fabs(offset_current) < tolerance){
+                        stop_type = NONE;
+                        safe_height_is_limited = FALSE;
+                        cut_started = FALSE;
+                        dry_run = FALSE;
                     }
                 }
             }else{
-                target_volts[0] = 0;
-                cornerlock_is_locked = FALSE;
-                kerfcross_is_locked = FALSE;
-                led_down = FALSE;
-                led_up = FALSE;
-                if(stop_type == STOP){
-                    if(program_is_idle){
-                        if(offset_counts < 0 && (offset_counts + setup_velocity) < 0){
-                            offset_counts += setup_velocity;
-                        }else if(offset_counts > 0 && (offset_counts - setup_velocity) > 0){
-                            offset_counts -= setup_velocity;
-                        }else{
-                            offset_counts = 0;
-                        }
-                        if(fabs(offset_current) < tolerance){
-                            stop_type = NONE;
-                            safe_height_is_limited = FALSE;
-                            cut_started = FALSE;
-                        }
-                    }
-                }else{
-                    state = IDLE;
-                }
+                state = IDLE;
             }
             break;
         case DEBUG:
