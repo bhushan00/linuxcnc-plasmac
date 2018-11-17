@@ -32,12 +32,14 @@ net p_comp:units-per-mm             halui.machine.units-per-mm      =>  plasmac.
 #***** SET THE FOLLOWING TO SUIT YOUR CONFIGURATION ********************
 
 # FOR MODE 0
+#setp plasmac.mode [PLASMAC]MODE - if this setting is in the ini file otherwise setp plasmac.mode 0)
 #net p_comp:arc-voltage-in           ***YOUR PLASMA ARC VOLTAGE***   =>  plasmac.arc-voltage-in
 #net p_comp:torch-on                                                 =>  ***YOUR TORCH ON***
 #net p_comp:float-switch             ***YOUR FLOAT SWITCH***         =>  debounce.0.0.in
 #net p_comp:breakaway                ***YOUR BREAKAWAY SWITCH***     =>  plasmac.breakaway
 
 # FOR MODE 1
+#setp plasmac.mode [PLASMAC]MODE - if this setting is in the ini file otherwise setp plasmac.mode 1)
 #net p_comp:arc-voltage-in           ***YOUR PLASMA ARC VOLTAGE***   =>  plasmac.arc-voltage-in
 #net p_comp:arc-ok-in                ***YOUR PLASMA ARC OK***        =>  plasmac.arc-ok-in
 #net p_comp:torch-on                                                 =>  ***YOUR TORCH ON***
@@ -45,6 +47,7 @@ net p_comp:units-per-mm             halui.machine.units-per-mm      =>  plasmac.
 #net p_comp:breakaway                ***YOUR BREAKAWAY SWITCH***     =>  plasmac.breakaway
 
 # FOR MODE 2
+#setp plasmac.mode [PLASMAC]MODE - if this setting is in the ini file otherwise setp plasmac.mode 2)
 #net p_comp:arc-ok-in                ***YOUR PLASMA ARC OK***        =>  plasmac.arc-ok-in
 #net p_comp:move-down                ***YOUR MOVE DOWN SIGNAL***     =>  plasmac.move-down
 #net p_comp:move-up                  ***YOUR MOVE UP SIGNAL***       =>  plasmac.move-up
