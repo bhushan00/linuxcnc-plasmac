@@ -104,6 +104,9 @@ class HandlerClass:
                 self.lcnc.comd.mode(linuxcnc.MODE_MANUAL)
                 self.wait_for_completion()
 
+    def on_setupFeedRate_value_changed(self, widget):
+        self.builder.get_object('probeFeedRateAdj').configure(self.builder.get_object('probeFeedRate').get_value(),0,self.builder.get_object('setupFeedRate').get_value(),1,0,0)
+        
     def configure_widgets(self):
         # set_digits = number of digits after decimal
         # configure  = (value, lower limit, upper limit, step size, 0, 0)
@@ -160,7 +163,7 @@ class HandlerClass:
             self.builder.get_object('pierceHeight').set_digits(2)
             self.builder.get_object('pierceHeightAdj').configure(3.8,0.1,9,0.01,0,0)
             self.builder.get_object('probeFeedRate').set_digits(0)
-            self.builder.get_object('probeFeedRateAdj').configure(1000,1,5000,1,0,0)
+            self.builder.get_object('probeFeedRateAdj').configure(1000,1,Global.thcFeedRate,1,0,0)
             self.builder.get_object('safeHeight').set_digits(0)
             self.builder.get_object('safeHeightAdj').configure(20,1,99,1,0,0)
             self.builder.get_object('setupFeedRate').set_digits(0)
@@ -175,7 +178,7 @@ class HandlerClass:
             self.builder.get_object('pierceHeight').set_digits(3)
             self.builder.get_object('pierceHeightAdj').configure(0.15,0.01,1,0.001,0,0)
             self.builder.get_object('probeFeedRate').set_digits(1)
-            self.builder.get_object('probeFeedRateAdj').configure(40,.1,400,.1,0,0)
+            self.builder.get_object('probeFeedRateAdj').configure(40,.1,Global.thcFeedRate,.1,0,0)
             self.builder.get_object('safeHeight').set_digits(2)
             self.builder.get_object('safeHeightAdj').configure(0.75,0.04,4,0.01,0,0)
             self.builder.get_object('setupFeedRate').set_digits(1)
@@ -286,6 +289,7 @@ class HandlerClass:
                          IniFile.widgets: widget_defaults(select_widgets(self.builder.get_objects(), hal_only=False,output_only = True))}
         self.ini = IniFile(self.ini_filename,self.defaults,self.builder)
         self.ini.restore_state(self)
+        self.builder.get_object('probeFeedRateAdj').set_upper(self.builder.get_object('setupFeedRate').get_value())
         p_height = self.builder.get_object('pierceHeightAdj').get_value()
         p_delay = self.builder.get_object('pierceDelayAdj').get_value()
         pj_height = self.builder.get_object('puddleJumpHeightAdj').get_value()

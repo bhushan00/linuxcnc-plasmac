@@ -6,7 +6,10 @@ A plasma cutting table control component for use with the linuxcnc master branch
 
 .I VERSIONS:
 .br
+V0.07 - 2018/11/17 - limit probe maximum velocity to setup velocity
+.br
 V0.06 - 2018/11/16 - make dry run facility full dry run rather than just x/y motion
+.br
 V0.05 - 2018/11/14 - add puddle jump height.
 .br
 V0.04 - 2018/11/10 - make the description more comprehensive.
@@ -329,7 +332,11 @@ FUNCTION(_) {
 
     /* convert feed rates to velocity */
     setup_velocity = setup_feed_rate * velocity_scale;
-    probe_velocity = probe_feed_rate * velocity_scale;
+    if(probe_feed_rate < setup_feed_rate){
+        probe_velocity = probe_feed_rate * velocity_scale;
+    }else{
+        probe_velocity = setup_velocity;
+    }
     if(mode == 2){
         thc_velocity = thc_feed_rate * velocity_scale * pid_p_gain / 100;
     }else{
