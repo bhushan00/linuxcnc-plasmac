@@ -2824,7 +2824,8 @@ this may be reduced due to THC movement</property>
 used for moving to:
 pierce height
 cutting height
-safe height</property>
+safe height
+this also sets the maximum probe feed rate</property>
                                     <property name="invisible_char">●</property>
                                     <property name="xalign">1</property>
                                     <property name="primary_icon_activatable">False</property>
@@ -2833,6 +2834,7 @@ safe height</property>
                                     <property name="secondary_icon_sensitive">True</property>
                                     <property name="adjustment">setupFeedRateAdj</property>
                                     <property name="wrap">True</property>
+                                    <signal name="value-changed" handler="on_setupFeedRate_value_changed" swapped="no"/>
                                   </object>
                                   <packing>
                                     <property name="expand">False</property>
@@ -2850,7 +2852,8 @@ safe height</property>
 used for moving to:
 pierce height
 cutting height
-safe height</property>
+safe height
+this also sets the maximum probe feed rate</property>
                                     <property name="xalign">0</property>
                                     <property name="xpad">2</property>
                                     <property name="label" translatable="yes">Setup Speed</property>
