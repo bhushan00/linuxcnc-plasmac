@@ -25,16 +25,19 @@ import gtk
 import linuxcnc
 import gobject
 import hal
-from   gladevcp.persistence import IniFile,widget_defaults,set_debug,select_widgets
+from   gladevcp.persistence import widget_defaults,select_widgets
+import gladevcp
 
 debug = 0
 
 class Global:
+    configDict = {}
     materialList = []
     thcFeedRate = 0
     oldMode = 9
 
 class linuxcncInterface(object):
+
     def send_command(self,command, wait=True):
         if self.s.interp_state == linuxcnc.INTERP_IDLE:
             if self.s.task_mode != linuxcnc.MODE_MDI:
@@ -50,32 +53,71 @@ class linuxcncInterface(object):
         self.comd = linuxcnc.command()
 
 class HandlerClass:
+
+    def set_materials(self):
+        self.builder.get_object('probeFeedRateAdj').set_upper(self.builder.get_object('setupFeedRate').get_value())
+        p_height = self.builder.get_object('pierceHeight').get_value()
+        p_delay = self.builder.get_object('pierceDelay').get_value()
+        pj_height = self.builder.get_object('puddleJumpHeight').get_value()
+        pj_delay = self.builder.get_object('puddleJumpDelay').get_value()
+        c_height = self.builder.get_object('cutHeight').get_value()
+        c_speed = self.builder.get_object('cutFeedRate').get_value()
+        c_amps = self.builder.get_object('cutAmps').get_value()
+        c_volts = self.builder.get_object('cutVolts').get_value()
+        Global.materialList.append(['Default', p_height, p_delay, pj_height, pj_delay, c_height, c_speed, c_amps, c_volts])
+        materialFile = self.lcnc.linuxcncIniFile.find('PLASMAC', 'MATERIAL_FILE') or self.lcnc.linuxcncIniFile.find('EMC', 'MACHINE').lower() + '.mat'
+        self.builder.get_object('material').set_active(0)
+        if os.path.exists(materialFile):
+            try:
+                with open(materialFile, 'r') as f:
+                    for line in f:
+                        if not line.startswith('#'):
+                            name, p_height, p_delay, pj_height, pj_delay, c_height, c_speed, c_amps, c_volts = line.split(',')
+                            name = name.strip()
+                            p_height = float(p_height)
+                            p_delay = float(p_delay)
+                            pj_height = float(pj_height)
+                            pj_delay = float(pj_delay)
+                            c_height = float(c_height)
+                            c_speed = float(c_speed)
+                            c_amps = float(c_amps)
+                            c_volts = float(c_volts)
+                            iter = self.builder.get_object('materials').append()
+                            self.builder.get_object('materials').set(iter, 0, name, 1, p_height, 2, p_delay, 3, pj_height, 4, pj_delay, 5, c_height, 6, c_speed, 7, c_amps, 8, c_volts)
+                            Global.materialList.append([name, p_height, p_delay, pj_height, pj_delay, c_height, c_speed, c_amps, c_volts])
+            except:
+                print '*** material file,', materialFile, 'is invalid'
+        else:
+            with open(materialFile, 'w') as f:
+                f.write('#   all fields must exist...\n#   Format =:\n#   name,   pierce height,   pierce-delay,   puddle-jump-height,   puddle-jump-delay,   cut-height,   cut-speed,   cut-amps,   cut-volts\n#\n')
+            print '*** new material file,', materialFile, 'created'
+
     def on_save_clicked(self,widget,data=None):
-        self.ini.save_state(self)
-        Global.materialList[0][1] = self.builder.get_object('pierceHeightAdj').get_value()
-        Global.materialList[0][2] = self.builder.get_object('pierceDelayAdj').get_value()
-        Global.materialList[0][3] = self.builder.get_object('puddleJumpHeightAdj').get_value()
-        Global.materialList[0][4] = self.builder.get_object('puddleJumpDelayAdj').get_value()
-        Global.materialList[0][5] = self.builder.get_object('cutHeightAdj').get_value()
-        Global.materialList[0][6] = self.builder.get_object('cutFeedRateAdj').get_value()
-        Global.materialList[0][7] = self.builder.get_object('cutAmpsAdj').get_value()
-        Global.materialList[0][8] = self.builder.get_object('cutVoltsAdj').get_value()
+        self.save_settings()
+        Global.materialList[0][1] = self.builder.get_object('pierceHeight').get_value()
+        Global.materialList[0][2] = self.builder.get_object('pierceDelay').get_value()
+        Global.materialList[0][3] = self.builder.get_object('puddleJumpHeight').get_value()
+        Global.materialList[0][4] = self.builder.get_object('puddleJumpDelay').get_value()
+        Global.materialList[0][5] = self.builder.get_object('cutHeight').get_value()
+        Global.materialList[0][6] = self.builder.get_object('cutFeedRate').get_value()
+        Global.materialList[0][7] = self.builder.get_object('cutAmps').get_value()
+        Global.materialList[0][8] = self.builder.get_object('cutVolts').get_value()
         self.builder.get_object('material').set_active(0)
 
     def on_reload_clicked(self,widget,data=None):
-        self.ini.restore_state(self)
+        self.load_settings()
         self.builder.get_object('material').set_active(0)
 
     def on_material_changed(self,widget,data=None):
         material = self.builder.get_object('material').get_active()
-        self.builder.get_object('pierceHeightAdj').set_value(Global.materialList[material][1])
-        self.builder.get_object('pierceDelayAdj').set_value(Global.materialList[material][2])
-        self.builder.get_object('puddleJumpHeightAdj').set_value(Global.materialList[material][3])
-        self.builder.get_object('puddleJumpDelayAdj').set_value(Global.materialList[material][4])
-        self.builder.get_object('cutHeightAdj').set_value(Global.materialList[material][5])
-        self.builder.get_object('cutFeedRateAdj').set_value(Global.materialList[material][6])
-        self.builder.get_object('cutAmpsAdj').set_value(Global.materialList[material][7])
-        self.builder.get_object('cutVoltsAdj').set_value(Global.materialList[material][8])
+        self.builder.get_object('pierceHeight').set_value(Global.materialList[material][1])
+        self.builder.get_object('pierceDelay').set_value(Global.materialList[material][2])
+        self.builder.get_object('puddleJumpHeight').set_value(Global.materialList[material][3])
+        self.builder.get_object('puddleJumpDelay').set_value(Global.materialList[material][4])
+        self.builder.get_object('cutHeight').set_value(Global.materialList[material][5])
+        self.builder.get_object('cutFeedRate').set_value(Global.materialList[material][6])
+        self.builder.get_object('cutAmps').set_value(Global.materialList[material][7])
+        self.builder.get_object('cutVolts').set_value(Global.materialList[material][8])
 
     def wait_for_completion(self):
         while self.lcnc.comd.wait_complete() == -1:
@@ -188,7 +230,7 @@ class HandlerClass:
             self.builder.get_object('skipIhsDistance').set_digits(1)
             self.builder.get_object('skipIhsDistanceAdj').configure(0,0,99,.1,0,0)
         else:
-            print '\nIncorrect [TRAJ]LINEAR_UNITS in ini file\n'
+            print '*** incorrect [TRAJ]LINEAR_UNITS in ini file'
 
     def mode_check(self):
         mode = int((sp.Popen(['halcmd getp plasmac.mode'], stdout=sp.PIPE, shell=True)).communicate()[0].strip())
@@ -272,6 +314,61 @@ class HandlerClass:
             Global.oldMode = mode
         return True
 
+    def load_settings(self):
+        for item in widget_defaults(select_widgets(self.builder.get_objects(), hal_only=False,output_only = True)):
+            if item != 'heightOverride':
+                Global.configDict[item] = '0'
+        convertFile = False
+        if os.path.exists(self.configFile):
+            try:
+                tmpDict = {}
+                with open(self.configFile, 'r') as f_in:
+                    for line in f_in:
+                        if not line.startswith('#') and not line.startswith('[') and not line.startswith('\n'):
+                            if 'version' in line or 'signature' in line:
+                                convertFile = True
+                            else:
+                                (key, value) = line.strip().replace(" ", "").split('=')
+                                if value == 'True':value = True
+                                if value == 'False':value = False
+                                if key in Global.configDict:
+                                    Global.configDict[key] = value
+                                    tmpDict[key] = value
+            except:
+                print '*** plasmac configuration file,', self.configFile, 'is invalid ***'
+            for item in Global.configDict:
+                if isinstance(self.builder.get_object(item), gladevcp.hal_widgets.HAL_SpinButton):
+                    if item in tmpDict:
+                        self.builder.get_object(item).set_value(float(Global.configDict.get(item)))
+                    else:
+                        self.builder.get_object(item).set_value(0)
+                        print '***', item, 'missing from', self.configFile
+                elif isinstance(self.builder.get_object(item), gladevcp.hal_widgets.HAL_CheckButton):
+                    if item in tmpDict:
+                        self.builder.get_object(item).set_active(Global.configDict.get(item))
+                    else:
+                        self.builder.get_object(item).set_active(False)
+                        print '***', item, 'missing from', self.configFile
+            if convertFile:
+                print '*** converting', self.configFile, 'to new format'
+                self.save_settings()
+        else:
+            self.save_settings()
+            print '*** creating new plasmac configuration file,', self.configFile
+
+    def save_settings(self):
+        try:
+            with open(self.configFile, 'w') as f_out:
+                f_out.write('#plasmac configuration file, format is:\n#name = value\n\n')
+                for key in Global.configDict:
+                    if isinstance(self.builder.get_object(key), gladevcp.hal_widgets.HAL_SpinButton):
+                        value = self.builder.get_object(key).get_value()
+                    elif isinstance(self.builder.get_object(key), gladevcp.hal_widgets.HAL_CheckButton):
+                        value = self.builder.get_object(key).get_active()
+                    f_out.write(key + '=' + str(value) + '\n')
+        except:
+            print '*** error opening', self.configFile
+
     def __init__(self, halcomp,builder,useropts):
         self.halcomp = halcomp
         self.builder = builder
@@ -286,49 +383,11 @@ class HandlerClass:
         Global.thcFeedRate = (float(self.lcnc.linuxcncIniFile.find('AXIS_Z', 'MAX_VELOCITY')) * \
                               float(self.lcnc.linuxcncIniFile.find('AXIS_Z', 'OFFSET_AV_RATIO'))) * 60
         sp.Popen('halcmd setp plasmac.thc-feed-rate %f' % Global.thcFeedRate, shell=True)
-        self.ini_filename = self.lcnc.linuxcncIniFile.find('PLASMAC', 'CONFIG_FILE') or \
+        self.configFile = self.lcnc.linuxcncIniFile.find('PLASMAC', 'CONFIG_FILE') or \
                             self.lcnc.linuxcncIniFile.find('EMC', 'MACHINE').lower() + '.cfg'
         self.configure_widgets()
-        self.defaults = {IniFile.vars: dict(), \
-                         IniFile.widgets: widget_defaults(select_widgets(self.builder.get_objects(), hal_only=False,output_only = True))}
-        self.ini = IniFile(self.ini_filename,self.defaults,self.builder)
-        self.ini.restore_state(self)
-        self.builder.get_object('probeFeedRateAdj').set_upper(self.builder.get_object('setupFeedRate').get_value())
-        p_height = self.builder.get_object('pierceHeightAdj').get_value()
-        p_delay = self.builder.get_object('pierceDelayAdj').get_value()
-        pj_height = self.builder.get_object('puddleJumpHeightAdj').get_value()
-        pj_delay = self.builder.get_object('puddleJumpDelayAdj').get_value()
-        c_height = self.builder.get_object('cutHeightAdj').get_value()
-        c_speed = self.builder.get_object('cutFeedRateAdj').get_value()
-        c_amps = self.builder.get_object('cutAmpsAdj').get_value()
-        c_volts = self.builder.get_object('cutVoltsAdj').get_value()
-        Global.materialList.append(['Default', p_height, p_delay, pj_height, pj_delay, c_height, c_speed, c_amps, c_volts])
-        materialFile = self.lcnc.linuxcncIniFile.find('PLASMAC', 'MATERIAL_FILE') or self.lcnc.linuxcncIniFile.find('EMC', 'MACHINE').lower() + '.mat'
-        self.builder.get_object('material').set_active(0)
-        if os.path.exists(materialFile):
-            try:
-                with open(materialFile, 'r') as f:
-                    for line in f:
-                        if not line.startswith('#'):
-                            name, p_height, p_delay, pj_height, pj_delay, c_height, c_speed, c_amps, c_volts = line.split(',')
-                            name = name.strip()
-                            p_height = float(p_height)
-                            p_delay = float(p_delay)
-                            pj_height = float(pj_height)
-                            pj_delay = float(pj_delay)
-                            c_height = float(c_height)
-                            c_speed = float(c_speed)
-                            c_amps = float(c_amps)
-                            c_volts = float(c_volts)
-                            iter = self.builder.get_object('materials').append()
-                            self.builder.get_object('materials').set(iter, 0, name, 1, p_height, 2, p_delay, 3, pj_height, 4, pj_delay, 5, c_height, 6, c_speed, 7, c_amps, 8, c_volts)
-                            Global.materialList.append([name, p_height, p_delay, pj_height, pj_delay, c_height, c_speed, c_amps, c_volts])
-            except:
-                print '\n*** MATERIAL FILE,', materialFile, ' IS INVALID ***\n'
-        else:
-            with open(materialFile, 'w') as f:
-                f.write('#   all fields must exist...\n#   Format =:\n#   name,   pierce height,   pierce-delay,   puddle-jump-height,   puddle-jump-delay,   cut-height,   cut-speed,   cut-amps,   cut-volts\n#\n')
-            print '\n*** EMPTY MATERIAL FILE,', materialFile, ' CREATED ***\n'
+        self.load_settings()
+        self.set_materials()
         gobject.timeout_add(100, self.mode_check)
 
 def get_handlers(halcomp,builder,useropts):
