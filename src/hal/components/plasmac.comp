@@ -180,9 +180,9 @@ pin in  s32     arc_max_starts              "maximum attempts at starting the ar
 pin in  float   arc_voltage_in              "arc voltage input [mode 0 & mode 1]";
 pin in  float   arc_voltage_offset          "offset to set arc voltage to 0 at 0 volts";
 pin in  float   arc_voltage_scale           "scale to convert arc_voltage input to actual volts";
-pin in  float   axis_min_limit              "axis minimum limit, connect to ini.L.min-limit";
-pin in  float   axis_max_limit              "axis maximum limit, connect to ini.L.max-limit";
-pin in  float   axis_position               "current axis position, connect to joint.N.pos-fb";
+pin in  float   axis_z_min_limit            "axis z minimum limit, connect to ini.z.min-limit";
+pin in  float   axis_z_max_limit            "axis z maximum limit, connect to ini.z.max-limit";
+pin in  float   axis_z_position             "current z axis position, connect to joint.N.pos-fb";
 pin in  float   axis_x_position             "current x axis position, connect to axis.x.pos-cmd";
 pin in  float   axis_y_position             "current y axis position, connect to axis.y.pos-cmd";
 pin in  bit     breakaway                   "torch breakaway switch (optional, see float_switch)";
@@ -203,7 +203,7 @@ pin in  float   kerfcross_threshold         "kerf crossing threshold [mode 0 & m
 pin in  s32     mode                        "operating mode";
 pin in  bit     move_down                   "external thc down switch [mode 2])";
 pin in  bit     move_up                     "external thc up switch [mode 2]";
-pin in  float   offset_current              "current L axis offset";
+pin in  float   offset_current              "current z axis offset";
 pin in  float   pid_d_gain                  "derivative gain input [mode 0 & mode 1]";
 pin in  float   pid_i_gain                  "integral gain input [mode 0 & mode 1]";
 pin in  float   pid_p_gain                  "proportional gain input [mode 0 & mode 1]";
@@ -238,9 +238,9 @@ pin out bit     feed_hold                   "feed hold, connect to motion.feed_h
 pin out bit     kerfcross_is_locked         "kerf crossing locked indicator [mode 0 & mode 1]";
 pin out bit     led_down                    "thc move down indicator";
 pin out bit     led_up                      "thc move up indicator";
-pin out s32     offset_counts               "number of counts to offset, connect to axis.L.eoffset-counts";
-pin out bit     offset_enable               "enable offsets, connect to axis.L.eoffset-enable";
-pin out float   offset_scale                "offset scale, connect to axis.L.eoffset-scale";
+pin out s32     offset_counts               "number of counts to offset, connect to axis.z.eoffset-counts";
+pin out bit     offset_enable               "enable offsets, connect to axis.z.eoffset-enable";
+pin out float   offset_scale                "offset scale, connect to axis.z.eoffset-scale";
 pin out bit     program_pause               "pause the current program, connect to halui.program.pause";
 pin out bit     program_resume              "resume the currently paused program, connect to halui.program.resume";
 pin out bit     program_run                 "run the currently loaded program, connect to halui.program.run";
@@ -286,7 +286,7 @@ variable int    thc_velocity;               /* velocity for thc moves */
 variable float  thread_period;              /* thread time in seconds */
 variable float  torch_off_timer;            /* arc off delay timer */
 variable float  restart_timer;              /* time between torch on attempts*/
-variable float  tolerance;                  /* tolerance when comparing axis height */
+variable float  tolerance;                  /* tolerance when comparing axis z height */
 variable bool   touchdown;                  /* float switch reached on initial down move */
 variable float  velocity_scale;             /* the velocity multipler */
 variable float  zero_target;                /* target offset for top of stock*/
@@ -520,7 +520,7 @@ FUNCTION(_) {
             feed_hold = TRUE;
             if(!touchdown){
                 if(!float_switch){
-                    if(axis_position - (probe_velocity * offset_scale) <= axis_min_limit){
+                    if(axis_z_position - (probe_velocity * offset_scale) <= axis_z_min_limit){
                         rtapi_print_msg(RTAPI_MSG_ERR,"bottom limit reached\n"
                                                       "while probing down\n"
                                                       "program is paused...\n");
@@ -549,8 +549,8 @@ FUNCTION(_) {
                         puddle_jump_target = offset_counts + (pierce_height * (puddle_jump_height / 100) / offset_scale);
                         safe_min = (pierce_height + (1 * units_per_mm)) / offset_scale;
                         safe_preferred = safe_height / offset_scale;
-                        offset_min = offset_counts - ((axis_position - axis_min_limit) / offset_scale);
-                        offset_max = offset_counts + (axis_max_limit - axis_position - (1 * units_per_mm)) / offset_scale;
+                        offset_min = offset_counts - ((axis_z_position - axis_z_min_limit) / offset_scale);
+                        offset_max = offset_counts + (axis_z_max_limit - axis_z_position - (1 * units_per_mm)) / offset_scale;
                         if(offset_counts  + safe_min >= offset_max){
                             safe_target = offset_max;
                             rtapi_print_msg(RTAPI_MSG_ERR, "material too high for\n"

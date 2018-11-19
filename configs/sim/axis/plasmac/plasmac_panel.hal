@@ -1,8 +1,8 @@
 # TYPICAL HAL CONNECTIONS FOR PLASMAC COMPONENT + PLASMAC-PANEL.PY + PLASMAC-PANEL.GLADE
 
 #***** PLASMAC COMPONENT ***********************************************
-net p_comp:axis-max-limit           ini.z.max_limit                 =>  plasmac.axis-max-limit
-net p_comp:axis-min-limit           ini.z.min_limit                 =>  plasmac.axis-min-limit
+net p_comp:axis-max-limit           ini.z.max_limit                 =>  plasmac.axis-z-max-limit
+net p_comp:axis-min-limit           ini.z.min_limit                 =>  plasmac.axis-z-min-limit
 
 #***** GLADEVCP RUN PAGE ***********************************************
 net p_run:arc-ok-out                plasmac.arc-ok-out              =>  gladevcp.arcOk

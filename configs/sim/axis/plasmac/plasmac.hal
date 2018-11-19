@@ -9,7 +9,7 @@ loadrt  plasmac
 addf    plasmac     servo-thread
 
 net p_comp:adaptive-feed            plasmac.adaptive-feed           =>  motion.adaptive-feed
-net p_comp:axis-position            joint.3.pos-fb                  =>  plasmac.axis-position
+net p_comp:axis-position            joint.3.pos-fb                  =>  plasmac.axis-z-position
 net p_comp:axis-x-position          axis.x.pos-cmd                  =>  plasmac.axis-x-position
 net p_comp:axis-y-position          axis.y.pos-cmd                  =>  plasmac.axis-y-position
 net p_comp:current-velocity         motion.current-vel              =>  plasmac.current-velocity
