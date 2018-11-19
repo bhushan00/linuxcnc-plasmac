@@ -255,6 +255,7 @@ variable float  arc_voltage;                /* calculated arc voltage */
 variable float  axis_x_finish;              /* axis x position at end of cut */
 variable float  axis_y_finish;              /* axis y position at end of cut */
 variable int    count;                      /* for counting */
+variable float  cut_offset;                 /* offset from last cut end to this cut start */
 variable float  cut_started;                /* cut has started */
 variable float  cut_target;                 /* cut height target offset */
 variable bool   dry_run;                    /* dry run in progress */
@@ -280,7 +281,6 @@ variable float  reverse_timer;              /* reverse run timer */
 variable float  safe_min;                   /* minimum safe height allowed */
 variable float  safe_preferred;             /* preferred safe height offset */
 variable float  safe_target;                /* safe height target offset */
-variable float  cut_offset;                 /* offset from last cut end to this cut start */
 variable float  target_volts[4];            /* target voltage for thc, set by arc voltage at cut height */
 variable int    thc_velocity;               /* velocity for thc moves */
 variable float  thread_period;              /* thread time in seconds */
@@ -386,8 +386,13 @@ FUNCTION(_) {
         }else if(state > IDLE && !spindle_on && stop_type != WAIT){
             torch_off_timer = torch_off_delay;
             stop_type = WAIT;
-            axis_x_finish = axis_x_position;
-            axis_y_finish = axis_y_position;
+            if(thc_enable && use_auto_volts){
+                axis_x_finish = axis_x_position;
+                axis_y_finish = axis_y_position;
+            }else{
+                axis_x_finish = 0;
+                axis_y_finish = 0;
+            }
             state = GOTO_SAFE_HEIGHT;
         }else if(state > TOUCHOFF && float_switch && stop_type != PAUSE){
             torch_on = FALSE;
