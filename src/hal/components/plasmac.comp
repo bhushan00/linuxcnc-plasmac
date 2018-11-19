@@ -176,6 +176,8 @@ pin in  float   arc_voltage_scale           "scale to convert arc_voltage input 
 pin in  float   axis_min_limit              "axis minimum limit, connect to ini.L.min-limit";
 pin in  float   axis_max_limit              "axis maximum limit, connect to ini.L.max-limit";
 pin in  float   axis_position               "current axis position, connect to joint.N.pos-fb";
+pin in  float   axis_x_position             "current x axis position, connect to axis.x.pos-cmd";
+pin in  float   axis_y_position             "current y axis position, connect to axis.y.pos-cmd";
 pin in  bit     breakaway                   "torch breakaway switch (optional, see float_switch)";
 pin in  bit     cornerlock_enable           "enable corner lock";
 pin in  float   cornerlock_threshold        "corner lock threshold (% of requested feed rate), speeds below this disable THC";
@@ -211,6 +213,7 @@ pin in  float   restart_delay               "time from arc failure till next res
 pin in  bit     reverse_run                 "reverse run to start of cut";
 pin in  float   safe_height                 "requested safe traverse height (machine units)";
 pin in  float   setup_feed_rate             "feed rate for moves to pierce and cut heights (machine units per minute)";
+pin in  float   skip_ihs_distance           "skip IHS if less than this distance from last cut";
 pin in  bit     spindle_on                  "start a new cut, connect to spindle.0.on";
 pin in  bit     thc_enable                  "enable thc";
 pin in  float   thc_feed_rate               "maximum feed rate for thc (machine units per minute)";
@@ -242,6 +245,8 @@ pin out bit     torch_on                    "turn torch on, connect to your torc
 variable int    arc_starts;                 /* number of attempts to start torch */
 variable float  arc_fail_timer;             /* arc failure timer */
 variable float  arc_voltage;                /* calculated arc voltage */
+variable float  axis_x_finish;              /* axis x position at end of cut */
+variable float  axis_y_finish;              /* axis y position at end of cut */
 variable int    count;                      /* for counting */
 variable float  cut_started;                /* cut has started */
 variable float  cut_target;                 /* cut height target offset */
@@ -268,6 +273,7 @@ variable float  reverse_timer;              /* reverse run timer */
 variable float  safe_min;                   /* minimum safe height allowed */
 variable float  safe_preferred;             /* preferred safe height offset */
 variable float  safe_target;                /* safe height target offset */
+variable float  cut_offset;                 /* offset from last cut end to this cut start */
 variable float  target_volts[4];            /* target voltage for thc, set by arc voltage at cut height */
 variable int    thc_velocity;               /* velocity for thc moves */
 variable float  thread_period;              /* thread time in seconds */
@@ -356,16 +362,16 @@ FUNCTION(_) {
     }
 
     /* check for an abort */
+    /* or for a pause or wait while active */
     if((external_estop || program_is_idle) && cut_started){
         torch_on = FALSE;
         stop_type = STOP;
         program_stop = TRUE;
         cut_started = FALSE;
+        axis_x_finish = 0;
+        axis_y_finish = 0;
         state = FINISH;
-    }
-
-    /* check for a pause or wait while active */
-    if(state < GOTO_SAFE_HEIGHT && stop_type == NONE && cut_started){
+    }else if(state < GOTO_SAFE_HEIGHT && stop_type == NONE && cut_started){
         if(state > IDLE && program_is_paused && stop_type != PAUSE){
             torch_on = FALSE;
             stop_type = PAUSE;
@@ -373,6 +379,8 @@ FUNCTION(_) {
         }else if(state > IDLE && !spindle_on && stop_type != WAIT){
             torch_off_timer = torch_off_delay;
             stop_type = WAIT;
+            axis_x_finish = axis_x_position;
+            axis_y_finish = axis_y_position;
             state = GOTO_SAFE_HEIGHT;
         }else if(state > TOUCHOFF && float_switch && stop_type != PAUSE){
             torch_on = FALSE;
@@ -473,7 +481,17 @@ FUNCTION(_) {
                 if(!safe_height_is_limited){
                     safe_target = 0;
                 }
-                state = TOUCHOFF;
+                if(axis_x_finish || axis_y_finish){
+                    cut_offset = sqrt(pow(axis_x_finish - axis_x_position, 2) + pow(axis_y_finish - axis_y_position, 2));
+                    axis_x_finish = 0;
+                    axis_y_finish = 0;
+                }
+                if(cut_offset && cut_offset < skip_ihs_distance){
+                    state = PIERCE_HEIGHT;
+                }else{
+                    state = TOUCHOFF;
+                }
+                cut_offset = 0;
             }else if(!program_is_idle && !reverse_run && !reverse && !reverse_timer && stop_type == PAUSE){
                 feed_hold = TRUE;
                 if(!program_is_paused){
