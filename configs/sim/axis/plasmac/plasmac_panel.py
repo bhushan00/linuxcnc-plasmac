@@ -168,6 +168,8 @@ class HandlerClass:
             self.builder.get_object('safeHeightAdj').configure(20,1,99,1,0,0)
             self.builder.get_object('setupFeedRate').set_digits(0)
             self.builder.get_object('setupFeedRateAdj').configure(int(Global.thcFeedRate * 0.8),1,Global.thcFeedRate,1,0,0)
+            self.builder.get_object('skipIhsDistance').set_digits(0)
+            self.builder.get_object('skipIhsDistanceAdj').configure(0,0,999,1,0,0)
         elif self.lcnc.linuxcncIniFile.find('TRAJ', 'LINEAR_UNITS').lower() == 'inch':
             self.builder.get_object('cutFeedRate').set_digits(1)
             self.builder.get_object('cutFeedRateAdj').configure(160,0,400,0.1,0,0)
@@ -183,6 +185,8 @@ class HandlerClass:
             self.builder.get_object('safeHeightAdj').configure(0.75,0.04,4,0.01,0,0)
             self.builder.get_object('setupFeedRate').set_digits(1)
             self.builder.get_object('setupFeedRateAdj').configure(int(Global.thcFeedRate * 0.8),.1,Global.thcFeedRate,.1,0,0)
+            self.builder.get_object('skipIhsDistance').set_digits(1)
+            self.builder.get_object('skipIhsDistanceAdj').configure(0,0,99,.1,0,0)
         else:
             print '\nIncorrect [TRAJ]LINEAR_UNITS in ini file\n'
 
