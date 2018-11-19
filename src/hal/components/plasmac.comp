@@ -6,6 +6,8 @@ A plasma cutting table control component for use with the linuxcnc master branch
 
 .I VERSIONS:
 .br
+V0.08 - 2018/11/19 - add skip IHS feature
+.br
 V0.07 - 2018/11/17 - limit probe maximum velocity to setup velocity
 .br
 V0.06 - 2018/11/16 - make dry run facility full dry run rather than just x/y motion
@@ -126,6 +128,11 @@ The example configuration has remapping for the F word set up as follows:
 - If the plasmac.cut-feed-rate input pin = 0 then the feed rate and THC calculations will be read from the gcode file, scaled and sent to the plasmac.requested-velocity input pin to be used for THC calculations.
 .RE
 The remapped F word is scaled correctly so that both metric and imperial gcode files may be used on both metric and imperial machines.
+
+.I IHS DISABLE
+.br
+IHS may be disabled if the start of the next cut is less than plasmac.skip-ihs-distance from the end of the last cut. This feature is disabled after any error. For example if there is a arc failure while cutting then IHS will be performed regardless of where the cut is.
+
 
 .I NOTES
 .br
