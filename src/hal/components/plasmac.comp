@@ -6,6 +6,8 @@ A plasma cutting table control component for use with the linuxcnc master branch
 
 .I VERSIONS:
 .br
+V0.09 - 2018/11/24 - add error checking on some inputs
+.br
 V0.08 - 2018/11/19 - add skip IHS feature
 .br
 V0.07 - 2018/11/17 - limit probe maximum velocity to setup velocity
@@ -80,10 +82,10 @@ Turn torch off, pause program and move to safe height then wait for 'resume' or 
 - plasmac.breakaway input pin is activated.
 .br
 - program is paused.
-..RE
-..br
+.RE
+.br
 .In the paused state the plasmac.reverse-run input pin will cause the motion to reverse whilst activated.
-..br
+.br
 .The furthest reversal point is the beginning of the current cut.
 .br
 NOTE: Reverse run is not functional until the reverse-run branch is merged into the master branch.
