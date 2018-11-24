@@ -505,7 +505,9 @@
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="has_tooltip">True</property>
-                        <property name="tooltip_text" translatable="yes">select a material with preset cut parameters</property>
+                        <property name="tooltip_text" translatable="yes">select a material with preset cut parameters
+to reload an edited material file,
+select Reload from the Configure tab</property>
                         <property name="model">materials</property>
                         <signal name="changed" handler="on_material_changed" swapped="no"/>
                         <child>
@@ -665,7 +667,8 @@
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
                                     <property name="has_tooltip">True</property>
-                                    <property name="tooltip_text" translatable="yes">puddle jump delay in seconds</property>
+                                    <property name="tooltip_text" translatable="yes">puddle jump delay in seconds
+set to 0 to disable</property>
                                     <property name="max_length">5</property>
                                     <property name="invisible_char">●</property>
                                     <property name="xalign">1</property>
@@ -687,7 +690,8 @@
                                     <property name="width_request">130</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">False</property>
-                                    <property name="tooltip_text" translatable="yes">puddle jump delay in seconds</property>
+                                    <property name="tooltip_text" translatable="yes">puddle jump delay in seconds
+set to 0 to disable</property>
                                     <property name="double_buffered">False</property>
                                     <property name="xalign">0</property>
                                     <property name="xpad">2</property>
@@ -716,7 +720,8 @@
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
                                     <property name="has_tooltip">True</property>
-                                    <property name="tooltip_text" translatable="yes">puddle jump height as a percentage of pierce height</property>
+                                    <property name="tooltip_text" translatable="yes">puddle jump height as a percentage of pierce height
+set to 0 to disable</property>
                                     <property name="max_length">5</property>
                                     <property name="invisible_char">●</property>
                                     <property name="xalign">1</property>
@@ -738,7 +743,8 @@
                                     <property name="width_request">130</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">False</property>
-                                    <property name="tooltip_text" translatable="yes">puddle jump height as a percentage of pierce height</property>
+                                    <property name="tooltip_text" translatable="yes">puddle jump height as a percentage of pierce height
+set to 0 to disable</property>
                                     <property name="double_buffered">False</property>
                                     <property name="xalign">0</property>
                                     <property name="xpad">2</property>
@@ -883,7 +889,8 @@ setting this to 0 will use feed rate from program</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
                                     <property name="has_tooltip">True</property>
-                                    <property name="tooltip_text" translatable="yes">cutting current in amps</property>
+                                    <property name="tooltip_text" translatable="yes">cutting current in amps
+indicator only, not used.</property>
                                     <property name="max_length">5</property>
                                     <property name="invisible_char">●</property>
                                     <property name="xalign">1</property>
@@ -907,7 +914,8 @@ setting this to 0 will use feed rate from program</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">False</property>
                                     <property name="has_tooltip">True</property>
-                                    <property name="tooltip_text" translatable="yes">cutting current in amps</property>
+                                    <property name="tooltip_text" translatable="yes">cutting current in amps
+indicator only, not used.</property>
                                     <property name="xalign">0</property>
                                     <property name="xpad">2</property>
                                     <property name="label" translatable="yes">Cut Amps</property>
@@ -935,7 +943,8 @@ setting this to 0 will use feed rate from program</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
                                     <property name="has_tooltip">True</property>
-                                    <property name="tooltip_text" translatable="yes">cutting voltage in volts</property>
+                                    <property name="tooltip_text" translatable="yes">cutting voltage in volts
+only used if not using auto volts</property>
                                     <property name="max_length">5</property>
                                     <property name="invisible_char">●</property>
                                     <property name="xalign">1</property>
@@ -959,7 +968,8 @@ setting this to 0 will use feed rate from program</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">False</property>
                                     <property name="has_tooltip">True</property>
-                                    <property name="tooltip_text" translatable="yes">cutting voltage in volts</property>
+                                    <property name="tooltip_text" translatable="yes">cutting voltage in volts
+only used if not using auto volts</property>
                                     <property name="xalign">0</property>
                                     <property name="xpad">2</property>
                                     <property name="label" translatable="yes">Cut Volts</property>

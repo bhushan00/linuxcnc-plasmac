@@ -1,11 +1,94 @@
-#   all fields must exist… whitespace is not required,,,,,,,,
-#   Format =:,,,,,,,,
-#   name,   pierce height,   pierce-delay,   puddle-jump-height,   puddle-jump-delay,   cut-height,   cut-speed,   cut-amps,   cut-volts
-#,,,,,,,,
-Mild Steel 16 GA,0.15,0.1,100,0,0.06,249,45,128
-Mild Steel 14 GA,0.15,0.2,100,0,0.06,225,45,128
-Mild Steel 10 GA,0.15,0.4,100,0,0.06,129,45,128
-Mild Steel 3/16,0.15,0.5,100,0,0.06,85,45,129
-Mild Steel 1/4,0.15,0.6,100,0,0.06,48,45,130
-Mild Steel 3/8,0.15,0.8,100,0,0.06,33,45,136
-Mild Steel 1/2,0.15,1,100,0,0.06,18,45,141
+#plasmac configuration file
+#the next line is required for version checking
+[VERSION 1]
+
+#example only, may be deleted
+#[MILD STEEL 1thick]
+#PIERCE_HEIGHT      = 
+#PIERCE_DELAY       = 
+#PUDDLE_JUMP_HEIGHT = (optional - use 0 or omit if not required)
+#PUDDLE_JUMP_DELAY  = (optional - use 0 or omit if not required)
+#CUT_HEIGHT         = 
+#CUT_SPEED          = 
+#CUT_AMPS           = 
+#CUT_VOLTS          = 
+
+[Mild Steel 18 GA]
+PIERCE_HEIGHT      = 0.13
+#PIERCE_DELAY       = 0.1
+#PUDDLE_JUMP_HEIGHT = 0
+#PUDDLE_JUMP_DELAY  = 0
+#CUT_HEIGHT         = 0.06
+#CUT_SPEED          = 249
+#CUT_AMPS           = 45
+#CUT_VOLTS          = 128
+
+[Mild Steel 16 GA]
+PIERCE_HEIGHT      = 0.15
+PIERCE_DELAY       = 0.1
+PUDDLE_JUMP_HEIGHT = 0
+PUDDLE_JUMP_DELAY  = 0
+CUT_HEIGHT         = 0.06
+CUT_SPEED          = 249
+CUT_AMPS           = 45
+CUT_VOLTS          = 128
+
+[Mild Steel 14 GA]
+PIERCE_HEIGHT      = 0.15
+PIERCE_DELAY       = 0.2
+PUDDLE_JUMP_HEIGHT = 0
+PUDDLE_JUMP_DELAY  = 0
+CUT_HEIGHT         = 0.06
+CUT_SPEED          = 225
+CUT_AMPS           = 45
+CUT_VOLTS          = 128
+
+[Mild Steel 10 GA]
+PIERCE_HEIGHT      = 0.15
+PIERCE_DELAY       = 0.4
+PUDDLE_JUMP_HEIGHT = 0
+PUDDLE_JUMP_DELAY  = 0
+CUT_HEIGHT         = 0.06
+CUT_SPEED          = 129
+CUT_AMPS           = 45
+CUT_VOLTS          = 128
+
+[Mild Steel 3/16]
+PIERCE_HEIGHT      = 0.15
+PIERCE_DELAY       = 0.5
+PUDDLE_JUMP_HEIGHT = 0
+PUDDLE_JUMP_DELAY  = 0
+CUT_HEIGHT         = 0.06
+CUT_SPEED          = 85
+CUT_AMPS           = 45
+CUT_VOLTS          = 129
+
+[Mild Steel 1/4]
+PIERCE_HEIGHT      = 0.15
+PIERCE_DELAY       = 0.6
+PUDDLE_JUMP_HEIGHT = 0
+PUDDLE_JUMP_DELAY  = 0
+CUT_HEIGHT         = 0.06
+CUT_SPEED          = 48
+CUT_AMPS           = 45
+CUT_VOLTS          = 130
+
+[Mild Steel 3/8]
+PIERCE_HEIGHT      = 0.15
+PIERCE_DELAY       = 0.8
+PUDDLE_JUMP_HEIGHT = 0
+PUDDLE_JUMP_DELAY  = 0
+CUT_HEIGHT         = 0.06
+CUT_SPEED          = 33
+CUT_AMPS           = 45
+CUT_VOLTS          = 136
+
+[Mild Steel 1/2]
+PIERCE_HEIGHT      = 0.15
+PIERCE_DELAY       = 1
+PUDDLE_JUMP_HEIGHT = 0
+PUDDLE_JUMP_DELAY  = 0
+CUT_HEIGHT         = 0.06
+CUT_SPEED          = 18
+CUT_AMPS           = 45
+CUT_VOLTS          = 141
