@@ -83,7 +83,6 @@ Turn torch off, pause program and move to safe height then wait for 'resume' or 
 .br
 - program is paused.
 .RE
-.br
 
 Turn torch off, move to safe height and stop program if the following occur:
 .RS 1
