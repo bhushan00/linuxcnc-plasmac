@@ -55,11 +55,11 @@ A spindle on signal (connected to the plasmac.spindle-on input pin) begins the s
 .br
 - wait for pierce delay.
 .br
-- move up to puddle jump height.
+- move to puddle jump height (if enabled).
 .br
 - release feedhold, X/Y motion begins.
 .br
-- wait for puddle jump delay.
+- wait for puddle jump delay (if enabled).
 .br
 - move down to cutting height.
 .br
@@ -84,11 +84,6 @@ Turn torch off, pause program and move to safe height then wait for 'resume' or 
 - program is paused.
 .RE
 .br
-.In the paused state the plasmac.reverse-run input pin will cause the motion to reverse whilst activated.
-.br
-.The furthest reversal point is the beginning of the current cut.
-.br
-NOTE: Reverse run is not functional until the reverse-run branch is merged into the master branch.
 
 Turn torch off, move to safe height and stop program if the following occur:
 .RS 1
@@ -219,7 +214,7 @@ pin in  float   puddle_jump_delay           "delay move from pierce height to cu
 pin in  float   puddle_jump_height          "puddle jump height (percentage of pierce height), leave disconnected if not required";
 pin in  float   requested_velocity          "requested velocity, set by a known requested velocity or connnect to motion.requested-vel";
 pin in  float   restart_delay               "time from arc failure till next restart attempt";
-pin in  bit     reverse_run                 "reverse run to start of cut";
+pin in  bit     reverse_run                 "reverse run to start of cut - *** not operational at this stage ***";
 pin in  float   safe_height                 "requested safe traverse height (machine units)";
 pin in  float   setup_feed_rate             "feed rate for moves to pierce and cut heights (machine units per minute)";
 pin in  float   skip_ihs_distance           "skip IHS if less than this distance from last cut";
