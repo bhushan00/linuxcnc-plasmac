@@ -258,7 +258,6 @@ variable bool   dry_run;                    /* dry run in progress */
 variable float  dry_run_timer;              /* dry run latch timer */
 variable bool   initialized;                /* initialization flag */
 variable float  last_arc_voltage;           /* last sensed arc voltage */
-variable int    move_direction;             /* setup move direction */
 variable float  offset_datum;               /* datum for safe height calcs */
 variable float  offset_min;                 /* minimum allowed offset */
 variable float  offset_max;                 /* maximum allowed offset */
@@ -321,8 +320,13 @@ typedef enum{NONE,
              WAIT,
              PAUSE} stop_type_t;
 
+typedef enum{ZERO,
+             UP,
+             DOWN} move_direction_t;
+
 state_t state = IDLE;
 stop_type_t stop_type = NONE;
+move_direction_t move_direction = ZERO;
 
 FUNCTION(_) {
 
@@ -649,11 +653,11 @@ FUNCTION(_) {
             }else{
                 puddle_jump_timer = puddle_jump_delay;
                 if(puddle_jump_percent > 100){
-                    move_direction = 1;
+                    move_direction = UP;
                 }else if(puddle_jump_percent < 100){
-                    move_direction = -1;
+                    move_direction = DOWN;
                 }else{
-                    move_direction = 0;
+                    move_direction = ZERO;
                 }
                 state = PUDDLE_JUMP;
             }
@@ -661,18 +665,23 @@ FUNCTION(_) {
         case PUDDLE_JUMP:
             /* move to puddle_jump height */
             feed_hold = TRUE;
-            if(move_direction == 1){
-                if((offset_counts - setup_velocity) > puddle_jump_target){
-                    offset_counts -= setup_velocity;
-                }else{
-                    offset_counts = puddle_jump_target;
-                }
-            }else if(move_direction == -1){
-                if((offset_counts + setup_velocity) < puddle_jump_target){
-                    offset_counts += setup_velocity;
-                }else{
-                    offset_counts = puddle_jump_target;
-                }
+            switch(move_direction){
+                case ZERO:
+                    break;
+                case UP:
+                    if((offset_counts - setup_velocity) > puddle_jump_target){
+                        offset_counts -= setup_velocity;
+                    }else{
+                        offset_counts = puddle_jump_target;
+                    }
+                    break;
+                case DOWN:
+                    if((offset_counts + setup_velocity) < puddle_jump_target){
+                        offset_counts += setup_velocity;
+                    }else{
+                        offset_counts = puddle_jump_target;
+                    }
+                    break;
             }
             if(fabs(offset_current - (puddle_jump_target * offset_scale)) < tolerance){
                 count = 0;
@@ -683,11 +692,11 @@ FUNCTION(_) {
                     puddle_jump_timer = 0;
                     feed_hold = TRUE;
                     if(pierce_height * puddle_jump_percent / 100 < cut_height){
-                        move_direction = 1;
+                        move_direction = UP;
                     }else if(pierce_height * puddle_jump_percent / 100 > cut_height){
-                        move_direction = -1;
+                        move_direction = DOWN;
                     }else{
-                        move_direction = 0;
+                        move_direction = ZERO;
                     }
                     state = CUT_HEIGHT;
                 }
@@ -696,18 +705,23 @@ FUNCTION(_) {
         case CUT_HEIGHT:
             /* move to cut height */
             feed_hold = TRUE;
-            if(move_direction == 1){
-                if((offset_counts - setup_velocity) > cut_target){
-                    offset_counts -= setup_velocity;
-                }else{
-                    offset_counts = cut_target;
-                }
-            }else if(move_direction == -1){
-                if((offset_counts + setup_velocity) < cut_target){
-                    offset_counts += setup_velocity;
-                }else{
-                    offset_counts = cut_target;
-                }
+            switch(move_direction){
+                case ZERO:
+                    break;
+                case UP:
+                    if((offset_counts - setup_velocity) > cut_target){
+                        offset_counts -= setup_velocity;
+                    }else{
+                        offset_counts = cut_target;
+                    }
+                    break;
+                case DOWN:
+                    if((offset_counts + setup_velocity) < cut_target){
+                        offset_counts += setup_velocity;
+                    }else{
+                        offset_counts = cut_target;
+                    }
+                    break;
             }
             if(fabs(offset_current - (cut_target * offset_scale)) < tolerance){
                 count = 0;
