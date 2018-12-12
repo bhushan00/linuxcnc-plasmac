@@ -6,6 +6,8 @@ A plasma cutting table control component for use with the linuxcnc master branch
 
 .I VERSIONS:
 .br
+V0.11 - 2018/12/12 - enable reverse run
+.br
 V0.10 - 2018/12/05 - change height override to adjust height as well as target voltage
 .br
 V0.09 - 2018/11/24 - add error checking on some inputs
@@ -114,6 +116,10 @@ Target voltage can be selected from:
 - the plasmac.cut-volts input pin.
 .RE
 
+Reverse Run allows reversing along the current segment as far as the start of the cut only while paused.  
+
+Dry Run runs the gcode without starting the torch.
+
 .I CUT FEED RATE
 .br
 Usage of the plasmac.cut-feed-rate input pin requires remapping of the F word, if not using this set the plasmac.cut-feed-rate input pin to 0 which will then use the feed rate from the gcode file.
@@ -134,7 +140,7 @@ IHS may be disabled if the start of the next cut is less than plasmac.skip-ihs-d
 
 .I NOTES
 .br
-As at 11 Nov 2018:
+As at 12 Dec 2018:
 .RS 1
 .br
 - there has been no testing done with a plasma cutter attached.

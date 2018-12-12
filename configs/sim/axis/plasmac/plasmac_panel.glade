@@ -1969,6 +1969,7 @@ turn off to use cut volts from parameters</property>
                             <property name="homogeneous">True</property>
                             <child>
                               <object class="HAL_Button" id="reverseRun">
+                                <property name="label" translatable="yes">Reverse Run</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">True</property>

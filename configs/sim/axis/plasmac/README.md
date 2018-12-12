@@ -22,12 +22,13 @@ The minimum .ini file requirements for the plasmac component are:
 \- [AXIS_L]MAX_ACCELERATION  
 \- [AXIS_L]OFFSET_AV_RATIO  
 All other .ini file settings are for the example configurations.  
-The .cfg file is a plain text file and values may be changed with any text editor.
-The .mat file is a plain text file so may be edited with any text editor.
-Lines beginning with # are ignored in both these files.
+The .cfg file is a plain text file and values may be changed with any text editor.  
+The .mat file is a plain text file so may be edited with any text editor.  
+Lines beginning with # are ignored in both these files.  
 The python directory is for remapping of the F word.  
 These configurations use the axis_tweaks file in lieu of ~/.axisrc, if you prefer to use a common ~/.axisrc file then copy the contents of axis_tweaks to your ~/.axisrc file and also comment out the line USER_COMMAND_FILE in the DISPLAY section of the ini file.  
-The reverse run button will be enabled when reverse-run is merged into master.  
+Reverse Run allows reversing along the current segment as far as the start of the cut only while paused.  
+Dry Run runs the gcode without starting the torch.
 
 ***
 #### TEST PANEL
