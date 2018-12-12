@@ -1,0 +1,951 @@
+component plasmac;
+
+description
+"""
+A plasma cutting table control component for use with the linuxcnc master branch.
+
+.I VERSIONS:
+.br
+V0.10 - 2018/12/05 - change height override to adjust height as well as target voltage
+.br
+V0.09 - 2018/11/24 - add error checking on some inputs
+.br
+V0.08 - 2018/11/19 - add skip IHS feature
+.br
+V0.07 - 2018/11/17 - limit probe maximum velocity to setup velocity
+.br
+V0.06 - 2018/11/16 - make dry run facility full dry run rather than just x/y motion
+.br
+V0.05 - 2018/11/14 - add puddle jump height.
+.br
+V0.04 - 2018/11/10 - make the description more comprehensive.
+.br
+V0.03 - 2018/11/06 - fix arc restart and add arc restart delay.
+.br
+V0.02 - 2018/11/05 - add dry run facility.
+.br
+V0.01 - 2018/11/01 - initial release.
+
+.I SUMMARY:
+.br
+Not dependent on any particular hardware and should work with any hardware that provides the correct I/O.
+
+No Z axis commands are required in gcode as all required height movements are controlled by this component.
+
+Should scale correctly for both metric and inch configuraions.
+
+Three different operating modes:  
+..RS 1
+.br
+0 Use the plasmac.arc-voltage-in input pin for both arc-OK and THC.
+.br
+1 Use the plasmac.arc-ok-in input pin for arc-OK, use the plasmac.arc-voltage-in input pin for THC.
+.br
+2 Use the plasmac.arc-ok-in input pin for arc-OK, use the plasmac.move-up and the plasmac.move-down input pins for THC, kerf crossing lockout is disabled.
+.RE
+
+A spindle on signal (connected to the plasmac.spindle-on input pin) begins the sequence of:
+.RS 1
+.br
+- set feedhold.
+.br
+- find top of stock.
+.br
+- move up to pierce height.
+.br
+- start torch, retry if unsuccessful until too many attempts.
+.br
+- wait for pierce delay.
+.br
+- move to puddle jump height (if enabled).
+.br
+- release feedhold, X/Y motion begins.
+.br
+- wait for puddle jump delay (if enabled).
+.br
+- move down to cutting height.
+.br
+- use THC (if enabled) to adjust torch height using rules for corner lock and kerf crossing.
+.br
+- when spindle on is removed, turn torch off after delay.
+.br
+- move to safe height.
+.br
+- return to idle state and wait for next cut.
+.RE
+
+Turn torch off, pause program and move to safe height then wait for 'resume' or 'stop' if the following occur:
+.RS 1
+.br
+- arc is lost.
+.br
+- plasmac.float-switch input pin is activated.
+.br
+- plasmac.breakaway input pin is activated.
+.br
+- program is paused.
+.RE
+
+Turn torch off, move to safe height and stop program if the following occur:
+.RS 1
+.br
+- program is stopped.
+.br
+- minimum height is reached during THC.
+.br
+- maximum height is reached during THC.
+.RE
+
+Safe height may be reduced if torch height (during THC moves) plus safe height would exceed the maximum height.
+.br
+The minimum allowed reduced safe height is Pierce Height plus 1mm (0.04").
+.br
+If safe height is reduced an error message is sent.
+
+Cut height can be adjusted on the fly by adding an offset to the plasmac.height-override input pin.
+.br
+This offset is added to the THC voltage target to lower or raise the torch.
+
+Target voltage can be selected from:
+.RS 1
+.br
+- a voltage automatically read from the initial cut height.
+.br
+- the plasmac.cut-volts input pin.
+.RE
+
+.I CUT FEED RATE
+.br
+Usage of the plasmac.cut-feed-rate input pin requires remapping of the F word, if not using this set the plasmac.cut-feed-rate input pin to 0 which will then use the feed rate from the gcode file.
+.br
+The example configuration has remapping for the F word set up as follows:
+.RS 1
+.br
+- If the plasmac.cut-feed-rate input pin is > 0 it will use this value for the feed rate and THC calculations.
+.br
+- If the plasmac.cut-feed-rate input pin = 0 then the feed rate and THC calculations will be read from the gcode file, scaled and sent to the plasmac.requested-velocity input pin to be used for THC calculations.
+.RE
+The remapped F word is scaled correctly so that both metric and imperial gcode files may be used on both metric and imperial machines.
+
+.I IHS DISABLE
+.br
+IHS may be disabled if the start of the next cut is less than plasmac.skip-ihs-distance from the end of the last cut. This feature is disabled after any error. For example if there is a arc failure while cutting then IHS will be performed regardless of where the cut is.
+
+
+.I NOTES
+.br
+As at 11 Nov 2018:
+.RS 1
+.br
+- there has been no testing done with a plasma cutter attached.
+.br
+- software simulation appears to work ok.
+.br
+- hardware testing has been limited to a parallel port driven XYZ test rig with simulated arc voltage, arc ok and up/down signals.
+.RE
+
+.I EXAMPLE CONFIGURATION
+.br
+There are example configuration files for both metric and imperial located in:
+.RS 1
+.br
+- run in place "configs/sim/axis/plasmac/"
+.br
+- installed    "/usr/share/doc/linuxcnc/examples/sample-configs/sim/axis/plasmac/"
+.RE
+.br
+- Example ngc files can be found in "nc_files/plasmac/"
+
+.I DISCLAIMER
+.br
+THE AUTHOR OF THIS SOFTWARE ACCEPTS ABSOLUTELY NO LIABILITY FOR ANY HARM OR LOSS RESULTING FROM ITS USE.
+.br
+IT IS EXTREMELY UNWISE TO RELY ON SOFTWARE ALONE FOR SAFETY.
+.br
+Any machinery capable of harming persons must have provisions for completely removing power from all motors, etc, before persons enter any danger area.
+.br
+All machinery must be designed to comply with local and national safety codes, and the author of this software can not, and does not, take any responsibility for such compliance.
+.br
+All plasmac related software is released under the GPLv2. See the file LICENSE for more details.
+""";
+
+/* INPUT PINS */
+pin in  float   arc_fail_delay              "arc failure timeout (seconds)";
+pin in  float   arc_ok_high                 "maximum voltage level for Arc OK signal [mode 0] (volts)";
+pin in  bit     arc_ok_in                   "external arc ok input signal [mode 1 & mode 2]";
+pin in  float   arc_ok_low                  "minimum voltage level for Arc OK signal [mode 0] (volts)";
+pin in  s32     arc_max_starts              "maximum attempts at starting the arc";
+pin in  float   arc_voltage_in              "arc voltage input [mode 0 & mode 1]";
+pin in  float   arc_voltage_offset          "offset to set arc voltage to 0 at 0 volts";
+pin in  float   arc_voltage_scale           "scale to convert arc_voltage input to actual volts";
+pin in  float   axis_z_min_limit            "axis z minimum limit, connect to ini.z.min-limit";
+pin in  float   axis_z_max_limit            "axis z maximum limit, connect to ini.z.max-limit";
+pin in  float   axis_z_position             "current z axis position, connect to joint.N.pos-fb";
+pin in  float   axis_x_position             "current x axis position, connect to axis.x.pos-cmd";
+pin in  float   axis_y_position             "current y axis position, connect to axis.y.pos-cmd";
+pin in  bit     breakaway                   "torch breakaway switch (optional, see float_switch)";
+pin in  bit     cornerlock_enable           "enable corner lock";
+pin in  float   cornerlock_threshold        "corner lock threshold (% of requested feed rate), speeds below this disable THC";
+pin in  float   current_velocity            "current machine velocity , connect to motion.current-vel";
+pin in  float   cut_feed_rate               "cut feed rate, set to 0 to use feed rate from gcod file (machine units per minute)";
+pin in  float   cut_height                  "cut height (machine units)";
+pin in  float   cut_volts                   "cut voltage (volts)";
+pin in  bit     dry_run_start               "do a dry run, no torch or thc";
+pin in  bit     external_estop              "external estop input";
+pin in  float   feed_override               "feed override value from gui (connect to halui.feed-override.value)";
+pin in  bit     float_switch                "float switch input (can also act as breakaway if it actuates when torch breaks away)";
+pin in  float   float_switch_travel         "float switch travel (machine units)";
+pin in  float   height_override             "height override adjustment (volts)";
+pin in  bit     kerfcross_enable            "enable kerf crossing [mode 0 & mode 1]";
+pin in  float   kerfcross_threshold         "kerf crossing threshold [mode 0 & mode 1] (volts), changes above this disable THC";
+pin in  s32     mode                        "operating mode";
+pin in  bit     move_down                   "external thc down switch [mode 2])";
+pin in  bit     move_up                     "external thc up switch [mode 2]";
+pin in  float   offset_current              "current z axis offset";
+pin in  float   pid_d_gain                  "derivative gain input [mode 0 & mode 1]";
+pin in  float   pid_i_gain                  "integral gain input [mode 0 & mode 1]";
+pin in  float   pid_p_gain                  "proportional gain input [mode 0 & mode 1]";
+pin in  float   pierce_delay                "time required to pierce stock (seconds)";
+pin in  float   pierce_height               "pierce height (machine units)";
+pin in  float   probe_feed_rate             "probe down velocity (machine units per minute)";
+pin in  bit     program_is_idle             "program is idle, connect to halui.program.is-idle";
+pin in  bit     program_is_paused           "program is paused, connect to halui.program.is-paused";
+pin in  bit     program_is_running          "program is running, connect to halui.program.is-running";
+pin in  float   puddle_jump_delay           "delay move from pierce height to cut height (seconds), leave disconnected if not required";
+pin in  float   puddle_jump_height          "puddle jump height (percentage of pierce height), leave disconnected if not required";
+pin in  float   requested_velocity          "requested velocity, set by a known requested velocity or connnect to motion.requested-vel";
+pin in  float   restart_delay               "time from arc failure till next restart attempt";
+pin in  bit     reverse_run                 "reverse run to start of cut - *** not operational at this stage ***";
+pin in  float   safe_height                 "requested safe traverse height (machine units)";
+pin in  float   setup_feed_rate             "feed rate for moves to pierce and cut heights (machine units per minute)";
+pin in  float   skip_ihs_distance           "skip IHS if less than this distance from last cut";
+pin in  bit     spindle_on                  "start a new cut, connect to spindle.0.on";
+pin in  bit     thc_enable                  "enable thc";
+pin in  float   thc_feed_rate               "maximum feed rate for thc (machine units per minute)";
+pin in  float   thc_threshold               "thc threshold (volts), changes below this have no effect";
+pin in  float   torch_off_delay             "time delay to turn torch off (seconds)";
+pin in  float   units_per_mm                "for scale calcs, connect to halui.machine.units-per-mm";
+pin in  bit     use_auto_volts              "use calculated voltage for thc baseline";
+
+/* OUTPUT PINS */
+pin out float   adaptive_feed               "for reverse-run, connect to motion.adaptive-feed";
+pin out bit     arc_ok_out                  "arc ok output";
+pin out float   arc_voltage_out             "arc voltage output [mode 0 & mode 1]";
+pin out bit     cornerlock_is_locked        "corner locked indicator";
+pin out bit     feed_hold                   "feed hold, connect to motion.feed_hold";
+pin out bit     kerfcross_is_locked         "kerf crossing locked indicator [mode 0 & mode 1]";
+pin out bit     led_down                    "thc move down indicator";
+pin out bit     led_up                      "thc move up indicator";
+pin out s32     offset_counts               "number of counts to offset, connect to axis.z.eoffset-counts";
+pin out bit     offset_enable               "enable offsets, connect to axis.z.eoffset-enable";
+pin out float   offset_scale                "offset scale, connect to axis.z.eoffset-scale";
+pin out bit     program_pause               "pause the current program, connect to halui.program.pause";
+pin out bit     program_resume              "resume the currently paused program, connect to halui.program.resume";
+pin out bit     program_run                 "run the currently loaded program, connect to halui.program.run";
+pin out bit     program_stop                "stop current program, connect to halui.program.stop";
+pin out bit     safe_height_is_limited      "safe height is limited indicator";
+pin out bit     torch_on                    "turn torch on, connect to your torch on input";
+
+/* VARIABLES */
+variable int    arc_starts;                 /* number of attempts to start torch */
+variable float  arc_fail_timer;             /* arc failure timer */
+variable float  arc_voltage;                /* calculated arc voltage */
+variable float  axis_x_finish;              /* axis x position at end of cut */
+variable float  axis_y_finish;              /* axis y position at end of cut */
+variable int    count;                      /* for counting */
+variable float  cut_offset;                 /* offset from last cut end to this cut start */
+variable float  cut_started;                /* cut has started */
+variable float  cut_target;                 /* cut height target offset */
+variable bool   dry_run;                    /* dry run in progress */
+variable float  dry_run_timer;              /* dry run latch timer */
+variable float  height_ovr_counts;          /* number of counts to change height via override */
+variable float  height_ovr_old;             /* old height override value */
+variable bool   initialized;                /* initialization flag */
+variable float  last_arc_voltage;           /* last sensed arc voltage */
+variable float  offset_datum;               /* datum for safe height calcs */
+variable float  offset_min;                 /* minimum allowed offset */
+variable float  offset_max;                 /* maximum allowed offset */
+variable float  setup_velocity;             /* velocity for setup moves */
+variable float  pid_error_now;              /* current error for pid calcs */
+variable float  pid_error_old;              /* old error for pid calcs */
+variable float  pid_output;                 /* calculated pid output value */
+variable float  pierce_timer;               /* pierce delay timer */
+variable float  pierce_target;              /* pierce height target offset */
+variable float  probe_velocity;             /* probe down velocity */
+variable float  puddle_jump_percent;        /* puddle jump height as percentage of pierce height */
+variable float  puddle_jump_target;         /* puddle jump height target offset */
+variable float  puddle_jump_timer;          /* puddle jump delay timer */
+variable float  requested_feed_rate;        /* requested feed rate */
+variable bool   reverse;                    /* reverse run flag */
+variable float  reverse_timer;              /* reverse run timer */
+variable float  safe_min;                   /* minimum safe height allowed */
+variable float  safe_preferred;             /* preferred safe height offset */
+variable float  safe_target;                /* safe height target offset */
+variable float  target_volts[4];            /* target voltage for thc, set by arc voltage at cut height */
+variable int    thc_velocity;               /* velocity for thc moves */
+variable float  thread_period;              /* thread time in seconds */
+variable float  torch_off_timer;            /* arc off delay timer */
+variable float  restart_timer;              /* time between torch on attempts*/
+variable float  tolerance;                  /* tolerance when comparing axis z height */
+variable bool   touchdown;                  /* float switch reached on initial down move */
+variable float  velocity_scale;             /* the velocity multipler */
+variable float  zero_target;                /* target offset for top of stock*/
+
+/* DEBUGGING PINS */
+//pin out s32     state_out;
+
+function _;
+
+author "Phillip A Carter";
+
+license "GPLv2 or greater";
+
+option singleton yes;
+
+;;
+
+#include "rtapi_math.h"
+
+typedef enum{IDLE,
+             TOUCHOFF,
+             PIERCE_HEIGHT,
+             TORCH_ON,
+             ARC_OK,
+             PIERCE_DELAY,
+             PUDDLE_JUMP,
+             CUT_HEIGHT,
+             CUTTING,
+             GOTO_SAFE_HEIGHT,
+             FINISH,
+             DEBUG} state_t;
+
+typedef enum{NONE,
+             STOP,
+             WAIT,
+             PAUSE} stop_type_t;
+
+typedef enum{ZERO,
+             UP,
+             DOWN} move_direction_t;
+
+state_t state = IDLE;
+stop_type_t stop_type = NONE;
+move_direction_t move_direction = ZERO;
+
+FUNCTION(_) {
+
+    /* debugging stuff */
+    //state_out = state;
+
+    /* do these first run only */
+    if(!initialized && units_per_mm){
+        thread_period = period * 1e-9;
+        offset_scale = thread_period * units_per_mm;
+        velocity_scale = 1 / units_per_mm / 60;
+        tolerance = 0.001 * units_per_mm;
+        offset_enable = TRUE;
+        adaptive_feed = 1;
+        initialized = TRUE;
+    }
+
+    /* convert feed rates to velocity */
+    setup_velocity = setup_feed_rate * velocity_scale;
+    if(probe_feed_rate < setup_feed_rate){
+        probe_velocity = probe_feed_rate * velocity_scale;
+    }else{
+        probe_velocity = setup_velocity;
+    }
+    if(mode == 2){
+        thc_velocity = thc_feed_rate * velocity_scale * pid_p_gain / 100;
+    }else{
+        thc_velocity = thc_feed_rate * velocity_scale;
+    }
+    if(thc_velocity < 1){
+        thc_velocity = 1;
+    }
+
+    /* turn torch off if torch off timer completed */
+    if(torch_off_timer > 0){
+        torch_off_timer -= thread_period;
+        if(torch_off_timer <= 0){
+            torch_on = FALSE;
+            torch_off_timer = 0;
+        }
+    }
+
+    /* check for an abort */
+    /* or for a pause or wait while active */
+    if((external_estop || program_is_idle) && cut_started){
+        torch_on = FALSE;
+        stop_type = STOP;
+        program_stop = TRUE;
+        cut_started = FALSE;
+        axis_x_finish = 0;
+        axis_y_finish = 0;
+        state = FINISH;
+    }else if(state < GOTO_SAFE_HEIGHT && stop_type == NONE && cut_started){
+        if(state > IDLE && program_is_paused && stop_type != PAUSE){
+            torch_on = FALSE;
+            stop_type = PAUSE;
+            state = GOTO_SAFE_HEIGHT;
+        }else if(state > IDLE && !spindle_on && stop_type != WAIT){
+            torch_off_timer = torch_off_delay;
+            stop_type = WAIT;
+            if(thc_enable && use_auto_volts){
+                axis_x_finish = axis_x_position;
+                axis_y_finish = axis_y_position;
+            }else{
+                axis_x_finish = 0;
+                axis_y_finish = 0;
+            }
+            state = GOTO_SAFE_HEIGHT;
+        }else if(state > TOUCHOFF && float_switch && stop_type != PAUSE){
+            torch_on = FALSE;
+            program_pause = TRUE;
+            stop_type = PAUSE;
+            rtapi_print_msg(RTAPI_MSG_ERR,"floatswitch activated\n"
+                                          "program is paused...\n");
+            state = GOTO_SAFE_HEIGHT;
+        }else if(state > IDLE && breakaway && stop_type != PAUSE){
+            torch_on = FALSE;
+            program_pause = TRUE;
+            stop_type = PAUSE;
+            rtapi_print_msg(RTAPI_MSG_ERR,"breakaway activated\n"
+                                          "program is paused...\n");
+            state = GOTO_SAFE_HEIGHT;
+        }else if(state > ARC_OK && !arc_ok_out && !dry_run && stop_type != PAUSE){ ;
+            torch_on = FALSE;
+            program_pause = TRUE;
+            stop_type = PAUSE;
+            rtapi_print_msg(RTAPI_MSG_ERR,"valid arc lost\n"
+                                          "program is paused...\n");
+            state = GOTO_SAFE_HEIGHT;
+        }
+    }
+
+    /* calculate arc voltage */
+    arc_voltage = (arc_voltage_in - arc_voltage_offset) * arc_voltage_scale;
+    arc_voltage_out = arc_voltage;
+
+    /* set arc ok from either arc ok input of from actual arc voltage
+     * if using arc ok input, set arc_ok_low_in and/or arc_ok_high_in to 0 */
+    if(mode > 0){
+        arc_ok_out = arc_ok_in;
+    }else if(arc_voltage >= arc_ok_low && arc_voltage <= arc_ok_high){
+        arc_ok_out = TRUE;
+    }else{
+        arc_ok_out = FALSE;
+    }
+
+    if(program_is_paused){
+        program_pause = FALSE;
+    }else{
+        program_resume = FALSE;
+    }
+
+    if(program_is_idle){
+        program_stop = FALSE;
+    }
+
+    if(program_is_running){
+        program_run = FALSE;
+    }
+
+    /* KLUDGE 1...
+     * Provides a workaround to a timing issue that causes reverse run
+     *  to drop out if button press/release too quick */
+    if(reverse_timer > 0){
+        reverse_timer -= thread_period;
+        if(reverse_timer <= 0){
+            reverse_timer = 0;
+        }
+    }
+
+    /* KLUDGE 2...
+     * Provides a workaround to a timing issue that causes dry run 
+     * to drop out if button press/release too quick */
+    if(dry_run_timer > 0){
+        dry_run_timer -= thread_period;
+        if(dry_run_timer <= 0){
+            dry_run_timer = 0;
+        }
+    }
+
+    /* if puddlejump height is 0 then set it to 100 */
+    if(puddle_jump_height == 0){
+        puddle_jump_percent = 100;
+    }else{
+        puddle_jump_percent = puddle_jump_height;
+    }
+
+/* state machine */
+    switch(state){
+        case IDLE:
+            if(float_switch || breakaway){
+                feed_hold = FALSE;
+            }else if(reverse_run && stop_type == PAUSE){
+                if(!reverse){
+                    reverse_timer = 0.15;  //see KLUDGE 1
+                    reverse = TRUE;
+                    adaptive_feed = -1;
+                    program_resume = TRUE;
+                    feed_hold = FALSE;
+                }
+            }else if(dry_run_start && !reverse_run && !reverse && !reverse_timer && (stop_type == NONE || stop_type == WAIT)){
+                if(!dry_run){
+                    dry_run_timer = 0.25;  //see KLUDGE 2
+                    dry_run = TRUE;
+                    program_run = TRUE;
+                }
+            }else if(spindle_on && !reverse_run && !reverse && !reverse_timer && !dry_run_timer && (stop_type == NONE || stop_type == WAIT)){
+                feed_hold = TRUE;
+                stop_type = NONE;
+                touchdown = FALSE;
+                cut_started = TRUE;
+                if(!safe_height_is_limited){
+                    safe_target = 0;
+                }
+                if(axis_x_finish || axis_y_finish){
+                    cut_offset = sqrt(pow(axis_x_finish - axis_x_position, 2) + pow(axis_y_finish - axis_y_position, 2));
+                    axis_x_finish = 0;
+                    axis_y_finish = 0;
+                }
+                if(cut_offset && cut_offset < skip_ihs_distance){
+                    state = PIERCE_HEIGHT;
+                }else{
+                    state = TOUCHOFF;
+                }
+                cut_offset = 0;
+            }else if(!program_is_idle && !reverse_run && !reverse && !reverse_timer && stop_type == PAUSE){
+                feed_hold = TRUE;
+                if(!program_is_paused){
+                    stop_type = NONE;
+                }
+            }else if(!reverse_run && reverse && !reverse_timer){
+                feed_hold = TRUE;
+                program_pause = TRUE;
+                if(program_is_paused){
+                    reverse = FALSE;
+                    adaptive_feed = 1;
+                }
+            }else if(!cut_started){
+                feed_hold = FALSE;
+            }
+            break;
+        case TOUCHOFF:
+            /* probe down to top of stock, then probe up slow to set zero when the float switch activates */
+            feed_hold = TRUE;
+            if(!touchdown){
+                if(!float_switch){
+                    if(axis_z_position - (probe_velocity * offset_scale) <= axis_z_min_limit){
+                        rtapi_print_msg(RTAPI_MSG_ERR,"bottom limit reached\n"
+                                                      "while probing down\n"
+                                                      "program is paused...\n");
+                        stop_type = PAUSE;
+                        program_pause = TRUE;
+                        state = GOTO_SAFE_HEIGHT;
+                    }else{
+                        offset_counts -= probe_velocity;
+                    }
+                }else{
+                    touchdown = TRUE;
+                    zero_target = offset_counts + (float_switch_travel / offset_scale);
+                }
+            }else{
+                if(float_switch){
+                    offset_counts += 1;
+                }else{
+                    if(offset_counts - setup_velocity > zero_target){
+                        offset_counts -= setup_velocity;
+                    }else{
+                        offset_counts = zero_target;
+                    }
+                    if(fabs(offset_current - (zero_target * offset_scale)) < tolerance){
+                        cut_target = offset_datum = offset_counts + (cut_height / offset_scale);
+                        pierce_target = offset_counts + (pierce_height / offset_scale);
+                        puddle_jump_target = offset_counts + (pierce_height * (puddle_jump_percent / 100) / offset_scale);
+                        safe_min = (pierce_height + (1 * units_per_mm)) / offset_scale;
+                        safe_preferred = safe_height / offset_scale;
+                        offset_min = offset_counts - ((axis_z_position - axis_z_min_limit) / offset_scale);
+                        offset_max = offset_counts + (axis_z_max_limit - axis_z_position - (1 * units_per_mm)) / offset_scale;
+                        if(offset_counts  + safe_min >= offset_max){
+                            safe_target = offset_max;
+                            rtapi_print_msg(RTAPI_MSG_ERR, "material too high for\n"
+                                                           "safe traverse\n"
+                                                           "program is stopped...\n");
+                            stop_type = STOP;
+                            program_stop = TRUE;
+                            state = FINISH;
+                        }else if(offset_counts + safe_preferred >= offset_max && !safe_height_is_limited){
+                            rtapi_print_msg(RTAPI_MSG_ERR, "safe traverse height\n"
+                                                           "has been reduced...\n");
+                            safe_target = offset_max;
+                            safe_height_is_limited = TRUE;
+                            state = PIERCE_HEIGHT;
+                        }else{
+                            if(!safe_target){
+                                safe_target = offset_counts + safe_preferred;
+                            }
+                            state = PIERCE_HEIGHT;
+                        }
+                    }
+                }
+            }
+            break;
+        case PIERCE_HEIGHT:
+            /* move up to pierce height + float switch mechanical travel */
+            if(pierce_height && cut_height && (use_auto_volts || (!use_auto_volts && cut_volts))){
+                feed_hold = TRUE;
+                if(offset_counts - setup_velocity > pierce_target){
+                    offset_counts -= setup_velocity;
+                }else{
+                    offset_counts = pierce_target;
+                }
+                if(fabs(offset_current - (pierce_target * offset_scale)) < tolerance){
+                    arc_starts = 0;
+                    if(dry_run){
+                        pierce_timer = pierce_delay;
+                        state = PIERCE_DELAY;
+                    }else{
+                        state = TORCH_ON;
+                    }
+                }
+            }else{
+                stop_type = PAUSE;
+                program_pause = TRUE;
+                state = GOTO_SAFE_HEIGHT;
+                rtapi_print_msg(RTAPI_MSG_ERR,"invalid pierce height\n"
+                                              "or invalid cut height\n"
+                                              "or invalid cut volts...\n");
+            }
+            break;
+        case TORCH_ON:
+            /* turn torch on and start arc fail timer, if too many attempts then turn torch off, pause program and return to idle state */
+            feed_hold = TRUE;
+            if(arc_starts > arc_max_starts - 1){
+                program_pause = TRUE;
+                restart_timer = 0;
+            }else{
+                restart_timer -= thread_period;
+                if(restart_timer <= 0){
+                    restart_timer = 0;
+                    torch_on = TRUE;
+                    arc_fail_timer = arc_fail_delay;
+                    state = ARC_OK;
+                }
+            }
+            break;
+        case ARC_OK:
+            /* wait for arc ok, if timeout occurs turn torch off then return to TORCH-TRUE for another attempt */
+            feed_hold = TRUE;
+            arc_fail_timer -= thread_period;
+            if(arc_fail_timer <= 0){
+                torch_on = FALSE;
+                restart_timer = restart_delay;
+                arc_starts += 1;
+                state = TORCH_ON;
+            }else if(arc_ok_out){
+                    pierce_timer = pierce_delay;
+                    state = PIERCE_DELAY;
+            }
+            break;
+        case PIERCE_DELAY:
+            /* wait for arc to pierce stock */
+            feed_hold = TRUE;
+            if(pierce_timer > 0){
+                pierce_timer -= thread_period;
+            }else{
+                puddle_jump_timer = puddle_jump_delay;
+                if(puddle_jump_percent > 100){
+                    move_direction = UP;
+                }else if(puddle_jump_percent < 100){
+                    move_direction = DOWN;
+                }else{
+                    move_direction = ZERO;
+                }
+                state = PUDDLE_JUMP;
+            }
+            break;
+        case PUDDLE_JUMP:
+            /* move to puddle_jump height */
+            feed_hold = TRUE;
+            switch(move_direction){
+                case ZERO:
+                    break;
+                case UP:
+                    if((offset_counts - setup_velocity) > puddle_jump_target){
+                        offset_counts -= setup_velocity;
+                    }else{
+                        offset_counts = puddle_jump_target;
+                    }
+                    break;
+                case DOWN:
+                    if((offset_counts + setup_velocity) < puddle_jump_target){
+                        offset_counts += setup_velocity;
+                    }else{
+                        offset_counts = puddle_jump_target;
+                    }
+                    break;
+            }
+            if(fabs(offset_current - (puddle_jump_target * offset_scale)) < tolerance){
+                count = 0;
+                if(puddle_jump_timer > 0){
+                    feed_hold = FALSE;
+                    puddle_jump_timer -= thread_period;
+                }else{
+                    puddle_jump_timer = 0;
+                    feed_hold = TRUE;
+                    if(pierce_height * puddle_jump_percent / 100 < cut_height){
+                        move_direction = UP;
+                    }else if(pierce_height * puddle_jump_percent / 100 > cut_height){
+                        move_direction = DOWN;
+                    }else{
+                        move_direction = ZERO;
+                    }
+                    state = CUT_HEIGHT;
+                }
+            }
+            break;
+        case CUT_HEIGHT:
+            /* move to cut height */
+            feed_hold = TRUE;
+            switch(move_direction){
+                case ZERO:
+                    break;
+                case UP:
+                    if((offset_counts - setup_velocity) > cut_target){
+                        offset_counts -= setup_velocity;
+                    }else{
+                        offset_counts = cut_target;
+                    }
+                    break;
+                case DOWN:
+                    if((offset_counts + setup_velocity) < cut_target){
+                        offset_counts += setup_velocity;
+                    }else{
+                        offset_counts = cut_target;
+                    }
+                    break;
+            }
+            if(fabs(offset_current - (cut_target * offset_scale)) < tolerance){
+                count = 0;
+                /* set feed rate for this cut */
+                if(cut_feed_rate > 0){
+                    requested_feed_rate = cut_feed_rate;
+                }else{
+                    requested_feed_rate = requested_velocity * 60;
+                }
+                feed_hold = FALSE;
+                state = CUTTING;
+            }
+            break;
+        case CUTTING:
+            /* while cutting and it is not a dry run:
+             * if thc is enabled then vary the torch height to keep the arc voltage constant
+             * if corner lock enabled, only allow THC if current velocity is greater than the threshold percentage of requested velocity
+             * if kerf crossing is enabled, only allow THC if the voltage change is less than the threshold voltage (modes 0 & 1 only)
+             * adjust torch heaight and target voltage to suit if height override requested (modes 0 & 1 only)*/
+            if(!dry_run){
+                if(mode < 2){ /* thc control by arc voltage */
+                    if(target_volts[0] == 0){
+                        /* wait until velocity is at least 99% of requested velocity before sampling arc voltage */
+                        if(use_auto_volts){
+                            if(current_velocity * 60 > requested_feed_rate * feed_override * 0.99){
+                                count += 1;
+                                target_volts[count] = arc_voltage;
+                                if(count == 3){
+                                    target_volts[0] = (target_volts[1] + target_volts[2] + target_volts[3]) / 3;
+                                    last_arc_voltage = target_volts[0];
+                                }
+                            }
+                        }else{
+                            target_volts[0] = cut_volts;
+                        }
+                    }else if(thc_enable){
+                        /* lock thc if velocity < requested velocity * cornerlock threshold percentage */
+                        if(cornerlock_enable == TRUE && current_velocity * 60 < requested_feed_rate * feed_override * cornerlock_threshold * 0.01){
+                            cornerlock_is_locked = TRUE;
+                        }else{
+                            cornerlock_is_locked = FALSE;
+                        }
+                        /* lock thc if voltage change > kerfcross threshold volts */
+                        if(kerfcross_enable == TRUE &&
+                           last_arc_voltage > 0 &&
+                           arc_voltage > last_arc_voltage + kerfcross_threshold){
+                            kerfcross_is_locked = TRUE;
+                        }else{
+                            kerfcross_is_locked = FALSE;
+                            last_arc_voltage = arc_voltage;
+                        }
+                        /* height override setup*/
+                        if(height_override != height_ovr_old){
+                            height_ovr_counts += (height_override - height_ovr_old) / 10 * units_per_mm / offset_scale;
+                            height_ovr_old = height_override;
+                        }
+                        /* do thc if ok to go*/
+                        if(height_ovr_counts == 0 && !cornerlock_is_locked && !kerfcross_is_locked){
+                            pid_error_now = (target_volts[0] + height_override - arc_voltage) * 0.1;
+                            if(fabs(pid_error_now) < fabs(thc_threshold * 0.1)){
+                                pid_error_now = 0;
+                            }
+                            pid_output = pid_error_now * pid_p_gain;
+                            pid_output += pid_error_now * pid_i_gain * thread_period;
+                            pid_output += (pid_error_now - pid_error_old) * pid_d_gain / thread_period;
+                            pid_error_old = pid_error_now;
+                            if(pid_output > thc_velocity){
+                                pid_output = thc_velocity;
+                            }else if(pid_output < -thc_velocity){
+                                pid_output = -thc_velocity;
+                            }
+                            if(offset_counts + pid_output <= offset_min){
+                                rtapi_print_msg(RTAPI_MSG_ERR,"bottom limit reached \n"
+                                                              "while THC moving down\n"
+                                                              "program is stopped......\n");
+                                torch_on = FALSE;
+                                stop_type = STOP;
+                                program_stop = TRUE;
+                                state = FINISH;
+                                pid_output = 0;
+                            }else if(offset_counts + pid_output >= offset_max){
+                                rtapi_print_msg(RTAPI_MSG_ERR,"top limit reached    \n"
+                                                              "while THC moving up  \n"
+                                                              "program is stopped......\n");
+                                torch_on = FALSE;
+                                stop_type = STOP;
+                                program_stop = TRUE;
+                                state = FINISH;
+                                pid_output = 0;
+                            }
+                            offset_counts += pid_output;
+                        /* height override raise */
+                        }else if(height_ovr_counts > 0){
+                            if((setup_velocity) < height_ovr_counts){
+                                offset_counts -= setup_velocity;
+                                height_ovr_counts -= setup_velocity;
+                            }else{
+                                offset_counts -= height_ovr_counts;
+                                height_ovr_counts = 0;
+                            }
+                        /* height override lower */
+                        }else if(height_ovr_counts < 0){
+                            if((setup_velocity) < height_ovr_counts){
+                                offset_counts += setup_velocity;
+                                height_ovr_counts += setup_velocity;
+                            }else{
+                                offset_counts += height_ovr_counts;
+                                height_ovr_counts = 0;
+                            }
+                        }
+                        if(pid_output > 0){
+                            led_up = TRUE;
+                        }else if((pid_output) < 0){
+                            led_down = TRUE;
+                        }else{
+                            led_down = FALSE;
+                            led_up = FALSE;
+                        }
+                        pid_output = 0;
+                    }
+                }else{ /* thc control by move-up and move-down inputs (FALSE kerf crossing in this mode) */
+                    if(thc_enable){
+                        /* lock thc if velocity < requested velocity * cornerlock threshold percentage */
+                        if(cornerlock_enable == TRUE &&
+                           current_velocity * 60 < requested_feed_rate * feed_override * cornerlock_threshold * 0.01){
+                                cornerlock_is_locked = TRUE;
+                        }else{
+                            cornerlock_is_locked = FALSE;
+                        }
+                        if(move_down && !cornerlock_is_locked){
+                            if(offset_counts - thc_velocity <= offset_min){
+                                rtapi_print_msg(RTAPI_MSG_ERR,"bottom limit reached \n"
+                                                              "while THC moving down\n"
+                                                              "program is stopped......\n");
+                                torch_on = FALSE;
+                                stop_type = STOP;
+                                program_stop = TRUE;
+                                state = FINISH;
+                            }else{ /* move down at requested velocity */
+                                offset_counts -= thc_velocity;
+                                led_down = TRUE;
+                            }
+                        }else if(move_up && !cornerlock_is_locked){
+                            if(offset_counts + thc_velocity + safe_min >= offset_max){
+                                rtapi_print_msg(RTAPI_MSG_ERR,"top limit reached    \n"
+                                                              "while THC moving up  \n"
+                                                              "program is stopped......\n");
+                                torch_on = FALSE;
+                                stop_type = STOP;
+                                program_stop = TRUE;
+                                state = FINISH;
+                            }else{ /* move up at requested velocity */
+                                offset_counts += thc_velocity;
+                                led_up = TRUE;
+                            }
+                        }else{
+                            led_down = FALSE;
+                            led_up = FALSE;
+                        }
+                    }
+                }
+                /* check if safe height is below maximium offset */
+                if(offset_counts > offset_datum){
+                    safe_target += offset_counts - offset_datum;
+                    offset_datum = offset_counts;
+                    if(safe_target > offset_max){
+                        safe_target = offset_max;
+                        if(!safe_height_is_limited){
+                            safe_height_is_limited = TRUE;
+                            rtapi_print_msg(RTAPI_MSG_ERR, "safe traverse height\n"
+                                                           "has been reduced...\n");
+                        }
+                    }
+                }
+            }
+            break;
+        case GOTO_SAFE_HEIGHT:
+            /* move to safe height */
+            feed_hold = TRUE;
+            if((offset_counts - setup_velocity) > safe_target){
+                offset_counts -= setup_velocity;
+            }else{
+            offset_counts = safe_target;
+            }
+            if(fabs(offset_current - (safe_target * offset_scale)) < tolerance){
+                if(stop_type == WAIT){
+                    feed_hold = FALSE;
+                }
+                state = FINISH;
+            }
+            break;
+        case FINISH:
+            /* clean up and return to idle state */
+            target_volts[0] = 0;
+            cornerlock_is_locked = FALSE;
+            kerfcross_is_locked = FALSE;
+            led_down = FALSE;
+            led_up = FALSE;
+            if(stop_type == STOP){
+                if(program_is_idle){
+                    if(offset_counts < 0 && (offset_counts + setup_velocity) < 0){
+                        offset_counts += setup_velocity;
+                    }else if(offset_counts > 0 && (offset_counts - setup_velocity) > 0){
+                        offset_counts -= setup_velocity;
+                    }else{
+                        offset_counts = 0;
+                    }
+                    if(fabs(offset_current) < tolerance){
+                        stop_type = NONE;
+                        safe_height_is_limited = FALSE;
+                        cut_started = FALSE;
+                        dry_run = FALSE;
+                    }
+                }
+            }else{
+                state = IDLE;
+            }
+            break;
+        case DEBUG:
+            /* holding state for debugging */
+            break;
+    }
+}
