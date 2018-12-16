@@ -6,6 +6,8 @@ A plasma cutting table control component for use with the linuxcnc master branch
 
 .I VERSIONS:
 .br
+V0.12 - 2018/12/16 - rework dry run to remove timing kludge
+.br
 V0.11 - 2018/12/12 - enable reverse run
 .br
 V0.10 - 2018/12/05 - change height override to adjust height as well as target voltage
@@ -263,7 +265,6 @@ variable float  cut_offset;                 /* offset from last cut end to this 
 variable float  cut_started;                /* cut has started */
 variable float  cut_target;                 /* cut height target offset */
 variable bool   dry_run;                    /* dry run in progress */
-variable float  dry_run_timer;              /* dry run latch timer */
 variable float  height_ovr_counts;          /* number of counts to change height via override */
 variable float  height_ovr_old;             /* old height override value */
 variable bool   initialized;                /* initialization flag */
@@ -381,7 +382,7 @@ FUNCTION(_) {
 
     /* check for an abort */
     /* or for a pause or wait while active */
-    if((external_estop || program_is_idle) && cut_started){
+    if((external_estop || program_is_idle) && cut_started && !program_run){
         torch_on = FALSE;
         stop_type = STOP;
         program_stop = TRUE;
@@ -443,18 +444,14 @@ FUNCTION(_) {
         arc_ok_out = FALSE;
     }
 
-    if(program_is_paused){
-        program_pause = FALSE;
-    }else{
-        program_resume = FALSE;
-    }
-
     if(program_is_idle){
         program_stop = FALSE;
-    }
-
-    if(program_is_running){
+        program_resume = FALSE;
+    }else if(program_is_paused){
+        program_pause = FALSE;
+    }else if(program_is_running){
         program_run = FALSE;
+        program_resume = FALSE;
     }
 
     /* KLUDGE 1...
@@ -464,16 +461,6 @@ FUNCTION(_) {
         reverse_timer -= thread_period;
         if(reverse_timer <= 0){
             reverse_timer = 0;
-        }
-    }
-
-    /* KLUDGE 2...
-     * Provides a workaround to a timing issue that causes dry run 
-     * to drop out if button press/release too quick */
-    if(dry_run_timer > 0){
-        dry_run_timer -= thread_period;
-        if(dry_run_timer <= 0){
-            dry_run_timer = 0;
         }
     }
 
@@ -498,12 +485,14 @@ FUNCTION(_) {
                     feed_hold = FALSE;
                 }
             }else if(dry_run_start && !reverse_run && !reverse && !reverse_timer && (stop_type == NONE || stop_type == WAIT)){
-                if(!dry_run){
-                    dry_run_timer = 0.25;  //see KLUDGE 2
-                    dry_run = TRUE;
-                    program_run = TRUE;
-                }
-            }else if(spindle_on && !reverse_run && !reverse && !reverse_timer && !dry_run_timer && (stop_type == NONE || stop_type == WAIT)){
+                dry_run = TRUE;
+                program_run = TRUE;
+//                if(!dry_run){
+//                    dry_run_timer = 0.25;  //see KLUDGE 2
+//                    dry_run = TRUE;
+//                    program_run = TRUE;
+//                }
+            }else if(spindle_on && !reverse_run && !reverse && !reverse_timer && (stop_type == NONE || stop_type == WAIT)){
                 feed_hold = TRUE;
                 stop_type = NONE;
                 touchdown = FALSE;
@@ -931,6 +920,7 @@ FUNCTION(_) {
             led_down = FALSE;
             led_up = FALSE;
             if(stop_type == STOP){
+                program_run = FALSE;
                 if(program_is_idle){
                     if(offset_counts < 0 && (offset_counts + setup_velocity) < 0){
                         offset_counts += setup_velocity;
