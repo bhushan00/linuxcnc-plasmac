@@ -265,9 +265,7 @@ variable int    arc_starts;                 /* number of attempts to start torch
 variable float  arc_fail_timer;             /* arc failure timer */
 variable float  arc_voltage;                /* calculated arc voltage */
 variable float  axis_x_finish;              /* axis x position at end of cut */
-variable float  axis_x_paused               /* x axis position when paused motion started */;
 variable float  axis_y_finish;              /* axis y position at end of cut */
-variable float  axis_y_paused               /* y axis position when paused motion started */;
 variable int    count;                      /* for counting */
 variable float  cut_offset;                 /* offset from last cut end to this cut start */
 variable float  cut_started;                /* cut has started */
