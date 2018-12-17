@@ -299,6 +299,9 @@ class HandlerClass:
             print '*** incorrect [TRAJ]LINEAR_UNITS in ini file'
 
     def mode_check(self):
+        idle = sp.Popen(['halcmd getp halui.program.is-idle'], stdout=sp.PIPE, shell=True).communicate()[0].strip()
+        if idle == 'TRUE':
+            self.builder.get_object('pausedMotionSpeedAdj').set_value(0)
         mode = int((sp.Popen(['halcmd getp plasmac.mode'], stdout=sp.PIPE, shell=True)).communicate()[0].strip())
         units = float(sp.Popen(['halcmd getp halui.machine.units-per-mm'], stdout=sp.PIPE, shell=True).communicate()[0].strip())
         maxPidP = self.thcFeedRate / units * 0.1

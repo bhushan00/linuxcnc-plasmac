@@ -1,12 +1,16 @@
-#### EXAMPLE CONFIGURATIONS
+#### EXAMPLE CONFIGURATIONS  
 \- metric_plasmac.ini  
 \- imperial_plasmac.ini  
 
 These example configuration files show examples of how to connect with the plasmac component for use in plasma cutting machines.  
-The manual page for the plasmac component is accessed by the command 'man.plasmac'
+The manual page for the plasmac component is accessed by the command 'man.plasmac'  
 
-Filename | Function
------------- | -------------
+
+Filename|Function
+---:|---
+plasmac_ini|configuration file.
+machine.hal|hal connections the machine.
+plasmac.hal|hal connections for the plasmac component.
 plasmac_panel.glade|a sample gladevcp panel connecting to the plasmac component.
 plasmac_panel.hal|hal connections for the panel.
 plasmac_panel.py|python code for the panel.
@@ -14,6 +18,7 @@ plasmac_panel.cfg|configuration settings.
 plasmac_panel.mat|material file for cut parameters.
 plasmac_feed.ngc|for remapping of the gcode feed rate.
 plasmac_gcode.py|removes z axis moves from the opened gcode file.
+axis_tweaks|customization file for axis.
 
 The .ini files are notated for extra the requirements for these configurations.  
 The minimum .ini file requirements for the plasmac component are:  
@@ -27,17 +32,21 @@ The .mat file is a plain text file so may be edited with any text editor.
 Lines beginning with # are ignored in both these files.  
 The python directory is for remapping of the F word.  
 These configurations use the axis_tweaks file in lieu of ~/.axisrc, if you prefer to use a common ~/.axisrc file then copy the contents of axis_tweaks to your ~/.axisrc file and also comment out the line USER_COMMAND_FILE in the DISPLAY section of the ini file.  
-Reverse Run allows reversing along the current segment as far as the start of the cut only while paused.  
-Dry Run runs the gcode without starting the torch.
 
-***
-#### TEST PANEL
+Paused Motion allows reversing and forwarding along the current segment while paused.  
+Reverse paused motion can only go back as far as the start of the cut the control point is currently on.  
+Forward paused motion can continue on through any number of cuts to the end of the gcode program.  
+
+Dry Run runs the gcode without starting the torch.  
+
+***  
+#### TEST PANEL  
 
 In the test directory there is a simple test panel and associated python file which can be used to test the example configuration as referenced in the ini file.  
 
-***
-#### NGC EXAMPLES
+***  
+#### NGC EXAMPLES  
 
 Example ngc files are in nc_files/plasmac.  
 
-***
+***  
