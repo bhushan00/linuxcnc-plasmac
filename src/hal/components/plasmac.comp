@@ -6,6 +6,8 @@ A plasma cutting table control component for use with the linuxcnc master branch
 
 .I VERSIONS:
 .br
+V0.14 - 2019/01/01 - add torch pulse
+.br
 V0.13 - 2018/12/16 - overhaul reverse run and call it paused motion
 .br
 V0.12 - 2018/12/16 - rework dry run to remove timing kludge
@@ -238,6 +240,8 @@ pin in  bit     thc_enable                  "enable thc";
 pin in  float   thc_feed_rate               "maximum feed rate for thc (machine units per minute)";
 pin in  float   thc_threshold               "thc threshold (volts), changes below this have no effect";
 pin in  float   torch_off_delay             "time delay to turn torch off (seconds)";
+pin in  float   torch_pulse_start           "torch pulse start";
+pin in  float   torch_pulse_time            "torch pulse time (seconds)";
 pin in  float   units_per_mm                "for scale calcs, connect to halui.machine.units-per-mm";
 pin in  bit     use_auto_volts              "use calculated voltage for thc baseline";
 
@@ -290,15 +294,16 @@ variable float  puddle_jump_percent;        /* puddle jump height as percentage 
 variable float  puddle_jump_target;         /* puddle jump height target offset */
 variable float  puddle_jump_timer;          /* puddle jump delay timer */
 variable float  requested_feed_rate;        /* requested feed rate */
+variable float  restart_timer;              /* time between torch on attempts*/
 variable float  safe_min;                   /* minimum safe height allowed */
 variable float  safe_preferred;             /* preferred safe height offset */
 variable float  safe_target;                /* safe height target offset */
 variable float  target_volts[4];            /* target voltage for thc, set by arc voltage at cut height */
 variable int    thc_velocity;               /* velocity for thc moves */
 variable float  thread_period;              /* thread time in seconds */
-variable float  torch_off_timer;            /* arc off delay timer */
-variable float  restart_timer;              /* time between torch on attempts*/
 variable float  tolerance;                  /* tolerance when comparing axis z height */
+variable float  torch_off_timer;            /* arc off delay timer */
+variable float  torch_pulse_timer;          /* torch pulse timer */
 variable bool   touchdown;                  /* float switch reached on initial down move */
 variable float  velocity_scale;             /* the velocity multipler */
 variable float  zero_target;                /* target offset for top of stock*/
@@ -329,6 +334,7 @@ typedef enum{IDLE,
              CUTTING,
              GOTO_SAFE_HEIGHT,
              FINISH,
+             TORCHPULSE,
              DEBUG} state_t;
 
 typedef enum{NONE,
@@ -520,6 +526,13 @@ FUNCTION(_) {
                     paused_motion = FALSE;
                     adaptive_feed = 1;
                 }
+            /* if torch pulse required */
+            }else if(torch_pulse_start){
+                feed_hold = TRUE;
+                torch_pulse_timer = torch_pulse_time;
+                torch_on = TRUE;
+                state = TORCHPULSE;
+            /* if no active cut */
             /* if no active cut */
             }else if(!cut_started){
                 feed_hold = FALSE;
@@ -938,6 +951,17 @@ FUNCTION(_) {
                 }
             }else{
                 state = IDLE;
+            }
+            break;
+        case TORCHPULSE:
+            /* single pulse the torch on and off */
+            if(torch_pulse_timer > 0){
+                torch_pulse_timer -= thread_period;
+                if(torch_pulse_timer <= 0){
+                    torch_on = FALSE;
+                    torch_pulse_timer = 0;
+                    state = IDLE;
+                }
             }
             break;
         case DEBUG:
