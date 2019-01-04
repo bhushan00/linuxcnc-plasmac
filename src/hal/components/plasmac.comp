@@ -6,6 +6,8 @@ A plasma cutting table control component for use with the linuxcnc master branch
 
 .I VERSIONS:
 .br
+V0.15 - 2019/01/05 - remove redundancies from if/else block
+.br
 V0.14 - 2019/01/01 - add torch pulse
 .br
 V0.13 - 2018/12/16 - overhaul reverse run and call it paused motion
@@ -401,12 +403,12 @@ FUNCTION(_) {
         axis_x_finish = 0;
         axis_y_finish = 0;
         state = FINISH;
-    }else if(state < GOTO_SAFE_HEIGHT && stop_type == NONE && cut_started){
-        if(state > IDLE && program_is_paused && stop_type != PAUSE){
+    }else if(state > IDLE && state < GOTO_SAFE_HEIGHT && stop_type == NONE && cut_started){
+        if(program_is_paused){
             torch_on = FALSE;
             stop_type = PAUSE;
             state = GOTO_SAFE_HEIGHT;
-        }else if(state > IDLE && !spindle_on && stop_type != WAIT){
+        }else if(!spindle_on){
             torch_off_timer = torch_off_delay;
             stop_type = WAIT;
             if(thc_enable && use_auto_volts){
@@ -417,21 +419,21 @@ FUNCTION(_) {
                 axis_y_finish = 0;
             }
             state = GOTO_SAFE_HEIGHT;
-        }else if(state > TOUCHOFF && float_switch && stop_type != PAUSE){
-            torch_on = FALSE;
-            program_pause = TRUE;
-            stop_type = PAUSE;
-            rtapi_print_msg(RTAPI_MSG_ERR,"floatswitch activated\n"
-                                          "program is paused...\n");
-            state = GOTO_SAFE_HEIGHT;
-        }else if(state > IDLE && breakaway && stop_type != PAUSE){
+        }else if(breakaway){
             torch_on = FALSE;
             program_pause = TRUE;
             stop_type = PAUSE;
             rtapi_print_msg(RTAPI_MSG_ERR,"breakaway activated\n"
                                           "program is paused...\n");
             state = GOTO_SAFE_HEIGHT;
-        }else if(state > ARC_OK && !arc_ok_out && !dry_run && stop_type != PAUSE){ ;
+        }else if(state > TOUCHOFF && float_switch){
+            torch_on = FALSE;
+            program_pause = TRUE;
+            stop_type = PAUSE;
+            rtapi_print_msg(RTAPI_MSG_ERR,"floatswitch activated\n"
+                                          "program is paused...\n");
+            state = GOTO_SAFE_HEIGHT;
+        }else if(state > ARC_OK && !arc_ok_out && !dry_run){ ;
             torch_on = FALSE;
             program_pause = TRUE;
             stop_type = PAUSE;
