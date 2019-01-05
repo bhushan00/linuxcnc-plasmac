@@ -260,6 +260,8 @@ class HandlerClass:
         self.builder.get_object('thcThresholdAdj').configure(1,0.05,9,0.01,0,0)
         self.builder.get_object('torchOffDelay').set_digits(1)
         self.builder.get_object('torchOffDelayAdj').configure(0,0,9,0.1,0,0)
+        self.builder.get_object('torchPulseTime').set_digits(1)
+        self.builder.get_object('torchPulseTimeAdj').configure(.5,.1,5,0.1,0,0)
         self.builder.get_object('useAutoVolts').set_active(1)
         if self.lcnc.linuxcncIniFile.find('TRAJ', 'LINEAR_UNITS').lower() == 'mm':
             self.builder.get_object('cutFeedRate').set_digits(0)
@@ -385,7 +387,7 @@ class HandlerClass:
 
     def load_settings(self):
         for item in widget_defaults(select_widgets(self.builder.get_objects(), hal_only=False,output_only = True)):
-            if item != 'heightOverride':
+            if item != 'heightOverride' or item != 'pausedMotionSpeed':
                 self.configDict[item] = '0'
         convertFile = False
         if os.path.exists(self.configFile):
@@ -418,6 +420,12 @@ class HandlerClass:
                     else:
                         self.builder.get_object(item).set_active(False)
                         print '***', item, 'missing from', self.configFile
+                elif item == 'torchPulseTime':
+                    if item in tmpDict:
+                        self.builder.get_object(item).set_value(float(self.configDict.get(item)))
+                    else:
+                        self.builder.get_object(item).set_value(0)
+                        print '***', item, 'missing from', self.configFile
             if convertFile:
                 print '*** converting', self.configFile, 'to new format'
                 self.save_settings()
@@ -432,9 +440,13 @@ class HandlerClass:
                 for key in self.configDict:
                     if isinstance(self.builder.get_object(key), gladevcp.hal_widgets.HAL_SpinButton):
                         value = self.builder.get_object(key).get_value()
+                        f_out.write(key + '=' + str(value) + '\n')
                     elif isinstance(self.builder.get_object(key), gladevcp.hal_widgets.HAL_CheckButton):
                         value = self.builder.get_object(key).get_active()
-                    f_out.write(key + '=' + str(value) + '\n')
+                        f_out.write(key + '=' + str(value) + '\n')
+                    elif key == 'torchPulseTime':
+                        value = self.builder.get_object(key).get_value()
+                        f_out.write(key + '=' + str(value) + '\n')
         except:
             print '*** error opening', self.configFile
 

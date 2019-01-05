@@ -31,6 +31,8 @@ net p_run:safe-height-is-limited    plasmac.safe-height-is-limited  =>  gladevcp
 net p_run:thc-enable                gladevcp.thcEnable              =>  plasmac.thc-enable
 net p_run:thc-threshold             gladevcp.thcThreshold-f         =>  plasmac.thc-threshold
 net p_comp:torch-on                                                 =>  gladevcp.torchOn
+net p_run:torch-pulse-start         gladevcp.torchPulseStart        =>  plasmac.torch-pulse-start
+net p_run:torch-pulse-time          gladevcp.torchPulseTime         =>  plasmac.torch-pulse-time
 net p_run:use-auto-volts            gladevcp.useAutoVolts           =>  plasmac.use-auto-volts
 
 #***** GLADEVCP CONFIG PAGE ********************************************

@@ -244,7 +244,7 @@ pin in  bit     thc_enable                  "enable thc";
 pin in  float   thc_feed_rate               "maximum feed rate for thc (machine units per minute)";
 pin in  float   thc_threshold               "thc threshold (volts), changes below this have no effect";
 pin in  float   torch_off_delay             "time delay to turn torch off (seconds)";
-pin in  float   torch_pulse_start           "torch pulse start";
+pin in  bit     torch_pulse_start           "torch pulse start";
 pin in  float   torch_pulse_time            "torch pulse time (seconds)";
 pin in  float   units_per_mm                "for scale calcs, connect to halui.machine.units-per-mm";
 pin in  bit     use_auto_volts              "use calculated voltage for thc baseline";
@@ -537,9 +537,11 @@ FUNCTION(_) {
             /* if torch pulse required */
             }else if(torch_pulse_start){
                 feed_hold = TRUE;
-                torch_pulse_timer = torch_pulse_time;
-                torch_on = TRUE;
-                state = TORCHPULSE;
+                if(torch_pulse_time > 0){
+                    torch_pulse_timer = torch_pulse_time;
+                    torch_on = TRUE;
+                    state = TORCHPULSE;
+                }
             /* if no active cut */
             /* if no active cut */
             }else if(!cut_started){
@@ -963,14 +965,14 @@ FUNCTION(_) {
             break;
         case TORCHPULSE:
             /* single pulse the torch on and off */
-            if(torch_pulse_timer > 0){
+//            if(torch_pulse_timer > 0){
                 torch_pulse_timer -= thread_period;
                 if(torch_pulse_timer <= 0){
                     torch_on = FALSE;
                     torch_pulse_timer = 0;
                     state = IDLE;
                 }
-            }
+//            }
             break;
         case DEBUG:
             /* holding state for debugging */

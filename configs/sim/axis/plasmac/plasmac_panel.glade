@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
-  <!-- interface-requires gladevcp 0.0 -->
   <requires lib="gtk+" version="2.18"/>
+  <!-- interface-requires gladevcp 0.0 -->
   <!-- interface-naming-policy project-wide -->
   <object class="GtkAdjustment" id="arcFailDelayAdj"/>
   <object class="GtkAdjustment" id="arcMaxStartsAdj"/>
@@ -77,6 +77,7 @@
   <object class="GtkAdjustment" id="thcMinVelocityAdj"/>
   <object class="GtkAdjustment" id="thcThresholdAdj"/>
   <object class="GtkAdjustment" id="torchOffDelayAdj"/>
+  <object class="GtkAdjustment" id="torchPulseTimeAdj"/>
   <object class="GtkWindow" id="window1">
     <property name="can_focus">False</property>
     <child>
@@ -2079,6 +2080,7 @@ NOTE: if forward motion goes past the end of the cut then reverse motion cannot 
                           <packing>
                             <property name="expand">True</property>
                             <property name="fill">True</property>
+                            <property name="padding">2</property>
                             <property name="position">1</property>
                           </packing>
                         </child>
@@ -2112,6 +2114,72 @@ NOTE: if forward motion goes past the end of the cut then reverse motion cannot 
                 <property name="expand">False</property>
                 <property name="fill">False</property>
                 <property name="position">7</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkFrame" id="pausedMotionFrame1">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="label_xalign">0</property>
+                <property name="shadow_type">out</property>
+                <child>
+                  <object class="GtkAlignment" id="alignmentR2">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <child>
+                      <object class="GtkHBox" id="hbox3">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <child>
+                          <object class="HAL_Button" id="torchPulseStart">
+                            <property name="label" translatable="yes">Torch On</property>
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="receives_default">True</property>
+                            <property name="has_tooltip">True</property>
+                            <property name="tooltip_text" translatable="yes">pulse torch on</property>
+                            <property name="xalign">0.68999999761581421</property>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">True</property>
+                            <property name="position">0</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="HAL_HScale" id="torchPulseTime">
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="has_tooltip">True</property>
+                            <property name="tooltip_text" translatable="yes">time of torch pulse (Seconds)</property>
+                            <property name="adjustment">torchPulseTimeAdj</property>
+                            <property name="round_digits">1</property>
+                          </object>
+                          <packing>
+                            <property name="expand">True</property>
+                            <property name="fill">True</property>
+                            <property name="padding">2</property>
+                            <property name="position">1</property>
+                          </packing>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+                <child type="label">
+                  <object class="GtkLabel" id="labelR3">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="yalign">0.49000000953674316</property>
+                    <property name="label" translatable="yes">Torch Pulse</property>
+                    <property name="use_markup">True</property>
+                  </object>
+                </child>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+                <property name="position">8</property>
               </packing>
             </child>
           </object>
