@@ -6,6 +6,8 @@ A plasma cutting table control component for use with the linuxcnc master branch
 
 .I VERSIONS:
 .br
+V0.16 - 2019/01/05 - fix torch off bug if off delay = 0
+.br
 V0.15 - 2019/01/05 - remove redundancies from if/else block
 .br
 V0.14 - 2019/01/01 - add torch pulse
@@ -409,7 +411,11 @@ FUNCTION(_) {
             stop_type = PAUSE;
             state = GOTO_SAFE_HEIGHT;
         }else if(!spindle_on){
-            torch_off_timer = torch_off_delay;
+            if(torch_off_delay > 0){
+                torch_off_timer = torch_off_delay;
+            }else{
+                torch_on = FALSE;
+            }
             stop_type = WAIT;
             if(thc_enable && use_auto_volts){
                 axis_x_finish = axis_x_position;
