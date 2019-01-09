@@ -1,0 +1,2 @@
+#outputs
+net p_buttons:dry-run   plasmac_buttons.dryRunStart =>  plasmac.dry-run-start

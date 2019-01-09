@@ -1,0 +1,7 @@
+# inputs
+net p_monitor:arc-ok-out                plasmac.arc-ok-out              =>  plasmac_monitor.arcOk
+net p_monitor:arc-voltage-out           plasmac.arc-voltage-out         =>  plasmac_monitor.arcVoltage
+net p_monitor:safe-height-is-limited    plasmac.safe-height-is-limited  =>  plasmac_monitor.safeHeightIsLimited
+net p_comp:breakaway-switch-out                                         =>  plasmac_monitor.breakawaySwitch
+net p_comp:float-switch-out                                             =>  plasmac_monitor.floatSwitch
+net p_comp:torch-on                                                     =>  plasmac_monitor.torchOn

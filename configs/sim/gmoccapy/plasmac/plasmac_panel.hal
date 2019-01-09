@@ -1,0 +1,46 @@
+
+#***** PLASMAC COMPONENT ***********************************************
+net p_comp:axis-max-limit           ini.z.max_limit                     =>  plasmac.axis-z-max-limit
+net p_comp:axis-min-limit           ini.z.min_limit                     =>  plasmac.axis-z-min-limit
+
+#***** RUN PAGE ********************************************************
+# inputs
+net p_run:cornerlock-is-locked      plasmac.cornerlock-is-locked        =>  plasmac_panel.cornerlockIsLocked
+net p_run:kerfcross-is-locked       plasmac.kerfcross-is-locked         =>  plasmac_panel.kerfCrossIsLocked
+net p_run:led-down                  plasmac.led-down                    =>  plasmac_panel.ledDown
+net p_run:led-up                    plasmac.led-up                      =>  plasmac_panel.ledUp
+
+# outputs
+net p_run:cornerlock-enable         plasmac_panel.cornerlockEnable       =>  plasmac.cornerlock-enable
+net p_run:cornerlock-threshold      plasmac_panel.cornerlockThreshold-f  =>  plasmac.cornerlock-threshold
+net p_run:cut-feed-rate             plasmac_panel.cutFeedRate-f          =>  plasmac.cut-feed-rate
+net p_run:cut-height                plasmac_panel.cutHeight-f            =>  plasmac.cut-height
+net p_run:cut-volts                 plasmac_panel.cutVolts-f             =>  plasmac.cut-volts
+net p_run:kerfcross-enable          plasmac_panel.kerfCrossEnable        =>  plasmac.kerfcross-enable
+net p_run:kerfcross-threshold       plasmac_panel.kerfCrossThreshold-f   =>  plasmac.kerfcross-threshold
+net p_run:pid-p-gain                plasmac_panel.pidPGain-f             =>  plasmac.pid-p-gain
+net p_run:pierce-delay              plasmac_panel.pierceDelay-f          =>  plasmac.pierce-delay
+net p_run:pierce-height             plasmac_panel.pierceHeight-f         =>  plasmac.pierce-height
+net p_run:puddle-jump-delay         plasmac_panel.puddleJumpDelay-f      =>  plasmac.puddle-jump-delay
+net p_run:puddle-jump-height        plasmac_panel.puddleJumpHeight-f     =>  plasmac.puddle-jump-height
+net p_run:thc-enable                plasmac_panel.thcEnable              =>  plasmac.thc-enable
+net p_run:thc-threshold             plasmac_panel.thcThreshold-f         =>  plasmac.thc-threshold
+net p_run:use-auto-volts            plasmac_panel.useAutoVolts           =>  plasmac.use-auto-volts
+
+#***** CONFIG PAGE *****************************************************
+# outputs
+net p_config:arc-ok-high            plasmac_panel.arcOkHigh-f            =>  plasmac.arc-ok-high
+net p_config:arc-ok-low             plasmac_panel.arcOkLow-f             =>  plasmac.arc-ok-low
+net p_config:arc-max-starts         plasmac_panel.arcMaxStarts-s         =>  plasmac.arc-max-starts
+net p_config:arc-fail-delay         plasmac_panel.arcFailDelay-f         =>  plasmac.arc-fail-delay
+net p_config:arc-voltage-offset     plasmac_panel.arcVoltageOffset-f     =>  plasmac.arc-voltage-offset
+net p_config:arc-voltage-scale      plasmac_panel.arcVoltageScale-f      =>  plasmac.arc-voltage-scale
+net p_config:float-switch-travel    plasmac_panel.floatSwitchTravel-f    =>  plasmac.float-switch-travel
+net p_config:pid-d-gain             plasmac_panel.pidDGain-f             =>  plasmac.pid-d-gain
+net p_config:pid-i-gain             plasmac_panel.pidIGain-f             =>  plasmac.pid-i-gain
+net p_config:probe-feed-rate        plasmac_panel.probeFeedRate-f        =>  plasmac.probe-feed-rate
+net p_config:restart-delay          plasmac_panel.arcRestartDelay-f      =>  plasmac.restart-delay
+net p_config:safe-height            plasmac_panel.safeHeight-f           =>  plasmac.safe-height
+net p_config:setup-feed-rate        plasmac_panel.setupFeedRate-f        =>  plasmac.setup-feed-rate
+net p_config:skip-ihs-distance      plasmac_panel.skipIhsDistance-f      =>  plasmac.skip-ihs-distance
+net p_config:torch-off-delay        plasmac_panel.torchOffDelay-f        =>  plasmac.torch-off-delay

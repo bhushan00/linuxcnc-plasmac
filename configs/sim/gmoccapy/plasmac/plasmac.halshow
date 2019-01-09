@@ -1,0 +1,16 @@
+# halshow watchlist created Wed Jan 09 10:09:49 AEDT 2019
+
+pin+plasmac.requested-velocity
+pin+plasmac.cut-feed-rate
+pin+plasmac.spindle-on
+pin+plasmac.feed-hold
+pin+plasmac.program-is-idle
+pin+plasmac.program-is-paused
+pin+plasmac.program-is-running
+pin+plasmac.torch-pulse-start
+pin+plasmac.torch-pulse-time
+pin+halui.mode.is-auto
+pin+halui.mode.is-manual
+pin+halui.mode.is-mdi
+pin+plasmac.paused-motion-speed
+pin+plasmac.height-override
