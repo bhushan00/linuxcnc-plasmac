@@ -2,7 +2,7 @@
 \- metric_plasmac.ini  
 \- imperial_plasmac.ini  
 
-These example configuration files show examples of how to connect with the plasmac component for use in plasma cutting machines.  
+These example configuration files show examples of how to connect Axis with the plasmac component for use in plasma cutting machines.  
 The manual page for the plasmac component is accessed by the command 'man.plasmac'  
 
 
@@ -27,10 +27,12 @@ The minimum .ini file requirements for the plasmac component are:
 \- [AXIS_L]MAX_ACCELERATION  
 \- [AXIS_L]OFFSET_AV_RATIO  
 All other .ini file settings are for the example configurations.  
-The .cfg file is a plain text file and values may be changed with any text editor.  
-The .mat file is a plain text file so may be edited with any text editor.  
+
+The .cfg  and .mat files are plain text and may be edited with any text editor.  
 Lines beginning with # are ignored in both these files.  
+
 The python directory is for remapping of the F word.  
+
 These configurations use the axis_tweaks file in lieu of ~/.axisrc, if you prefer to use a common ~/.axisrc file then copy the contents of axis_tweaks to your ~/.axisrc file and also comment out the line USER_COMMAND_FILE in the DISPLAY section of the ini file.  
 
 Paused Motion allows reversing and forwarding along the current segment while paused.  
