@@ -1,6 +1,9 @@
-*_mdi_history.txt
-*_parameters.txt
-*_position.txt
+*~
+*.DS_Store
 *.bak
-*.halscope
 *.BAD
+*.halscope
+*parameters.txt
+*cmds.hal
+*position.txt
+*mdi_history.txt
