@@ -543,7 +543,6 @@ FUNCTION(_) {
                     state = TORCHPULSE;
                 }
             /* if no active cut */
-            /* if no active cut */
             }else if(!cut_started){
                 feed_hold = FALSE;
             }
@@ -965,14 +964,12 @@ FUNCTION(_) {
             break;
         case TORCHPULSE:
             /* single pulse the torch on and off */
-//            if(torch_pulse_timer > 0){
-                torch_pulse_timer -= thread_period;
-                if(torch_pulse_timer <= 0){
-                    torch_on = FALSE;
-                    torch_pulse_timer = 0;
-                    state = IDLE;
-                }
-//            }
+            torch_pulse_timer -= thread_period;
+            if(torch_pulse_timer <= 0){
+                torch_on = FALSE;
+                torch_pulse_timer = 0;
+                state = IDLE;
+            }
             break;
         case DEBUG:
             /* holding state for debugging */
