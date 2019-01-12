@@ -1,7 +1,0 @@
-# halshow watchlist created Fri Nov 16 13:53:21 AEDT 2018
-
-pin+plasmac.axis-max-limit
-pin+plasmac.axis-min-limit
-pin+plasmac.axis-position
-pin+plasmac.requested-velocity
-pin+plasmac.cut-feed-rate
