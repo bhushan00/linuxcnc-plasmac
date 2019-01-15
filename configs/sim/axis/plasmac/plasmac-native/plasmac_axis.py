@@ -564,14 +564,14 @@ def z_to_home():
     goto_home('Z')
 
 def dry_run():
-    if Popen(['halcmd getp halui.program.is-idle'], stdout=PIPE, shell=True).communicate()[0].strip() == 'TRUE':
-        Popen('halcmd setp plasmac.dry-run-start 1', shell=True)
+    if hal.get_value('halui.program.is-idle'):
+        hal.set_p('plasmac.dry-run-start','1')
         global dryRun
         dryRun = 1
 
 def torch_pulse():
-    if Popen(['halcmd getp halui.program.is-idle'], stdout=PIPE, shell=True).communicate()[0].strip() == 'TRUE':
-        Popen('halcmd setp plasmac.torch-pulse-start 1', shell=True)
+    if hal.get_value('halui.program.is-idle'):
+        hal.set_p('plasmac.torch-pulse-start','1')
         global torchPulse
         torchPulse = 1
 
@@ -581,11 +581,9 @@ def wait_for_completion():
         pass
 
 def goto_home(axis):
-    idle = Popen(['halcmd getp halui.program.is-idle'], stdout=PIPE, shell=True).communicate()[0].strip()
-    if idle == 'TRUE':
+    if hal.get_value('halui.program.is-idle'):
         home = inifile.find('JOINT_' + str(inifile.find('TRAJ','COORDINATES').upper().index(axis)), 'HOME')
-        mode = Popen(['halcmd getp halui.mode.is-mdi'], stdout=PIPE, shell=True).communicate()[0].strip()
-        if mode == 'FALSE':
+        if not hal.get_value('halui.mode.is-mdi'):
             c.mode(linuxcnc.MODE_MDI)
             wait_for_completion()
         c.mdi('G53 G0 ' + axis + home)
@@ -637,9 +635,9 @@ def user_live_update():
             if value != widgetValues[widget]:
                 widgetValues[widget] = value
                 if item == 'arc-max-starts':
-                    Popen('halcmd setp plasmac.%s %d' % (item, value), shell=True)
+                    hal.set_p('plasmac.%s' % (item),'%d' % (value))
                 else:
-                    Popen('halcmd setp plasmac.%s %f' % (item, value), shell=True)
+                    hal.set_p('plasmac.%s' % (item),'%f' % (value))
                 if item == 'setup-feed-rate': #limit max probe feed rate to setup feed rate
                     root_window.tk.call(fmotion + '.probe-feed-rate','configure','-to',value)
     for widget in wCheckbuttons:
@@ -647,7 +645,7 @@ def user_live_update():
         value = int(root_window.tk.call('set',item))
         if value != widgetValues[widget]:
             widgetValues[widget] = value
-            Popen('halcmd setp plasmac.%s %d' % (item, value), shell=True)
+            hal.set_p('plasmac.%s' % (item),'%d' % (value))
     for widget in wLeds:
         tmp, item = widget.rsplit('.',1)
         if pcomp[item] != widgetValues[widget]:
@@ -659,15 +657,15 @@ def user_live_update():
     root_window.tk.call(fmonitor + '.arc-voltage','configure','-text','%0.1f' % (pcomp['arc-voltage']))
     global dryRun
     if dryRun == 1:
-        if Popen(['halcmd getp halui.program.is-running'], stdout=PIPE, shell=True).communicate()[0].strip() == 'TRUE':
-            Popen('halcmd setp plasmac.dry-run-start 0', shell=True)
+        if hal.get_value('halui.program.is-running'):
+            hal.set_p('plasmac.dry-run-start','0')
             dryRun = 0
     global torchPulse
     if torchPulse == 1:
-        if Popen(['halcmd getp plasmac.torch-on'], stdout=PIPE, shell=True).communicate()[0].strip() == 'TRUE':
-            Popen('halcmd setp plasmac.torch-pulse-start 0', shell=True)
+        if hal.get_value('plasmac.torch-on'):
+            hal.set_p('plasmac.torch-pulse-start','0')
             torchPulse = 0
-    if Popen(['halcmd getp plasmac-panel.config-disable'], stdout=PIPE, shell=True).communicate()[0].strip() == 'TRUE':
+    if hal.get_value('plasmac-panel.config-disable'):
         root_window.tk.call('.plasmac','itemconfigure','config','-state','disabled')
     else:
         root_window.tk.call('.plasmac','itemconfigure','config','-state','normal')
@@ -751,21 +749,23 @@ def load_settings():
                 if item in tmpDict:
                     if configDict.get(item) == '1':
                         root_window.tk.call(widget,'select')
-                        Popen('halcmd setp plasmac.%s %d' % (item, 1), shell=True)
+                        hal.set_p('plasmac.%s' % (item),'1')
                     else:
                         root_window.tk.call(widget,'deselect')
-                        Popen('halcmd setp plasmac.%s %d' % (item, 0), shell=True)
+                        hal.set_p('plasmac.%s' % (item),'0')
                 else:
                     root_window.tk.call(widget,'deselect')
-                    Popen('halcmd setp plasmac.%s %d' % (item, 0), shell=True)
+                    hal.set_p('plasmac.%s' % (item),'0')
                     print '***', item, 'missing from', configFile
             elif widget in wSpinboxes + wScalesSaved:
                 if item in tmpDict:
+                    if item == 'setup-feed-rate' and float(configDict.get(item)) > thcFeedRate:
+                        configDict[item] = thcFeedRate
                     root_window.tk.call(widget,'set',configDict.get(item))
                     if item == 'arc-max-starts':
-                        Popen('halcmd setp plasmac.%s %d' % (item, float(configDict.get(item))), shell=True)
+                        hal.set_p('plasmac.%s' % (item),'%d' % (float(configDict.get(item))))
                     elif item != 'cut-amps':
-                        Popen('halcmd setp plasmac.%s %f' % (item, float(configDict.get(item))), shell=True)
+                        hal.set_p('plasmac.%s' % (item),'%f' % (float(configDict.get(item))))
                 else:
                     root_window.tk.call(widget,'set','0')
                     print '***', item, 'missing from', configFile
@@ -897,12 +897,10 @@ def set_mode(mode):
         root_window.tk.call('grid','forget',foffsets + '.pIGlab')
         root_window.tk.call('grid','forget',foffsets + '.pid-d-gain')
         root_window.tk.call('grid','forget',foffsets + '.pDGlab')
-    Popen(['halcmd setp plasmac.mode %s' % (mode)], shell=True)
-
-from subprocess import Popen, PIPE
+    hal.set_p('plasmac.mode','%d' % (int(mode)))
 thcFeedRate = (float(inifile.find('AXIS_Z','MAX_VELOCITY')) * \
                float(inifile.find('AXIS_Z','OFFSET_AV_RATIO'))) * 60
-Popen('halcmd setp plasmac.thc-feed-rate %f' % thcFeedRate, shell=True)
+hal.set_p('plasmac.thc-feed-rate','%f' % (thcFeedRate))
 configFile = inifile.find('PLASMAC','CONFIG_FILE') or inifile.find('EMC','MACHINE').lower() + '.cfg'
 materialsFile = inifile.find('PLASMAC','MATERIAL_FILE') or inifile.find('EMC','MACHINE').lower() + '.mat'
 materialsList = []
@@ -1018,18 +1016,26 @@ pcomp.newpin('led-breakaway', hal.HAL_BIT, hal.HAL_IN)
 pcomp.newpin('led-safe-height', hal.HAL_BIT, hal.HAL_IN)
 pcomp.newpin('config-disable', hal.HAL_BIT, hal.HAL_IN)
 pcomp.ready()
-Popen(['halcmd net plasmac:led-up plasmac.led-up plasmac-panel.led-up'], shell=True)
-Popen(['halcmd net plasmac:led-down plasmac.led-down plasmac-panel.led-down'], shell=True)
-Popen(['halcmd net plasmac:cornerlock-is-locked plasmac.cornerlock-is-locked plasmac-panel.led-cornerlock'], shell=True)
-Popen(['halcmd net plasmac:kerfcross-is-locked plasmac.kerfcross-is-locked plasmac-panel.led-kerfcross'], shell=True)
-Popen(['halcmd net plasmac:arc-voltage-out plasmac.arc-voltage-out plasmac-panel.arc-voltage'], shell=True)
-Popen(['halcmd net plasmac:arc-ok-out plasmac.arc-ok-out plasmac-panel.led-arc-ok'], shell=True)
-Popen(['halcmd net plasmac:torch-on plasmac.torch-on plasmac-panel.led-torch'], shell=True)
-Popen(['halcmd net plasmac:safe-height-is-limited plasmac.safe-height-is-limited plasmac-panel.led-safe-height'], shell=True)
-Popen(['halcmd net plasmac:axis-min-limit ini.z.min_limit plasmac.axis-z-min-limit'], shell=True)
-Popen(['halcmd net plasmac:axis-max-limit ini.z.max_limit plasmac.axis-z-max-limit'], shell=True)
+hal_data = [[0,'plasmac:arc-voltage-out','plasmac.arc-voltage-out','plasmac-panel.arc-voltage'],\
+            [1,'plasmac:axis-min-limit','ini.z.min_limit','plasmac.axis-z-min-limit'],\
+            [2,'plasmac:axis-max-limit','ini.z.max_limit','plasmac.axis-z-max-limit'],\
+            [3,'plasmac:led-up','plasmac.led-up','plasmac-panel.led-up'],\
+            [4,'plasmac:led-down','plasmac.led-down','plasmac-panel.led-down'],\
+            [5,'plasmac:cornerlock-is-locked','plasmac.cornerlock-is-locked','plasmac-panel.led-cornerlock'],\
+            [6,'plasmac:kerfcross-is-locked','plasmac.kerfcross-is-locked','plasmac-panel.led-kerfcross'],\
+            [7,'plasmac:arc-ok-out','plasmac.arc-ok-out','plasmac-panel.led-arc-ok'],\
+            [8,'plasmac:safe-height-is-limited','plasmac.safe-height-is-limited','plasmac-panel.led-safe-height'],\
+            ]
+for line in hal_data:
+    if line[0] < 3:
+        hal.new_sig(line[1],hal.HAL_FLOAT)
+    else:
+        hal.new_sig(line[1],hal.HAL_BIT)
+    hal.connect(line[2],line[1])
+    hal.connect(line[3],line[1])
 hal.connect('plasmac-panel.led-float','plasmac:float-switch-out')
 hal.connect('plasmac-panel.led-breakaway','plasmac:breakaway-switch-out')
+hal.connect('plasmac-panel.led-torch','plasmac:torch-on')
 for widget in wSpinboxes:
     root_window.tk.call(widget,'configure','-wrap','1','-width',swidth,'-font',font,'-justify','r')
 for widget in wLabels:
@@ -1049,7 +1055,7 @@ for widget in wLeds:
         root_window.tk.call(widget,'configure','-state','disabled')
         widgetValues[widget] = 0
 root_window.tk.call(fmotion + '.probe-feed-rate','configure','-to',widgetValues[foffsets + '.setup-feed-rate'])
-units = float(Popen(['halcmd getp halui.machine.units-per-mm'], stdout=PIPE, shell=True).communicate()[0].strip())
+units = hal.get_value('halui.machine.units-per-mm')
 maxPidP = thcFeedRate / units * 0.1
 mode = inifile.find('PLASMAC','MODE') or '0'
 set_mode(mode)
