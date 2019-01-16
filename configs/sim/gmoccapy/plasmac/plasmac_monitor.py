@@ -20,14 +20,10 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 '''
 
 import os
-from subprocess import Popen, PIPE
 import gtk
 import linuxcnc
 import gobject
-#import hal
-#from   gladevcp.persistence import widget_defaults,select_widgets
-#import gladevcp
-#import traceback
+import hal
 
 class linuxcncInterface(object):
 
@@ -39,7 +35,7 @@ class linuxcncInterface(object):
 class HandlerClass:
 
     def periodic(self):
-        mode = int((Popen(['halcmd getp plasmac.mode'], stdout=PIPE, shell=True)).communicate()[0].strip())
+        mode = hal.get_value('plasmac.mode')
         if mode != self.oldMode:
             print 'MODE CHANGED TO',mode
             if mode == 0:

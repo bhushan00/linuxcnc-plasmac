@@ -20,10 +20,10 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 '''
 
 import os
-import subprocess as sp
 import gtk
 import linuxcnc
 import gobject
+import hal
 import gladevcp
 
 class linuxcncInterface(object):
@@ -50,16 +50,11 @@ class HandlerClass:
         if self.rapid_override != self.lcnc.stat.rapidrate:
             self.builder.get_object('rapidOverride').set_active(int(self.lcnc.stat.rapidrate * 100))
             self.feed_override = int(self.lcnc.stat.rapidrate * 100)
-        idle = sp.Popen(['halcmd getp halui.program.is-idle'], stdout=sp.PIPE, shell=True).communicate()[0].strip()
-        if idle == 'TRUE':
-            self.builder.get_object('pausedMotionSpeedAdj').set_value(0)
-        machine = sp.Popen(['halcmd getp halui.machine.is-on'], stdout=sp.PIPE, shell=True).communicate()[0].strip()
-        if idle == 'TRUE' and machine == 'TRUE':
+        if hal.get_value('halui.program.is-idle') and hal.get_value('halui.machine.is-on'):
             self.builder.get_object('torchPulseStart').set_sensitive(True)
         else:
             self.builder.get_object('torchPulseStart').set_sensitive(False)
-
-        mode = int((sp.Popen(['halcmd getp plasmac.mode'], stdout=sp.PIPE, shell=True)).communicate()[0].strip())
+        mode = hal.get_value('plasmac.mode')
         if mode != self.oldMode:
             if mode == 0:
                 self.builder.get_object('heightFrame').show()
@@ -105,35 +100,35 @@ class HandlerClass:
     def on_heightLower_pressed(self, widget):
         self.torch_height -= 0.1
         self.builder.get_object('heightOverride').set_text('%0.1f V' % (self.torch_height))
-        sp.Popen(['halcmd setp plasmac.height-override %f' % self.torch_height], shell=True)
+        hal.set_p('plasmac.height-override','%f' %(self.torch_height))
 
     def on_heightRaise_pressed(self, widget):
         self.torch_height += 0.1
         self.builder.get_object('heightOverride').set_text('%0.1f V' % (self.torch_height))
-        sp.Popen(['halcmd setp plasmac.height-override %f' % self.torch_height], shell=True)
+        hal.set_p('plasmac.height-override','%f' %(self.torch_height))
 
     def on_heightReset_pressed(self, widget):
         self.torch_height = 0
         self.builder.get_object('heightOverride').set_text('%0.1f V' % (self.torch_height))
-        sp.Popen(['halcmd setp plasmac.height-override %f' % self.torch_height], shell=True)
+        hal.set_p('plasmac.height-override','%f' %(self.torch_height))
 
     def on_forward_pressed(self, widget):
         tmp1, tmp2 = self.builder.get_object('pausedMotionSpeed').get_active_text().split()
         speed = float(tmp1) * 0.01
-        sp.Popen(['halcmd setp plasmac.paused-motion-speed %f' % speed], shell=True)
+        hal.set_p('plasmac.paused-motion-speed','%f' %(speed))
 
     def on_forward_released(self, widget):
         speed = 0
-        sp.Popen(['halcmd setp plasmac.paused-motion-speed %f' % speed], shell=True)
+        hal.set_p('plasmac.paused-motion-speed','%f' %(speed))
 
     def on_reverse_pressed(self, widget):
         tmp1, tmp2 = self.builder.get_object('pausedMotionSpeed').get_active_text().split()
         speed = float(tmp1) * -0.01
-        sp.Popen(['halcmd setp plasmac.paused-motion-speed %f' % speed], shell=True)
+        hal.set_p('plasmac.paused-motion-speed','%f' %(speed))
 
     def on_reverse_released(self, widget):
         speed = 0
-        sp.Popen(['halcmd setp plasmac.paused-motion-speed %f' % speed], shell=True)
+        hal.set_p('plasmac.paused-motion-speed','%f' %(speed))
 
     def configure_comboboxes(self, name, lo, hi, step, default):
         if name == 'torchPulseTime':
@@ -162,7 +157,7 @@ class HandlerClass:
         self.rapid_override = 0
         self.torch_height = 0
         self.builder.get_object('heightOverride').set_text('%0.1f V' % (self.torch_height))
-        sp.Popen(['halcmd setp plasmac.height-override %f' % self.torch_height], shell=True)
+        hal.set_p('plasmac.height-override','%f' % (self.torch_height))
         self.configure_comboboxes('feedOverride', 0, self.maxFeed, 1, '100')
         self.feed_override = 1
         self.configure_comboboxes('rapidOverride', 0, self.maxRapid, 1, '100')

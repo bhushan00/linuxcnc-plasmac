@@ -20,10 +20,10 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 '''
 
 import os
-import subprocess as sp
 import gtk
 import linuxcnc
 import gobject
+import hal
 import gladevcp
 
 class linuxcncInterface(object):
@@ -50,17 +50,15 @@ class HandlerClass:
         self.goto_home('Z')
 
     def goto_home(self,axis):
-        idle = sp.Popen(['halcmd getp halui.program.is-idle'], stdout=sp.PIPE, shell=True).communicate()[0].strip()
-        print 'IDLE =',idle
-        if idle == 'TRUE':
+        if hal.get_value('halui.program.is-idle'):
             home = self.lcnc.linuxcncIniFile.find('JOINT_' + str(self.lcnc.linuxcncIniFile.find('TRAJ', 'COORDINATES').upper().index(axis)), 'HOME')
-            mode = sp.Popen(['halcmd getp halui.mode.is-mdi'], stdout=sp.PIPE, shell=True).communicate()[0].strip()
-            if mode == 'FALSE':
+            mode = hal.get_value('halui.mode.is-mdi')
+            if not mode:
                 self.lcnc.comd.mode(linuxcnc.MODE_MDI)
                 self.wait_for_completion()
             self.lcnc.comd.mdi('G53 G0 ' + axis + home)
             self.wait_for_completion()
-            if mode == 'FALSE':
+            if not mode:
                 self.lcnc.comd.mode(linuxcnc.MODE_MANUAL)
                 self.wait_for_completion()
 

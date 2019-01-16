@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
-  <requires lib="gtk+" version="2.18"/>
   <!-- interface-requires gladevcp 0.0 -->
+  <requires lib="gtk+" version="2.18"/>
   <!-- interface-naming-policy project-wide -->
   <object class="GtkAdjustment" id="arcFailDelayAdj"/>
   <object class="GtkAdjustment" id="arcMaxStartsAdj"/>
@@ -354,6 +354,64 @@
                               </packing>
                             </child>
                             <child>
+                              <object class="GtkHBox" id="hboxR00012">
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                                <child>
+                                  <object class="GtkLabel" id="labelR000120">
+                                    <property name="width_request">55</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="fill">False</property>
+                                    <property name="position">0</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="HAL_LED" id="breakawaySwitch">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                    <property name="has_tooltip">True</property>
+                                    <property name="tooltip_text" translatable="yes">an external estop has been activated</property>
+                                    <property name="is_on">True</property>
+                                    <property name="led_blink_rate">0</property>
+                                    <property name="led_size">8</property>
+                                    <property name="off_color">grey</property>
+                                    <property name="on_color">yellow</property>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="fill">False</property>
+                                    <property name="position">1</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkLabel" id="labelR000121">
+                                    <property name="width_request">130</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                    <property name="tooltip_text" translatable="yes">an external estop has been activated</property>
+                                    <property name="double_buffered">False</property>
+                                    <property name="xalign">0</property>
+                                    <property name="label" translatable="yes">Breakaway</property>
+                                    <property name="justify">right</property>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="fill">False</property>
+                                    <property name="position">2</property>
+                                  </packing>
+                                </child>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">False</property>
+                                <property name="position">1</property>
+                              </packing>
+                            </child>
+                            <child>
                               <object class="GtkHBox" id="hboxR00011">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
@@ -397,64 +455,6 @@
                                     <property name="xalign">0</property>
                                     <property name="xpad">2</property>
                                     <property name="label" translatable="yes">Safe Limited</property>
-                                  </object>
-                                  <packing>
-                                    <property name="expand">False</property>
-                                    <property name="fill">False</property>
-                                    <property name="position">2</property>
-                                  </packing>
-                                </child>
-                              </object>
-                              <packing>
-                                <property name="expand">False</property>
-                                <property name="fill">False</property>
-                                <property name="position">1</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <object class="GtkHBox" id="hboxR00012">
-                                <property name="visible">True</property>
-                                <property name="can_focus">False</property>
-                                <child>
-                                  <object class="GtkLabel" id="labelR000120">
-                                    <property name="width_request">55</property>
-                                    <property name="visible">True</property>
-                                    <property name="can_focus">False</property>
-                                  </object>
-                                  <packing>
-                                    <property name="expand">False</property>
-                                    <property name="fill">False</property>
-                                    <property name="position">0</property>
-                                  </packing>
-                                </child>
-                                <child>
-                                  <object class="HAL_LED" id="externalEstopIn">
-                                    <property name="visible">True</property>
-                                    <property name="can_focus">False</property>
-                                    <property name="has_tooltip">True</property>
-                                    <property name="tooltip_text" translatable="yes">an external estop has been activated</property>
-                                    <property name="is_on">True</property>
-                                    <property name="led_blink_rate">0</property>
-                                    <property name="led_size">8</property>
-                                    <property name="off_color">grey</property>
-                                    <property name="on_color">red</property>
-                                  </object>
-                                  <packing>
-                                    <property name="expand">False</property>
-                                    <property name="fill">False</property>
-                                    <property name="position">1</property>
-                                  </packing>
-                                </child>
-                                <child>
-                                  <object class="GtkLabel" id="labelR000121">
-                                    <property name="width_request">130</property>
-                                    <property name="visible">True</property>
-                                    <property name="can_focus">False</property>
-                                    <property name="tooltip_text" translatable="yes">an external estop has been activated</property>
-                                    <property name="double_buffered">False</property>
-                                    <property name="xalign">0</property>
-                                    <property name="label" translatable="yes">Ext. Estop</property>
-                                    <property name="justify">right</property>
                                   </object>
                                   <packing>
                                     <property name="expand">False</property>

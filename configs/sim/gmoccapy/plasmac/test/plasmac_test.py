@@ -90,7 +90,7 @@ class plasmacTest:
         sp.Popen(['halcmd net arc-ok-in plasmactest.arcOk plasmac.arc-ok-in'], shell=True)
         sp.Popen(['halcmd net move-up plasmactest.moveUp plasmac.move-up'], shell=True)
         sp.Popen(['halcmd net move-down plasmactest.moveDown plasmac.move-down'], shell=True)
-        sp.Popen(['halcmd net breakaway plasmactest.breakaway debounce.0.1.in'], shell=True)
+        sp.Popen(['halcmd net breakaway-switch plasmactest.breakawaySwitch debounce.0.1.in'], shell=True)
         sp.Popen(['halshow plasmac.halshow'], shell=True)
         self.W.connect('delete_event', self.ignore)
         self.W.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_MENU)

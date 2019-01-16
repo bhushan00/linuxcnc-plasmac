@@ -20,7 +20,6 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 '''
 
 import os
-import subprocess as sp
 import gtk
 import linuxcnc
 import gobject
@@ -199,16 +198,15 @@ class HandlerClass:
         self.goto_home('Z')
 
     def goto_home(self,axis):
-        idle = sp.Popen(['halcmd getp halui.program.is-idle'], stdout=sp.PIPE, shell=True).communicate()[0].strip()
-        if idle == 'TRUE':
+        if hal.get_value('halui.program.is-idle'):
             home = self.lcnc.linuxcncIniFile.find('JOINT_' + str(self.lcnc.linuxcncIniFile.find('TRAJ', 'COORDINATES').upper().index(axis)), 'HOME')
-            mode = sp.Popen(['halcmd getp halui.mode.is-mdi'], stdout=sp.PIPE, shell=True).communicate()[0].strip()
-            if mode == 'FALSE':
+            mode = hal.get_value('halui.mode.is-mdi')
+            if not mode:
                 self.lcnc.comd.mode(linuxcnc.MODE_MDI)
                 self.wait_for_completion()
             self.lcnc.comd.mdi('G53 G0 ' + axis + home)
             self.wait_for_completion()
-            if mode == 'FALSE':
+            if not mode:
                 self.lcnc.comd.mode(linuxcnc.MODE_MANUAL)
                 self.wait_for_completion()
 
@@ -301,11 +299,10 @@ class HandlerClass:
             print '*** incorrect [TRAJ]LINEAR_UNITS in ini file'
 
     def mode_check(self):
-        idle = sp.Popen(['halcmd getp halui.program.is-idle'], stdout=sp.PIPE, shell=True).communicate()[0].strip()
-        if idle == 'TRUE':
+        if hal.get_value('halui.program.is-idle'):
             self.builder.get_object('pausedMotionSpeedAdj').set_value(0)
-        mode = int((sp.Popen(['halcmd getp plasmac.mode'], stdout=sp.PIPE, shell=True)).communicate()[0].strip())
-        units = float(sp.Popen(['halcmd getp halui.machine.units-per-mm'], stdout=sp.PIPE, shell=True).communicate()[0].strip())
+        mode = hal.get_value('plasmac.mode')
+        units = hal.get_value('halui.machine.units-per-mm')
         maxPidP = self.thcFeedRate / units * 0.1
         if mode != self.oldMode:
             if mode == 0:
@@ -458,13 +455,12 @@ class HandlerClass:
         font = self.lcnc.linuxcncIniFile.find('PLASMAC', 'FONT') or 'sans 10'
         gtk.settings_get_default().set_property('gtk-font-name', font)
         configEnable = self.lcnc.linuxcncIniFile.find('PLASMAC', 'CONFIG_ENABLE') or '1'
-        sp.Popen(['halcmd setp gladevcp.configEnable ' + configEnable], shell=True)
+        hal.set_p('gladevcp.configEnable',configEnable) # % (int(configEnable))
         self.thcFeedRate = (float(self.lcnc.linuxcncIniFile.find('AXIS_Z', 'MAX_VELOCITY')) * \
                               float(self.lcnc.linuxcncIniFile.find('AXIS_Z', 'OFFSET_AV_RATIO'))) * 60
-        sp.Popen('halcmd setp plasmac.thc-feed-rate %f' % self.thcFeedRate, shell=True)
-        self.configFile = self.lcnc.linuxcncIniFile.find('PLASMAC', 'CONFIG_FILE') or \
-                            self.lcnc.linuxcncIniFile.find('EMC', 'MACHINE').lower() + '.cfg'
-        self.materialsFile = self.lcnc.linuxcncIniFile.find('PLASMAC', 'MATERIAL_FILE') or self.lcnc.linuxcncIniFile.find('EMC', 'MACHINE').lower() + '.mat'
+        hal.set_p('plasmac.thc-feed-rate','%f' % (self.thcFeedRate))
+        self.configFile = self.lcnc.linuxcncIniFile.find('EMC', 'MACHINE').lower() + '.cfg'
+        self.materialsFile = self.lcnc.linuxcncIniFile.find('EMC', 'MACHINE').lower() + '.mat'
         self.materialsList = []
         self.configDict = {}
         self.oldMode = 9

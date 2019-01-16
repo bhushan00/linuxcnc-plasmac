@@ -582,11 +582,16 @@ def wait_for_completion():
 
 def goto_home(axis):
     if hal.get_value('halui.program.is-idle'):
-        home = inifile.find('JOINT_' + str(inifile.find('TRAJ','COORDINATES').upper().index(axis)), 'HOME')
-        if not hal.get_value('halui.mode.is-mdi'):
+        home = self.lcnc.linuxcncIniFile.find('JOINT_' + str(self.lcnc.linuxcncIniFile.find('TRAJ', 'COORDINATES').upper().index(axis)), 'HOME')
+        mode = hal.get_value('halui.mode.is-mdi')
+        if not mode:
             c.mode(linuxcnc.MODE_MDI)
-            wait_for_completion()
+            self.wait_for_completion()
         c.mdi('G53 G0 ' + axis + home)
+        self.wait_for_completion()
+        if not mode:
+            c.mode(linuxcnc.MODE_MANUAL)
+            self.wait_for_completion()
 
 def joint_mode_switch(a,b,c):
     if vars.motion_mode.get() == linuxcnc.TRAJ_MODE_FREE and s.kinematics_type != linuxcnc.KINEMATICS_IDENTITY:
@@ -901,8 +906,8 @@ def set_mode(mode):
 thcFeedRate = (float(inifile.find('AXIS_Z','MAX_VELOCITY')) * \
                float(inifile.find('AXIS_Z','OFFSET_AV_RATIO'))) * 60
 hal.set_p('plasmac.thc-feed-rate','%f' % (thcFeedRate))
-configFile = inifile.find('PLASMAC','CONFIG_FILE') or inifile.find('EMC','MACHINE').lower() + '.cfg'
-materialsFile = inifile.find('PLASMAC','MATERIAL_FILE') or inifile.find('EMC','MACHINE').lower() + '.mat'
+configFile = inifile.find('EMC','MACHINE').lower() + '.cfg'
+materialsFile = inifile.find('EMC','MACHINE').lower() + '.mat'
 materialsList = []
 configDict = {}
 dryRun = 0

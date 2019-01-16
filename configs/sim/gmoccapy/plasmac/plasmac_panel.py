@@ -20,7 +20,6 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 '''
 
 import os
-import subprocess as sp
 import gtk
 import linuxcnc
 import gobject
@@ -261,8 +260,8 @@ class HandlerClass:
             print '*** incorrect [TRAJ]LINEAR_UNITS in ini file'
 
     def periodic(self):
-        mode = int((sp.Popen(['halcmd getp plasmac.mode'], stdout=sp.PIPE, shell=True)).communicate()[0].strip())
-        units = float(sp.Popen(['halcmd getp halui.machine.units-per-mm'], stdout=sp.PIPE, shell=True).communicate()[0].strip())
+        mode = hal.get_value('plasmac.mode')
+        units = hal.get_value('halui.machine.units-per-mm')
         maxPidP = self.thcFeedRate / units * 0.1
         if mode != self.oldMode:
             if mode == 0:
@@ -414,13 +413,13 @@ class HandlerClass:
         self.builder = builder
         self.lcnc = linuxcncInterface()
         configEnable = self.lcnc.linuxcncIniFile.find('PLASMAC', 'CONFIG_ENABLE') or '1'
-        sp.Popen(['halcmd setp plasmac_panel.configEnable ' + configEnable], shell=True)
+        hal.set_p('plasmac_panel.configEnable',configEnable)
         self.thcFeedRate = (float(self.lcnc.linuxcncIniFile.find('AXIS_Z', 'MAX_VELOCITY')) * \
                               float(self.lcnc.linuxcncIniFile.find('AXIS_Z', 'OFFSET_AV_RATIO'))) * 60
-        sp.Popen('halcmd setp plasmac.thc-feed-rate %f' % self.thcFeedRate, shell=True)
-        self.configFile = self.lcnc.linuxcncIniFile.find('EMC', 'MACHINE') + '.cfg'
+        hal.set_p('plasmac.thc-feed-rate','%f' % (self.thcFeedRate))
+        self.configFile = self.lcnc.linuxcncIniFile.find('EMC', 'MACHINE').lower() + '.cfg'
         self.prefFile = self.lcnc.linuxcncIniFile.find('EMC', 'MACHINE') + '.pref'
-        self.materialsFile = self.lcnc.linuxcncIniFile.find('PLASMAC', 'MATERIAL_FILE') or self.lcnc.linuxcncIniFile.find('EMC', 'MACHINE').lower() + '.mat'
+        self.materialsFile = self.lcnc.linuxcncIniFile.find('EMC', 'MACHINE').lower() + '.mat'
         self.materialsList = []
         self.configDict = {}
         self.oldMode = 9

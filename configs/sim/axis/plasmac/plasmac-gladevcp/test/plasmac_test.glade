@@ -89,7 +89,7 @@
                       </packing>
                     </child>
                     <child>
-                      <object class="HAL_Button" id="breakaway">
+                      <object class="HAL_Button" id="breakawaySwitch">
                         <property name="label" translatable="yes">BREAKAWAY</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
