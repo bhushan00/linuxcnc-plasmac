@@ -23,7 +23,7 @@ import os
 import gtk
 import linuxcnc
 import gobject
-import hal
+import hal, hal_glib
 from   gladevcp.persistence import widget_defaults,select_widgets
 import gladevcp
 
@@ -330,6 +330,7 @@ class HandlerClass:
             else:
                 pass
             self.oldMode = mode
+        self.builder.get_object('config').set_sensitive(not hal.get_value('plasmac_panel.config-disable'))
         return True
 
     def set_theme(self):
@@ -412,8 +413,9 @@ class HandlerClass:
         self.halcomp = halcomp
         self.builder = builder
         self.lcnc = linuxcncInterface()
-        configEnable = self.lcnc.linuxcncIniFile.find('PLASMAC', 'CONFIG_ENABLE') or '1'
-        hal.set_p('plasmac_panel.configEnable',configEnable)
+        hal_glib.GPin(halcomp.newpin('config-disable', hal.HAL_BIT, hal.HAL_IN))
+        configDisable = self.lcnc.linuxcncIniFile.find('PLASMAC', 'CONFIG_DISABLE') or '0'
+        hal.set_p('plasmac_panel.config-disable',configDisable)
         self.thcFeedRate = (float(self.lcnc.linuxcncIniFile.find('AXIS_Z', 'MAX_VELOCITY')) * \
                               float(self.lcnc.linuxcncIniFile.find('AXIS_Z', 'OFFSET_AV_RATIO'))) * 60
         hal.set_p('plasmac.thc-feed-rate','%f' % (self.thcFeedRate))

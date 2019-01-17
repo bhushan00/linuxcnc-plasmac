@@ -2,7 +2,7 @@
 
 '''
 plasmac_panel.py
-Copyright (C) 2018  Phillip A Carter
+Copyright (C) 2018 2019 Phillip A Carter
 
 This program is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the
@@ -298,7 +298,7 @@ class HandlerClass:
         else:
             print '*** incorrect [TRAJ]LINEAR_UNITS in ini file'
 
-    def mode_check(self):
+    def periodic(self):
         if hal.get_value('halui.program.is-idle'):
             self.builder.get_object('pausedMotionSpeedAdj').set_value(0)
         mode = hal.get_value('plasmac.mode')
@@ -380,6 +380,7 @@ class HandlerClass:
             else:
                 pass
             self.oldMode = mode
+        self.builder.get_object('config').set_sensitive(not hal.get_value('plasmac_panel.config-disable'))
         return True
 
     def load_settings(self):
@@ -454,8 +455,8 @@ class HandlerClass:
         gtk.settings_get_default().set_property('gtk-theme-name', self.lcnc.linuxcncIniFile.find('PLASMAC', 'THEME'))
         font = self.lcnc.linuxcncIniFile.find('PLASMAC', 'FONT') or 'sans 10'
         gtk.settings_get_default().set_property('gtk-font-name', font)
-        configEnable = self.lcnc.linuxcncIniFile.find('PLASMAC', 'CONFIG_ENABLE') or '1'
-        hal.set_p('gladevcp.configEnable',configEnable) # % (int(configEnable))
+        configDisable = self.lcnc.linuxcncIniFile.find('PLASMAC', 'CONFIG_DISABLE') or '0'
+        hal.set_p('plasmac_panel.config-disable',configDisable)
         self.thcFeedRate = (float(self.lcnc.linuxcncIniFile.find('AXIS_Z', 'MAX_VELOCITY')) * \
                               float(self.lcnc.linuxcncIniFile.find('AXIS_Z', 'OFFSET_AV_RATIO'))) * 60
         hal.set_p('plasmac.thc-feed-rate','%f' % (self.thcFeedRate))
@@ -470,7 +471,7 @@ class HandlerClass:
         self.load_settings()
         self.check_materials_file()
         self.get_materials()
-        gobject.timeout_add(100, self.mode_check)
+        gobject.timeout_add(100, self.periodic)
 
 def get_handlers(halcomp,builder,useropts):
     return [HandlerClass(halcomp,builder,useropts)]

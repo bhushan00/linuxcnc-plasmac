@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
-  <requires lib="gtk+" version="2.18"/>
   <!-- interface-requires gladevcp 0.0 -->
+  <requires lib="gtk+" version="2.18"/>
   <!-- interface-naming-policy project-wide -->
   <object class="GtkAdjustment" id="arcFailDelayAdj"/>
   <object class="GtkAdjustment" id="arcMaxStartsAdj"/>
@@ -540,6 +540,12 @@ set to 0 to disable</property>
                             <property name="column_spacing">2</property>
                             <property name="row_spacing">2</property>
                             <child>
+                              <placeholder/>
+                            </child>
+                            <child>
+                              <placeholder/>
+                            </child>
+                            <child>
                               <object class="GtkHBox" id="autoBox">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
@@ -745,9 +751,6 @@ for mode 3 this is the percentage of max velocity used for THC</property>
                               </packing>
                             </child>
                             <child>
-                              <placeholder/>
-                            </child>
-                            <child>
                               <object class="GtkLabel" id="labelR300111">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
@@ -818,9 +821,6 @@ for mode 3 this is the percentage of max velocity used for THC</property>
                                 <property name="top_attach">5</property>
                                 <property name="bottom_attach">6</property>
                               </packing>
-                            </child>
-                            <child>
-                              <placeholder/>
                             </child>
                           </object>
                         </child>
@@ -1218,7 +1218,7 @@ for mode 3 this is the percentage of max velocity used for THC</property>
               </packing>
             </child>
             <child>
-              <object class="HAL_Table" id="configEnable">
+              <object class="GtkTable" id="config">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="n_rows">4</property>
@@ -1234,7 +1234,7 @@ for mode 3 this is the percentage of max velocity used for THC</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <child>
-                          <object class="GtkTable" id="table4">
+                          <object class="GtkTable" id="table5">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <property name="n_rows">4</property>
@@ -1423,7 +1423,7 @@ from end of previous cut</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <child>
-                          <object class="GtkTable" id="table5">
+                          <object class="GtkTable" id="table6">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <property name="n_rows">8</property>
@@ -1807,7 +1807,7 @@ from end of previous cut</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <child>
-                          <object class="GtkTable" id="table6">
+                          <object class="GtkTable" id="table7">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <property name="n_rows">4</property>
@@ -2020,7 +2020,7 @@ this also sets the maximum probe feed rate</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <child>
-                          <object class="GtkTable" id="table7">
+                          <object class="GtkTable" id="table8">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <property name="n_columns">2</property>

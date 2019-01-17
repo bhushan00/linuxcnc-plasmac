@@ -1,3 +1,22 @@
+'''
+plasmac_axis.py
+Copyright (C) 2018 2019  Phillip A Carter
+
+This program is free software; you can redistribute it and/or modify it
+under the terms of the GNU General Public License as published by the
+Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along
+with this program; if not, write to the Free Software Foundation, Inc.,
+51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+'''
+
 ''' set the window size, change pad_width and pad_height to suit your setup
     then uncomment the next 13 lines'''
 #maxgeo=root_window.tk.call('wm','maxsize','.')
@@ -903,6 +922,8 @@ def set_mode(mode):
         root_window.tk.call('grid','forget',foffsets + '.pid-d-gain')
         root_window.tk.call('grid','forget',foffsets + '.pDGlab')
     hal.set_p('plasmac.mode','%d' % (int(mode)))
+
+# setup
 thcFeedRate = (float(inifile.find('AXIS_Z','MAX_VELOCITY')) * \
                float(inifile.find('AXIS_Z','OFFSET_AV_RATIO'))) * 60
 hal.set_p('plasmac.thc-feed-rate','%f' % (thcFeedRate))
@@ -1021,15 +1042,15 @@ pcomp.newpin('led-breakaway', hal.HAL_BIT, hal.HAL_IN)
 pcomp.newpin('led-safe-height', hal.HAL_BIT, hal.HAL_IN)
 pcomp.newpin('config-disable', hal.HAL_BIT, hal.HAL_IN)
 pcomp.ready()
-hal_data = [[0,'plasmac:arc-voltage-out','plasmac.arc-voltage-out','plasmac-panel.arc-voltage'],\
-            [1,'plasmac:axis-min-limit','ini.z.min_limit','plasmac.axis-z-min-limit'],\
-            [2,'plasmac:axis-max-limit','ini.z.max_limit','plasmac.axis-z-max-limit'],\
-            [3,'plasmac:led-up','plasmac.led-up','plasmac-panel.led-up'],\
-            [4,'plasmac:led-down','plasmac.led-down','plasmac-panel.led-down'],\
-            [5,'plasmac:cornerlock-is-locked','plasmac.cornerlock-is-locked','plasmac-panel.led-cornerlock'],\
-            [6,'plasmac:kerfcross-is-locked','plasmac.kerfcross-is-locked','plasmac-panel.led-kerfcross'],\
-            [7,'plasmac:arc-ok-out','plasmac.arc-ok-out','plasmac-panel.led-arc-ok'],\
-            [8,'plasmac:safe-height-is-limited','plasmac.safe-height-is-limited','plasmac-panel.led-safe-height'],\
+hal_data = [[0,'p_panel:arc-voltage-out','plasmac.arc-voltage-out','plasmac-panel.arc-voltage'],\
+            [1,'p_panel:axis-min-limit','ini.z.min_limit','plasmac.axis-z-min-limit'],\
+            [2,'p_panel:axis-max-limit','ini.z.max_limit','plasmac.axis-z-max-limit'],\
+            [3,'p_panel:led-up','plasmac.led-up','plasmac-panel.led-up'],\
+            [4,'p_panel:led-down','plasmac.led-down','plasmac-panel.led-down'],\
+            [5,'p_panel:cornerlock-is-locked','plasmac.cornerlock-is-locked','plasmac-panel.led-cornerlock'],\
+            [6,'p_panel:kerfcross-is-locked','plasmac.kerfcross-is-locked','plasmac-panel.led-kerfcross'],\
+            [7,'p_panel:arc-ok-out','plasmac.arc-ok-out','plasmac-panel.led-arc-ok'],\
+            [8,'p_panel:safe-height-is-limited','plasmac.safe-height-is-limited','plasmac-panel.led-safe-height'],\
             ]
 for line in hal_data:
     if line[0] < 3:
@@ -1038,9 +1059,11 @@ for line in hal_data:
         hal.new_sig(line[1],hal.HAL_BIT)
     hal.connect(line[2],line[1])
     hal.connect(line[3],line[1])
-hal.connect('plasmac-panel.led-float','plasmac:float-switch-out')
-hal.connect('plasmac-panel.led-breakaway','plasmac:breakaway-switch-out')
-hal.connect('plasmac-panel.led-torch','plasmac:torch-on')
+hal.connect('plasmac-panel.led-float','p_comp:float-switch-out')
+hal.connect('plasmac-panel.led-breakaway','p_comp:breakaway-switch-out')
+hal.connect('plasmac-panel.led-torch','p_comp:torch-on')
+configDisable = inifile.find('PLASMAC', 'CONFIG_DISABLE') or '0'
+hal.set_p('plasmac-panel.config-disable',configDisable)
 for widget in wSpinboxes:
     root_window.tk.call(widget,'configure','-wrap','1','-width',swidth,'-font',font,'-justify','r')
 for widget in wLabels:

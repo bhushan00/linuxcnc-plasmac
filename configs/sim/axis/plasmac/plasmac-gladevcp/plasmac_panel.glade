@@ -2200,7 +2200,7 @@ NOTE: if forward motion goes past the end of the cut then reverse motion cannot 
           </packing>
         </child>
         <child>
-          <object class="HAL_Table" id="configEnable">
+          <object class="GtkTable" id="config">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="n_rows">4</property>
