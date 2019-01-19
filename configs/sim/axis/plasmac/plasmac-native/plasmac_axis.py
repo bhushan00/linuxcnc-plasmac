@@ -234,9 +234,17 @@ root_window.tk.call('grid',foverride,'-column','0','-row','3','-columnspan','1',
 
 # paused motion frame
 root_window.tk.call('labelframe',fpausedmotion,'-text','Paused Motion Speed:','-relief','ridge')
+root_window.tk.call('Button',fpausedmotion + '.reverse','-text','Rev','-takefocus','0','-width','3')
 root_window.tk.call('scale',fpausedmotion + '.paused-motion-speed','-orient','horizontal')
-root_window.tk.call('pack',fpausedmotion + '.paused-motion-speed','-fill','x')
+root_window.tk.call('Button',fpausedmotion + '.forward','-text','Fwd','-takefocus','0','-width','3')
+root_window.tk.call('pack',fpausedmotion + '.reverse','-side','left','-fill','y')
+root_window.tk.call('pack',fpausedmotion + '.paused-motion-speed','-side','left','-fill','x','-expand','1')
+root_window.tk.call('pack',fpausedmotion + '.forward','-side','right','-fill','y')
 root_window.tk.call('grid',fpausedmotion,'-column','0','-row','4','-columnspan','1','-padx','4','-pady','4 0','-sticky','ew')
+root_window.tk.call('bind',fpausedmotion + '.reverse','<Button-1>','paused_motion -1')
+root_window.tk.call('bind',fpausedmotion + '.reverse','<ButtonRelease-1>','paused_motion 0')
+root_window.tk.call('bind',fpausedmotion + '.forward','<Button-1>','paused_motion 1')
+root_window.tk.call('bind',fpausedmotion + '.forward','<ButtonRelease-1>','paused_motion 0')
 
 # bottom pane - hide until modified
 root_window.tk.call('pack','forget','.pane.bottom.t.text')
@@ -547,13 +555,13 @@ def save_config():
         with open(configFile, 'w') as f_out:
             f_out.write('#plasmac configuration file, format is:\n#name = value\n\n')
             for key in sorted(configDict.iterkeys()):
-                for widget in wCheckbuttons + wSpinboxes + wScalesSaved:
+                for widget in wCheckbuttons + wSpinboxes + wScalesConfig:
                     if widget.endswith(key):
                         if widget in wCheckbuttons:
                             value = root_window.tk.call('set',key)
                             f_out.write(key + ' = ' + str(value) + '\n')
                             break
-                        elif widget in wSpinboxes + wScalesSaved:
+                        elif widget in wSpinboxes + wScalesConfig:
                             value = root_window.tk.call(widget,'get')
                             f_out.write(key + ' = ' + str(value) + '\n')
                             break
@@ -593,6 +601,10 @@ def torch_pulse():
         hal.set_p('plasmac.torch-pulse-start','1')
         global torchPulse
         torchPulse = 1
+
+def paused_motion(direction):
+    speed = float(root_window.tk.call(fpausedmotion + '.paused-motion-speed','get'))
+    hal.set_p('plasmac.paused-motion-speed','%f' % (speed * int(direction)))
 
 def wait_for_completion():
     pass
@@ -644,6 +656,7 @@ TclCommands.y_to_home = y_to_home
 TclCommands.z_to_home = z_to_home
 TclCommands.dry_run = dry_run
 TclCommands.torch_pulse = torch_pulse
+TclCommands.paused_motion = paused_motion
 TclCommands.joint_mode_switch = joint_mode_switch
 TclCommands.ja_button_activated = ja_button_activated
 commands = TclCommands(root_window)
@@ -652,7 +665,7 @@ commands = TclCommands(root_window)
 
 # original in axis.py line 3000
 def user_live_update():
-    for widget in wSpinboxes + wScalesSaved + wScalesVolatile:
+    for widget in wSpinboxes + wScalesHal:
         tmp, item = widget.rsplit('.',1)
         if item != 'cut-amps':
             value = float(root_window.tk.call(widget,'get'))
@@ -689,7 +702,7 @@ def user_live_update():
         if hal.get_value('plasmac.torch-on'):
             hal.set_p('plasmac.torch-pulse-start','0')
             torchPulse = 0
-    if hal.get_value('plasmac-panel.config-disable'):
+    if hal.get_value('plasmac_panel.config-disable'):
         root_window.tk.call('.plasmac','itemconfigure','config','-state','disabled')
     else:
         root_window.tk.call('.plasmac','itemconfigure','config','-state','normal')
@@ -697,7 +710,7 @@ def user_live_update():
 def configure_widgets():
     root_window.tk.call(ftorch + '.torch-pulse-time','configure','-from','0','-to','3','-resolution','0.1')
     root_window.tk.call(foverride + '.height-override','configure','-from','-10','-to','10','-resolution','0.1') #0
-    root_window.tk.call(fpausedmotion + '.paused-motion-speed','configure','-from','-1','-to','1','-resolution','0.1') #0
+    root_window.tk.call(fpausedmotion + '.paused-motion-speed','configure','-from','.01','-to','1','-resolution','0.01') #0
     root_window.tk.call(fcutparms + '.pierce-delay','configure','-from','0','-to','10','-increment','0.1','-format','%0.1f') #0.1
     root_window.tk.call(fcutparms + '.puddle-jump-height','configure','-from','0','-to','200','-increment','1','-format','%0.0f') #0
     root_window.tk.call(fcutparms + '.puddle-jump-delay','configure','-from','0','-to','9','-increment','0.01','-format','%0.2f') #0
@@ -743,9 +756,10 @@ def configure_widgets():
         print '*** incorrect [TRAJ]LINEAR_UNITS in ini file'
 
 def load_settings():
-    for widget in wCheckbuttons + wSpinboxes + wScalesSaved:
+    for widget in wCheckbuttons + wSpinboxes + wScalesConfig:
         tmp, item = widget.rsplit('.',1)
-        if item != 'height-override' or item != 'paused-motion-speed':
+        #if item != 'height-override' or item != 'paused-motion-speed':
+        if item != 'height-override':
             configDict[item] = '0'
     convertFile = False
     if os.path.exists(configFile):
@@ -767,7 +781,7 @@ def load_settings():
             print '*** plasmac configuration file,', configFile, 'is invalid ***'
         finally:
             f_in.close()
-        for widget in wCheckbuttons + wSpinboxes + wScalesSaved:
+        for widget in wCheckbuttons + wSpinboxes + wScalesConfig:
             tmp, item = widget.rsplit('.',1)
             if widget in wCheckbuttons:
                 if item in tmpDict:
@@ -781,14 +795,14 @@ def load_settings():
                     root_window.tk.call(widget,'deselect')
                     hal.set_p('plasmac.%s' % (item),'0')
                     print '***', item, 'missing from', configFile
-            elif widget in wSpinboxes + wScalesSaved:
+            elif widget in wSpinboxes + wScalesConfig:
                 if item in tmpDict:
                     if item == 'setup-feed-rate' and float(configDict.get(item)) > thcFeedRate:
                         configDict[item] = thcFeedRate
                     root_window.tk.call(widget,'set',configDict.get(item))
                     if item == 'arc-max-starts':
                         hal.set_p('plasmac.%s' % (item),'%d' % (float(configDict.get(item))))
-                    elif item != 'cut-amps':
+                    elif item != 'cut-amps' and item != 'paused-motion-speed':
                         hal.set_p('plasmac.%s' % (item),'%f' % (float(configDict.get(item))))
                 else:
                     root_window.tk.call(widget,'set','0')
@@ -934,102 +948,117 @@ configDict = {}
 dryRun = 0
 torchPulse = 0
 materialsUpdate = False
-wLabels = [fmonitor + '.aVlab',\
-           fmonitor + '.lTlab',\
-           fmonitor + '.lAOlab',\
-           fmonitor + '.lFlab',\
-           fmonitor + '.lBlab',\
-           fmonitor + '.lSHlab',\
-           fcutparms + '.pHlab',\
-           fcutparms + '.pDlab',\
-           fcutparms + '.pJHlab',\
-           fcutparms + '.pJDlab',\
-           fcutparms + '.cHlab',\
-           fcutparms + '.cFRlab',\
-           fcutparms + '.cAlab',\
-           fcutparms + '.cVlab',\
-           fthc + '.tElab',\
-           fthc + '.tTlab',\
-           fthc + '.pPGlab',\
-           fthc + '.uAVlab',\
-           fthc + '.lUlab',\
-           fthc + '.lDlab',\
-           fcornerlock + '.cElab',\
-           fcornerlock + '.cTlab',\
-           fcornerlock + '.lClab',\
-           fkerflock + '.kElab',\
-           fkerflock + '.kTlab',\
-           fkerflock + '.lKlab',\
-           fmotion + '.sHlab',\
-           fmotion + '.pFRlab',\
-           fmotion + '.fSTlab',\
-           fmotion + '.sIDlab',\
-           farc + '.aFDlab',\
-           farc + '.aVSlab',\
-           farc + '.aMSlab',\
-           farc + '.aVOlab',\
-           farc + '.aRDlab',\
-           farc + '.aOHlab',\
-           farc + '.tODlab',\
-           farc + '.aOLlab',\
-           foffsets + '.msplab',\
-           foffsets + '.pIGlab',\
-           foffsets + '.sFRlab',\
-           foffsets + '.pDGlab',\
-           ]
-wCheckbuttons = [fcornerlock + '.cornerlock-enable',\
-                 fkerflock + '.kerfcross-enable',\
-                 fthc + '.thc-enable',\
-                 fthc + '.use-auto-volts',\
-                 ]
-wSpinboxes = [fcutparms + '.pierce-height',\
-              fcutparms + '.pierce-delay',\
-              fcutparms + '.puddle-jump-height',\
-              fcutparms + '.puddle-jump-delay',\
-              fcutparms + '.cut-height',\
-              fcutparms + '.cut-feed-rate',\
-              fcutparms + '.cut-amps',\
-              fcutparms + '.cut-volts',\
-              fthc + '.thc-threshold',\
-              fthc + '.pid-p-gain',\
-              fcornerlock + '.cornerlock-threshold',\
-              fkerflock + '.kerfcross-threshold',\
-              fmotion + '.safe-height',\
-              fmotion + '.float-switch-travel',\
-              fmotion + '.probe-feed-rate',\
-              fmotion + '.skip-ihs-distance',\
-              farc + '.arc-fail-delay',\
-              farc + '.arc-max-starts',\
-              farc + '.restart-delay',\
-              farc + '.torch-off-delay',\
-              farc + '.arc-voltage-scale',\
-              farc + '.arc-voltage-offset',\
-              farc + '.arc-ok-high',\
-              farc + '.arc-ok-low',\
-              foffsets + '.setup-feed-rate',\
-              foffsets + '.pid-i-gain',\
-              foffsets + '.pid-d-gain',\
-              ]
-wScalesSaved = [ftorch + '.torch-pulse-time']
-wScalesVolatile = [foverride + '.height-override',\
-                   fpausedmotion + '.paused-motion-speed',\
-                   ]
-wComboBoxes = [fmaterial + '.materials']
-wLeds = [fthc + '.led-up',\
-         fthc + '.led-down',\
-         fcornerlock + '.led-cornerlock',\
-         fkerflock + '.led-kerfcross',\
-         fmonitor + '.led-arc-ok',\
-         fmonitor + '.led-torch',\
-         fmonitor + '.led-float',\
-         fmonitor + '.led-breakaway',\
-         fmonitor + '.led-safe-height',\
-         ]
+wLabels =\
+    [fmonitor + '.aVlab',\
+    fmonitor + '.lTlab',\
+    fmonitor + '.lAOlab',\
+    fmonitor + '.lFlab',\
+    fmonitor + '.lBlab',\
+    fmonitor + '.lSHlab',\
+    fcutparms + '.pHlab',\
+    fcutparms + '.pDlab',\
+    fcutparms + '.pJHlab',\
+    fcutparms + '.pJDlab',\
+    fcutparms + '.cHlab',\
+    fcutparms + '.cFRlab',\
+    fcutparms + '.cAlab',\
+    fcutparms + '.cVlab',\
+    fthc + '.tElab',\
+    fthc + '.tTlab',\
+    fthc + '.pPGlab',\
+    fthc + '.uAVlab',\
+    fthc + '.lUlab',\
+    fthc + '.lDlab',\
+    fcornerlock + '.cElab',\
+    fcornerlock + '.cTlab',\
+    fcornerlock + '.lClab',\
+    fkerflock + '.kElab',\
+    fkerflock + '.kTlab',\
+    fkerflock + '.lKlab',\
+    fmotion + '.sHlab',\
+    fmotion + '.pFRlab',\
+    fmotion + '.fSTlab',\
+    fmotion + '.sIDlab',\
+    farc + '.aFDlab',\
+    farc + '.aVSlab',\
+    farc + '.aMSlab',\
+    farc + '.aVOlab',\
+    farc + '.aRDlab',\
+    farc + '.aOHlab',\
+    farc + '.tODlab',\
+    farc + '.aOLlab',\
+    foffsets + '.msplab',\
+    foffsets + '.pIGlab',\
+    foffsets + '.sFRlab',\
+    foffsets + '.pDGlab',\
+    ]
+wCheckbuttons =\
+    [fcornerlock + '.cornerlock-enable',\
+    fkerflock + '.kerfcross-enable',\
+    fthc + '.thc-enable',\
+    fthc + '.use-auto-volts',\
+    ]
+wSpinboxes =\
+    [fcutparms + '.pierce-height',\
+    fcutparms + '.pierce-delay',\
+    fcutparms + '.puddle-jump-height',\
+    fcutparms + '.puddle-jump-delay',\
+    fcutparms + '.cut-height',\
+    fcutparms + '.cut-feed-rate',\
+    fcutparms + '.cut-amps',\
+    fcutparms + '.cut-volts',\
+    fthc + '.thc-threshold',\
+    fthc + '.pid-p-gain',\
+    fcornerlock + '.cornerlock-threshold',\
+    fkerflock + '.kerfcross-threshold',\
+    fmotion + '.safe-height',\
+    fmotion + '.float-switch-travel',\
+    fmotion + '.probe-feed-rate',\
+    fmotion + '.skip-ihs-distance',\
+    farc + '.arc-fail-delay',\
+    farc + '.arc-max-starts',\
+    farc + '.restart-delay',\
+    farc + '.torch-off-delay',\
+    farc + '.arc-voltage-scale',\
+    farc + '.arc-voltage-offset',\
+    farc + '.arc-ok-high',\
+    farc + '.arc-ok-low',\
+    foffsets + '.setup-feed-rate',\
+    foffsets + '.pid-i-gain',\
+    foffsets + '.pid-d-gain',\
+    ]
+wScales =\
+    [ftorch + '.torch-pulse-time',\
+    foverride + '.height-override',\
+    fpausedmotion + '.paused-motion-speed',\
+    ]
+wScalesConfig =\
+    [ftorch + '.torch-pulse-time',\
+    fpausedmotion + '.paused-motion-speed',\
+    ]
+wScalesHal =\
+    [ftorch + '.torch-pulse-time',\
+    foverride + '.height-override',\
+    ]
+wComboBoxes =\
+    [fmaterial + '.materials',\
+    ]
+wLeds =\
+    [fthc + '.led-up',\
+    fthc + '.led-down',\
+    fcornerlock + '.led-cornerlock',\
+    fkerflock + '.led-kerfcross',\
+    fmonitor + '.led-arc-ok',\
+    fmonitor + '.led-torch',\
+    fmonitor + '.led-float',\
+    fmonitor + '.led-breakaway',\
+    fmonitor + '.led-safe-height',\
+    ]
 configure_widgets()
 load_settings()
 check_materials_file()
 get_materials()
-pcomp = hal.component('plasmac-panel')
+pcomp = hal.component('plasmac_panel')
 pcomp.newpin('led-up', hal.HAL_BIT, hal.HAL_IN)
 pcomp.newpin('led-down', hal.HAL_BIT, hal.HAL_IN)
 pcomp.newpin('led-cornerlock', hal.HAL_BIT, hal.HAL_IN)
@@ -1042,15 +1071,15 @@ pcomp.newpin('led-breakaway', hal.HAL_BIT, hal.HAL_IN)
 pcomp.newpin('led-safe-height', hal.HAL_BIT, hal.HAL_IN)
 pcomp.newpin('config-disable', hal.HAL_BIT, hal.HAL_IN)
 pcomp.ready()
-hal_data = [[0,'p_panel:arc-voltage-out','plasmac.arc-voltage-out','plasmac-panel.arc-voltage'],\
+hal_data = [[0,'p_panel:arc-voltage-out','plasmac.arc-voltage-out','plasmac_panel.arc-voltage'],\
             [1,'p_panel:axis-min-limit','ini.z.min_limit','plasmac.axis-z-min-limit'],\
             [2,'p_panel:axis-max-limit','ini.z.max_limit','plasmac.axis-z-max-limit'],\
-            [3,'p_panel:led-up','plasmac.led-up','plasmac-panel.led-up'],\
-            [4,'p_panel:led-down','plasmac.led-down','plasmac-panel.led-down'],\
-            [5,'p_panel:cornerlock-is-locked','plasmac.cornerlock-is-locked','plasmac-panel.led-cornerlock'],\
-            [6,'p_panel:kerfcross-is-locked','plasmac.kerfcross-is-locked','plasmac-panel.led-kerfcross'],\
-            [7,'p_panel:arc-ok-out','plasmac.arc-ok-out','plasmac-panel.led-arc-ok'],\
-            [8,'p_panel:safe-height-is-limited','plasmac.safe-height-is-limited','plasmac-panel.led-safe-height'],\
+            [3,'p_panel:led-up','plasmac.led-up','plasmac_panel.led-up'],\
+            [4,'p_panel:led-down','plasmac.led-down','plasmac_panel.led-down'],\
+            [5,'p_panel:cornerlock-is-locked','plasmac.cornerlock-is-locked','plasmac_panel.led-cornerlock'],\
+            [6,'p_panel:kerfcross-is-locked','plasmac.kerfcross-is-locked','plasmac_panel.led-kerfcross'],\
+            [7,'p_panel:arc-ok-out','plasmac.arc-ok-out','plasmac_panel.led-arc-ok'],\
+            [8,'p_panel:safe-height-is-limited','plasmac.safe-height-is-limited','plasmac_panel.led-safe-height'],\
             ]
 for line in hal_data:
     if line[0] < 3:
@@ -1059,17 +1088,17 @@ for line in hal_data:
         hal.new_sig(line[1],hal.HAL_BIT)
     hal.connect(line[2],line[1])
     hal.connect(line[3],line[1])
-hal.connect('plasmac-panel.led-float','p_comp:float-switch-out')
-hal.connect('plasmac-panel.led-breakaway','p_comp:breakaway-switch-out')
-hal.connect('plasmac-panel.led-torch','p_comp:torch-on')
+hal.connect('plasmac_panel.led-float','p_comp:float-switch-out')
+hal.connect('plasmac_panel.led-breakaway','p_comp:breakaway-switch-out')
+hal.connect('plasmac_panel.led-torch','p_comp:torch-on')
 configDisable = inifile.find('PLASMAC', 'CONFIG_DISABLE') or '0'
-hal.set_p('plasmac-panel.config-disable',configDisable)
+hal.set_p('plasmac_panel.config-disable',configDisable)
 for widget in wSpinboxes:
     root_window.tk.call(widget,'configure','-wrap','1','-width',swidth,'-font',font,'-justify','r')
 for widget in wLabels:
     root_window.tk.call(widget,'configure','-anchor','w','-width',lwidth)
 widgetValues={}
-for widget in wSpinboxes + wScalesSaved + wScalesVolatile:
+for widget in wSpinboxes + wScales:
         widgetValues[widget] = float(root_window.tk.call(widget,'get'))
 for widget in wCheckbuttons:
     tmp, item = widget.rsplit('.',1)

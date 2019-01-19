@@ -210,6 +210,22 @@ class HandlerClass:
                 self.lcnc.comd.mode(linuxcnc.MODE_MANUAL)
                 self.wait_for_completion()
 
+    def on_forward_pressed(self, widget):
+        speed = self.builder.get_object('pausedMotionSpeed').get_value()
+        hal.set_p('plasmac.paused-motion-speed','%f' %(speed))
+
+    def on_forward_released(self, widget):
+        speed = 0
+        hal.set_p('plasmac.paused-motion-speed','%f' %(speed))
+
+    def on_reverse_pressed(self, widget):
+        speed = self.builder.get_object('pausedMotionSpeed').get_value() * -1
+        hal.set_p('plasmac.paused-motion-speed','%f' %(speed))
+
+    def on_reverse_released(self, widget):
+        speed = 0
+        hal.set_p('plasmac.paused-motion-speed','%f' %(speed))
+
     def on_setupFeedRate_value_changed(self, widget):
         self.builder.get_object('probeFeedRateAdj').configure(self.builder.get_object('probeFeedRate').get_value(),0,self.builder.get_object('setupFeedRate').get_value(),1,0,0)
         
@@ -299,8 +315,8 @@ class HandlerClass:
             print '*** incorrect [TRAJ]LINEAR_UNITS in ini file'
 
     def periodic(self):
-        if hal.get_value('halui.program.is-idle'):
-            self.builder.get_object('pausedMotionSpeedAdj').set_value(0)
+#        if hal.get_value('halui.program.is-idle'):
+#            self.builder.get_object('pausedMotionSpeedAdj').set_value(0)
         mode = hal.get_value('plasmac.mode')
         units = hal.get_value('halui.machine.units-per-mm')
         maxPidP = self.thcFeedRate / units * 0.1
@@ -385,7 +401,7 @@ class HandlerClass:
 
     def load_settings(self):
         for item in widget_defaults(select_widgets(self.builder.get_objects(), hal_only=False,output_only = True)):
-            if item != 'heightOverride' or item != 'pausedMotionSpeed':
+            if item != 'heightOverride':
                 self.configDict[item] = '0'
         convertFile = False
         if os.path.exists(self.configFile):
@@ -418,7 +434,7 @@ class HandlerClass:
                     else:
                         self.builder.get_object(item).set_active(False)
                         print '***', item, 'missing from', self.configFile
-                elif item == 'torchPulseTime':
+                elif item == 'torchPulseTime' or item == 'pausedMotionSpeed':
                     if item in tmpDict:
                         self.builder.get_object(item).set_value(float(self.configDict.get(item)))
                     else:
@@ -435,14 +451,14 @@ class HandlerClass:
         try:
             with open(self.configFile, 'w') as f_out:
                 f_out.write('#plasmac configuration file, format is:\n#name = value\n\n')
-                for key in self.configDict:
+                for key in sorted(self.configDict.iterkeys()):
                     if isinstance(self.builder.get_object(key), gladevcp.hal_widgets.HAL_SpinButton):
                         value = self.builder.get_object(key).get_value()
                         f_out.write(key + '=' + str(value) + '\n')
                     elif isinstance(self.builder.get_object(key), gladevcp.hal_widgets.HAL_CheckButton):
                         value = self.builder.get_object(key).get_active()
                         f_out.write(key + '=' + str(value) + '\n')
-                    elif key == 'torchPulseTime':
+                    elif key == 'torchPulseTime' or key == 'pausedMotionSpeed':
                         value = self.builder.get_object(key).get_value()
                         f_out.write(key + '=' + str(value) + '\n')
         except:

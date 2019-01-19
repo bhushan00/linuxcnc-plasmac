@@ -396,7 +396,8 @@ class HandlerClass:
         try:
             with open(self.configFile, 'w') as f_out:
                 f_out.write('#plasmac configuration file, format is:\n#name = value\n\n')
-                for key in self.configDict:
+                #for key in self.configDict:
+                for key in sorted(self.configDict.iterkeys()):
                     if isinstance(self.builder.get_object(key), gladevcp.hal_widgets.HAL_SpinButton):
                         value = self.builder.get_object(key).get_value()
                         f_out.write(key + '=' + str(value) + '\n')

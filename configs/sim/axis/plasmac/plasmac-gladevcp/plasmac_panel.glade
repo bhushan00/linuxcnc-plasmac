@@ -59,9 +59,9 @@
   </object>
   <object class="GtkAdjustment" id="offsetChangeAdj"/>
   <object class="GtkAdjustment" id="pausedMotionSpeedAdj">
-    <property name="lower">-1</property>
+    <property name="lower">0.01</property>
     <property name="upper">1</property>
-    <property name="step_increment">0.10000000000000001</property>
+    <property name="step_increment">0.01</property>
   </object>
   <object class="GtkAdjustment" id="pidDGainAdj"/>
   <object class="GtkAdjustment" id="pidIGainAdj"/>
@@ -2054,14 +2054,17 @@ turn torch on or use THC</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <child>
-                          <object class="GtkLabel" id="label3">
-                            <property name="visible">True</property>
-                            <property name="can_focus">False</property>
+                          <object class="GtkButton" id="reverse">
                             <property name="label" translatable="yes">Rev</property>
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="receives_default">True</property>
+                            <signal name="pressed" handler="on_reverse_pressed" swapped="no"/>
+                            <signal name="released" handler="on_reverse_released" swapped="no"/>
                           </object>
                           <packing>
                             <property name="expand">False</property>
-                            <property name="fill">False</property>
+                            <property name="fill">True</property>
                             <property name="position">0</property>
                           </packing>
                         </child>
@@ -2076,23 +2079,27 @@ turn torch on or use THC</property>
 NOTE: if forward motion goes past the end of the cut then reverse motion cannot get back to this cut</property>
                             <property name="adjustment">pausedMotionSpeedAdj</property>
                             <property name="round_digits">1</property>
+                            <property name="digits">2</property>
                           </object>
                           <packing>
                             <property name="expand">True</property>
                             <property name="fill">True</property>
-                            <property name="padding">2</property>
+                            <property name="padding">4</property>
                             <property name="position">1</property>
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkLabel" id="label5">
-                            <property name="visible">True</property>
-                            <property name="can_focus">False</property>
+                          <object class="GtkButton" id="forward">
                             <property name="label" translatable="yes">Fwd</property>
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="receives_default">True</property>
+                            <signal name="pressed" handler="on_forward_pressed" swapped="no"/>
+                            <signal name="released" handler="on_forward_released" swapped="no"/>
                           </object>
                           <packing>
                             <property name="expand">False</property>
-                            <property name="fill">False</property>
+                            <property name="fill">True</property>
                             <property name="position">2</property>
                           </packing>
                         </child>

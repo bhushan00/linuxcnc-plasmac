@@ -287,7 +287,8 @@ variable float  offset_datum;               /* datum for safe height calcs */
 variable float  offset_min;                 /* minimum allowed offset */
 variable float  offset_max;                 /* maximum allowed offset */
 variable float  setup_velocity;             /* velocity for setup moves */
-variable bool   paused_motion;              /* paused motion flag flag */
+variable bool   paused_motion;              /* paused motion flag */
+variable float  paused_motion_timer;        /* minimum run timer for paused motion */
 variable float  pid_error_now;              /* current error for pid calcs */
 variable float  pid_error_old;              /* old error for pid calcs */
 variable float  pid_output;                 /* calculated pid output value */
@@ -339,6 +340,7 @@ typedef enum{IDLE,
              GOTO_SAFE_HEIGHT,
              FINISH,
              TORCHPULSE,
+             PAUSED_MOTION,
              DEBUG} state_t;
 
 typedef enum{NONE,
@@ -486,22 +488,17 @@ FUNCTION(_) {
             /* if the torch has come adrift */
             if(float_switch || breakaway){
                 feed_hold = FALSE;
-            /* if we get a manual feed request and we are paused */
+            /* if we get a paused motion request and we are paused */
             }else if(paused_motion_speed && stop_type == PAUSE){
-                if(paused_motion){
-                    program_pause = FALSE;
-                    program_resume = TRUE;
-                    adaptive_feed = paused_motion_speed;
-                    feed_hold = FALSE;
-                }else{
-                    paused_motion = TRUE;
-                }
-            /* if we get a dry run request with no manual feed request and we are stopped or waiting for a restart */
-            }else if(dry_run_start && !paused_motion && (stop_type == NONE || stop_type == WAIT)){
+                state = PAUSED_MOTION;
+            /* if we get a dry run request with no paused motion request and we are stopped or waiting for a restart */
+            //}else if(dry_run_start && !paused_motion && (stop_type == NONE || stop_type == WAIT)){
+            }else if(dry_run_start && (stop_type == NONE || stop_type == WAIT)){
                 dry_run = TRUE;
                 program_run = TRUE;
-            /* if we get a start request with no manual feed request and we are stopped or waiting for a restart */
-            }else if(spindle_on && !paused_motion && (stop_type == NONE || stop_type == WAIT)){
+            /* if we get a start request with no paused motion request and we are stopped or waiting for a restart */
+            //}else if(spindle_on && !paused_motion && (stop_type == NONE || stop_type == WAIT)){
+            }else if(spindle_on && (stop_type == NONE || stop_type == WAIT)){
                 feed_hold = TRUE;
                 stop_type = NONE;
                 touchdown = FALSE;
@@ -520,19 +517,12 @@ FUNCTION(_) {
                     state = TOUCHOFF;
                 }
                 cut_offset = 0;
-            /* if we get a resume request with no manual feed request and we are paused */
-            }else if(!program_is_idle && !paused_motion && stop_type == PAUSE){
+            /* if we get a resume request with no paused motion request and we are paused */
+            //}else if(!program_is_idle && !paused_motion && stop_type == PAUSE){
+            }else if(!program_is_idle && stop_type == PAUSE){
                 feed_hold = TRUE;
                 if(!program_is_paused){
                     stop_type = NONE;
-                }
-            /* if we get a manual feed stop request and we are in manual feed mode  */
-            }else if(!paused_motion_speed && paused_motion){
-                feed_hold = TRUE;
-                program_pause = TRUE;
-                if(program_is_paused){
-                    paused_motion = FALSE;
-                    adaptive_feed = 1;
                 }
             /* if torch pulse required */
             }else if(torch_pulse_start){
@@ -969,6 +959,30 @@ FUNCTION(_) {
                 torch_on = FALSE;
                 torch_pulse_timer = 0;
                 state = IDLE;
+            }
+            break;
+        case PAUSED_MOTION:
+            /* a bit kludgy but we need a timer here for a minimum run
+             * time to give the GUI time to poll the status channel */
+            if(paused_motion_speed){
+                if(!paused_motion){
+                    paused_motion_timer = 0.2; // 0.2 seconds
+                    paused_motion = TRUE;
+                    adaptive_feed = paused_motion_speed;
+                    feed_hold = FALSE;
+                    program_resume = TRUE;
+                }else{
+                    paused_motion_timer -= thread_period;
+                }
+            }else{
+                paused_motion_timer -= thread_period;
+                feed_hold = TRUE;
+                program_pause = TRUE;
+                if(program_is_paused && paused_motion_timer <= 0){
+                    paused_motion = FALSE;
+                    adaptive_feed = 1;
+                    state = IDLE;
+                }
             }
             break;
         case DEBUG:

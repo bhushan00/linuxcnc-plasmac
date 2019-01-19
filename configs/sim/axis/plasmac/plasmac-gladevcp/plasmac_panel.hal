@@ -21,7 +21,6 @@ net p_run:pierce-delay              gladevcp.pierceDelay-f          =>  plasmac.
 net p_run:pierce-height             gladevcp.pierceHeight-f         =>  plasmac.pierce-height
 net p_run:puddle-jump-delay         gladevcp.puddleJumpDelay-f      =>  plasmac.puddle-jump-delay
 net p_run:puddle-jump-height        gladevcp.puddleJumpHeight-f     =>  plasmac.puddle-jump-height
-net p_run:paused_motion_speed       gladevcp.pausedMotionSpeed      =>  plasmac.paused-motion-speed
 net p_run:thc-enable                gladevcp.thcEnable              =>  plasmac.thc-enable
 net p_run:thc-threshold             gladevcp.thcThreshold-f         =>  plasmac.thc-threshold
 net p_run:torch-pulse-start         gladevcp.torchPulseStart        =>  plasmac.torch-pulse-start
