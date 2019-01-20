@@ -6,6 +6,10 @@ A plasma cutting table control component for use with the linuxcnc master branch
 
 .I VERSIONS:
 .br
+V0.18 - 2019/01/20 - rework torch pulse
+.br
+V0.17 - 2019/01/19 - rework paused motion
+.br
 V0.16 - 2019/01/05 - fix torch off bug if off delay = 0
 .br
 V0.15 - 2019/01/05 - remove redundancies from if/else block
@@ -308,6 +312,7 @@ variable int    thc_velocity;               /* velocity for thc moves */
 variable float  thread_period;              /* thread time in seconds */
 variable float  tolerance;                  /* tolerance when comparing axis z height */
 variable float  torch_off_timer;            /* arc off delay timer */
+variable bool   torch_pulse;                /* torch pulse flag */
 variable float  torch_pulse_timer;          /* torch pulse timer */
 variable bool   touchdown;                  /* float switch reached on initial down move */
 variable float  velocity_scale;             /* the velocity multipler */
@@ -491,13 +496,11 @@ FUNCTION(_) {
             /* if we get a paused motion request and we are paused */
             }else if(paused_motion_speed && stop_type == PAUSE){
                 state = PAUSED_MOTION;
-            /* if we get a dry run request with no paused motion request and we are stopped or waiting for a restart */
-            //}else if(dry_run_start && !paused_motion && (stop_type == NONE || stop_type == WAIT)){
-            }else if(dry_run_start && (stop_type == NONE || stop_type == WAIT)){
+            /* if we get a dry run request and we are stopped or waiting for a restart */
+            }else if(dry_run_start && !dry_run && (stop_type == NONE || stop_type == WAIT)){
                 dry_run = TRUE;
                 program_run = TRUE;
-            /* if we get a start request with no paused motion request and we are stopped or waiting for a restart */
-            //}else if(spindle_on && !paused_motion && (stop_type == NONE || stop_type == WAIT)){
+            /* if we get a start request and we are stopped or waiting for a restart */
             }else if(spindle_on && (stop_type == NONE || stop_type == WAIT)){
                 feed_hold = TRUE;
                 stop_type = NONE;
@@ -517,8 +520,7 @@ FUNCTION(_) {
                     state = TOUCHOFF;
                 }
                 cut_offset = 0;
-            /* if we get a resume request with no paused motion request and we are paused */
-            //}else if(!program_is_idle && !paused_motion && stop_type == PAUSE){
+            /* if we get a resume request and we are paused */
             }else if(!program_is_idle && stop_type == PAUSE){
                 feed_hold = TRUE;
                 if(!program_is_paused){
@@ -527,11 +529,7 @@ FUNCTION(_) {
             /* if torch pulse required */
             }else if(torch_pulse_start){
                 feed_hold = TRUE;
-                if(torch_pulse_time > 0){
-                    torch_pulse_timer = torch_pulse_time;
-                    torch_on = TRUE;
-                    state = TORCHPULSE;
-                }
+                state = TORCHPULSE;
             /* if no active cut */
             }else if(!cut_started){
                 feed_hold = FALSE;
@@ -954,12 +952,22 @@ FUNCTION(_) {
             break;
         case TORCHPULSE:
             /* single pulse the torch on and off */
-            torch_pulse_timer -= thread_period;
-            if(torch_pulse_timer <= 0){
-                torch_on = FALSE;
-                torch_pulse_timer = 0;
-                state = IDLE;
+            if(!torch_pulse){
+                torch_pulse_timer = torch_pulse_time;
+                torch_on = TRUE;
+                torch_pulse = TRUE;
+            }else{
+                if(torch_pulse_timer > 0){
+                    torch_pulse_timer -= thread_period;
+                }else{
+                    torch_on = FALSE;
+                    if(!torch_pulse_start){
+                        torch_pulse = FALSE;
+                        state = IDLE;
+                    }
+                }
             }
+
             break;
         case PAUSED_MOTION:
             /* a bit kludgy but we need a timer here for a minimum run

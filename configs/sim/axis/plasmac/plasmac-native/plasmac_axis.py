@@ -43,71 +43,9 @@ fsize = font.split()[1]
 root_window.tk.call('font','configure','TkDefaultFont','-family', fname, '-size', fsize)
 root_window.tk.call('.pane.bottom.t.text','configure','-height','10','-font', font, '-foreground','blue')
 
-# redo the text in tabs so they resize for the new default font
-root_window.tk.call('.pane.top.tabs','itemconfigure','manual','-text',' Manual - F3 ')
-root_window.tk.call('.pane.top.tabs','itemconfigure','mdi','-text',' MDI - F5 ')
-root_window.tk.call('.pane.top.right','itemconfigure','preview','-text',' Preview ')
-root_window.tk.call('.pane.top.right','itemconfigure','numbers','-text',' DRO ')
-
-# hide some original widgets
-fmanual = '.pane.top.tabs.fmanual'
-root_window.tk.call('pack','forget','.toolbar.rule0')
-root_window.tk.call('pack','forget','.toolbar.rule4')
-root_window.tk.call('pack','forget','.toolbar.rule8')
-root_window.tk.call('pack','forget','.toolbar.rule9')
-root_window.tk.call('grid','forget',fmanual + '.axis')
-root_window.tk.call('grid','forget',fmanual + '.jogf')
-#root_window.tk.call('grid','forget',fmanual + '.jogf.zerohome.tooltouch')
-root_window.tk.call('grid','forget',fmanual + '.space2')
-root_window.tk.call('grid','forget',fmanual + '.spindlel')
-root_window.tk.call('grid','forget',fmanual + '.spindlef')
-root_window.tk.call('grid','forget',fmanual + '.space2')
-root_window.tk.call('grid','forget',fmanual + '.coolant')
-root_window.tk.call('grid','forget',fmanual + '.mist')
-root_window.tk.call('grid','forget',fmanual + '.flood')
-root_window.tk.call('grid','forget','.pane.top.spinoverride')
-
-# change layout for some scales
-root_window.tk.call('pack','forget','.pane.top.jogspeed.l0')
-root_window.tk.call('pack','forget','.pane.top.jogspeed.l')
-root_window.tk.call('pack','forget','.pane.top.jogspeed.l1')
-root_window.tk.call('pack','forget','.pane.top.jogspeed.s')
-root_window.tk.call('pack','forget','.pane.top.maxvel.l0')
-root_window.tk.call('pack','forget','.pane.top.maxvel.l')
-root_window.tk.call('pack','forget','.pane.top.maxvel.l1')
-root_window.tk.call('pack','forget','.pane.top.maxvel.s')
-root_window.tk.call('pack','.pane.top.jogspeed.s','-side','right')
-root_window.tk.call('pack','.pane.top.jogspeed.l1','-side','right')
-root_window.tk.call('pack','.pane.top.jogspeed.l','-side','right')
-root_window.tk.call('pack','.pane.top.jogspeed.l0','-side','left')
-root_window.tk.call('pack','.pane.top.maxvel.s','-side','right')
-root_window.tk.call('pack','.pane.top.maxvel.l1','-side','right')
-root_window.tk.call('pack','.pane.top.maxvel.l','-side','right')
-root_window.tk.call('pack','.pane.top.maxvel.l0','-side','left')
-
-# modify the toolbar
-root_window.tk.call('label','.toolbar.space1','-width','5')
-root_window.tk.call('label','.toolbar.space2','-width','5')
-root_window.tk.call('label','.toolbar.space3','-width','5')
-root_window.tk.call('label','.toolbar.space4','-width','10')
-root_window.tk.call('pack','.toolbar.space1','-after','.toolbar.machine_power','-side','left')
-root_window.tk.call('pack','.toolbar.space2','-after','.toolbar.reload','-side','left')
-root_window.tk.call('pack','.toolbar.space3','-after','.toolbar.program_stop','-side','left')
-root_window.tk.call('pack','.toolbar.space4','-after','.toolbar.program_optpause','-side','left')
-
-
-# set sizes for widgets
-swidth = 5  # spinboxes width
-lwidth = 11 # labels width
-bwidth = 8  # buttons width
-cwidth = int(fsize) * 2 #canvas width
-cheight = int(fsize) * 2 #canvas height
-ledwidth = cwidth - 2 #led width
-ledheight = cheight - 2 #led height
-ledx = cwidth-ledwidth # led x start
-ledy = cheight-ledheight # led y start
-
 # some names to save fingers
+ftop = '.pane.top'
+fmanual = ftop + '.tabs.fmanual'
 faxes = fmanual + '.axes'
 fjoints = fmanual + '.joints'
 fjogf = fmanual + '.jogf'
@@ -128,6 +66,68 @@ foffsets = '.plasmac.fconfig.offsets'
 fsettings ='.plasmac.fconfig.settings'
 fcornerlock = '.plasmac.frun.locks.cornerlock'
 fkerflock = '.plasmac.frun.locks.kerflock'
+
+# redo the text in tabs so they resize for the new default font
+root_window.tk.call(ftop + '.tabs','itemconfigure','manual','-text',' Manual - F3 ')
+root_window.tk.call(ftop + '.tabs','itemconfigure','mdi','-text',' MDI - F5 ')
+root_window.tk.call(ftop + '.right','itemconfigure','preview','-text',' Preview ')
+root_window.tk.call(ftop + '.right','itemconfigure','numbers','-text',' DRO ')
+
+# hide some original widgets
+root_window.tk.call('pack','forget','.toolbar.rule0')
+root_window.tk.call('pack','forget','.toolbar.rule4')
+root_window.tk.call('pack','forget','.toolbar.rule8')
+root_window.tk.call('pack','forget','.toolbar.rule9')
+root_window.tk.call('grid','forget',fmanual + '.axis')
+root_window.tk.call('grid','forget',fmanual + '.jogf')
+#root_window.tk.call('grid','forget',fmanual + '.jogf.zerohome.tooltouch')
+root_window.tk.call('grid','forget',fmanual + '.space2')
+root_window.tk.call('grid','forget',fmanual + '.spindlel')
+root_window.tk.call('grid','forget',fmanual + '.spindlef')
+root_window.tk.call('grid','forget',fmanual + '.space2')
+root_window.tk.call('grid','forget',fmanual + '.coolant')
+root_window.tk.call('grid','forget',fmanual + '.mist')
+root_window.tk.call('grid','forget',fmanual + '.flood')
+root_window.tk.call('grid','forget',ftop + '.spinoverride')
+
+# change layout for some scales
+root_window.tk.call('pack','forget',ftop + '.jogspeed.l0')
+root_window.tk.call('pack','forget',ftop + '.jogspeed.l')
+root_window.tk.call('pack','forget',ftop + '.jogspeed.l1')
+root_window.tk.call('pack','forget',ftop + '.jogspeed.s')
+root_window.tk.call('pack','forget',ftop + '.maxvel.l0')
+root_window.tk.call('pack','forget',ftop + '.maxvel.l')
+root_window.tk.call('pack','forget',ftop + '.maxvel.l1')
+root_window.tk.call('pack','forget',ftop + '.maxvel.s')
+root_window.tk.call('pack',ftop + '.jogspeed.s','-side','right')
+root_window.tk.call('pack',ftop + '.jogspeed.l1','-side','right')
+root_window.tk.call('pack',ftop + '.jogspeed.l','-side','right')
+root_window.tk.call('pack',ftop + '.jogspeed.l0','-side','left')
+root_window.tk.call('pack',ftop + '.maxvel.s','-side','right')
+root_window.tk.call('pack',ftop + '.maxvel.l1','-side','right')
+root_window.tk.call('pack',ftop + '.maxvel.l','-side','right')
+root_window.tk.call('pack',ftop + '.maxvel.l0','-side','left')
+
+# modify the toolbar
+root_window.tk.call('label','.toolbar.space1','-width','5')
+root_window.tk.call('label','.toolbar.space2','-width','5')
+root_window.tk.call('label','.toolbar.space3','-width','5')
+root_window.tk.call('label','.toolbar.space4','-width','10')
+root_window.tk.call('pack','.toolbar.space1','-after','.toolbar.machine_power','-side','left')
+root_window.tk.call('pack','.toolbar.space2','-after','.toolbar.reload','-side','left')
+root_window.tk.call('pack','.toolbar.space3','-after','.toolbar.program_stop','-side','left')
+root_window.tk.call('pack','.toolbar.space4','-after','.toolbar.program_optpause','-side','left')
+
+# set sizes for widgets
+swidth = 5  # spinboxes width
+lwidth = 11 # labels width
+bwidth = 8  # buttons width
+cwidth = int(fsize) * 2 #canvas width
+cheight = int(fsize) * 2 #canvas height
+ledwidth = cwidth - 2 #led width
+ledheight = cheight - 2 #led height
+ledx = cwidth-ledwidth # led x start
+ledy = cheight-ledheight # led y start
 
 # rework the axis/joints frame
 root_window.tk.call('destroy',faxes)
@@ -215,7 +215,9 @@ if homing_order_defined:
 
 # torch frame
 root_window.tk.call('labelframe',ftorch,'-text','Torch:','-relief','ridge')
-root_window.tk.call('Button', ftorch + '.torch-button','-command','torch_pulse','-text','PULSE','-takefocus','0','-width','3')
+root_window.tk.call('Button', ftorch + '.torch-button','-text','PULSE','-takefocus','0','-width','3')
+root_window.tk.call('bind',ftorch + '.torch-button','<Button-1>','torch_pulse 1')
+root_window.tk.call('bind',ftorch + '.torch-button','<ButtonRelease-1>','torch_pulse 0')
 root_window.tk.call('append','manualgroup',' ' + ftorch + '.torch-button')
 root_window.tk.call('scale', ftorch + '.torch-pulse-time','-orient','horizontal','-variable','torchPulse','-showvalue','0')
 root_window.tk.call('label', ftorch + '.torch-time','-textvariable','torchPulse','-width','3','-anchor','e')
@@ -235,16 +237,16 @@ root_window.tk.call('grid',foverride,'-column','0','-row','3','-columnspan','1',
 # paused motion frame
 root_window.tk.call('labelframe',fpausedmotion,'-text','Paused Motion Speed:','-relief','ridge')
 root_window.tk.call('Button',fpausedmotion + '.reverse','-text','Rev','-takefocus','0','-width','3')
+root_window.tk.call('bind',fpausedmotion + '.reverse','<Button-1>','paused_motion -1')
+root_window.tk.call('bind',fpausedmotion + '.reverse','<ButtonRelease-1>','paused_motion 0')
 root_window.tk.call('scale',fpausedmotion + '.paused-motion-speed','-orient','horizontal')
 root_window.tk.call('Button',fpausedmotion + '.forward','-text','Fwd','-takefocus','0','-width','3')
+root_window.tk.call('bind',fpausedmotion + '.forward','<Button-1>','paused_motion 1')
+root_window.tk.call('bind',fpausedmotion + '.forward','<ButtonRelease-1>','paused_motion 0')
 root_window.tk.call('pack',fpausedmotion + '.reverse','-side','left','-fill','y')
 root_window.tk.call('pack',fpausedmotion + '.paused-motion-speed','-side','left','-fill','x','-expand','1')
 root_window.tk.call('pack',fpausedmotion + '.forward','-side','right','-fill','y')
 root_window.tk.call('grid',fpausedmotion,'-column','0','-row','4','-columnspan','1','-padx','4','-pady','4 0','-sticky','ew')
-root_window.tk.call('bind',fpausedmotion + '.reverse','<Button-1>','paused_motion -1')
-root_window.tk.call('bind',fpausedmotion + '.reverse','<ButtonRelease-1>','paused_motion 0')
-root_window.tk.call('bind',fpausedmotion + '.forward','<Button-1>','paused_motion 1')
-root_window.tk.call('bind',fpausedmotion + '.forward','<ButtonRelease-1>','paused_motion 0')
 
 # bottom pane - hide until modified
 root_window.tk.call('pack','forget','.pane.bottom.t.text')
@@ -293,7 +295,9 @@ root_window.tk.call('labelframe',fbuttons,'-relief','flat')
 root_window.tk.call('button',fbuttons + '.xtohome','-text','X to Home','-command','x_to_home','-width',bwidth)
 root_window.tk.call('button',fbuttons + '.ytohome','-text','Y to Home','-command','y_to_home','-width',bwidth)
 root_window.tk.call('button',fbuttons + '.ztohome','-text','Z to Home','-command','z_to_home','-width',bwidth)
-root_window.tk.call('button',fbuttons + '.dryRun','-text','Dry Run','-command','dry_run','-width',bwidth)
+root_window.tk.call('button',fbuttons + '.dryRun','-text','Dry Run','-width',bwidth)
+root_window.tk.call('bind',fbuttons + '.dryRun','<Button-1>','dry_run 1')
+root_window.tk.call('bind',fbuttons + '.dryRun','<ButtonRelease-1>','dry_run 0')
 root_window.tk.call('grid',fbuttons + '.xtohome','-row','0','-column','0')
 root_window.tk.call('grid',fbuttons + '.ytohome','-row','1','-column','0')
 root_window.tk.call('grid',fbuttons + '.ztohome','-row','2','-column','0')
@@ -590,39 +594,23 @@ def y_to_home():
 def z_to_home():
     goto_home('Z')
 
-def dry_run():
-    if hal.get_value('halui.program.is-idle'):
-        hal.set_p('plasmac.dry-run-start','1')
-        global dryRun
-        dryRun = 1
+def dry_run(value):
+    hal.set_p('plasmac.dry-run-start',value)
 
-def torch_pulse():
-    if hal.get_value('halui.program.is-idle'):
-        hal.set_p('plasmac.torch-pulse-start','1')
-        global torchPulse
-        torchPulse = 1
+def torch_pulse(value):
+    hal.set_p('plasmac.torch-pulse-start',value)
 
 def paused_motion(direction):
     speed = float(root_window.tk.call(fpausedmotion + '.paused-motion-speed','get'))
     hal.set_p('plasmac.paused-motion-speed','%f' % (speed * int(direction)))
 
-def wait_for_completion():
-    pass
-    while c.wait_complete() == -1:
-        pass
-
 def goto_home(axis):
     if hal.get_value('halui.program.is-idle'):
-        home = self.lcnc.linuxcncIniFile.find('JOINT_' + str(self.lcnc.linuxcncIniFile.find('TRAJ', 'COORDINATES').upper().index(axis)), 'HOME')
+        home = inifile.find('JOINT_' + str(inifile.find('TRAJ', 'COORDINATES').upper().index(axis)), 'HOME')
         mode = hal.get_value('halui.mode.is-mdi')
         if not mode:
             c.mode(linuxcnc.MODE_MDI)
-            self.wait_for_completion()
         c.mdi('G53 G0 ' + axis + home)
-        self.wait_for_completion()
-        if not mode:
-            c.mode(linuxcnc.MODE_MANUAL)
-            self.wait_for_completion()
 
 def joint_mode_switch(a,b,c):
     if vars.motion_mode.get() == linuxcnc.TRAJ_MODE_FREE and s.kinematics_type != linuxcnc.KINEMATICS_IDENTITY:
@@ -692,16 +680,26 @@ def user_live_update():
             else:
                 root_window.tk.call(widget,'configure','-state','disabled')
     root_window.tk.call(fmonitor + '.arc-voltage','configure','-text','%0.1f' % (pcomp['arc-voltage']))
-    global dryRun
-    if dryRun == 1:
-        if hal.get_value('halui.program.is-running'):
-            hal.set_p('plasmac.dry-run-start','0')
-            dryRun = 0
-    global torchPulse
-    if torchPulse == 1:
-        if hal.get_value('plasmac.torch-on'):
-            hal.set_p('plasmac.torch-pulse-start','0')
-            torchPulse = 0
+    if all_homed() and hal.get_value('halui.program.is-idle'):
+        root_window.tk.call(fbuttons + '.xtohome','configure','-state','normal')
+        root_window.tk.call(fbuttons + '.ytohome','configure','-state','normal')
+        root_window.tk.call(fbuttons + '.ztohome','configure','-state','normal')
+        root_window.tk.call(fbuttons + '.dryRun','configure','-state','normal')
+    else:
+        root_window.tk.call(fbuttons + '.xtohome','configure','-state','disabled')
+        root_window.tk.call(fbuttons + '.ytohome','configure','-state','disabled')
+        root_window.tk.call(fbuttons + '.ztohome','configure','-state','disabled')
+        root_window.tk.call(fbuttons + '.dryRun','configure','-state','disabled')
+    if hal.get_value('halui.machine.is-on') and hal.get_value('halui.program.is-idle'):
+        root_window.tk.call(ftorch + '.torch-button','configure','-state','normal')
+    else:
+        root_window.tk.call(ftorch + '.torch-button','configure','-state','disabled')
+    if hal.get_value('halui.program.is-paused') or hal.get_value('plasmac.paused-motion-speed'):
+        root_window.tk.call(fpausedmotion + '.reverse','configure','-state','normal')
+        root_window.tk.call(fpausedmotion + '.forward','configure','-state','normal')
+    else:
+        root_window.tk.call(fpausedmotion + '.reverse','configure','-state','disabled')
+        root_window.tk.call(fpausedmotion + '.forward','configure','-state','disabled')
     if hal.get_value('plasmac_panel.config-disable'):
         root_window.tk.call('.plasmac','itemconfigure','config','-state','disabled')
     else:
@@ -758,7 +756,6 @@ def configure_widgets():
 def load_settings():
     for widget in wCheckbuttons + wSpinboxes + wScalesConfig:
         tmp, item = widget.rsplit('.',1)
-        #if item != 'height-override' or item != 'paused-motion-speed':
         if item != 'height-override':
             configDict[item] = '0'
     convertFile = False
