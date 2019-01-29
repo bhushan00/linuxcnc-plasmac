@@ -910,14 +910,12 @@ def set_mode(mode):
         root_window.tk.call('grid','forget',farc + '.arc-ok-low')
         root_window.tk.call('grid','forget',farc + '.aOLlab')
     elif mode == '2':
-        root_window.tk.call('grid','forget',fmonitor + '.arc-voltage')
-        root_window.tk.call('grid','forget',fmonitor + '.aVlab')
+        root_window.tk.call(fthc + '.pid-p-gain','configure','-from','0','-to','100','-increment','1','-format','%0.0f') #25
+        root_window.tk.call(fthc + '.pPGlab','configure','-text','Speed (%)')
         root_window.tk.call('grid','forget',fthc + '.use-auto-volts')
         root_window.tk.call('grid','forget',fthc + '.uAVlab') 
         root_window.tk.call('grid','forget',fthc + '.thc-threshold')
         root_window.tk.call('grid','forget',fthc + '.tTlab')
-        root_window.tk.call(fthc + '.pid-p-gain','configure','-from','0','-to','100','-increment','1','-format','%0.0f') #25
-        root_window.tk.call(fthc + '.pPGlab','configure','-text','Speed (%)')
         root_window.tk.call('pack','forget',fkerflock)
         root_window.tk.call('grid','forget',farc + '.arc-ok-high')
         root_window.tk.call('grid','forget',farc + '.aOHlab')
@@ -931,6 +929,8 @@ def set_mode(mode):
         root_window.tk.call('grid','forget',foffsets + '.pIGlab')
         root_window.tk.call('grid','forget',foffsets + '.pid-d-gain')
         root_window.tk.call('grid','forget',foffsets + '.pDGlab')
+        root_window.tk.call('grid','forget',fmonitor + '.arc-voltage')
+        root_window.tk.call('grid','forget',fmonitor + '.aVlab')
     hal.set_p('plasmac.mode','%d' % (int(mode)))
 
 # setup
