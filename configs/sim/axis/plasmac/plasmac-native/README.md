@@ -2,7 +2,7 @@
 \- metric_plasmac.ini  
 \- imperial_plasmac.ini  
 
-These example configuration files show examples of how to connect with the plasmac component for use in plasma cutting machines.  
+These example configuration files show examples of how to connect with the plasmac HAL component for use in plasma cutting machines.  
 The manual page for the plasmac component is accessed by the command 'man.plasmac'  
 
 
@@ -15,7 +15,7 @@ plasmac_panel.cfg|configuration settings.
 plasmac_panel.mat|material file for cut parameters.
 plasmac_feed.ngc|for remapping of the gcode feed rate.
 plasmac_gcode.py|removes z axis moves from the opened gcode file.
-plasmac.axis|customization file for axis.
+plasmac_axis.py|customization file for the Axis GUI.
 
 The .ini files are notated for extra the requirements for these configurations.  
 The minimum .ini file requirements for the plasmac component are:  

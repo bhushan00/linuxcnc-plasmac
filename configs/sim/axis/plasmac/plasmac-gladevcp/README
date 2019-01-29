@@ -1,3 +1,3 @@
-Examples of how to connect Axis with the plasmac component for use in plasma cutting machines.
+Examples of how to connect Axis with the plasmac HAL component for use in plasma cutting machines.
 
-These configs use a gladvcp panel with associated hal and python files.
+These configs use a GladeVCP panel with associated hal and python files.

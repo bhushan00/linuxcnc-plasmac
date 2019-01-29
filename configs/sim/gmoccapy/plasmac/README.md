@@ -2,7 +2,7 @@
 \- metric_plasmac.ini  
 \- imperial_plasmac.ini  
 
-These example configuration files show examples of how to connect gmoccapy with the plasmac component for use in plasma cutting machines.  
+These example configuration files show examples of how to connect the Gmoccapy GUI with the plasmac HAL component for use in plasma cutting machines.  
 The manual page for the plasmac component is accessed by the command 'man.plasmac'  
 
 
