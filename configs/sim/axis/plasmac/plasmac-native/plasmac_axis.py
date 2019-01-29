@@ -869,7 +869,6 @@ def get_materials():
     c_volts = root_window.tk.call(fcutparms + '.cut-volts','get')
     try:
         with open(materialsFile, 'r') as f_in:
-            combolist = '[list'
             for line in f_in:
                 if not line.startswith('#'):
                     if line.startswith('[') and line.strip().endswith(']') and not 'VERSION' in line:
@@ -905,14 +904,21 @@ def set_mode(mode):
     if mode == '0':
         root_window.tk.call(fthc + '.pid-p-gain','configure','-from','0','-to',maxPidP,'-increment','1','-format','%0.0f') #25
     elif mode == '1':
+        root_window.tk.call(fthc + '.pid-p-gain','configure','-from','0','-to',maxPidP,'-increment','1','-format','%0.0f') #25
         root_window.tk.call('grid','forget',farc + '.arc-ok-high')
         root_window.tk.call('grid','forget',farc + '.aOHlab')
         root_window.tk.call('grid','forget',farc + '.arc-ok-low')
         root_window.tk.call('grid','forget',farc + '.aOLlab')
     elif mode == '2':
-        root_window.tk.call(fthc + '.pid-p-gain','configure','-from','0','-to',maxPidP,'-increment','1','-format','%0.0f') #25
         root_window.tk.call('grid','forget',fmonitor + '.arc-voltage')
         root_window.tk.call('grid','forget',fmonitor + '.aVlab')
+        root_window.tk.call('grid','forget',fthc + '.use-auto-volts')
+        root_window.tk.call('grid','forget',fthc + '.uAVlab') 
+        root_window.tk.call('grid','forget',fthc + '.thc-threshold')
+        root_window.tk.call('grid','forget',fthc + '.tTlab')
+        root_window.tk.call(fthc + '.pid-p-gain','configure','-from','0','-to','100','-increment','1','-format','%0.0f') #25
+        root_window.tk.call(fthc + '.pPGlab','configure','-text','Speed (%)')
+        root_window.tk.call('pack','forget',fkerflock)
         root_window.tk.call('grid','forget',farc + '.arc-ok-high')
         root_window.tk.call('grid','forget',farc + '.aOHlab')
         root_window.tk.call('grid','forget',farc + '.arc-ok-low')
@@ -921,13 +927,6 @@ def set_mode(mode):
         root_window.tk.call('grid','forget',farc + '.aVSlab')
         root_window.tk.call('grid','forget',farc + '.arc-voltage-offset')
         root_window.tk.call('grid','forget',farc + '.aVOlab')
-        root_window.tk.call('grid','forget',fthc + '.use-auto-volts')
-        root_window.tk.call('grid','forget',fthc + '.uAVlab') 
-        root_window.tk.call('grid','forget',fthc + '.thc-threshold')
-        root_window.tk.call('grid','forget',fthc + '.tTlab')
-        root_window.tk.call(fthc + '.pid-p-gain','configure','-from','0','-to','100','-increment','1','-format','%0.0f') #25
-        root_window.tk.call(fthc + '.pPGlab','configure','-text','Speed (%)')
-        root_window.tk.call('pack','forget',fkerflock)
         root_window.tk.call('grid','forget',foffsets + '.pid-i-gain')
         root_window.tk.call('grid','forget',foffsets + '.pIGlab')
         root_window.tk.call('grid','forget',foffsets + '.pid-d-gain')
