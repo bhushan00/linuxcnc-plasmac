@@ -1,0 +1,4382 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>926</width>
+    <height>720</height>
+   </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>0</width>
+    <height>0</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>16777215</width>
+    <height>16777215</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>PLASMAP</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">background-color: rgb(186, 189, 182);
+border-color: rgb(0, 0, 0);</string>
+  </property>
+  <property name="animated">
+   <bool>false</bool>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
+   <property name="maximumSize">
+    <size>
+     <width>16777215</width>
+     <height>720</height>
+    </size>
+   </property>
+   <property name="autoFillBackground">
+    <bool>false</bool>
+   </property>
+   <widget class="QTabWidget" name="settings">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>1</x>
+      <y>24</y>
+      <width>178</width>
+      <height>696</height>
+     </rect>
+    </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>0</width>
+      <height>0</height>
+     </size>
+    </property>
+    <property name="tabShape">
+     <enum>QTabWidget::Rounded</enum>
+    </property>
+    <property name="currentIndex">
+     <number>0</number>
+    </property>
+    <widget class="QWidget" name="run_tab">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <attribute name="title">
+      <string>Run</string>
+     </attribute>
+     <widget class="QFrame" name="corner_frame">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>461</y>
+        <width>174</width>
+        <height>102</height>
+       </rect>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::StyledPanel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
+      </property>
+      <widget class="QGroupBox" name="corner_box">
+       <property name="geometry">
+        <rect>
+         <x>2</x>
+         <y>2</y>
+         <width>170</width>
+         <height>98</height>
+        </rect>
+       </property>
+       <property name="autoFillBackground">
+        <bool>false</bool>
+       </property>
+       <property name="title">
+        <string>Corner Lock</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+       </property>
+       <property name="flat">
+        <bool>true</bool>
+       </property>
+       <widget class="QCheckBox" name="cornerlock_enable">
+        <property name="geometry">
+         <rect>
+          <x>50</x>
+          <y>20</y>
+          <width>118</width>
+          <height>24</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Enable</string>
+        </property>
+       </widget>
+       <widget class="QDoubleSpinBox" name="cornerlock_threshold">
+        <property name="geometry">
+         <rect>
+          <x>2</x>
+          <y>46</y>
+          <width>62</width>
+          <height>24</height>
+         </rect>
+        </property>
+        <property name="wrapping">
+         <bool>true</bool>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+        <property name="decimals">
+         <number>0</number>
+        </property>
+        <property name="minimum">
+         <double>1.000000000000000</double>
+        </property>
+        <property name="maximum">
+         <double>99.000000000000000</double>
+        </property>
+        <property name="value">
+         <double>1.000000000000000</double>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_15">
+        <property name="geometry">
+         <rect>
+          <x>70</x>
+          <y>46</y>
+          <width>98</width>
+          <height>24</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Threshold (%)</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_18">
+        <property name="geometry">
+         <rect>
+          <x>70</x>
+          <y>72</y>
+          <width>98</width>
+          <height>24</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Locked</string>
+        </property>
+       </widget>
+       <widget class="LED" name="cornerlock_locked_led">
+        <property name="geometry">
+         <rect>
+          <x>46</x>
+          <y>74</y>
+          <width>24</width>
+          <height>24</height>
+         </rect>
+        </property>
+        <property name="color">
+         <color>
+          <red>252</red>
+          <green>233</green>
+          <blue>79</blue>
+         </color>
+        </property>
+       </widget>
+      </widget>
+     </widget>
+     <widget class="QFrame" name="material_frame">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>174</width>
+        <height>48</height>
+       </rect>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::StyledPanel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
+      </property>
+      <widget class="QGroupBox" name="material_box">
+       <property name="geometry">
+        <rect>
+         <x>1</x>
+         <y>1</y>
+         <width>170</width>
+         <height>46</height>
+        </rect>
+       </property>
+       <property name="title">
+        <string>Material</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+       </property>
+       <widget class="QComboBox" name="materials">
+        <property name="geometry">
+         <rect>
+          <x>2</x>
+          <y>20</y>
+          <width>168</width>
+          <height>24</height>
+         </rect>
+        </property>
+        <property name="editable">
+         <bool>false</bool>
+        </property>
+        <property name="currentIndex">
+         <number>-1</number>
+        </property>
+       </widget>
+      </widget>
+     </widget>
+     <widget class="QFrame" name="cut_frame">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>49</y>
+        <width>174</width>
+        <height>230</height>
+       </rect>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::StyledPanel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
+      </property>
+      <property name="lineWidth">
+       <number>2</number>
+      </property>
+      <widget class="QGroupBox" name="cut_box">
+       <property name="geometry">
+        <rect>
+         <x>1</x>
+         <y>1</y>
+         <width>170</width>
+         <height>228</height>
+        </rect>
+       </property>
+       <property name="title">
+        <string>Cut Parameters</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+       </property>
+       <property name="flat">
+        <bool>true</bool>
+       </property>
+       <widget class="QDoubleSpinBox" name="pierce_height">
+        <property name="geometry">
+         <rect>
+          <x>2</x>
+          <y>20</y>
+          <width>62</width>
+          <height>24</height>
+         </rect>
+        </property>
+        <property name="wrapping">
+         <bool>true</bool>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+        <property name="decimals">
+         <number>1</number>
+        </property>
+        <property name="maximum">
+         <double>10.000000000000000</double>
+        </property>
+        <property name="singleStep">
+         <double>0.100000000000000</double>
+        </property>
+        <property name="value">
+         <double>0.000000000000000</double>
+        </property>
+       </widget>
+       <widget class="QDoubleSpinBox" name="pierce_delay">
+        <property name="geometry">
+         <rect>
+          <x>2</x>
+          <y>46</y>
+          <width>62</width>
+          <height>24</height>
+         </rect>
+        </property>
+        <property name="wrapping">
+         <bool>true</bool>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+        <property name="decimals">
+         <number>1</number>
+        </property>
+        <property name="maximum">
+         <double>10.000000000000000</double>
+        </property>
+        <property name="singleStep">
+         <double>0.100000000000000</double>
+        </property>
+        <property name="value">
+         <double>0.000000000000000</double>
+        </property>
+       </widget>
+       <widget class="QDoubleSpinBox" name="puddle_jump_height">
+        <property name="geometry">
+         <rect>
+          <x>2</x>
+          <y>72</y>
+          <width>62</width>
+          <height>24</height>
+         </rect>
+        </property>
+        <property name="wrapping">
+         <bool>true</bool>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+        <property name="decimals">
+         <number>0</number>
+        </property>
+        <property name="minimum">
+         <double>50.000000000000000</double>
+        </property>
+        <property name="maximum">
+         <double>200.000000000000000</double>
+        </property>
+        <property name="value">
+         <double>100.000000000000000</double>
+        </property>
+       </widget>
+       <widget class="QDoubleSpinBox" name="puddle_jump_delay">
+        <property name="geometry">
+         <rect>
+          <x>2</x>
+          <y>98</y>
+          <width>62</width>
+          <height>24</height>
+         </rect>
+        </property>
+        <property name="wrapping">
+         <bool>true</bool>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+        <property name="decimals">
+         <number>1</number>
+        </property>
+        <property name="maximum">
+         <double>5.000000000000000</double>
+        </property>
+        <property name="singleStep">
+         <double>0.100000000000000</double>
+        </property>
+        <property name="value">
+         <double>0.000000000000000</double>
+        </property>
+       </widget>
+       <widget class="QDoubleSpinBox" name="cut_height">
+        <property name="geometry">
+         <rect>
+          <x>2</x>
+          <y>124</y>
+          <width>62</width>
+          <height>24</height>
+         </rect>
+        </property>
+        <property name="wrapping">
+         <bool>true</bool>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+        <property name="prefix">
+         <string/>
+        </property>
+        <property name="suffix">
+         <string/>
+        </property>
+        <property name="decimals">
+         <number>1</number>
+        </property>
+        <property name="maximum">
+         <double>10.000000000000000</double>
+        </property>
+        <property name="singleStep">
+         <double>0.100000000000000</double>
+        </property>
+        <property name="value">
+         <double>0.000000000000000</double>
+        </property>
+       </widget>
+       <widget class="QDoubleSpinBox" name="cut_feed_rate">
+        <property name="geometry">
+         <rect>
+          <x>2</x>
+          <y>150</y>
+          <width>62</width>
+          <height>24</height>
+         </rect>
+        </property>
+        <property name="wrapping">
+         <bool>true</bool>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+        <property name="prefix">
+         <string/>
+        </property>
+        <property name="suffix">
+         <string/>
+        </property>
+        <property name="decimals">
+         <number>0</number>
+        </property>
+        <property name="maximum">
+         <double>10000.000000000000000</double>
+        </property>
+        <property name="singleStep">
+         <double>1.000000000000000</double>
+        </property>
+        <property name="value">
+         <double>0.000000000000000</double>
+        </property>
+       </widget>
+       <widget class="QDoubleSpinBox" name="cut_amps">
+        <property name="geometry">
+         <rect>
+          <x>2</x>
+          <y>176</y>
+          <width>62</width>
+          <height>24</height>
+         </rect>
+        </property>
+        <property name="wrapping">
+         <bool>true</bool>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+        <property name="decimals">
+         <number>0</number>
+        </property>
+        <property name="maximum">
+         <double>300.000000000000000</double>
+        </property>
+        <property name="value">
+         <double>0.000000000000000</double>
+        </property>
+       </widget>
+       <widget class="QDoubleSpinBox" name="cut_volts">
+        <property name="geometry">
+         <rect>
+          <x>2</x>
+          <y>202</y>
+          <width>62</width>
+          <height>24</height>
+         </rect>
+        </property>
+        <property name="wrapping">
+         <bool>true</bool>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+        <property name="decimals">
+         <number>0</number>
+        </property>
+        <property name="maximum">
+         <double>300.000000000000000</double>
+        </property>
+        <property name="singleStep">
+         <double>0.100000000000000</double>
+        </property>
+        <property name="value">
+         <double>0.000000000000000</double>
+        </property>
+       </widget>
+       <widget class="QLabel" name="cVLabel">
+        <property name="geometry">
+         <rect>
+          <x>70</x>
+          <y>202</y>
+          <width>98</width>
+          <height>24</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Cut Volts</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_10">
+        <property name="geometry">
+         <rect>
+          <x>70</x>
+          <y>176</y>
+          <width>98</width>
+          <height>24</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Cut Amps</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_9">
+        <property name="geometry">
+         <rect>
+          <x>70</x>
+          <y>150</y>
+          <width>98</width>
+          <height>24</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Cut Speed</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_8">
+        <property name="geometry">
+         <rect>
+          <x>70</x>
+          <y>124</y>
+          <width>98</width>
+          <height>24</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Cut Height</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_7">
+        <property name="geometry">
+         <rect>
+          <x>70</x>
+          <y>98</y>
+          <width>98</width>
+          <height>24</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>PJ Delay</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_6">
+        <property name="geometry">
+         <rect>
+          <x>70</x>
+          <y>72</y>
+          <width>98</width>
+          <height>24</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>PJ Height (%)</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_5">
+        <property name="geometry">
+         <rect>
+          <x>70</x>
+          <y>46</y>
+          <width>98</width>
+          <height>24</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Pierce Delay</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_4">
+        <property name="geometry">
+         <rect>
+          <x>70</x>
+          <y>20</y>
+          <width>98</width>
+          <height>24</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Pierce Height</string>
+        </property>
+       </widget>
+      </widget>
+     </widget>
+     <widget class="QFrame" name="thc_frame">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>280</y>
+        <width>174</width>
+        <height>180</height>
+       </rect>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::StyledPanel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
+      </property>
+      <widget class="QGroupBox" name="thc_box">
+       <property name="geometry">
+        <rect>
+         <x>2</x>
+         <y>2</y>
+         <width>170</width>
+         <height>176</height>
+        </rect>
+       </property>
+       <property name="title">
+        <string>THC</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+       </property>
+       <widget class="QCheckBox" name="thc_enable">
+        <property name="geometry">
+         <rect>
+          <x>50</x>
+          <y>20</y>
+          <width>118</width>
+          <height>24</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Enable</string>
+        </property>
+       </widget>
+       <widget class="QCheckBox" name="use_auto_volts">
+        <property name="geometry">
+         <rect>
+          <x>50</x>
+          <y>46</y>
+          <width>118</width>
+          <height>24</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Use Auto Volts</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="tTLabel">
+        <property name="geometry">
+         <rect>
+          <x>70</x>
+          <y>72</y>
+          <width>98</width>
+          <height>24</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Threshold (V)</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="pPLabel">
+        <property name="geometry">
+         <rect>
+          <x>70</x>
+          <y>98</y>
+          <width>98</width>
+          <height>24</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Speed (PID P)</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="lULabel">
+        <property name="geometry">
+         <rect>
+          <x>70</x>
+          <y>124</y>
+          <width>98</width>
+          <height>24</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Moving Up</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="lDLabel">
+        <property name="geometry">
+         <rect>
+          <x>70</x>
+          <y>150</y>
+          <width>98</width>
+          <height>24</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Moving Down</string>
+        </property>
+       </widget>
+       <widget class="QDoubleSpinBox" name="thc_threshold">
+        <property name="geometry">
+         <rect>
+          <x>2</x>
+          <y>72</y>
+          <width>62</width>
+          <height>24</height>
+         </rect>
+        </property>
+        <property name="wrapping">
+         <bool>true</bool>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+        <property name="minimum">
+         <double>0.050000000000000</double>
+        </property>
+        <property name="maximum">
+         <double>10.000000000000000</double>
+        </property>
+        <property name="singleStep">
+         <double>0.010000000000000</double>
+        </property>
+        <property name="value">
+         <double>0.050000000000000</double>
+        </property>
+       </widget>
+       <widget class="QDoubleSpinBox" name="pid_p_gain">
+        <property name="geometry">
+         <rect>
+          <x>2</x>
+          <y>98</y>
+          <width>62</width>
+          <height>24</height>
+         </rect>
+        </property>
+        <property name="wrapping">
+         <bool>true</bool>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+        <property name="decimals">
+         <number>0</number>
+        </property>
+        <property name="maximum">
+         <double>1000.000000000000000</double>
+        </property>
+        <property name="value">
+         <double>0.000000000000000</double>
+        </property>
+       </widget>
+       <widget class="LED" name="up_led">
+        <property name="geometry">
+         <rect>
+          <x>46</x>
+          <y>126</y>
+          <width>24</width>
+          <height>23</height>
+         </rect>
+        </property>
+        <property name="color">
+         <color>
+          <red>252</red>
+          <green>233</green>
+          <blue>79</blue>
+         </color>
+        </property>
+       </widget>
+       <widget class="LED" name="down_led">
+        <property name="geometry">
+         <rect>
+          <x>46</x>
+          <y>152</y>
+          <width>24</width>
+          <height>24</height>
+         </rect>
+        </property>
+        <property name="color">
+         <color>
+          <red>252</red>
+          <green>233</green>
+          <blue>79</blue>
+         </color>
+        </property>
+       </widget>
+      </widget>
+     </widget>
+     <widget class="QFrame" name="kerf_frame">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>564</y>
+        <width>174</width>
+        <height>102</height>
+       </rect>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::StyledPanel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
+      </property>
+      <widget class="QGroupBox" name="kerf_box">
+       <property name="geometry">
+        <rect>
+         <x>2</x>
+         <y>2</y>
+         <width>170</width>
+         <height>98</height>
+        </rect>
+       </property>
+       <property name="autoFillBackground">
+        <bool>false</bool>
+       </property>
+       <property name="title">
+        <string>Kerf Cross</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+       </property>
+       <property name="flat">
+        <bool>true</bool>
+       </property>
+       <widget class="QCheckBox" name="kerfcross_enable">
+        <property name="geometry">
+         <rect>
+          <x>50</x>
+          <y>20</y>
+          <width>118</width>
+          <height>24</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Enable</string>
+        </property>
+       </widget>
+       <widget class="QDoubleSpinBox" name="kerfcross_threshold">
+        <property name="geometry">
+         <rect>
+          <x>2</x>
+          <y>46</y>
+          <width>62</width>
+          <height>24</height>
+         </rect>
+        </property>
+        <property name="wrapping">
+         <bool>true</bool>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+        <property name="decimals">
+         <number>1</number>
+        </property>
+        <property name="minimum">
+         <double>0.100000000000000</double>
+        </property>
+        <property name="maximum">
+         <double>10.000000000000000</double>
+        </property>
+        <property name="singleStep">
+         <double>0.100000000000000</double>
+        </property>
+        <property name="value">
+         <double>0.100000000000000</double>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_20">
+        <property name="geometry">
+         <rect>
+          <x>70</x>
+          <y>46</y>
+          <width>98</width>
+          <height>24</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Threshold (V)</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_21">
+        <property name="geometry">
+         <rect>
+          <x>70</x>
+          <y>72</y>
+          <width>98</width>
+          <height>24</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Locked</string>
+        </property>
+       </widget>
+       <widget class="LED" name="kerfcross_locked_led">
+        <property name="geometry">
+         <rect>
+          <x>46</x>
+          <y>74</y>
+          <width>24</width>
+          <height>24</height>
+         </rect>
+        </property>
+        <property name="color">
+         <color>
+          <red>252</red>
+          <green>233</green>
+          <blue>79</blue>
+         </color>
+        </property>
+       </widget>
+      </widget>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="config_tab">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <attribute name="title">
+      <string>Config</string>
+     </attribute>
+     <widget class="QFrame" name="motion_frame">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>174</width>
+        <height>126</height>
+       </rect>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::StyledPanel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
+      </property>
+      <property name="lineWidth">
+       <number>2</number>
+      </property>
+      <widget class="QGroupBox" name="motion_box">
+       <property name="geometry">
+        <rect>
+         <x>1</x>
+         <y>1</y>
+         <width>170</width>
+         <height>124</height>
+        </rect>
+       </property>
+       <property name="title">
+        <string>Motion</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+       </property>
+       <property name="flat">
+        <bool>true</bool>
+       </property>
+       <widget class="QDoubleSpinBox" name="safe_height">
+        <property name="geometry">
+         <rect>
+          <x>2</x>
+          <y>20</y>
+          <width>62</width>
+          <height>24</height>
+         </rect>
+        </property>
+        <property name="wrapping">
+         <bool>true</bool>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+        <property name="decimals">
+         <number>0</number>
+        </property>
+        <property name="value">
+         <double>0.000000000000000</double>
+        </property>
+       </widget>
+       <widget class="QDoubleSpinBox" name="float_switch_travel">
+        <property name="geometry">
+         <rect>
+          <x>2</x>
+          <y>46</y>
+          <width>62</width>
+          <height>24</height>
+         </rect>
+        </property>
+        <property name="wrapping">
+         <bool>true</bool>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+        <property name="maximum">
+         <double>100.000000000000000</double>
+        </property>
+        <property name="value">
+         <double>0.000000000000000</double>
+        </property>
+       </widget>
+       <widget class="QDoubleSpinBox" name="probe_feed_rate">
+        <property name="geometry">
+         <rect>
+          <x>2</x>
+          <y>72</y>
+          <width>62</width>
+          <height>24</height>
+         </rect>
+        </property>
+        <property name="wrapping">
+         <bool>true</bool>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+        <property name="decimals">
+         <number>0</number>
+        </property>
+        <property name="maximum">
+         <double>10000.000000000000000</double>
+        </property>
+        <property name="value">
+         <double>0.000000000000000</double>
+        </property>
+       </widget>
+       <widget class="QDoubleSpinBox" name="skip_ihs_distance">
+        <property name="geometry">
+         <rect>
+          <x>2</x>
+          <y>98</y>
+          <width>62</width>
+          <height>24</height>
+         </rect>
+        </property>
+        <property name="wrapping">
+         <bool>true</bool>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+        <property name="decimals">
+         <number>0</number>
+        </property>
+        <property name="maximum">
+         <double>1000.000000000000000</double>
+        </property>
+        <property name="value">
+         <double>0.000000000000000</double>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_24">
+        <property name="geometry">
+         <rect>
+          <x>70</x>
+          <y>98</y>
+          <width>98</width>
+          <height>24</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Skip IHS</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_25">
+        <property name="geometry">
+         <rect>
+          <x>70</x>
+          <y>72</y>
+          <width>98</width>
+          <height>24</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Probe Speed</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_26">
+        <property name="geometry">
+         <rect>
+          <x>70</x>
+          <y>46</y>
+          <width>98</width>
+          <height>24</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Float Travel</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_27">
+        <property name="geometry">
+         <rect>
+          <x>70</x>
+          <y>20</y>
+          <width>98</width>
+          <height>24</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Safe Height</string>
+        </property>
+       </widget>
+      </widget>
+     </widget>
+     <widget class="QFrame" name="arc_frame">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>127</y>
+        <width>174</width>
+        <height>230</height>
+       </rect>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::StyledPanel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
+      </property>
+      <property name="lineWidth">
+       <number>2</number>
+      </property>
+      <widget class="QGroupBox" name="arc_box">
+       <property name="geometry">
+        <rect>
+         <x>1</x>
+         <y>1</y>
+         <width>170</width>
+         <height>228</height>
+        </rect>
+       </property>
+       <property name="title">
+        <string>Arc</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+       </property>
+       <property name="flat">
+        <bool>true</bool>
+       </property>
+       <widget class="QDoubleSpinBox" name="arc_fail_delay">
+        <property name="geometry">
+         <rect>
+          <x>2</x>
+          <y>20</y>
+          <width>62</width>
+          <height>24</height>
+         </rect>
+        </property>
+        <property name="wrapping">
+         <bool>true</bool>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+        <property name="decimals">
+         <number>0</number>
+        </property>
+        <property name="maximum">
+         <double>10.000000000000000</double>
+        </property>
+        <property name="value">
+         <double>0.000000000000000</double>
+        </property>
+       </widget>
+       <widget class="QDoubleSpinBox" name="arc_max_starts">
+        <property name="geometry">
+         <rect>
+          <x>2</x>
+          <y>46</y>
+          <width>62</width>
+          <height>24</height>
+         </rect>
+        </property>
+        <property name="wrapping">
+         <bool>true</bool>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+        <property name="decimals">
+         <number>0</number>
+        </property>
+        <property name="maximum">
+         <double>10.000000000000000</double>
+        </property>
+        <property name="value">
+         <double>0.000000000000000</double>
+        </property>
+       </widget>
+       <widget class="QDoubleSpinBox" name="restart_delay">
+        <property name="geometry">
+         <rect>
+          <x>2</x>
+          <y>72</y>
+          <width>62</width>
+          <height>24</height>
+         </rect>
+        </property>
+        <property name="wrapping">
+         <bool>true</bool>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+        <property name="decimals">
+         <number>0</number>
+        </property>
+        <property name="value">
+         <double>0.000000000000000</double>
+        </property>
+       </widget>
+       <widget class="QDoubleSpinBox" name="torch_off_delay">
+        <property name="geometry">
+         <rect>
+          <x>2</x>
+          <y>98</y>
+          <width>62</width>
+          <height>24</height>
+         </rect>
+        </property>
+        <property name="wrapping">
+         <bool>true</bool>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+        <property name="decimals">
+         <number>1</number>
+        </property>
+        <property name="maximum">
+         <double>10.000000000000000</double>
+        </property>
+        <property name="singleStep">
+         <double>0.100000000000000</double>
+        </property>
+        <property name="value">
+         <double>0.000000000000000</double>
+        </property>
+       </widget>
+       <widget class="QDoubleSpinBox" name="arc_voltage_scale">
+        <property name="geometry">
+         <rect>
+          <x>2</x>
+          <y>124</y>
+          <width>62</width>
+          <height>24</height>
+         </rect>
+        </property>
+        <property name="wrapping">
+         <bool>true</bool>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+        <property name="prefix">
+         <string/>
+        </property>
+        <property name="suffix">
+         <string/>
+        </property>
+        <property name="decimals">
+         <number>1</number>
+        </property>
+        <property name="maximum">
+         <double>300.000000000000000</double>
+        </property>
+        <property name="singleStep">
+         <double>0.100000000000000</double>
+        </property>
+        <property name="value">
+         <double>0.000000000000000</double>
+        </property>
+       </widget>
+       <widget class="QDoubleSpinBox" name="arc_voltage_offset">
+        <property name="geometry">
+         <rect>
+          <x>2</x>
+          <y>150</y>
+          <width>62</width>
+          <height>24</height>
+         </rect>
+        </property>
+        <property name="wrapping">
+         <bool>true</bool>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+        <property name="prefix">
+         <string/>
+        </property>
+        <property name="suffix">
+         <string/>
+        </property>
+        <property name="decimals">
+         <number>1</number>
+        </property>
+        <property name="maximum">
+         <double>300.000000000000000</double>
+        </property>
+        <property name="singleStep">
+         <double>0.100000000000000</double>
+        </property>
+        <property name="value">
+         <double>0.000000000000000</double>
+        </property>
+       </widget>
+       <widget class="QDoubleSpinBox" name="arc_ok_high">
+        <property name="geometry">
+         <rect>
+          <x>2</x>
+          <y>176</y>
+          <width>62</width>
+          <height>24</height>
+         </rect>
+        </property>
+        <property name="wrapping">
+         <bool>true</bool>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+        <property name="decimals">
+         <number>0</number>
+        </property>
+        <property name="maximum">
+         <double>300.000000000000000</double>
+        </property>
+        <property name="value">
+         <double>0.000000000000000</double>
+        </property>
+       </widget>
+       <widget class="QDoubleSpinBox" name="arc_ok_low">
+        <property name="geometry">
+         <rect>
+          <x>2</x>
+          <y>202</y>
+          <width>62</width>
+          <height>24</height>
+         </rect>
+        </property>
+        <property name="wrapping">
+         <bool>true</bool>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+        <property name="decimals">
+         <number>0</number>
+        </property>
+        <property name="maximum">
+         <double>300.000000000000000</double>
+        </property>
+        <property name="value">
+         <double>0.000000000000000</double>
+        </property>
+       </widget>
+       <widget class="QLabel" name="aOLLabel">
+        <property name="geometry">
+         <rect>
+          <x>70</x>
+          <y>202</y>
+          <width>98</width>
+          <height>24</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>OK Low Volts</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="aOHLabel">
+        <property name="geometry">
+         <rect>
+          <x>70</x>
+          <y>176</y>
+          <width>98</width>
+          <height>24</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>OK High Volts</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="aVOLabel">
+        <property name="geometry">
+         <rect>
+          <x>70</x>
+          <y>150</y>
+          <width>98</width>
+          <height>24</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Voltage Offset</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="aVSLabel">
+        <property name="geometry">
+         <rect>
+          <x>70</x>
+          <y>124</y>
+          <width>98</width>
+          <height>24</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Voltage Scale</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_32">
+        <property name="geometry">
+         <rect>
+          <x>70</x>
+          <y>98</y>
+          <width>98</width>
+          <height>24</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Torch Off Delay</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_33">
+        <property name="geometry">
+         <rect>
+          <x>70</x>
+          <y>72</y>
+          <width>98</width>
+          <height>24</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Restart Delay</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_34">
+        <property name="geometry">
+         <rect>
+          <x>70</x>
+          <y>46</y>
+          <width>98</width>
+          <height>24</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Max Starts</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_35">
+        <property name="geometry">
+         <rect>
+          <x>70</x>
+          <y>20</y>
+          <width>98</width>
+          <height>24</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Fail Timeout</string>
+        </property>
+       </widget>
+      </widget>
+     </widget>
+     <widget class="QFrame" name="offsets_frame">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>358</y>
+        <width>174</width>
+        <height>126</height>
+       </rect>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::StyledPanel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
+      </property>
+      <property name="lineWidth">
+       <number>2</number>
+      </property>
+      <widget class="QGroupBox" name="offsets_box">
+       <property name="geometry">
+        <rect>
+         <x>1</x>
+         <y>1</y>
+         <width>170</width>
+         <height>124</height>
+        </rect>
+       </property>
+       <property name="title">
+        <string>Speed</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+       </property>
+       <property name="flat">
+        <bool>true</bool>
+       </property>
+       <widget class="QDoubleSpinBox" name="setup_feed_rate">
+        <property name="geometry">
+         <rect>
+          <x>2</x>
+          <y>46</y>
+          <width>62</width>
+          <height>24</height>
+         </rect>
+        </property>
+        <property name="wrapping">
+         <bool>true</bool>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+        <property name="decimals">
+         <number>0</number>
+        </property>
+        <property name="maximum">
+         <double>10000.000000000000000</double>
+        </property>
+        <property name="value">
+         <double>0.000000000000000</double>
+        </property>
+       </widget>
+       <widget class="QDoubleSpinBox" name="pid_i_gain">
+        <property name="geometry">
+         <rect>
+          <x>2</x>
+          <y>72</y>
+          <width>62</width>
+          <height>24</height>
+         </rect>
+        </property>
+        <property name="wrapping">
+         <bool>true</bool>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+        <property name="decimals">
+         <number>0</number>
+        </property>
+        <property name="maximum">
+         <double>10000.000000000000000</double>
+        </property>
+        <property name="value">
+         <double>0.000000000000000</double>
+        </property>
+       </widget>
+       <widget class="QDoubleSpinBox" name="pid_d_gain">
+        <property name="geometry">
+         <rect>
+          <x>2</x>
+          <y>98</y>
+          <width>62</width>
+          <height>24</height>
+         </rect>
+        </property>
+        <property name="wrapping">
+         <bool>true</bool>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+        <property name="decimals">
+         <number>0</number>
+        </property>
+        <property name="maximum">
+         <double>10000.000000000000000</double>
+        </property>
+        <property name="value">
+         <double>0.000000000000000</double>
+        </property>
+       </widget>
+       <widget class="QLabel" name="pDLabel">
+        <property name="geometry">
+         <rect>
+          <x>70</x>
+          <y>98</y>
+          <width>98</width>
+          <height>24</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>PID D Gain</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="pILabel">
+        <property name="geometry">
+         <rect>
+          <x>70</x>
+          <y>72</y>
+          <width>98</width>
+          <height>24</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>PID I Gain</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_38">
+        <property name="geometry">
+         <rect>
+          <x>70</x>
+          <y>46</y>
+          <width>98</width>
+          <height>24</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Setup Speed</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_39">
+        <property name="geometry">
+         <rect>
+          <x>70</x>
+          <y>20</y>
+          <width>98</width>
+          <height>24</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Max Speed</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="max_feed_rate">
+        <property name="geometry">
+         <rect>
+          <x>2</x>
+          <y>20</y>
+          <width>62</width>
+          <height>24</height>
+         </rect>
+        </property>
+        <property name="frameShape">
+         <enum>QFrame::StyledPanel</enum>
+        </property>
+        <property name="frameShadow">
+         <enum>QFrame::Sunken</enum>
+        </property>
+        <property name="text">
+         <string>0</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+        <property name="indent">
+         <number>20</number>
+        </property>
+       </widget>
+      </widget>
+     </widget>
+    </widget>
+   </widget>
+   <widget class="QFrame" name="dro_frame">
+    <property name="geometry">
+     <rect>
+      <x>178</x>
+      <y>24</y>
+      <width>220</width>
+      <height>268</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>0</width>
+      <height>0</height>
+     </size>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::StyledPanel</enum>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Raised</enum>
+    </property>
+    <widget class="ActionButton" name="estop_button">
+     <property name="geometry">
+      <rect>
+       <x>111</x>
+       <y>2</y>
+       <width>59</width>
+       <height>36</height>
+      </rect>
+     </property>
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="text">
+      <string>
+Estop</string>
+     </property>
+     <property name="indicator_option" stdset="0">
+      <bool>false</bool>
+     </property>
+     <property name="estop_action" stdset="0">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="ActionButton" name="power_button">
+     <property name="geometry">
+      <rect>
+       <x>50</x>
+       <y>2</y>
+       <width>59</width>
+       <height>36</height>
+      </rect>
+     </property>
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="text">
+      <string>
+Power</string>
+     </property>
+     <property name="estop_action" stdset="0">
+      <bool>false</bool>
+     </property>
+     <property name="machine_on_action" stdset="0">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="StateLED" name="power_led">
+     <property name="geometry">
+      <rect>
+       <x>95</x>
+       <y>2</y>
+       <width>15</width>
+       <height>15</height>
+      </rect>
+     </property>
+     <property name="color">
+      <color>
+       <red>78</red>
+       <green>154</green>
+       <blue>6</blue>
+      </color>
+     </property>
+     <property name="is_on_status" stdset="0">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="StateLED" name="estop_led">
+     <property name="geometry">
+      <rect>
+       <x>158</x>
+       <y>2</y>
+       <width>15</width>
+       <height>15</height>
+      </rect>
+     </property>
+     <property name="is_estopped_status" stdset="0">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="ActionButton" name="home_all">
+     <property name="geometry">
+      <rect>
+       <x>2</x>
+       <y>2</y>
+       <width>46</width>
+       <height>36</height>
+      </rect>
+     </property>
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="text">
+      <string>
+Home</string>
+     </property>
+     <property name="estop_action" stdset="0">
+      <bool>false</bool>
+     </property>
+     <property name="home_action" stdset="0">
+      <bool>true</bool>
+     </property>
+     <property name="joint_number" stdset="0">
+      <number>-1</number>
+     </property>
+    </widget>
+    <widget class="StateLED" name="home_led">
+     <property name="geometry">
+      <rect>
+       <x>33</x>
+       <y>2</y>
+       <width>15</width>
+       <height>15</height>
+      </rect>
+     </property>
+     <property name="color">
+      <color>
+       <red>78</red>
+       <green>154</green>
+       <blue>6</blue>
+      </color>
+     </property>
+     <property name="is_homed_status" stdset="0">
+      <bool>true</bool>
+     </property>
+     <property name="joint_number_status" stdset="0">
+      <number>-1</number>
+     </property>
+    </widget>
+    <widget class="DROLabel" name="dro_x">
+     <property name="geometry">
+      <rect>
+       <x>50</x>
+       <y>40</y>
+       <width>120</width>
+       <height>36</height>
+      </rect>
+     </property>
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="font">
+      <font>
+       <family>Liberation Sans Narrow</family>
+       <pointsize>16</pointsize>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color: rgb(136, 138, 133);</string>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::Box</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Sunken</enum>
+     </property>
+     <property name="scaledContents">
+      <bool>true</bool>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+     <property name="Qreference_type" stdset="0">
+      <number>1</number>
+     </property>
+    </widget>
+    <widget class="DROLabel" name="dro_y">
+     <property name="geometry">
+      <rect>
+       <x>50</x>
+       <y>78</y>
+       <width>120</width>
+       <height>36</height>
+      </rect>
+     </property>
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="font">
+      <font>
+       <family>Liberation Sans Narrow</family>
+       <pointsize>16</pointsize>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color: rgb(136, 138, 133);</string>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::Box</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Sunken</enum>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+     <property name="Qjoint_number" stdset="0">
+      <number>1</number>
+     </property>
+     <property name="Qreference_type" stdset="0">
+      <number>1</number>
+     </property>
+    </widget>
+    <widget class="DROLabel" name="dro_z">
+     <property name="geometry">
+      <rect>
+       <x>50</x>
+       <y>116</y>
+       <width>120</width>
+       <height>36</height>
+      </rect>
+     </property>
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="font">
+      <font>
+       <family>Liberation Sans Narrow</family>
+       <pointsize>16</pointsize>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color: rgb(136, 138, 133);</string>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::Box</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Sunken</enum>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+     <property name="Qjoint_number" stdset="0">
+      <number>2</number>
+     </property>
+     <property name="Qreference_type" stdset="0">
+      <number>1</number>
+     </property>
+    </widget>
+    <widget class="StatusSlider" name="feed_override_slider">
+     <property name="geometry">
+      <rect>
+       <x>50</x>
+       <y>170</y>
+       <width>120</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="minimum">
+      <number>1</number>
+     </property>
+     <property name="maximum">
+      <number>120</number>
+     </property>
+     <property name="sliderPosition">
+      <number>100</number>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="invertedAppearance">
+      <bool>false</bool>
+     </property>
+     <property name="invertedControls">
+      <bool>false</bool>
+     </property>
+     <property name="tickPosition">
+      <enum>QSlider::NoTicks</enum>
+     </property>
+     <property name="tickInterval">
+      <number>10</number>
+     </property>
+     <property name="rapid_rate" stdset="0">
+      <bool>false</bool>
+     </property>
+     <property name="feed_rate" stdset="0">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="StatusLabel" name="feed_override_status">
+     <property name="geometry">
+      <rect>
+       <x>172</x>
+       <y>154</y>
+       <width>46</width>
+       <height>36</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="StatusLabel" name="rapid_override_status">
+     <property name="geometry">
+      <rect>
+       <x>172</x>
+       <y>192</y>
+       <width>46</width>
+       <height>36</height>
+      </rect>
+     </property>
+     <property name="feed_override_status" stdset="0">
+      <bool>false</bool>
+     </property>
+     <property name="rapid_override_status" stdset="0">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="StatusLabel" name="jog_rate_status">
+     <property name="geometry">
+      <rect>
+       <x>172</x>
+       <y>230</y>
+       <width>46</width>
+       <height>36</height>
+      </rect>
+     </property>
+     <property name="jograte_status" stdset="0">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="StatusSlider" name="rapid_override_slider">
+     <property name="geometry">
+      <rect>
+       <x>50</x>
+       <y>208</y>
+       <width>120</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="maximum">
+      <number>120</number>
+     </property>
+     <property name="sliderPosition">
+      <number>100</number>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="tickPosition">
+      <enum>QSlider::NoTicks</enum>
+     </property>
+     <property name="tickInterval">
+      <number>10</number>
+     </property>
+    </widget>
+    <widget class="StatusSlider" name="jog_rate_slider">
+     <property name="geometry">
+      <rect>
+       <x>50</x>
+       <y>246</y>
+       <width>120</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="maximum">
+      <number>999</number>
+     </property>
+     <property name="sliderPosition">
+      <number>500</number>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="tickPosition">
+      <enum>QSlider::NoTicks</enum>
+     </property>
+     <property name="tickInterval">
+      <number>100</number>
+     </property>
+     <property name="rapid_rate" stdset="0">
+      <bool>false</bool>
+     </property>
+     <property name="jograte_rate" stdset="0">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QLabel" name="jRLabel">
+     <property name="geometry">
+      <rect>
+       <x>50</x>
+       <y>230</y>
+       <width>120</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>JogRate</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+    <widget class="QLabel" name="rOLabel">
+     <property name="geometry">
+      <rect>
+       <x>50</x>
+       <y>192</y>
+       <width>120</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Rapid Override</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+    <widget class="QLabel" name="fOLabel">
+     <property name="geometry">
+      <rect>
+       <x>50</x>
+       <y>154</y>
+       <width>120</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Feed Override</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+    <widget class="AxisToolButton" name="zero_z_button">
+     <property name="geometry">
+      <rect>
+       <x>172</x>
+       <y>116</y>
+       <width>45</width>
+       <height>36</height>
+      </rect>
+     </property>
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="font">
+      <font>
+       <family>DejaVu Sans</family>
+       <pointsize>16</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>Z0</string>
+     </property>
+     <property name="popupMode">
+      <enum>QToolButton::InstantPopup</enum>
+     </property>
+     <property name="toolButtonStyle">
+      <enum>Qt::ToolButtonTextOnly</enum>
+     </property>
+     <property name="autoRaise">
+      <bool>false</bool>
+     </property>
+     <property name="arrowType">
+      <enum>Qt::NoArrow</enum>
+     </property>
+     <property name="joint_number" stdset="0">
+      <number>2</number>
+     </property>
+    </widget>
+    <widget class="AxisToolButton" name="zero_y_button">
+     <property name="geometry">
+      <rect>
+       <x>172</x>
+       <y>78</y>
+       <width>45</width>
+       <height>36</height>
+      </rect>
+     </property>
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="font">
+      <font>
+       <family>DejaVu Sans</family>
+       <pointsize>16</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>Y0</string>
+     </property>
+     <property name="popupMode">
+      <enum>QToolButton::InstantPopup</enum>
+     </property>
+     <property name="toolButtonStyle">
+      <enum>Qt::ToolButtonTextOnly</enum>
+     </property>
+     <property name="autoRaise">
+      <bool>false</bool>
+     </property>
+     <property name="arrowType">
+      <enum>Qt::NoArrow</enum>
+     </property>
+     <property name="joint_number" stdset="0">
+      <number>1</number>
+     </property>
+    </widget>
+    <widget class="AxisToolButton" name="zero_x_button">
+     <property name="geometry">
+      <rect>
+       <x>172</x>
+       <y>40</y>
+       <width>46</width>
+       <height>36</height>
+      </rect>
+     </property>
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="font">
+      <font>
+       <family>DejaVu Sans</family>
+       <pointsize>16</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>X0</string>
+     </property>
+     <property name="popupMode">
+      <enum>QToolButton::InstantPopup</enum>
+     </property>
+     <property name="toolButtonStyle">
+      <enum>Qt::ToolButtonTextOnly</enum>
+     </property>
+     <property name="autoRaise">
+      <bool>false</bool>
+     </property>
+     <property name="arrowType">
+      <enum>Qt::NoArrow</enum>
+     </property>
+    </widget>
+    <widget class="SystemToolButton" name="work_coordinates_button">
+     <property name="geometry">
+      <rect>
+       <x>172</x>
+       <y>2</y>
+       <width>46</width>
+       <height>36</height>
+      </rect>
+     </property>
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="popupMode">
+      <enum>QToolButton::InstantPopup</enum>
+     </property>
+    </widget>
+    <widget class="ActionButton" name="open_button">
+     <property name="geometry">
+      <rect>
+       <x>2</x>
+       <y>40</y>
+       <width>46</width>
+       <height>36</height>
+      </rect>
+     </property>
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="text">
+      <string>Open</string>
+     </property>
+     <property name="estop_action" stdset="0">
+      <bool>false</bool>
+     </property>
+     <property name="load_dialog_action" stdset="0">
+      <bool>true</bool>
+     </property>
+     <property name="home_action" stdset="0">
+      <bool>false</bool>
+     </property>
+     <property name="joint_number" stdset="0">
+      <number>-1</number>
+     </property>
+    </widget>
+    <widget class="ActionButton" name="run_button">
+     <property name="geometry">
+      <rect>
+       <x>2</x>
+       <y>78</y>
+       <width>46</width>
+       <height>36</height>
+      </rect>
+     </property>
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="text">
+      <string>Run</string>
+     </property>
+     <property name="estop_action" stdset="0">
+      <bool>false</bool>
+     </property>
+     <property name="run_action" stdset="0">
+      <bool>true</bool>
+     </property>
+     <property name="home_action" stdset="0">
+      <bool>false</bool>
+     </property>
+     <property name="joint_number" stdset="0">
+      <number>-1</number>
+     </property>
+    </widget>
+    <widget class="ActionButton" name="pause_button">
+     <property name="geometry">
+      <rect>
+       <x>2</x>
+       <y>116</y>
+       <width>46</width>
+       <height>36</height>
+      </rect>
+     </property>
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="text">
+      <string>Pause</string>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+     <property name="indicator_option" stdset="0">
+      <bool>true</bool>
+     </property>
+     <property name="indicator_HAL_pin_option" stdset="0">
+      <bool>false</bool>
+     </property>
+     <property name="checked_state_text_option" stdset="0">
+      <bool>false</bool>
+     </property>
+     <property name="python_command_option" stdset="0">
+      <bool>false</bool>
+     </property>
+     <property name="on_color" stdset="0">
+      <color>
+       <red>255</red>
+       <green>0</green>
+       <blue>0</blue>
+      </color>
+     </property>
+     <property name="off_color" stdset="0">
+      <color>
+       <red>0</red>
+       <green>0</green>
+       <blue>0</blue>
+      </color>
+     </property>
+     <property name="indicator_size" stdset="0">
+      <double>0.300000000000000</double>
+     </property>
+     <property name="true_python_cmd_string" stdset="0">
+      <string>print&quot;true command&quot;</string>
+     </property>
+     <property name="false_python_cmd_string" stdset="0">
+      <string>print&quot;false command&quot;</string>
+     </property>
+     <property name="estop_action" stdset="0">
+      <bool>false</bool>
+     </property>
+     <property name="pause_action" stdset="0">
+      <bool>true</bool>
+     </property>
+     <property name="home_action" stdset="0">
+      <bool>false</bool>
+     </property>
+     <property name="joint_number" stdset="0">
+      <number>-1</number>
+     </property>
+    </widget>
+    <widget class="ActionButton" name="stop_button">
+     <property name="geometry">
+      <rect>
+       <x>2</x>
+       <y>154</y>
+       <width>46</width>
+       <height>36</height>
+      </rect>
+     </property>
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="text">
+      <string>Stop</string>
+     </property>
+     <property name="estop_action" stdset="0">
+      <bool>false</bool>
+     </property>
+     <property name="abort_action" stdset="0">
+      <bool>true</bool>
+     </property>
+     <property name="pause_action" stdset="0">
+      <bool>false</bool>
+     </property>
+     <property name="home_action" stdset="0">
+      <bool>false</bool>
+     </property>
+     <property name="joint_number" stdset="0">
+      <number>-1</number>
+     </property>
+    </widget>
+    <widget class="QCheckBox" name="edit_code">
+     <property name="geometry">
+      <rect>
+       <x>5</x>
+       <y>192</y>
+       <width>46</width>
+       <height>36</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Edit</string>
+     </property>
+    </widget>
+    <zorder>estop_button</zorder>
+    <zorder>power_button</zorder>
+    <zorder>power_led</zorder>
+    <zorder>estop_led</zorder>
+    <zorder>home_all</zorder>
+    <zorder>home_led</zorder>
+    <zorder>dro_x</zorder>
+    <zorder>dro_y</zorder>
+    <zorder>dro_z</zorder>
+    <zorder>feed_override_slider</zorder>
+    <zorder>feed_override_status</zorder>
+    <zorder>rapid_override_status</zorder>
+    <zorder>jog_rate_status</zorder>
+    <zorder>rapid_override_slider</zorder>
+    <zorder>jog_rate_slider</zorder>
+    <zorder>jRLabel</zorder>
+    <zorder>rOLabel</zorder>
+    <zorder>zero_z_button</zorder>
+    <zorder>zero_y_button</zorder>
+    <zorder>zero_x_button</zorder>
+    <zorder>work_coordinates_button</zorder>
+    <zorder>open_button</zorder>
+    <zorder>run_button</zorder>
+    <zorder>pause_button</zorder>
+    <zorder>fOLabel</zorder>
+    <zorder>stop_button</zorder>
+    <zorder>edit_code</zorder>
+   </widget>
+   <widget class="QFrame" name="manualframe">
+    <property name="geometry">
+     <rect>
+      <x>400</x>
+      <y>304</y>
+      <width>185</width>
+      <height>145</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>0</width>
+      <height>0</height>
+     </size>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::NoFrame</enum>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Raised</enum>
+    </property>
+    <widget class="JogIncrements" name="jog_increments_button">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>120</y>
+       <width>135</width>
+       <height>25</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="ActionButton" name="jog_z_plus_button">
+     <property name="geometry">
+      <rect>
+       <x>140</x>
+       <y>0</y>
+       <width>45</width>
+       <height>35</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Z+</string>
+     </property>
+     <property name="jog_joint_pos_action" stdset="0">
+      <bool>true</bool>
+     </property>
+     <property name="joint_number" stdset="0">
+      <number>2</number>
+     </property>
+    </widget>
+    <widget class="ActionButton" name="jog_z_minus_button">
+     <property name="geometry">
+      <rect>
+       <x>140</x>
+       <y>80</y>
+       <width>45</width>
+       <height>35</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Z-</string>
+     </property>
+     <property name="jog_joint_neg_action" stdset="0">
+      <bool>true</bool>
+     </property>
+     <property name="joint_number" stdset="0">
+      <number>2</number>
+     </property>
+    </widget>
+    <widget class="ActionButton" name="jog_y_plus_button">
+     <property name="geometry">
+      <rect>
+       <x>45</x>
+       <y>0</y>
+       <width>45</width>
+       <height>35</height>
+      </rect>
+     </property>
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="text">
+      <string>Y+</string>
+     </property>
+     <property name="jog_joint_pos_action" stdset="0">
+      <bool>true</bool>
+     </property>
+     <property name="joint_number" stdset="0">
+      <number>1</number>
+     </property>
+    </widget>
+    <widget class="ActionButton" name="jog_y_minus_button">
+     <property name="geometry">
+      <rect>
+       <x>45</x>
+       <y>80</y>
+       <width>45</width>
+       <height>35</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Y-</string>
+     </property>
+     <property name="jog_joint_neg_action" stdset="0">
+      <bool>true</bool>
+     </property>
+     <property name="joint_number" stdset="0">
+      <number>1</number>
+     </property>
+    </widget>
+    <widget class="ActionButton" name="jog_x_plus_button">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>40</y>
+       <width>45</width>
+       <height>35</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>X-</string>
+     </property>
+     <property name="jog_joint_pos_action" stdset="0">
+      <bool>false</bool>
+     </property>
+     <property name="jog_joint_neg_action" stdset="0">
+      <bool>true</bool>
+     </property>
+     <property name="joint_number" stdset="0">
+      <number>0</number>
+     </property>
+    </widget>
+    <widget class="ActionButton" name="jog_x_minus_button">
+     <property name="geometry">
+      <rect>
+       <x>90</x>
+       <y>40</y>
+       <width>45</width>
+       <height>35</height>
+      </rect>
+     </property>
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="text">
+      <string>X+</string>
+     </property>
+     <property name="jog_joint_pos_action" stdset="0">
+      <bool>true</bool>
+     </property>
+     <property name="jog_joint_neg_action" stdset="0">
+      <bool>false</bool>
+     </property>
+     <property name="joint_number" stdset="0">
+      <number>0</number>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QFrame" name="view_frame">
+    <property name="geometry">
+     <rect>
+      <x>800</x>
+      <y>24</y>
+      <width>40</width>
+      <height>275</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>0</width>
+      <height>0</height>
+     </size>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::NoFrame</enum>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Raised</enum>
+    </property>
+    <widget class="ActionButton" name="viewx">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>40</width>
+       <height>35</height>
+      </rect>
+     </property>
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="text">
+      <string>X</string>
+     </property>
+     <property name="view_change_action" stdset="0">
+      <bool>true</bool>
+     </property>
+     <property name="view_type_string" stdset="0">
+      <string>x</string>
+     </property>
+    </widget>
+    <widget class="ActionButton" name="viewy">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>40</y>
+       <width>40</width>
+       <height>35</height>
+      </rect>
+     </property>
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="text">
+      <string>Y</string>
+     </property>
+     <property name="view_change_action" stdset="0">
+      <bool>true</bool>
+     </property>
+     <property name="view_type_string" stdset="0">
+      <string>y</string>
+     </property>
+    </widget>
+    <widget class="ActionButton" name="viewz">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>80</y>
+       <width>40</width>
+       <height>35</height>
+      </rect>
+     </property>
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="text">
+      <string>Z</string>
+     </property>
+     <property name="view_change_action" stdset="0">
+      <bool>true</bool>
+     </property>
+     <property name="view_type_string" stdset="0">
+      <string>z</string>
+     </property>
+    </widget>
+    <widget class="ActionButton" name="viewz2">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>120</y>
+       <width>40</width>
+       <height>35</height>
+      </rect>
+     </property>
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="text">
+      <string>Z2</string>
+     </property>
+     <property name="view_change_action" stdset="0">
+      <bool>true</bool>
+     </property>
+     <property name="view_type_string" stdset="0">
+      <string>z2</string>
+     </property>
+    </widget>
+    <widget class="ActionButton" name="viewp">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>160</y>
+       <width>40</width>
+       <height>35</height>
+      </rect>
+     </property>
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="icon">
+      <iconset>
+       <normaloff>../../../../../../../home/lib/python/qtvcp/widgets/widget_icons/graphics.png</normaloff>../../../../../../../home/lib/python/qtvcp/widgets/widget_icons/graphics.png</iconset>
+     </property>
+     <property name="view_change_action" stdset="0">
+      <bool>true</bool>
+     </property>
+     <property name="view_type_string" stdset="0">
+      <string>p</string>
+     </property>
+    </widget>
+    <widget class="ActionButton" name="viewp_2">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>200</y>
+       <width>40</width>
+       <height>35</height>
+      </rect>
+     </property>
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="text">
+      <string>Clear</string>
+     </property>
+     <property name="view_change_action" stdset="0">
+      <bool>true</bool>
+     </property>
+     <property name="view_type_string" stdset="0">
+      <string>clear</string>
+     </property>
+    </widget>
+   </widget>
+   <widget class="MDIHistory" name="mdi_history">
+    <property name="geometry">
+     <rect>
+      <x>591</x>
+      <y>304</y>
+      <width>250</width>
+      <height>145</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>0</width>
+      <height>0</height>
+     </size>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>250</width>
+      <height>145</height>
+     </size>
+    </property>
+    <property name="soft_keyboard_option" stdset="0">
+     <bool>false</bool>
+    </property>
+   </widget>
+   <widget class="GcodeEditor" name="gcode_editor">
+    <property name="geometry">
+     <rect>
+      <x>802</x>
+      <y>454</y>
+      <width>440</width>
+      <height>200</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>300</width>
+      <height>126</height>
+     </size>
+    </property>
+   </widget>
+   <widget class="ActionButton" name="halshow_button">
+    <property name="geometry">
+     <rect>
+      <x>755</x>
+      <y>455</y>
+      <width>40</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Halshow</string>
+    </property>
+    <property name="launch_halshow_action" stdset="0">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="GeneralHALInput" name="config_disable">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>16</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="pin_name" stdset="0">
+     <string>config-disable</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton">
+    <property name="geometry">
+     <rect>
+      <x>715</x>
+      <y>480</y>
+      <width>82</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Mode 0</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_2">
+    <property name="geometry">
+     <rect>
+      <x>715</x>
+      <y>515</y>
+      <width>82</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Mode 1</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_3">
+    <property name="geometry">
+     <rect>
+      <x>715</x>
+      <y>550</y>
+      <width>82</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Mode 2</string>
+    </property>
+   </widget>
+   <widget class="ScreenOptions" name="screen_options">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>50</width>
+      <height>50</height>
+     </rect>
+    </property>
+    <property name="catch_close_option" stdset="0">
+     <bool>false</bool>
+    </property>
+    <property name="play_sounds_option" stdset="0">
+     <bool>false</bool>
+    </property>
+    <property name="pref_filename_string" stdset="0">
+     <string>.qtvcp_screen_preferences</string>
+    </property>
+   </widget>
+   <widget class="GCodeGraphics" name="preview">
+    <property name="geometry">
+     <rect>
+      <x>400</x>
+      <y>24</y>
+      <width>395</width>
+      <height>275</height>
+     </rect>
+    </property>
+    <property name="background_color" stdset="0">
+     <color>
+      <red>0</red>
+      <green>0</green>
+      <blue>0</blue>
+     </color>
+    </property>
+   </widget>
+   <widget class="FileDialog" name="open_file_dialog">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>100</width>
+      <height>100</height>
+     </rect>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>16777215</width>
+      <height>16777215</height>
+     </size>
+    </property>
+    <property name="state">
+     <bool>false</bool>
+    </property>
+   </widget>
+   <widget class="QLabel" name="status">
+    <property name="geometry">
+     <rect>
+      <x>1</x>
+      <y>1</y>
+      <width>848</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::StyledPanel</enum>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Sunken</enum>
+    </property>
+    <property name="text">
+     <string>status</string>
+    </property>
+   </widget>
+   <widget class="QFrame" name="frame">
+    <property name="geometry">
+     <rect>
+      <x>178</x>
+      <y>294</y>
+      <width>220</width>
+      <height>268</height>
+     </rect>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::StyledPanel</enum>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Raised</enum>
+    </property>
+    <widget class="StateEnableGridLayout" name="state_enable_gridLayout">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>220</width>
+       <height>268</height>
+      </rect>
+     </property>
+     <widget class="LCDNumber" name="arc_voltage">
+      <property name="geometry">
+       <rect>
+        <x>5</x>
+        <y>10</y>
+        <width>40</width>
+        <height>32</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>DejaVu Sans</family>
+        <pointsize>10</pointsize>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">color: rgb(206, 92, 0);</string>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::NoFrame</enum>
+      </property>
+      <property name="digitCount">
+       <number>3</number>
+      </property>
+      <property name="segmentStyle">
+       <enum>QLCDNumber::Flat</enum>
+      </property>
+      <property name="value" stdset="0">
+       <double>300.000000000000000</double>
+      </property>
+      <property name="intValue" stdset="0">
+       <number>300</number>
+      </property>
+     </widget>
+    </widget>
+   </widget>
+   <widget class="PushButton" name="x_to_home">
+    <property name="geometry">
+     <rect>
+      <x>585</x>
+      <y>455</y>
+      <width>72</width>
+      <height>36</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>X to Home</string>
+    </property>
+   </widget>
+   <widget class="PushButton" name="y_to_home">
+    <property name="geometry">
+     <rect>
+      <x>585</x>
+      <y>495</y>
+      <width>72</width>
+      <height>36</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Y to Home</string>
+    </property>
+   </widget>
+   <widget class="PushButton" name="z_to_home">
+    <property name="geometry">
+     <rect>
+      <x>585</x>
+      <y>535</y>
+      <width>72</width>
+      <height>36</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Z to Home</string>
+    </property>
+   </widget>
+   <widget class="PushButton" name="dry_run">
+    <property name="geometry">
+     <rect>
+      <x>585</x>
+      <y>575</y>
+      <width>72</width>
+      <height>36</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Dry Run</string>
+    </property>
+   </widget>
+   <widget class="PushButton" name="forward">
+    <property name="geometry">
+     <rect>
+      <x>625</x>
+      <y>680</y>
+      <width>36</width>
+      <height>36</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Fwd</string>
+    </property>
+   </widget>
+   <widget class="Slider" name="paused_motion_speed">
+    <property name="geometry">
+     <rect>
+      <x>470</x>
+      <y>700</y>
+      <width>140</width>
+      <height>15</height>
+     </rect>
+    </property>
+    <property name="minimum">
+     <number>1</number>
+    </property>
+    <property name="maximum">
+     <number>100</number>
+    </property>
+    <property name="singleStep">
+     <number>1</number>
+    </property>
+    <property name="orientation">
+     <enum>Qt::Horizontal</enum>
+    </property>
+    <property name="tickPosition">
+     <enum>QSlider::NoTicks</enum>
+    </property>
+    <property name="tickInterval">
+     <number>10</number>
+    </property>
+   </widget>
+   <widget class="QLabel" name="jRLabel_2">
+    <property name="geometry">
+     <rect>
+      <x>475</x>
+      <y>680</y>
+      <width>140</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Paused Motion</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="Slider" name="torch_pulse_time">
+    <property name="geometry">
+     <rect>
+      <x>480</x>
+      <y>665</y>
+      <width>140</width>
+      <height>15</height>
+     </rect>
+    </property>
+    <property name="minimum">
+     <number>1</number>
+    </property>
+    <property name="maximum">
+     <number>100</number>
+    </property>
+    <property name="singleStep">
+     <number>1</number>
+    </property>
+    <property name="orientation">
+     <enum>Qt::Horizontal</enum>
+    </property>
+    <property name="tickPosition">
+     <enum>QSlider::NoTicks</enum>
+    </property>
+    <property name="tickInterval">
+     <number>10</number>
+    </property>
+   </widget>
+   <widget class="QLabel" name="Label_7">
+    <property name="geometry">
+     <rect>
+      <x>480</x>
+      <y>645</y>
+      <width>140</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Torch Pulse</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="Slider" name="height_override">
+    <property name="geometry">
+     <rect>
+      <x>470</x>
+      <y>630</y>
+      <width>140</width>
+      <height>15</height>
+     </rect>
+    </property>
+    <property name="minimum">
+     <number>-50</number>
+    </property>
+    <property name="maximum">
+     <number>50</number>
+    </property>
+    <property name="singleStep">
+     <number>1</number>
+    </property>
+    <property name="orientation">
+     <enum>Qt::Horizontal</enum>
+    </property>
+    <property name="tickPosition">
+     <enum>QSlider::NoTicks</enum>
+    </property>
+    <property name="tickInterval">
+     <number>10</number>
+    </property>
+   </widget>
+   <widget class="QLabel" name="Label_6">
+    <property name="geometry">
+     <rect>
+      <x>470</x>
+      <y>615</y>
+      <width>140</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Height Override</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="aVLabel">
+    <property name="geometry">
+     <rect>
+      <x>495</x>
+      <y>455</y>
+      <width>82</width>
+      <height>24</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Arc Voltage</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="Label">
+    <property name="geometry">
+     <rect>
+      <x>495</x>
+      <y>480</y>
+      <width>82</width>
+      <height>24</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Arc OK</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="Label_2">
+    <property name="geometry">
+     <rect>
+      <x>495</x>
+      <y>500</y>
+      <width>82</width>
+      <height>24</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Torch On</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="Label_3">
+    <property name="geometry">
+     <rect>
+      <x>495</x>
+      <y>525</y>
+      <width>82</width>
+      <height>24</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Float Switch</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="Label_4">
+    <property name="geometry">
+     <rect>
+      <x>495</x>
+      <y>550</y>
+      <width>82</width>
+      <height>24</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Breakaway</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="Label_5">
+    <property name="geometry">
+     <rect>
+      <x>495</x>
+      <y>585</y>
+      <width>82</width>
+      <height>24</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Safe Limited</string>
+    </property>
+   </widget>
+   <widget class="LED" name="arc_ok_led">
+    <property name="geometry">
+     <rect>
+      <x>460</x>
+      <y>480</y>
+      <width>24</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="color">
+     <color>
+      <red>115</red>
+      <green>210</green>
+      <blue>22</blue>
+     </color>
+    </property>
+   </widget>
+   <widget class="LED" name="torch_on_led">
+    <property name="geometry">
+     <rect>
+      <x>465</x>
+      <y>500</y>
+      <width>24</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="color">
+     <color>
+      <red>245</red>
+      <green>121</green>
+      <blue>0</blue>
+     </color>
+    </property>
+   </widget>
+   <widget class="LED" name="float_switch_led">
+    <property name="geometry">
+     <rect>
+      <x>465</x>
+      <y>525</y>
+      <width>24</width>
+      <height>23</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="LED" name="breakaway_switch_led">
+    <property name="geometry">
+     <rect>
+      <x>465</x>
+      <y>550</y>
+      <width>24</width>
+      <height>23</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="LED" name="safe_height_limited_led">
+    <property name="geometry">
+     <rect>
+      <x>465</x>
+      <y>585</y>
+      <width>24</width>
+      <height>23</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="PushButton" name="torch_pulse_start">
+    <property name="geometry">
+     <rect>
+      <x>415</x>
+      <y>650</y>
+      <width>36</width>
+      <height>36</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>On</string>
+    </property>
+   </widget>
+   <widget class="PushButton" name="reverse">
+    <property name="geometry">
+     <rect>
+      <x>415</x>
+      <y>685</y>
+      <width>36</width>
+      <height>36</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Rev</string>
+    </property>
+   </widget>
+   <zorder>screen_options</zorder>
+   <zorder>settings</zorder>
+   <zorder>config_disable</zorder>
+   <zorder>dro_frame</zorder>
+   <zorder>manualframe</zorder>
+   <zorder>view_frame</zorder>
+   <zorder>mdi_history</zorder>
+   <zorder>gcode_editor</zorder>
+   <zorder>halshow_button</zorder>
+   <zorder>pushButton</zorder>
+   <zorder>pushButton_2</zorder>
+   <zorder>pushButton_3</zorder>
+   <zorder>preview</zorder>
+   <zorder>open_file_dialog</zorder>
+   <zorder>status</zorder>
+   <zorder>frame</zorder>
+   <zorder>x_to_home</zorder>
+   <zorder>y_to_home</zorder>
+   <zorder>z_to_home</zorder>
+   <zorder>dry_run</zorder>
+   <zorder>forward</zorder>
+   <zorder>paused_motion_speed</zorder>
+   <zorder>jRLabel_2</zorder>
+   <zorder>torch_pulse_time</zorder>
+   <zorder>Label_7</zorder>
+   <zorder>height_override</zorder>
+   <zorder>Label_6</zorder>
+   <zorder>aVLabel</zorder>
+   <zorder>Label</zorder>
+   <zorder>Label_2</zorder>
+   <zorder>Label_3</zorder>
+   <zorder>Label_4</zorder>
+   <zorder>Label_5</zorder>
+   <zorder>arc_ok_led</zorder>
+   <zorder>torch_on_led</zorder>
+   <zorder>float_switch_led</zorder>
+   <zorder>breakaway_switch_led</zorder>
+   <zorder>safe_height_limited_led</zorder>
+   <zorder>torch_pulse_start</zorder>
+   <zorder>reverse</zorder>
+  </widget>
+  <action name="actionOPen">
+   <property name="text">
+    <string>OPen</string>
+   </property>
+  </action>
+  <action name="actionSave">
+   <property name="text">
+    <string>Save</string>
+   </property>
+  </action>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>LCDNumber</class>
+   <extends>QLCDNumber</extends>
+   <header>qtvcp.widgets.simple_widgets</header>
+  </customwidget>
+  <customwidget>
+   <class>GCodeGraphics</class>
+   <extends>QWidget</extends>
+   <header>qtvcp.widgets.gcode_graphics</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>StatusSlider</class>
+   <extends>QSlider</extends>
+   <header>qtvcp.widgets.status_slider</header>
+  </customwidget>
+  <customwidget>
+   <class>AxisToolButton</class>
+   <extends>QToolButton</extends>
+   <header>qtvcp.widgets.axis_tool_button</header>
+  </customwidget>
+  <customwidget>
+   <class>LED</class>
+   <extends>QWidget</extends>
+   <header>qtvcp.widgets.led_widget</header>
+  </customwidget>
+  <customwidget>
+   <class>Slider</class>
+   <extends>QSlider</extends>
+   <header>qtvcp.widgets.simple_widgets</header>
+  </customwidget>
+  <customwidget>
+   <class>FileDialog</class>
+   <extends>QDialog</extends>
+   <header>qtvcp.widgets.dialog_widget</header>
+  </customwidget>
+  <customwidget>
+   <class>StateLED</class>
+   <extends>LED</extends>
+   <header>qtvcp.widgets.state_led</header>
+  </customwidget>
+  <customwidget>
+   <class>StateEnableGridLayout</class>
+   <extends>QWidget</extends>
+   <header>qtvcp.widgets.container_widgets</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>JogIncrements</class>
+   <extends>QComboBox</extends>
+   <header>qtvcp.widgets.jog_increments</header>
+  </customwidget>
+  <customwidget>
+   <class>ScreenOptions</class>
+   <extends>QWidget</extends>
+   <header>qtvcp.widgets.screen_options</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>PushButton</class>
+   <extends>QPushButton</extends>
+   <header>qtvcp.widgets.simple_widgets</header>
+  </customwidget>
+  <customwidget>
+   <class>StatusLabel</class>
+   <extends>QLabel</extends>
+   <header>qtvcp.widgets.status_label</header>
+  </customwidget>
+  <customwidget>
+   <class>DROLabel</class>
+   <extends>QLabel</extends>
+   <header>qtvcp.widgets.dro_widget</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>GeneralHALInput</class>
+   <extends>QWidget</extends>
+   <header>qtvcp.widgets.general_hal_input</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>SystemToolButton</class>
+   <extends>QToolButton</extends>
+   <header>qtvcp.widgets.system_tool_button</header>
+  </customwidget>
+  <customwidget>
+   <class>GcodeEditor</class>
+   <extends>QWidget</extends>
+   <header>qtvcp.widgets.gcode_editor</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>MDIHistory</class>
+   <extends>QWidget</extends>
+   <header>qtvcp.widgets.mdi_history</header>
+  </customwidget>
+  <customwidget>
+   <class>ActionButton</class>
+   <extends>QPushButton</extends>
+   <header>qtvcp.widgets.action_button</header>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>edit_code</sender>
+   <signal>stateChanged(int)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>edit_mode_changed(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>188</x>
+     <y>254</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>155</x>
+     <y>325</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>cut_height</sender>
+   <signal>valueChanged(QString)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>spin_value_changed()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>35</x>
+     <y>244</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>182</x>
+     <y>431</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>cut_feed_rate</sender>
+   <signal>valueChanged(QString)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>spin_value_changed()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>60</x>
+     <y>270</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>176</x>
+     <y>458</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>materials</sender>
+   <signal>currentIndexChanged(int)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>material_changed()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>69</x>
+     <y>91</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>237</x>
+     <y>354</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>cut_amps</sender>
+   <signal>valueChanged(double)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>spin_value_changed()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>19</x>
+     <y>283</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>231</x>
+     <y>318</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>cut_volts</sender>
+   <signal>valueChanged(double)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>spin_value_changed()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>27</x>
+     <y>313</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>212</x>
+     <y>307</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>puddle_jump_delay</sender>
+   <signal>valueChanged(double)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>spin_value_changed()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>46</x>
+     <y>204</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>206</x>
+     <y>340</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>puddle_jump_height</sender>
+   <signal>valueChanged(double)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>spin_value_changed()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>23</x>
+     <y>181</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>207</x>
+     <y>365</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pierce_delay</sender>
+   <signal>valueChanged(double)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>spin_value_changed()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>64</x>
+     <y>166</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>267</x>
+     <y>389</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pierce_height</sender>
+   <signal>valueChanged(double)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>spin_value_changed()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>13</x>
+     <y>127</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>197</x>
+     <y>328</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>thc_threshold</sender>
+   <signal>valueChanged(double)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>spin_value_changed()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>44</x>
+     <y>408</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>227</x>
+     <y>402</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pid_p_gain</sender>
+   <signal>valueChanged(double)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>spin_value_changed()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>28</x>
+     <y>438</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>307</x>
+     <y>478</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>thc_enable</sender>
+   <signal>stateChanged(int)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>checkbox_changed(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>67</x>
+     <y>362</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>277</x>
+     <y>489</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>use_auto_volts</sender>
+   <signal>stateChanged(int)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>checkbox_changed(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>66</x>
+     <y>386</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>203</x>
+     <y>411</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>cornerlock_enable</sender>
+   <signal>stateChanged(int)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>checkbox_changed(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>63</x>
+     <y>542</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>203</x>
+     <y>539</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>cornerlock_threshold</sender>
+   <signal>valueChanged(double)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>spin_value_changed()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>26</x>
+     <y>566</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>190</x>
+     <y>563</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>kerfcross_enable</sender>
+   <signal>stateChanged(int)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>checkbox_changed(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>68</x>
+     <y>642</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>199</x>
+     <y>643</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>kerfcross_threshold</sender>
+   <signal>valueChanged(double)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>spin_value_changed()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>42</x>
+     <y>669</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>202</x>
+     <y>674</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>skip_ihs_distance</sender>
+   <signal>valueChanged(double)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>spin_value_changed()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>30</x>
+     <y>159</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>260</x>
+     <y>377</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>probe_feed_rate</sender>
+   <signal>valueChanged(double)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>spin_value_changed()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>11</x>
+     <y>133</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>284</x>
+     <y>422</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>float_switch_travel</sender>
+   <signal>valueChanged(double)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>spin_value_changed()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>47</x>
+     <y>109</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>250</x>
+     <y>448</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>safe_height</sender>
+   <signal>valueChanged(double)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>spin_value_changed()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>59</x>
+     <y>82</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>208</x>
+     <y>298</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>arc_fail_delay</sender>
+   <signal>valueChanged(double)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>spin_value_changed()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>41</x>
+     <y>209</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>205</x>
+     <y>394</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>arc_max_starts</sender>
+   <signal>valueChanged(double)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>spin_value_changed()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>28</x>
+     <y>233</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>386</x>
+     <y>317</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>restart_delay</sender>
+   <signal>valueChanged(double)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>spin_value_changed()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>28</x>
+     <y>255</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>371</x>
+     <y>339</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>torch_off_delay</sender>
+   <signal>valueChanged(double)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>spin_value_changed()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>30</x>
+     <y>284</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>377</x>
+     <y>368</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>arc_voltage_scale</sender>
+   <signal>valueChanged(double)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>spin_value_changed()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>30</x>
+     <y>309</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>358</x>
+     <y>433</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>arc_voltage_offset</sender>
+   <signal>valueChanged(double)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>spin_value_changed()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>25</x>
+     <y>335</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>388</x>
+     <y>459</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>arc_ok_high</sender>
+   <signal>valueChanged(double)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>spin_value_changed()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>13</x>
+     <y>361</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>371</x>
+     <y>469</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>arc_ok_low</sender>
+   <signal>valueChanged(double)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>spin_value_changed()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>35</x>
+     <y>384</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>220</x>
+     <y>443</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>setup_feed_rate</sender>
+   <signal>valueChanged(double)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>spin_value_changed()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>28</x>
+     <y>463</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>201</x>
+     <y>483</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pid_i_gain</sender>
+   <signal>valueChanged(double)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>spin_value_changed()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>28</x>
+     <y>492</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>221</x>
+     <y>495</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pid_d_gain</sender>
+   <signal>valueChanged(double)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>spin_value_changed()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>35</x>
+     <y>511</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>252</x>
+     <y>510</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton</sender>
+   <signal>pressed()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>mode_0()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>461</x>
+     <y>715</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>463</x>
+     <y>753</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_2</sender>
+   <signal>pressed()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>mode_1()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>548</x>
+     <y>708</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>551</x>
+     <y>746</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_3</sender>
+   <signal>pressed()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>mode_2()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>649</x>
+     <y>710</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>648</x>
+     <y>752</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>torch_pulse_time</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>pulse_changed(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>313</x>
+     <y>511</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>310</x>
+     <y>594</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>height_override</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>height_changed(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>346</x>
+     <y>469</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>346</x>
+     <y>581</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>torch_pulse_start</sender>
+   <signal>pressed()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>torch_pulse_start_pressed()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>187</x>
+     <y>504</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>189</x>
+     <y>604</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>torch_pulse_start</sender>
+   <signal>released()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>torch_pulse_start_released()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>204</x>
+     <y>504</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>211</x>
+     <y>614</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>reverse</sender>
+   <signal>pressed()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>reverse_pressed()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>184</x>
+     <y>537</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>184</x>
+     <y>651</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>reverse</sender>
+   <signal>released()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>reverse_released()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>197</x>
+     <y>533</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>226</x>
+     <y>691</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>forward</sender>
+   <signal>pressed()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>forward_pressed()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>366</x>
+     <y>549</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>363</x>
+     <y>565</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>forward</sender>
+   <signal>released()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>forward_released()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>388</x>
+     <y>540</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>384</x>
+     <y>567</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <designerdata>
+  <property name="gridDeltaX">
+   <number>5</number>
+  </property>
+  <property name="gridDeltaY">
+   <number>5</number>
+  </property>
+  <property name="gridSnapX">
+   <bool>true</bool>
+  </property>
+  <property name="gridSnapY">
+   <bool>true</bool>
+  </property>
+  <property name="gridVisible">
+   <bool>true</bool>
+  </property>
+ </designerdata>
+ <slots>
+  <slot>edit_mode_changed(int)</slot>
+  <slot>spin_value_changed()</slot>
+  <slot>material_changed()</slot>
+  <slot>checkbox_changed(int)</slot>
+  <slot>mode_0()</slot>
+  <slot>mode_1()</slot>
+  <slot>mode_2()</slot>
+  <slot>height_changed(int)</slot>
+  <slot>pulse_changed(int)</slot>
+  <slot>torch_pulse_start_pressed()</slot>
+  <slot>torch_pulse_start_released()</slot>
+  <slot>forward_pressed()</slot>
+  <slot>forward_released()</slot>
+  <slot>reverse_pressed()</slot>
+  <slot>reverse_released()</slot>
+ </slots>
+</ui>
