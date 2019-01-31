@@ -38,8 +38,7 @@ root_window.tk.call('wm','protocol','.','WM_DELETE_WINDOW','destroy .')
 
 # set the default font and the gcode font
 font = inifile.find("PLASMAC","FONT") or 'sans 10'
-fname = font.split()[0]
-fsize = font.split()[1]
+fname, fsize = font.split()
 root_window.tk.call('font','configure','TkDefaultFont','-family', fname, '-size', fsize)
 root_window.tk.call('.pane.bottom.t.text','configure','-height','10','-font', font, '-foreground','blue')
 
@@ -80,7 +79,6 @@ root_window.tk.call('pack','forget','.toolbar.rule8')
 root_window.tk.call('pack','forget','.toolbar.rule9')
 root_window.tk.call('grid','forget',fmanual + '.axis')
 root_window.tk.call('grid','forget',fmanual + '.jogf')
-#root_window.tk.call('grid','forget',fmanual + '.jogf.zerohome.tooltouch')
 root_window.tk.call('grid','forget',fmanual + '.space2')
 root_window.tk.call('grid','forget',fmanual + '.spindlel')
 root_window.tk.call('grid','forget',fmanual + '.spindlef')
