@@ -17,8 +17,15 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 '''
 
-''' set the window size, change pad_width and pad_height to suit your setup
-    then uncomment the next 13 lines'''
+firstrundone = 0
+
+
+
+################################################################################
+# set the window size
+# change pad_width and pad_height to suit your setup
+# then uncomment the next 13 lines
+
 #maxgeo=root_window.tk.call('wm','maxsize','.')
 #if type(maxgeo) == tuple:
 #    fullsize=str(maxgeo[0]),str(maxgeo[1])
@@ -33,24 +40,48 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #print '\nAxis window is', width, 'x', height, 'and starts at', x, 'x', y, '\n'
 #root_window.tk.call('wm','geometry','.',width + 'x' + height + '+' + x + '+' + y)
 
+
+
+################################################################################
 # disable the 'do you want to close' dialog
+
 root_window.tk.call('wm','protocol','.','WM_DELETE_WINDOW','destroy .')
 
+
+
+################################################################################
 # set the default font and the gcode font
+
 font = inifile.find("PLASMAC","FONT") or 'sans 10'
 fname, fsize = font.split()
 root_window.tk.call('font','configure','TkDefaultFont','-family', fname, '-size', fsize)
 root_window.tk.call('.pane.bottom.t.text','configure','-height','10','-font', font, '-foreground','blue')
 
+
+
+################################################################################
+# change dro screen
+
+root_window.tk.call('.pane.top.right.fnumbers.text','configure','-foreground','green','-background','black')
+
+
+
+################################################################################
+# widget setup
+
 # some names to save fingers
 ftop = '.pane.top'
-fmanual = ftop + '.tabs.fmanual'
+ftabs = ftop + '.tabs'
+fmanual = ftabs + '.fmanual'
 faxes = fmanual + '.axes'
 fjoints = fmanual + '.joints'
 fjogf = fmanual + '.jogf'
 ftorch = fmanual + '.torch'
 foverride = fmanual + '.override'
 fpausedmotion = fmanual + '.pausedmotion'
+fmdi = ftabs + '.fmdi'
+ft = '.pane.bottom.t'
+fcommon = '.pane.bottom.t.common'
 fmonitor = '.pane.bottom.t.common.monitor'
 fbuttons = '.pane.bottom.t.common.buttons'
 frun = '.plasmac.frun'
@@ -202,7 +233,7 @@ root_window.tk.call('grid',fjogf + '.jog','-row','0','-column','0','-sticky','ew
 root_window.tk.call('grid',fjogf + '.zerohome.home','-row','0','-column','0','-padx','0 3','-sticky','ew')
 root_window.tk.call('grid',fjogf + '.zerohome.zero','-row','0','-column','1','-padx','3 0','-sticky','ew')
 root_window.tk.call('grid',fjogf + '.zerohome','-row','1','-column','0','-pady','4 0','-sticky','ew')
-root_window.tk.call('grid',fjogf,'-column','0','-row','1','-padx','4','-pady','4 0','-sticky','ew')
+root_window.tk.call('grid',fjogf,'-column','0','-row','1','-padx','4','-pady','2 0','-sticky','ew')
 root_window.tk.call('grid','columnconfigure',fmanual,'0','-weight','1')
 root_window.tk.call('grid','columnconfigure',fjogf,'0','-weight','1')
 root_window.tk.call('grid','columnconfigure',fjogf + '.jog','0 1 2','-weight','1')
@@ -224,13 +255,13 @@ root_window.tk.call('pack', ftorch + '.torch-button','-side','left','-pady','2')
 root_window.tk.call('pack', ftorch + '.torch-pulse-time','-side','left','-fill','x','-expand','1')
 root_window.tk.call('pack', ftorch + '.torch-label','-side','right')
 root_window.tk.call('pack', ftorch + '.torch-time','-side','right')
-root_window.tk.call('grid',ftorch,'-column','0','-row','2','-columnspan','1','-padx','4','-pady','4 0','-sticky','ew')
+root_window.tk.call('grid',ftorch,'-column','0','-row','2','-columnspan','1','-padx','4','-pady','2 0','-sticky','ew')
 
 # override frame
 root_window.tk.call('labelframe',foverride,'-text','Height Override:','-relief','ridge')
 root_window.tk.call('scale',foverride + '.height-override','-orient','horizontal')
 root_window.tk.call('pack',foverride + '.height-override','-fill','x','-expand','1')
-root_window.tk.call('grid',foverride,'-column','0','-row','3','-columnspan','1','-padx','4','-pady','4 0','-sticky','ew')
+root_window.tk.call('grid',foverride,'-column','0','-row','3','-columnspan','1','-padx','4','-pady','2 0','-sticky','ew')
 
 # paused motion frame
 root_window.tk.call('labelframe',fpausedmotion,'-text','Paused Motion Speed:','-relief','ridge')
@@ -244,15 +275,14 @@ root_window.tk.call('bind',fpausedmotion + '.forward','<ButtonRelease-1>','pause
 root_window.tk.call('pack',fpausedmotion + '.reverse','-side','left','-fill','y')
 root_window.tk.call('pack',fpausedmotion + '.paused-motion-speed','-side','left','-fill','x','-expand','1')
 root_window.tk.call('pack',fpausedmotion + '.forward','-side','right','-fill','y')
-root_window.tk.call('grid',fpausedmotion,'-column','0','-row','4','-columnspan','1','-padx','4','-pady','4 0','-sticky','ew')
+root_window.tk.call('grid',fpausedmotion,'-column','0','-row','4','-columnspan','1','-padx','4','-pady','2 0','-sticky','ew')
 
-# bottom pane - hide until modified
+# hide bottom pane until modified
 root_window.tk.call('pack','forget','.pane.bottom.t.text')
 root_window.tk.call('pack','forget','.pane.bottom.t.sb')
 
 # common frame
-common = '.pane.bottom.t.common'
-root_window.tk.call('labelframe',common,'-text','','-relief','raised')
+root_window.tk.call('labelframe',fcommon,'-text','','-relief','raised')
 
 # monitor frame
 root_window.tk.call('labelframe',fmonitor,'-text','','-relief','flat')
@@ -303,13 +333,16 @@ root_window.tk.call('grid',fbuttons + '.dryRun','-row','3','-column','0')
 root_window.tk.call('grid','columnconfigure',fbuttons,0,'-weight','1')
 
 # populate bottom frame
+root_window.tk.call('frame',fcommon + '.spaceframe','-relief','sunken')
 root_window.tk.call('pack',fmonitor,'-fill','y','-side','left')
+root_window.tk.call('pack',fcommon + '.spaceframe','-fill','x','-side','left')
 root_window.tk.call('pack',fbuttons,'-fill','y','-side','left')
-root_window.tk.call('.pane.bottom.t','configure','-relief','flat')
-root_window.tk.call('.pane.bottom.t.text','configure','-borderwidth','2','-relief','sunken')
-root_window.tk.call('pack',common,'-fill','y','-side','left')
-root_window.tk.call('pack','.pane.bottom.t.text','-fill','both','-expand','1','-side','left','-padx','4','-pady','0')
-root_window.tk.call('pack','.pane.bottom.t.sb','-fill','y','-side','left')
+root_window.tk.call(ft,'configure','-relief','flat')
+root_window.tk.call(ft + '.text','configure','-borderwidth','2','-relief','sunken')
+root_window.tk.call('pack',fcommon,'-fill','both','-side','left')
+root_window.tk.call('pack',ft + '.sb','-fill','y','-side','left','-padx','4')
+#root_window.tk.call(ft +'.text','configure','-width','20')
+root_window.tk.call('pack',ft + '.text','-fill','both','-expand','1','-side','left','-padx','0','-pady','0')
 
 # new notebook for plasmac stuff
 root_window.tk.call('NoteBook','.plasmac','-borderwidth','2','-arcradius','3')
@@ -539,6 +572,9 @@ root_window.tk.call('grid','.plasmac','-column','0','-row','1','-sticky','nsew',
 root_window.tk.call('grid','columnconfigure','.','0','-weight','0')
 root_window.tk.call('grid','columnconfigure','.','1','-weight','1')
 
+
+
+################################################################################
 # some new commands for TCL
 def material_changed():
     if not materialsUpdate:
@@ -647,10 +683,22 @@ TclCommands.joint_mode_switch = joint_mode_switch
 TclCommands.ja_button_activated = ja_button_activated
 commands = TclCommands(root_window)
 
+
+
+################################################################################
 # some python functions
 
 # original in axis.py line 3000
 def user_live_update():
+    global firstrundone
+    if not firstrundone:
+        configDisable = inifile.find('PLASMAC', 'CONFIG_DISABLE') or '0'
+        hal.set_p('axisui.config-disable',configDisable)
+        spaceWidth = root_window.tk.call('winfo','width',fmanual)
+        spaceWidth -= root_window.tk.call('winfo','width',fmonitor)
+        spaceWidth -= root_window.tk.call('winfo','width',fbuttons)
+        root_window.tk.call(fcommon + '.spaceframe','configure','-width',spaceWidth)
+        firstrundone = 1
     for widget in wSpinboxes + wScalesHal:
         tmp, item = widget.rsplit('.',1)
         if item != 'cut-amps':
@@ -671,13 +719,13 @@ def user_live_update():
             hal.set_p('plasmac.%s' % (item),'%d' % (value))
     for widget in wLeds:
         tmp, item = widget.rsplit('.',1)
-        if pcomp[item] != widgetValues[widget]:
-            widgetValues[widget] = pcomp[item]
-            if pcomp[item] == 1:
+        if comp[item] != widgetValues[widget]:
+            widgetValues[widget] = comp[item]
+            if comp[item] == 1:
                 root_window.tk.call(widget,'configure','-state','normal')
             else:
                 root_window.tk.call(widget,'configure','-state','disabled')
-    root_window.tk.call(fmonitor + '.arc-voltage','configure','-text','%0.1f' % (pcomp['arc-voltage']))
+    root_window.tk.call(fmonitor + '.arc-voltage','configure','-text','%0.1f' % (comp['arc-voltage']))
     if all_homed() and hal.get_value('halui.program.is-idle'):
         root_window.tk.call(fbuttons + '.xtohome','configure','-state','normal')
         root_window.tk.call(fbuttons + '.ytohome','configure','-state','normal')
@@ -698,10 +746,45 @@ def user_live_update():
     else:
         root_window.tk.call(fpausedmotion + '.reverse','configure','-state','disabled')
         root_window.tk.call(fpausedmotion + '.forward','configure','-state','disabled')
-    if hal.get_value('plasmac_panel.config-disable'):
+    if hal.get_value('axisui.config-disable'):
         root_window.tk.call('.plasmac','itemconfigure','config','-state','disabled')
     else:
         root_window.tk.call('.plasmac','itemconfigure','config','-state','normal')
+
+
+def user_hal_pins():
+    comp.newpin('arc-voltage', hal.HAL_FLOAT, hal.HAL_IN)
+    comp.newpin('led-up', hal.HAL_BIT, hal.HAL_IN)
+    comp.newpin('led-down', hal.HAL_BIT, hal.HAL_IN)
+    comp.newpin('led-cornerlock', hal.HAL_BIT, hal.HAL_IN)
+    comp.newpin('led-kerfcross', hal.HAL_BIT, hal.HAL_IN)
+    comp.newpin('led-arc-ok', hal.HAL_BIT, hal.HAL_IN)
+    comp.newpin('led-torch', hal.HAL_BIT, hal.HAL_IN)
+    comp.newpin('led-float', hal.HAL_BIT, hal.HAL_IN)
+    comp.newpin('led-breakaway', hal.HAL_BIT, hal.HAL_IN)
+    comp.newpin('led-safe-height', hal.HAL_BIT, hal.HAL_IN)
+    comp.newpin('config-disable', hal.HAL_BIT, hal.HAL_IN)
+    comp.ready()
+    hal_data = [[0,'plasmac:arc-voltage-out','plasmac.arc-voltage-out','axisui.arc-voltage'],\
+                [1,'plasmac:axis-min-limit','ini.z.min_limit','plasmac.axis-z-min-limit'],\
+                [2,'plasmac:axis-max-limit','ini.z.max_limit','plasmac.axis-z-max-limit'],\
+                [3,'plasmac:led-up','plasmac.led-up','axisui.led-up'],\
+                [4,'plasmac:led-down','plasmac.led-down','axisui.led-down'],\
+                [5,'plasmac:cornerlock-is-locked','plasmac.cornerlock-is-locked','axisui.led-cornerlock'],\
+                [6,'plasmac:kerfcross-is-locked','plasmac.kerfcross-is-locked','axisui.led-kerfcross'],\
+                [7,'plasmac:arc-ok-out','plasmac.arc-ok-out','axisui.led-arc-ok'],\
+                [8,'plasmac:safe-height-is-limited','plasmac.safe-height-is-limited','axisui.led-safe-height'],\
+                ]
+    for line in hal_data:
+        if line[0] < 3:
+            hal.new_sig(line[1],hal.HAL_FLOAT)
+        else:
+            hal.new_sig(line[1],hal.HAL_BIT)
+        hal.connect(line[2],line[1])
+        hal.connect(line[3],line[1])
+    hal.connect('axisui.led-float','plasmac:float-switch-out')
+    hal.connect('axisui.led-breakaway','plasmac:breakaway-switch-out')
+    hal.connect('axisui.led-torch','plasmac:torch-on')
 
 def configure_widgets():
     root_window.tk.call(ftorch + '.torch-pulse-time','configure','-from','0','-to','3','-resolution','0.1')
@@ -931,6 +1014,9 @@ def set_mode(mode):
         root_window.tk.call('grid','forget',fmonitor + '.aVlab')
     hal.set_p('plasmac.mode','%d' % (int(mode)))
 
+
+
+################################################################################
 # setup
 thcFeedRate = (float(inifile.find('AXIS_Z','MAX_VELOCITY')) * \
                float(inifile.find('AXIS_Z','OFFSET_AV_RATIO'))) * 60
@@ -1052,41 +1138,6 @@ configure_widgets()
 load_settings()
 check_materials_file()
 get_materials()
-pcomp = hal.component('plasmac_panel')
-pcomp.newpin('led-up', hal.HAL_BIT, hal.HAL_IN)
-pcomp.newpin('led-down', hal.HAL_BIT, hal.HAL_IN)
-pcomp.newpin('led-cornerlock', hal.HAL_BIT, hal.HAL_IN)
-pcomp.newpin('led-kerfcross', hal.HAL_BIT, hal.HAL_IN)
-pcomp.newpin('arc-voltage', hal.HAL_FLOAT, hal.HAL_IN)
-pcomp.newpin('led-arc-ok', hal.HAL_BIT, hal.HAL_IN)
-pcomp.newpin('led-torch', hal.HAL_BIT, hal.HAL_IN)
-pcomp.newpin('led-float', hal.HAL_BIT, hal.HAL_IN)
-pcomp.newpin('led-breakaway', hal.HAL_BIT, hal.HAL_IN)
-pcomp.newpin('led-safe-height', hal.HAL_BIT, hal.HAL_IN)
-pcomp.newpin('config-disable', hal.HAL_BIT, hal.HAL_IN)
-pcomp.ready()
-hal_data = [[0,'p_panel:arc-voltage-out','plasmac.arc-voltage-out','plasmac_panel.arc-voltage'],\
-            [1,'p_panel:axis-min-limit','ini.z.min_limit','plasmac.axis-z-min-limit'],\
-            [2,'p_panel:axis-max-limit','ini.z.max_limit','plasmac.axis-z-max-limit'],\
-            [3,'p_panel:led-up','plasmac.led-up','plasmac_panel.led-up'],\
-            [4,'p_panel:led-down','plasmac.led-down','plasmac_panel.led-down'],\
-            [5,'p_panel:cornerlock-is-locked','plasmac.cornerlock-is-locked','plasmac_panel.led-cornerlock'],\
-            [6,'p_panel:kerfcross-is-locked','plasmac.kerfcross-is-locked','plasmac_panel.led-kerfcross'],\
-            [7,'p_panel:arc-ok-out','plasmac.arc-ok-out','plasmac_panel.led-arc-ok'],\
-            [8,'p_panel:safe-height-is-limited','plasmac.safe-height-is-limited','plasmac_panel.led-safe-height'],\
-            ]
-for line in hal_data:
-    if line[0] < 3:
-        hal.new_sig(line[1],hal.HAL_FLOAT)
-    else:
-        hal.new_sig(line[1],hal.HAL_BIT)
-    hal.connect(line[2],line[1])
-    hal.connect(line[3],line[1])
-hal.connect('plasmac_panel.led-float','p_comp:float-switch-out')
-hal.connect('plasmac_panel.led-breakaway','p_comp:breakaway-switch-out')
-hal.connect('plasmac_panel.led-torch','p_comp:torch-on')
-configDisable = inifile.find('PLASMAC', 'CONFIG_DISABLE') or '0'
-hal.set_p('plasmac_panel.config-disable',configDisable)
 for widget in wSpinboxes:
     root_window.tk.call(widget,'configure','-wrap','1','-width',swidth,'-font',font,'-justify','r')
 for widget in wLabels:
@@ -1098,16 +1149,55 @@ for widget in wCheckbuttons:
     tmp, item = widget.rsplit('.',1)
     widgetValues[widget] = int(root_window.tk.call('set',item))
 for widget in wLeds:
-    tmp, item = widget.rsplit('.',1)
-    if pcomp[item] == 1:
-        root_window.tk.call(widget,'configure','-state','normal')
-        widgetValues[widget] = 1
-    else:
-        root_window.tk.call(widget,'configure','-state','disabled')
-        widgetValues[widget] = 0
+    root_window.tk.call(widget,'configure','-state','disabled')
+    widgetValues[widget] = 0
 root_window.tk.call(fmotion + '.probe-feed-rate','configure','-to',widgetValues[foffsets + '.setup-feed-rate'])
 units = hal.get_value('halui.machine.units-per-mm')
 maxPidP = thcFeedRate / units * 0.1
 mode = inifile.find('PLASMAC','MODE') or '0'
 set_mode(mode)
 commands.set_view_z()
+
+
+
+################################################################################
+#   gets widget information
+#   shows parent and child/children plus properties
+#   uncomment any you need to look at, one or more at a time
+#   lots more can be added...
+
+my_widget = [\
+#'.',\
+#'.menu',\
+#'.toolbar',\
+#'.pane',\
+#'.pane.top',\
+#'.pane.top.tabs',\
+#'.pane.top.tabs.c',\
+#'.pane.top.tabs.fmanual',\
+#'.pane.top.tabs.fmanual.space1',\
+#'.pane.top.tabs.fmanual.axis',\
+#'.pane.top.tabs.fmanual.axes',\
+#'.pane.top.tabs.fmanual.spindlel',\
+#'.pane.top.tabs.fmanual.spindlef',\
+#'.pane.top.jogspeed',\
+#'.pane.top.right',\
+#'.pane.top.right.fpreview',\
+#'.pane.top.right.fnumbers',\
+#'.pane.top.right.fnumbers.text',\
+#'.pane.bottom',\
+#'.pane.bottom.t',\
+#'.pane.bottom.t.text',\
+]
+for widget in my_widget:
+    print '\n********** BEGIN',widget,'**********'
+    print '\nwidget',widget,'is a',root_window.tk.call('winfo','class',widget)
+    print '\nmanager =',root_window.tk.call('winfo','manager',widget)
+    print '\nparent is:',root_window.tk.call('winfo','parent',widget)
+    print '\nchildren are:'
+    for item in root_window.tk.call('winfo','children',widget):
+        print '  ',item,'which is managed by',root_window.tk.call('winfo','manager',item)
+    print '\nvalid options are:'
+    for item in range (len(root_window.tk.call(widget,'configure'))):
+        print '  ',root_window.tk.call(widget,'configure')[item]
+    print '\n********** END',widget,'**********\n'
