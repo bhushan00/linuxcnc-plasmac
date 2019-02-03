@@ -17,8 +17,6 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 '''
 
-firstrundone = 0
-
 
 
 ################################################################################
@@ -1018,6 +1016,7 @@ def set_mode(mode):
 
 ################################################################################
 # setup
+firstrundone = 0
 thcFeedRate = (float(inifile.find('AXIS_Z','MAX_VELOCITY')) * \
                float(inifile.find('AXIS_Z','OFFSET_AV_RATIO'))) * 60
 hal.set_p('plasmac.thc-feed-rate','%f' % (thcFeedRate))
