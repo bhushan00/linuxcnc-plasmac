@@ -130,6 +130,30 @@ class HandlerClass:
         else:
             self.w.gcode_editor.editMode()
 
+    def edit_clicked(self, mode):
+        if self.w.stackedWidget.currentWidget() == self.w.Preview:
+            print 'preview'
+            self.w.stackedWidget.setCurrentWidget(self.w.GcodeEdit)
+            self.w.gcode_editor.editMode()
+            self.w.edit_button.setText('Preview')
+        elif self.w.stackedWidget.currentWidget() == self.w.GcodeEdit:
+            print 'gcode edit'
+            self.w.stackedWidget.setCurrentWidget(self.w.Preview)
+            self.w.gcode_editor.readOnlyMode()
+            self.w.edit_button.setText('Edit')
+        else:
+            print 'unknown'
+            
+
+#        print 'mode =',mode
+        #if mode == 0:
+        #    self.w.gcode_editor.readOnlyMode()
+        #else:
+        #    self.w.gcode_editor.editMode()
+#        self.w.stackedWidget.setCurrentWidget(self.w.GcodeEdit)
+#        print self.w.stackedWidget.currentWidget()
+#        self.w.gcode_editor.editMode()
+
     def spin_value_changed(self,value):
         name = 'plasmac.' + self.w.sender().objectName().replace('_','-')
         if name != 'plasmac.cut-amps':
@@ -169,14 +193,17 @@ class HandlerClass:
         while self.lcnc.comd.wait_complete() == -1:
             pass
 
-    def on_xToHome_clicked(self,event):
-        self.goto_home('X')
+    def x_to_home_clicked(self):
+        print 'x to home'
+        #self.goto_home('X')
 
-    def on_yToHome_clicked(self,event):
-        self.goto_home('Y')
+    def y_to_home_clicked(self):
+        print 'y to home'
+        #self.goto_home('Y')
 
-    def on_zToHome_clicked(self,event):
-        self.goto_home('Z')
+    def z_to_home_clicked(self):
+        print 'z to home'
+        #self.goto_home('Z')
 
     def goto_home(self,axis):
         if hal.get_value('halui.program.is-idle'):
@@ -191,6 +218,9 @@ class HandlerClass:
                 self.lcnc.comd.mode(linuxcnc.MODE_MANUAL)
                 self.wait_for_completion()
 
+    def dry_run_clicked(self):
+        print 'dry run'
+        
     def forward_pressed(self):
         speed = self.w.paused_motion_speed.value()
         hal.set_p('plasmac.paused-motion-speed','%f' %(speed))
@@ -286,7 +316,7 @@ class HandlerClass:
         self.config_widgets = ['pierce_height','pierce_delay','puddle_jump_height',\
                                'puddle_jump_delay','cut_height','cut_feed_rate',\
                                'cut_amps','cut_volts','thc_enable','use_auto_volts',
-                               'thc_threshold','pid_p_gain','led_up','led_down',\
+                               'thc_threshold','pid_p_gain','up_led','down_led',\
                                'cornerlock_enable','cornerlock_threshold',\
                                'kerfcross_enable','kerfcross_threshold','safe_height',\
                                'float_switch_travel','probe_feed_rate','skip_ihs_distance',\
@@ -482,9 +512,9 @@ class HandlerClass:
                 self.w.tTLabel.show()
                 self.w.pid_p_gain.move(self.w.pid_p_gain.geometry().left(), self.w.pid_p_gain.geometry().top() + 52)
                 self.w.pPLabel.move(self.w.pPLabel.geometry().left(), self.w.pPLabel.geometry().top() + 52)
-                self.w.led_up.move(self.w.led_up.geometry().left(), self.w.led_up.geometry().top() + 52)
+                self.w.up_led.move(self.w.up_led.geometry().left(), self.w.up_led.geometry().top() + 52)
                 self.w.lULabel.move(self.w.lULabel.geometry().left(), self.w.lULabel.geometry().top() + 52)
-                self.w.led_down.move(self.w.led_down.geometry().left(), self.w.led_down.geometry().top() + 52)
+                self.w.down_led.move(self.w.down_led.geometry().left(), self.w.down_led.geometry().top() + 52)
                 self.w.lDLabel.move(self.w.lULabel.geometry().left(), self.w.lDLabel.geometry().top() + 52)
                 self.w.thc_frame.resize(self.w.thc_frame.geometry().width(), self.w.thc_frame.geometry().height() + 52)
                 self.w.corner_frame.move(self.w.corner_frame.geometry().left(), self.w.corner_frame.geometry().top() + 78)
@@ -529,9 +559,9 @@ class HandlerClass:
                 self.w.tTLabel.show()
                 self.w.pid_p_gain.move(self.w.pid_p_gain.geometry().left(), self.w.pid_p_gain.geometry().top() + 52)
                 self.w.pPLabel.move(self.w.pPLabel.geometry().left(), self.w.pPLabel.geometry().top() + 52)
-                self.w.led_up.move(self.w.led_up.geometry().left(), self.w.led_up.geometry().top() + 52)
+                self.w.up_led.move(self.w.up_led.geometry().left(), self.w.up_led.geometry().top() + 52)
                 self.w.lULabel.move(self.w.lULabel.geometry().left(), self.w.lULabel.geometry().top() + 52)
-                self.w.led_down.move(self.w.led_down.geometry().left(), self.w.led_down.geometry().top() + 52)
+                self.w.down_led.move(self.w.down_led.geometry().left(), self.w.down_led.geometry().top() + 52)
                 self.w.lDLabel.move(self.w.lULabel.geometry().left(), self.w.lDLabel.geometry().top() + 52)
                 self.w.thc_frame.resize(self.w.thc_frame.geometry().width(), self.w.thc_frame.geometry().height() + 52)
                 self.w.corner_frame.move(self.w.corner_frame.geometry().left(), self.w.corner_frame.geometry().top() + 78)
@@ -560,9 +590,9 @@ class HandlerClass:
                 self.w.tTLabel.close()
                 self.w.pid_p_gain.move(self.w.pid_p_gain.geometry().left(), self.w.pid_p_gain.geometry().top() - 52)
                 self.w.pPLabel.move(self.w.pPLabel.geometry().left(), self.w.pPLabel.geometry().top() - 52)
-                self.w.led_up.move(self.w.led_up.geometry().left(), self.w.led_up.geometry().top() - 52)
+                self.w.up_led.move(self.w.up_led.geometry().left(), self.w.up_led.geometry().top() - 52)
                 self.w.lULabel.move(self.w.lULabel.geometry().left(), self.w.lULabel.geometry().top() - 52)
-                self.w.led_down.move(self.w.led_down.geometry().left(), self.w.led_down.geometry().top() - 52)
+                self.w.down_led.move(self.w.down_led.geometry().left(), self.w.down_led.geometry().top() - 52)
                 self.w.lDLabel.move(self.w.lULabel.geometry().left(), self.w.lDLabel.geometry().top() - 52)
                 self.w.thc_frame.resize(self.w.thc_frame.geometry().width(), self.w.thc_frame.geometry().height() - 52)
                 self.w.corner_frame.move(self.w.corner_frame.geometry().left(), self.w.corner_frame.geometry().top() - 78)
@@ -597,9 +627,9 @@ class HandlerClass:
                 self.w.tTLabel.close()
                 self.w.pid_p_gain.move(self.w.pid_p_gain.geometry().left(), self.w.pid_p_gain.geometry().top() - 52)
                 self.w.pPLabel.move(self.w.pPLabel.geometry().left(), self.w.pPLabel.geometry().top() - 52)
-                self.w.led_up.move(self.w.led_up.geometry().left(), self.w.led_up.geometry().top() - 52)
+                self.w.up_led.move(self.w.up_led.geometry().left(), self.w.up_led.geometry().top() - 52)
                 self.w.lULabel.move(self.w.lULabel.geometry().left(), self.w.lULabel.geometry().top() - 52)
-                self.w.led_down.move(self.w.led_down.geometry().left(), self.w.led_down.geometry().top() - 52)
+                self.w.down_led.move(self.w.down_led.geometry().left(), self.w.down_led.geometry().top() - 52)
                 self.w.lDLabel.move(self.w.lULabel.geometry().left(), self.w.lDLabel.geometry().top() - 52)
                 self.w.thc_frame.resize(self.w.thc_frame.geometry().width(), self.w.thc_frame.geometry().height() - 52)
                 self.w.corner_frame.move(self.w.corner_frame.geometry().left(), self.w.corner_frame.geometry().top() - 78)
