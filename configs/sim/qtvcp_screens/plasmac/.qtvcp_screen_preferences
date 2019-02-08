@@ -5,6 +5,7 @@ fileDialog_sound_type = RING
 EntryDialog-geometry = 0 0 640 480
 toolDialog_play_sound = True
 toolDialog_sound_type = RING
+CamViewDialog-geometry = 789 451 358 315
 
 [BOOK_KEEPING]
 last_file_path = /home/phill/linuxcnc/nc_files/plasmac

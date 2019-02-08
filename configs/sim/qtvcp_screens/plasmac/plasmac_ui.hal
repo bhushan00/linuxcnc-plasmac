@@ -14,3 +14,5 @@ net p_gui:kerfcross-is-locked       plasmac.kerfcross-is-locked     =>  plasmac_
 net p_gui:led-down                  plasmac.led-down                =>  plasmac_ui.down_led
 net p_gui:led-up                    plasmac.led-up                  =>  plasmac_ui.up_led
 net p_gui:safe-height-is-limited    plasmac.safe-height-is-limited  =>  plasmac_ui.safe_height_limited_led
+
+net p_gui:dry-run                   plasmac_ui.dry_run              =>  plasmac.dry-run-start

@@ -60,7 +60,7 @@ class HandlerClass:
                             float(self.ini.find('AXIS_Z', 'OFFSET_AV_RATIO'))) * 60
         hal.set_p('plasmac.thc-feed-rate','%f' % (int(self.thcFeedRate)))
         self.w.max_feed_rate.setText(str(int(self.thcFeedRate)))
-        self.w.settings.setTabEnabled(1, not int(self.ini.find('PLASMAC', 'CONFIG_DISABLE')))
+        self.w.plasmac_settings_tabs.setTabEnabled(1, not int(self.ini.find('PLASMAC', 'CONFIG_DISABLE')))
         self.materialsUpdate = False
         self.oldMode = 0
         self.configure_widgets()
@@ -115,32 +115,17 @@ class HandlerClass:
     # callbacks from form #
     #######################
 
-    def mode_0(self):                       ####### TEMP
-        hal.set_p('plasmac.mode', '0')
-
-    def mode_1(self):                       ####### TEMP
-        hal.set_p('plasmac.mode', '1')
-
-    def mode_2(self):                       ####### TEMP
-        hal.set_p('plasmac.mode', '2')
-
-    def edit_mode_changed(self, mode):
-        if mode == 0:
-            self.w.gcode_editor.readOnlyMode()
-        else:
-            self.w.gcode_editor.editMode()
-
     def edit_clicked(self, mode):
-        if self.w.stackedWidget.currentWidget() == self.w.Preview:
-            print 'preview'
-            self.w.stackedWidget.setCurrentWidget(self.w.GcodeEdit)
-            self.w.gcode_editor.editMode()
-            self.w.edit_button.setText('Preview')
-        elif self.w.stackedWidget.currentWidget() == self.w.GcodeEdit:
+        if self.w.gcoder.width() == 300:
+            print 'editing'
+            self.w.edit_button.setText('View')
+            self.w.gcoder.setGeometry(522,434,500,308)
+            self.w.gcoder.editMode()
+        elif self.w.gcoder.width() == 500:
             print 'gcode edit'
-            self.w.stackedWidget.setCurrentWidget(self.w.Preview)
-            self.w.gcode_editor.readOnlyMode()
             self.w.edit_button.setText('Edit')
+            self.w.gcoder.setGeometry(522,434,300,256)
+            self.w.gcoder.readOnlyMode()
         else:
             print 'unknown'
             
@@ -181,55 +166,52 @@ class HandlerClass:
             self.w.cut_amps.setValue(self.materialsList[index][7])
             self.w.cut_volts.setValue(self.materialsList[index][8])
 
-    def pulse_changed(self, value):
-        print value
-        print float(value) * 0.1
-
-    def height_changed(self, value):
-        print value
-        print float(value) * 0.1
-
-    def wait_for_completion(self):
-        while self.lcnc.comd.wait_complete() == -1:
-            pass
-
     def x_to_home_clicked(self):
         print 'x to home'
-        #self.goto_home('X')
+        self.goto_home('X')
 
     def y_to_home_clicked(self):
         print 'y to home'
-        #self.goto_home('Y')
+        self.goto_home('Y')
 
     def z_to_home_clicked(self):
         print 'z to home'
-        #self.goto_home('Z')
+        self.goto_home('Z')
 
     def goto_home(self,axis):
         if hal.get_value('halui.program.is-idle'):
-            home = self.lcnc.linuxcncIniFile.find('JOINT_' + str(self.lcnc.linuxcncIniFile.find('TRAJ', 'COORDINATES').upper().index(axis)), 'HOME')
-            mode = hal.get_value('halui.mode.is-mdi')
-            if not mode:
-                self.lcnc.comd.mode(linuxcnc.MODE_MDI)
-                self.wait_for_completion()
-            self.lcnc.comd.mdi('G53 G0 ' + axis + home)
-            self.wait_for_completion()
-            if not mode:
-                self.lcnc.comd.mode(linuxcnc.MODE_MANUAL)
-                self.wait_for_completion()
+            home = self.ini.find('JOINT_' + str(self.ini.find('TRAJ', 'COORDINATES').upper().index(axis)), 'HOME')
+#            mode = hal.get_value('halui.mode.is-mdi')
+#            if not mode:
+            if not hal.get_value('halui.mode.is-mdi'):
+                self.cmnd.mode(linuxcnc.MODE_MDI)
+            self.cmnd.mdi('G53 G0 ' + axis + home)
 
-    def dry_run_clicked(self):
-        print 'dry run'
-        
+    def height_override_changed(self, height):
+        self.w.ho_label.setText('%d' % height)
+        hal.set_p('plasmac.height-override','%f' %(height))
+
+    def torch_pulse_time_changed(self, time):
+        bob = float(time) * 0.1
+        print time,type(time)
+        self.w.tp_label.setText('%0.1f Sec' % (float(time) * 0.1))
+        print 'TORCH PULSE TIME CHANGED'
+        print float(time) * 0.1
+
+    def paused_motion_speed_changed(self, speed):
+        self.w.pm_label.setText('%s%%' % speed)
+        print 'MOTION SPEED CHANGED'
+        print float(speed) * 0.1
+
     def forward_pressed(self):
-        speed = self.w.paused_motion_speed.value()
+        speed = self.w.paused_motion_speed.value() * 0.01
         hal.set_p('plasmac.paused-motion-speed','%f' %(speed))
 
     def forward_released(self):
         hal.set_p('plasmac.paused-motion-speed','0')
 
     def reverse_pressed(self):
-        speed = self.w.paused_motion_speed.value() * -1
+        speed = self.w.paused_motion_speed.value() * -0.01
         hal.set_p('plasmac.paused-motion-speed','%f' %(speed))
 
     def reverse_released(self):
@@ -243,6 +225,10 @@ class HandlerClass:
     def torch_pulse_start_released(self):
         hal.set_p('plasmac.torch-pulse-start','0')
         hal.set_p('plasmac.torch-pulse-time','0')
+
+    def hal_scope_clicked(self):
+        print 'launch halscope'
+        os.system('halscope')
 
     #####################
     # general functions #
@@ -536,7 +522,7 @@ class HandlerClass:
                 self.w.offsets_frame.resize(self.w.offsets_frame.geometry().width(), self.w.offsets_frame.geometry().height() + 52)
                 self.w.run_tab.resize(self.w.run_tab.geometry().width(), self.w.run_tab.geometry().height() + 181)
                 self.w.config_tab.resize(self.w.config_tab.geometry().width(), self.w.config_tab.geometry().height() + 181)
-                self.w.settings.resize(self.w.settings.geometry().width(), self.w.settings.geometry().height() + 181)
+                self.w.plasmac_settings_tabs.resize(self.w.plasmac_settings_tabs.geometry().width(), self.w.plasmac_settings_tabs.geometry().height() + 181)
 
 
         elif mode == 1:
@@ -614,7 +600,7 @@ class HandlerClass:
                 self.w.offsets_frame.resize(self.w.offsets_frame.geometry().width(), self.w.offsets_frame.geometry().height() - 52)
                 self.w.run_tab.resize(self.w.run_tab.geometry().width(), self.w.run_tab.geometry().height() - 181)
                 self.w.config_tab.resize(self.w.config_tab.geometry().width(), self.w.config_tab.geometry().height() - 181)
-                self.w.settings.resize(self.w.settings.geometry().width(), self.w.settings.geometry().height() - 181)
+                self.w.plasmac_settings_tabs.resize(self.w.plasmac_settings_tabs.geometry().width(), self.w.plasmac_settings_tabs.geometry().height() - 181)
             else:
                 self.w.cut_volts.close()
                 self.w.cVLabel.close()
@@ -680,7 +666,7 @@ class HandlerClass:
 
 #        if hal.get_value('halui.program.is-idle'):
 #            self.builder.get_object('pausedMotionSpeedAdj').set_value(0)
-        self.w.settings.setTabEnabled(1, not hal.get_value('plasmac_ui.config_disable'))
+        self.w.plasmac_settings_tabs.setTabEnabled(1, not hal.get_value('plasmac_ui.config_disable'))
         mode = hal.get_value('plasmac.mode')
         if mode != self.oldMode: self.set_mode(mode)
         return True

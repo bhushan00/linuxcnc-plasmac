@@ -38,7 +38,7 @@
    <string>PLASMAP</string>
   </property>
   <property name="styleSheet">
-   <string notr="true">background-color: rgb(238, 238, 236);</string>
+   <string notr="true">background-color: rgb(186, 189, 182);</string>
   </property>
   <property name="animated">
    <bool>false</bool>
@@ -59,7 +59,7 @@
    <property name="autoFillBackground">
     <bool>false</bool>
    </property>
-   <widget class="QTabWidget" name="settings">
+   <widget class="QTabWidget" name="plasmac_settings_tabs">
     <property name="enabled">
      <bool>true</bool>
     </property>
@@ -68,7 +68,7 @@
       <x>2</x>
       <y>26</y>
       <width>178</width>
-      <height>740</height>
+      <height>717</height>
      </rect>
     </property>
     <property name="sizePolicy">
@@ -1713,7 +1713,7 @@
      </widget>
     </widget>
    </widget>
-   <widget class="QFrame" name="view_frame">
+   <widget class="QFrame" name="button_top_frame">
     <property name="geometry">
      <rect>
       <x>182</x>
@@ -2163,9 +2163,9 @@
     </property>
     <property name="geometry">
      <rect>
-      <x>522</x>
+      <x>826</x>
       <y>434</y>
-      <width>276</width>
+      <width>196</width>
       <height>256</height>
      </rect>
     </property>
@@ -2177,28 +2177,12 @@
     </property>
     <property name="maximumSize">
      <size>
-      <width>16777215</width>
+      <width>196</width>
       <height>16777215</height>
      </size>
     </property>
     <property name="soft_keyboard_option" stdset="0">
      <bool>false</bool>
-    </property>
-   </widget>
-   <widget class="ActionButton" name="halshow_button">
-    <property name="geometry">
-     <rect>
-      <x>445</x>
-      <y>735</y>
-      <width>56</width>
-      <height>23</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Halshow</string>
-    </property>
-    <property name="launch_halshow_action" stdset="0">
-     <bool>true</bool>
     </property>
    </widget>
    <widget class="GeneralHALInput" name="config_disable">
@@ -2212,45 +2196,6 @@
     </property>
     <property name="pin_name" stdset="0">
      <string>config-disable</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="pushButton">
-    <property name="geometry">
-     <rect>
-      <x>520</x>
-      <y>735</y>
-      <width>82</width>
-      <height>23</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Mode 0</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="pushButton_2">
-    <property name="geometry">
-     <rect>
-      <x>610</x>
-      <y>740</y>
-      <width>82</width>
-      <height>23</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Mode 1</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="pushButton_3">
-    <property name="geometry">
-     <rect>
-      <x>715</x>
-      <y>740</y>
-      <width>82</width>
-      <height>23</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Mode 2</string>
     </property>
    </widget>
    <widget class="ScreenOptions" name="screen_options">
@@ -2316,13 +2261,13 @@
      <string>status</string>
     </property>
    </widget>
-   <widget class="QFrame" name="frame">
+   <widget class="QFrame" name="control_frame">
     <property name="geometry">
      <rect>
       <x>184</x>
       <y>538</y>
       <width>336</width>
-      <height>191</height>
+      <height>152</height>
      </rect>
     </property>
     <property name="frameShape">
@@ -2331,7 +2276,7 @@
     <property name="frameShadow">
      <enum>QFrame::Raised</enum>
     </property>
-    <widget class="QLabel" name="ho_label">
+    <widget class="QLabel" name="ho_label_1">
      <property name="enabled">
       <bool>true</bool>
      </property>
@@ -2350,35 +2295,7 @@
       <set>Qt::AlignCenter</set>
      </property>
     </widget>
-    <widget class="Slider" name="height_override">
-     <property name="geometry">
-      <rect>
-       <x>52</x>
-       <y>24</y>
-       <width>232</width>
-       <height>15</height>
-      </rect>
-     </property>
-     <property name="minimum">
-      <number>-50</number>
-     </property>
-     <property name="maximum">
-      <number>50</number>
-     </property>
-     <property name="singleStep">
-      <number>1</number>
-     </property>
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-     <property name="tickPosition">
-      <enum>QSlider::NoTicks</enum>
-     </property>
-     <property name="tickInterval">
-      <number>10</number>
-     </property>
-    </widget>
-    <widget class="QLabel" name="tp_label">
+    <widget class="QLabel" name="tp_label_1">
      <property name="geometry">
       <rect>
        <x>52</x>
@@ -2394,35 +2311,7 @@
       <set>Qt::AlignCenter</set>
      </property>
     </widget>
-    <widget class="Slider" name="torch_pulse_time">
-     <property name="geometry">
-      <rect>
-       <x>52</x>
-       <y>76</y>
-       <width>232</width>
-       <height>15</height>
-      </rect>
-     </property>
-     <property name="minimum">
-      <number>1</number>
-     </property>
-     <property name="maximum">
-      <number>100</number>
-     </property>
-     <property name="singleStep">
-      <number>1</number>
-     </property>
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-     <property name="tickPosition">
-      <enum>QSlider::NoTicks</enum>
-     </property>
-     <property name="tickInterval">
-      <number>10</number>
-     </property>
-    </widget>
-    <widget class="QLabel" name="pms_label">
+    <widget class="QLabel" name="pm_label_1">
      <property name="geometry">
       <rect>
        <x>52</x>
@@ -2436,34 +2325,6 @@
      </property>
      <property name="alignment">
       <set>Qt::AlignCenter</set>
-     </property>
-    </widget>
-    <widget class="Slider" name="paused_motion_speed">
-     <property name="geometry">
-      <rect>
-       <x>52</x>
-       <y>128</y>
-       <width>232</width>
-       <height>15</height>
-      </rect>
-     </property>
-     <property name="minimum">
-      <number>1</number>
-     </property>
-     <property name="maximum">
-      <number>100</number>
-     </property>
-     <property name="singleStep">
-      <number>1</number>
-     </property>
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-     <property name="tickPosition">
-      <enum>QSlider::NoTicks</enum>
-     </property>
-     <property name="tickInterval">
-      <number>10</number>
      </property>
     </widget>
     <widget class="PushButton" name="forward">
@@ -2503,6 +2364,159 @@
      </property>
      <property name="text">
       <string>On</string>
+     </property>
+    </widget>
+    <widget class="QScrollBar" name="height_override">
+     <property name="geometry">
+      <rect>
+       <x>58</x>
+       <y>24</y>
+       <width>220</width>
+       <height>24</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">
+background-color: rgb(136, 138, 133);</string>
+     </property>
+     <property name="minimum">
+      <number>-10</number>
+     </property>
+     <property name="maximum">
+      <number>10</number>
+     </property>
+     <property name="value">
+      <number>0</number>
+     </property>
+     <property name="sliderPosition">
+      <number>0</number>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="invertedAppearance">
+      <bool>false</bool>
+     </property>
+     <property name="invertedControls">
+      <bool>false</bool>
+     </property>
+    </widget>
+    <widget class="QScrollBar" name="torch_pulse_time">
+     <property name="geometry">
+      <rect>
+       <x>58</x>
+       <y>76</y>
+       <width>220</width>
+       <height>24</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">
+background-color: rgb(136, 138, 133);</string>
+     </property>
+     <property name="minimum">
+      <number>1</number>
+     </property>
+     <property name="maximum">
+      <number>99</number>
+     </property>
+     <property name="value">
+      <number>1</number>
+     </property>
+     <property name="sliderPosition">
+      <number>1</number>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="invertedAppearance">
+      <bool>false</bool>
+     </property>
+     <property name="invertedControls">
+      <bool>false</bool>
+     </property>
+    </widget>
+    <widget class="QScrollBar" name="paused_motion_speed">
+     <property name="geometry">
+      <rect>
+       <x>58</x>
+       <y>128</y>
+       <width>220</width>
+       <height>24</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">
+background-color: rgb(136, 138, 133);</string>
+     </property>
+     <property name="minimum">
+      <number>1</number>
+     </property>
+     <property name="maximum">
+      <number>100</number>
+     </property>
+     <property name="value">
+      <number>50</number>
+     </property>
+     <property name="sliderPosition">
+      <number>50</number>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="invertedAppearance">
+      <bool>false</bool>
+     </property>
+     <property name="invertedControls">
+      <bool>false</bool>
+     </property>
+    </widget>
+    <widget class="QLabel" name="ho_label">
+     <property name="geometry">
+      <rect>
+       <x>234</x>
+       <y>4</y>
+       <width>50</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>+50</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+    </widget>
+    <widget class="QLabel" name="tp_label">
+     <property name="geometry">
+      <rect>
+       <x>234</x>
+       <y>56</y>
+       <width>50</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>9.9 Sec</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+    </widget>
+    <widget class="QLabel" name="pm_label">
+     <property name="geometry">
+      <rect>
+       <x>234</x>
+       <y>108</y>
+       <width>50</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>100%</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
      </property>
     </widget>
    </widget>
@@ -2611,10 +2625,10 @@ Home</string>
       </font>
      </property>
      <property name="styleSheet">
-      <string notr="true">background-color: rgb(136, 138, 133);</string>
+      <string notr="true"/>
      </property>
      <property name="frameShape">
-      <enum>QFrame::Box</enum>
+      <enum>QFrame::Panel</enum>
      </property>
      <property name="frameShadow">
       <enum>QFrame::Sunken</enum>
@@ -2654,10 +2668,10 @@ Home</string>
       </font>
      </property>
      <property name="styleSheet">
-      <string notr="true">background-color: rgb(136, 138, 133);</string>
+      <string notr="true"/>
      </property>
      <property name="frameShape">
-      <enum>QFrame::Box</enum>
+      <enum>QFrame::Panel</enum>
      </property>
      <property name="frameShadow">
       <enum>QFrame::Sunken</enum>
@@ -2694,10 +2708,10 @@ Home</string>
       </font>
      </property>
      <property name="styleSheet">
-      <string notr="true">background-color: rgb(136, 138, 133);</string>
+      <string notr="true"/>
      </property>
      <property name="frameShape">
-      <enum>QFrame::Box</enum>
+      <enum>QFrame::Panel</enum>
      </property>
      <property name="frameShadow">
       <enum>QFrame::Sunken</enum>
@@ -3233,6 +3247,9 @@ Z+</string>
        <pointsize>20</pointsize>
       </font>
      </property>
+     <property name="styleSheet">
+      <string notr="true">color: rgb(239, 41, 41);</string>
+     </property>
      <property name="text">
       <string>X</string>
      </property>
@@ -3255,6 +3272,9 @@ Z+</string>
        <pointsize>20</pointsize>
       </font>
      </property>
+     <property name="styleSheet">
+      <string notr="true">color: rgb(239, 41, 41);</string>
+     </property>
      <property name="text">
       <string>Y</string>
      </property>
@@ -3276,6 +3296,9 @@ Z+</string>
        <family>DejaVu Sans</family>
        <pointsize>20</pointsize>
       </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">color: rgb(239, 41, 41);</string>
      </property>
      <property name="text">
       <string>Z</string>
@@ -3517,73 +3540,7 @@ Z+</string>
     <zorder>breakaway_switch_led</zorder>
     <zorder>safe_height_limited_led</zorder>
    </widget>
-   <widget class="QStackedWidget" name="stackedWidget">
-    <property name="geometry">
-     <rect>
-      <x>522</x>
-      <y>78</y>
-      <width>498</width>
-      <height>352</height>
-     </rect>
-    </property>
-    <property name="currentIndex">
-     <number>0</number>
-    </property>
-    <widget class="QWidget" name="Preview">
-     <widget class="GCodeGraphics" name="preview">
-      <property name="geometry">
-       <rect>
-        <x>0</x>
-        <y>0</y>
-        <width>498</width>
-        <height>352</height>
-       </rect>
-      </property>
-      <property name="background_color" stdset="0">
-       <color>
-        <red>0</red>
-        <green>0</green>
-        <blue>0</blue>
-       </color>
-      </property>
-     </widget>
-    </widget>
-    <widget class="QWidget" name="GcodeEdit">
-     <widget class="QFrame" name="frame_2">
-      <property name="geometry">
-       <rect>
-        <x>0</x>
-        <y>0</y>
-        <width>498</width>
-        <height>352</height>
-       </rect>
-      </property>
-      <property name="frameShape">
-       <enum>QFrame::StyledPanel</enum>
-      </property>
-      <property name="frameShadow">
-       <enum>QFrame::Sunken</enum>
-      </property>
-      <widget class="GcodeEditor" name="gcode_editor">
-       <property name="geometry">
-        <rect>
-         <x>2</x>
-         <y>2</y>
-         <width>494</width>
-         <height>348</height>
-        </rect>
-       </property>
-       <property name="minimumSize">
-        <size>
-         <width>300</width>
-         <height>126</height>
-        </size>
-       </property>
-      </widget>
-     </widget>
-    </widget>
-   </widget>
-   <widget class="StateEnableGridLayout" name="state_enable_gridLayout_2">
+   <widget class="StateEnableGridLayout" name="button_layout">
     <property name="geometry">
      <rect>
       <x>184</x>
@@ -3648,22 +3605,144 @@ Z+</string>
      </property>
     </widget>
    </widget>
-   <zorder>frame</zorder>
+   <widget class="QFrame" name="button_bottom_frame">
+    <property name="geometry">
+     <rect>
+      <x>184</x>
+      <y>694</y>
+      <width>336</width>
+      <height>48</height>
+     </rect>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::StyledPanel</enum>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Raised</enum>
+    </property>
+    <widget class="ActionButton" name="status_show_button">
+     <property name="geometry">
+      <rect>
+       <x>228</x>
+       <y>0</y>
+       <width>72</width>
+       <height>48</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Show
+Status</string>
+     </property>
+     <property name="launch_status_action" stdset="0">
+      <bool>true</bool>
+     </property>
+     <property name="launch_halshow_action" stdset="0">
+      <bool>false</bool>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="hal_scope_button">
+     <property name="geometry">
+      <rect>
+       <x>152</x>
+       <y>0</y>
+       <width>72</width>
+       <height>48</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>HAL
+Scope</string>
+     </property>
+    </widget>
+    <widget class="ActionButton" name="hal_meter_button">
+     <property name="geometry">
+      <rect>
+       <x>76</x>
+       <y>0</y>
+       <width>72</width>
+       <height>48</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>HAL
+Meter</string>
+     </property>
+     <property name="launch_halmeter_action" stdset="0">
+      <bool>true</bool>
+     </property>
+     <property name="launch_halshow_action" stdset="0">
+      <bool>false</bool>
+     </property>
+    </widget>
+    <widget class="ActionButton" name="hal_show_button">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>72</width>
+       <height>48</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>HAL
+Show</string>
+     </property>
+     <property name="launch_halshow_action" stdset="0">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </widget>
+   <widget class="GcodeEditor" name="gcoder">
+    <property name="geometry">
+     <rect>
+      <x>522</x>
+      <y>434</y>
+      <width>300</width>
+      <height>256</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>250</width>
+      <height>200</height>
+     </size>
+    </property>
+   </widget>
+   <widget class="GCodeGraphics" name="preview">
+    <property name="geometry">
+     <rect>
+      <x>522</x>
+      <y>78</y>
+      <width>500</width>
+      <height>352</height>
+     </rect>
+    </property>
+    <property name="_view" stdset="0">
+     <string>z</string>
+    </property>
+    <property name="background_color" stdset="0">
+     <color>
+      <red>0</red>
+      <green>0</green>
+      <blue>0</blue>
+     </color>
+    </property>
+   </widget>
+   <zorder>mdi_history</zorder>
+   <zorder>button_bottom_frame</zorder>
+   <zorder>control_frame</zorder>
    <zorder>screen_options</zorder>
-   <zorder>settings</zorder>
+   <zorder>plasmac_settings_tabs</zorder>
    <zorder>config_disable</zorder>
-   <zorder>view_frame</zorder>
-   <zorder>halshow_button</zorder>
-   <zorder>pushButton</zorder>
-   <zorder>pushButton_2</zorder>
-   <zorder>pushButton_3</zorder>
+   <zorder>button_top_frame</zorder>
    <zorder>open_file_dialog</zorder>
    <zorder>status</zorder>
-   <zorder>mdi_history</zorder>
    <zorder>dro_frame</zorder>
-   <zorder>stackedWidget</zorder>
-   <zorder>state_enable_gridLayout_2</zorder>
+   <zorder>button_layout</zorder>
+   <zorder>gcoder</zorder>
+   <zorder>preview</zorder>
   </widget>
+  <widget class="QStatusBar" name="statusBar"/>
   <action name="actionOPen">
    <property name="text">
     <string>OPen</string>
@@ -3701,11 +3780,6 @@ Z+</string>
    <class>LED</class>
    <extends>QWidget</extends>
    <header>qtvcp.widgets.led_widget</header>
-  </customwidget>
-  <customwidget>
-   <class>Slider</class>
-   <extends>QSlider</extends>
-   <header>qtvcp.widgets.simple_widgets</header>
   </customwidget>
   <customwidget>
    <class>FileDialog</class>
@@ -4288,78 +4362,14 @@ Z+</string>
    </hints>
   </connection>
   <connection>
-   <sender>pushButton</sender>
-   <signal>pressed()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>mode_0()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>520</x>
-     <y>757</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>463</x>
-     <y>753</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>pushButton_2</sender>
-   <signal>pressed()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>mode_1()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>610</x>
-     <y>762</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>551</x>
-     <y>746</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>pushButton_3</sender>
-   <signal>pressed()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>mode_2()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>715</x>
-     <y>762</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>648</x>
-     <y>752</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>torch_pulse_time</sender>
-   <signal>valueChanged(int)</signal>
-   <receiver>MainWindow</receiver>
-   <slot>pulse_changed(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>342</x>
-     <y>620</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>310</x>
-     <y>594</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
    <sender>height_override</sender>
    <signal>valueChanged(int)</signal>
    <receiver>MainWindow</receiver>
-   <slot>height_changed(int)</slot>
+   <slot>height_override_changed()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>364</x>
-     <y>563</y>
+     <x>351</x>
+     <y>569</y>
     </hint>
     <hint type="destinationlabel">
      <x>346</x>
@@ -4464,22 +4474,6 @@ Z+</string>
    </hints>
   </connection>
   <connection>
-   <sender>dry_run</sender>
-   <signal>clicked()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>dry_run_clicked()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>237</x>
-     <y>503</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>604</x>
-     <y>428</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
    <sender>x_to_home</sender>
    <signal>clicked()</signal>
    <receiver>MainWindow</receiver>
@@ -4543,6 +4537,54 @@ Z+</string>
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>torch_pulse_time</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>torch_pulse_time_changed(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>294</x>
+     <y>625</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>292</x>
+     <y>739</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>paused_motion_speed</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>paused_motion_speed_changed()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>431</x>
+     <y>678</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>433</x>
+     <y>738</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>hal_scope_button</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>hal_scope_clicked()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>372</x>
+     <y>710</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>574</x>
+     <y>710</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <designerdata>
   <property name="gridDeltaX">
@@ -4562,7 +4604,6 @@ Z+</string>
   </property>
  </designerdata>
  <slots>
-  <slot>edit_mode_changed(int)</slot>
   <slot>spin_value_changed()</slot>
   <slot>material_changed()</slot>
   <slot>checkbox_changed(int)</slot>
@@ -4570,7 +4611,7 @@ Z+</string>
   <slot>mode_1()</slot>
   <slot>mode_2()</slot>
   <slot>height_changed(int)</slot>
-  <slot>pulse_changed(int)</slot>
+  <slot>torch_pulse_time_changed(int)</slot>
   <slot>torch_pulse_start_pressed()</slot>
   <slot>torch_pulse_start_released()</slot>
   <slot>forward_pressed()</slot>
@@ -4582,5 +4623,8 @@ Z+</string>
   <slot>y_to_home_clicked()</slot>
   <slot>z_to_home_clicked()</slot>
   <slot>edit_clicked()</slot>
+  <slot>height_override_changed()</slot>
+  <slot>paused_motion_speed_changed()</slot>
+  <slot>hal_scope_clicked()</slot>
  </slots>
 </ui>
