@@ -71,6 +71,9 @@ class HandlerClass:
 
 
 
+        STATUS.connect('error', self.error__)
+
+
 
         gobject.timeout_add(100, self.periodic)
 
@@ -117,27 +120,13 @@ class HandlerClass:
 
     def edit_clicked(self, mode):
         if self.w.gcoder.width() == 300:
-            print 'editing'
             self.w.edit_button.setText('View')
             self.w.gcoder.setGeometry(522,434,500,308)
             self.w.gcoder.editMode()
         elif self.w.gcoder.width() == 500:
-            print 'gcode edit'
             self.w.edit_button.setText('Edit')
             self.w.gcoder.setGeometry(522,434,300,256)
             self.w.gcoder.readOnlyMode()
-        else:
-            print 'unknown'
-            
-
-#        print 'mode =',mode
-        #if mode == 0:
-        #    self.w.gcode_editor.readOnlyMode()
-        #else:
-        #    self.w.gcode_editor.editMode()
-#        self.w.stackedWidget.setCurrentWidget(self.w.GcodeEdit)
-#        print self.w.stackedWidget.currentWidget()
-#        self.w.gcode_editor.editMode()
 
     def spin_value_changed(self,value):
         name = 'plasmac.' + self.w.sender().objectName().replace('_','-')
@@ -230,9 +219,16 @@ class HandlerClass:
         print 'launch halscope'
         os.system('halscope')
 
+    def gcoder_percent_done(self, pcd):
+        print pcd,'DUN...'
+
     #####################
     # general functions #
     #####################
+
+    def error__(self, w, kind ,error):
+        print 'ERROR',error
+        self.w.error_label.setText(error)
 
 #    def mouseDoubleClickEvent(self, event):
 #        #name = 'plasmac.' + self.w.sender().objectName().replace('_','-')
@@ -638,7 +634,13 @@ class HandlerClass:
     ###############################
     # PERIODIC CALLED EVERY 100mS #
     ###############################
-    
+
+
+
+#    print self.error
+
+
+
     def periodic(self):
         self.stat.poll()
         gcodeRaw = []

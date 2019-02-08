@@ -2166,7 +2166,7 @@
       <x>826</x>
       <y>434</y>
       <width>196</width>
-      <height>256</height>
+      <height>200</height>
      </rect>
     </property>
     <property name="minimumSize">
@@ -3698,7 +3698,7 @@ Show</string>
       <x>522</x>
       <y>434</y>
       <width>300</width>
-      <height>256</height>
+      <height>308</height>
      </rect>
     </property>
     <property name="minimumSize">
@@ -3728,6 +3728,22 @@ Show</string>
      </color>
     </property>
    </widget>
+   <widget class="QLabel" name="error_label">
+    <property name="geometry">
+     <rect>
+      <x>826</x>
+      <y>638</y>
+      <width>196</width>
+      <height>104</height>
+     </rect>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::StyledPanel</enum>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
    <zorder>mdi_history</zorder>
    <zorder>button_bottom_frame</zorder>
    <zorder>control_frame</zorder>
@@ -3741,6 +3757,7 @@ Show</string>
    <zorder>button_layout</zorder>
    <zorder>gcoder</zorder>
    <zorder>preview</zorder>
+   <zorder>error_label</zorder>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="actionOPen">
@@ -3847,6 +3864,79 @@ Show</string>
    <header>qtvcp.widgets.action_button</header>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>estop_button</tabstop>
+  <tabstop>power_button</tabstop>
+  <tabstop>home_all</tabstop>
+  <tabstop>open_button</tabstop>
+  <tabstop>run_button</tabstop>
+  <tabstop>stop_button</tabstop>
+  <tabstop>pause_button</tabstop>
+  <tabstop>edit_button</tabstop>
+  <tabstop>cut_height</tabstop>
+  <tabstop>cut_feed_rate</tabstop>
+  <tabstop>cut_amps</tabstop>
+  <tabstop>cut_volts</tabstop>
+  <tabstop>thc_enable</tabstop>
+  <tabstop>use_auto_volts</tabstop>
+  <tabstop>thc_threshold</tabstop>
+  <tabstop>pid_p_gain</tabstop>
+  <tabstop>kerfcross_enable</tabstop>
+  <tabstop>kerfcross_threshold</tabstop>
+  <tabstop>safe_height</tabstop>
+  <tabstop>float_switch_travel</tabstop>
+  <tabstop>probe_feed_rate</tabstop>
+  <tabstop>skip_ihs_distance</tabstop>
+  <tabstop>arc_fail_delay</tabstop>
+  <tabstop>arc_max_starts</tabstop>
+  <tabstop>restart_delay</tabstop>
+  <tabstop>torch_off_delay</tabstop>
+  <tabstop>arc_voltage_scale</tabstop>
+  <tabstop>arc_voltage_offset</tabstop>
+  <tabstop>arc_ok_high</tabstop>
+  <tabstop>arc_ok_low</tabstop>
+  <tabstop>setup_feed_rate</tabstop>
+  <tabstop>pid_i_gain</tabstop>
+  <tabstop>pid_d_gain</tabstop>
+  <tabstop>viewz</tabstop>
+  <tabstop>viewz2</tabstop>
+  <tabstop>viewp</tabstop>
+  <tabstop>clear</tabstop>
+  <tabstop>plasmac_settings_tabs</tabstop>
+  <tabstop>cornerlock_enable</tabstop>
+  <tabstop>materials</tabstop>
+  <tabstop>pierce_height</tabstop>
+  <tabstop>puddle_jump_height</tabstop>
+  <tabstop>pierce_delay</tabstop>
+  <tabstop>pushButton_4</tabstop>
+  <tabstop>puddle_jump_delay</tabstop>
+  <tabstop>hal_show_button</tabstop>
+  <tabstop>forward</tabstop>
+  <tabstop>reverse</tabstop>
+  <tabstop>torch_pulse_start</tabstop>
+  <tabstop>cornerlock_threshold</tabstop>
+  <tabstop>feed_override_slider</tabstop>
+  <tabstop>rapid_override_slider</tabstop>
+  <tabstop>jog_rate_slider</tabstop>
+  <tabstop>zero_z_button</tabstop>
+  <tabstop>zero_y_button</tabstop>
+  <tabstop>zero_x_button</tabstop>
+  <tabstop>work_coordinates_button</tabstop>
+  <tabstop>jog_x_plus_button</tabstop>
+  <tabstop>jog_x_minus_button</tabstop>
+  <tabstop>jog_y_minus_button</tabstop>
+  <tabstop>jog_y_plus_button</tabstop>
+  <tabstop>jog_z_minus_button</tabstop>
+  <tabstop>jog_z_plus_button</tabstop>
+  <tabstop>jog_increments_button</tabstop>
+  <tabstop>x_to_home</tabstop>
+  <tabstop>y_to_home</tabstop>
+  <tabstop>z_to_home</tabstop>
+  <tabstop>dry_run</tabstop>
+  <tabstop>hal_meter_button</tabstop>
+  <tabstop>status_show_button</tabstop>
+  <tabstop>hal_scope_button</tabstop>
+ </tabstops>
  <resources/>
  <connections>
   <connection>
@@ -4607,10 +4697,6 @@ Show</string>
   <slot>spin_value_changed()</slot>
   <slot>material_changed()</slot>
   <slot>checkbox_changed(int)</slot>
-  <slot>mode_0()</slot>
-  <slot>mode_1()</slot>
-  <slot>mode_2()</slot>
-  <slot>height_changed(int)</slot>
   <slot>torch_pulse_time_changed(int)</slot>
   <slot>torch_pulse_start_pressed()</slot>
   <slot>torch_pulse_start_released()</slot>
@@ -4618,7 +4704,6 @@ Show</string>
   <slot>forward_released()</slot>
   <slot>reverse_pressed()</slot>
   <slot>reverse_released()</slot>
-  <slot>dry_run_clicked()</slot>
   <slot>x_to_home_clicked()</slot>
   <slot>y_to_home_clicked()</slot>
   <slot>z_to_home_clicked()</slot>
