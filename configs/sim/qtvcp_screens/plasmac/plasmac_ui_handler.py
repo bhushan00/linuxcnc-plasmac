@@ -68,10 +68,10 @@ class HandlerClass:
         self.w.probe_feed_rate.setMaximum(self.w.setup_feed_rate.value())
         self.check_materials_file()
         self.get_materials()
-
-
-
         STATUS.connect('error', self.error__)
+        self.w.ho_label.setText('%d' % self.w.height_override.value())
+        self.w.tp_label.setText('%0.1f Sec' % (float(self.w.torch_pulse_time.value()) * 0.1))
+        self.w.pm_label.setText('%s%%' % self.w.paused_motion_speed.value())
 
 
 
@@ -170,8 +170,6 @@ class HandlerClass:
     def goto_home(self,axis):
         if hal.get_value('halui.program.is-idle'):
             home = self.ini.find('JOINT_' + str(self.ini.find('TRAJ', 'COORDINATES').upper().index(axis)), 'HOME')
-#            mode = hal.get_value('halui.mode.is-mdi')
-#            if not mode:
             if not hal.get_value('halui.mode.is-mdi'):
                 self.cmnd.mode(linuxcnc.MODE_MDI)
             self.cmnd.mdi('G53 G0 ' + axis + home)
@@ -181,11 +179,7 @@ class HandlerClass:
         hal.set_p('plasmac.height-override','%f' %(height))
 
     def torch_pulse_time_changed(self, time):
-        bob = float(time) * 0.1
-        print time,type(time)
         self.w.tp_label.setText('%0.1f Sec' % (float(time) * 0.1))
-        print 'TORCH PULSE TIME CHANGED'
-        print float(time) * 0.1
 
     def paused_motion_speed_changed(self, speed):
         self.w.pm_label.setText('%s%%' % speed)
@@ -227,8 +221,14 @@ class HandlerClass:
     #####################
 
     def error__(self, w, kind ,error):
-        print 'ERROR',error
-        self.w.error_label.setText(error)
+        if kind in (linuxcnc.NML_ERROR, linuxcnc.OPERATOR_ERROR):
+            eType = 'ERROR'
+        else:
+            eType = 'INFO'
+        
+        #self.w.error_label.setText(self.w.error_label.text() + '\n' + eType +': ' + error)
+        #self.w.error_text.appendPlainText(eType +': ' + error + '\n')
+        self.w.error_text.appendPlainText(eType +': ' + error)
 
 #    def mouseDoubleClickEvent(self, event):
 #        #name = 'plasmac.' + self.w.sender().objectName().replace('_','-')
@@ -297,15 +297,15 @@ class HandlerClass:
         self.configDict = {}
         self.config_widgets = ['pierce_height','pierce_delay','puddle_jump_height',\
                                'puddle_jump_delay','cut_height','cut_feed_rate',\
-                               'cut_amps','cut_volts','thc_enable','use_auto_volts',
-                               'thc_threshold','pid_p_gain','up_led','down_led',\
-                               'cornerlock_enable','cornerlock_threshold',\
-                               'kerfcross_enable','kerfcross_threshold','safe_height',\
+                               'cut_amps','cut_volts','thc_enable','use_auto_volts',\
+                               'thc_threshold','pid_p_gain','cornerlock_enable',\
+                               'cornerlock_threshold','kerfcross_enable',\
+                               'kerfcross_threshold','safe_height',\
                                'float_switch_travel','probe_feed_rate','skip_ihs_distance',\
                                'arc_fail_delay','arc_max_starts','restart_delay',\
                                'torch_off_delay','arc_voltage_scale','arc_voltage_offset',\
                                'arc_ok_high','arc_ok_low','setup_feed_rate','pid_i_gain',\
-                               'pid_d_gain',\
+                               'pid_d_gain','paused-motion-speed','torch-pulse-time',\
                                ]
         for item in self.config_widgets:
             self.configDict[item.replace('_','-')] = '0'
@@ -344,14 +344,20 @@ class HandlerClass:
                     else:
                         widget.setCheckState(False)
                         print '***', item, 'missing from', self.configFile
-                elif item == 'torch-pulse-time' or item == 'paused-motion-speed':
+                elif item == 'torch-pulse-time':
                     if item in tmpDict:
-                        widget.setValue(float(self.configDict.get(item)))
+                        widget.setValue(int(float(self.configDict.get(item)) * 10))
                     else:
                         widget.setValue(0)
                         print '***', item, 'missing from', self.configFile
-#                else:
-#                    print getattr(self.w,item.replace('-','_'),None), 'is invalid'
+                elif item == 'paused-motion-speed':
+                    if item in tmpDict:
+                        widget.setValue(int(float(self.configDict.get(item)) * 100))
+                    else:
+                        widget.setValue(0)
+                        print '***', item, 'missing from', self.configFile
+                else:
+                    print item, 'does not exist'
             if convertFile:
                 print '*** converting', self.configFile, 'to new format'
                 self.save_settings()

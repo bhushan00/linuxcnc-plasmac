@@ -2166,7 +2166,7 @@
       <x>826</x>
       <y>434</y>
       <width>196</width>
-      <height>200</height>
+      <height>204</height>
      </rect>
     </property>
     <property name="minimumSize">
@@ -2481,7 +2481,7 @@ background-color: rgb(136, 138, 133);</string>
       </rect>
      </property>
      <property name="text">
-      <string>+50</string>
+      <string>0</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -2497,7 +2497,7 @@ background-color: rgb(136, 138, 133);</string>
       </rect>
      </property>
      <property name="text">
-      <string>9.9 Sec</string>
+      <string>0</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -2513,7 +2513,7 @@ background-color: rgb(136, 138, 133);</string>
       </rect>
      </property>
      <property name="text">
-      <string>100%</string>
+      <string>0</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -3623,9 +3623,9 @@ Z+</string>
     <widget class="ActionButton" name="status_show_button">
      <property name="geometry">
       <rect>
-       <x>228</x>
+       <x>255</x>
        <y>0</y>
-       <width>72</width>
+       <width>81</width>
        <height>48</height>
       </rect>
      </property>
@@ -3643,9 +3643,9 @@ Status</string>
     <widget class="QPushButton" name="hal_scope_button">
      <property name="geometry">
       <rect>
-       <x>152</x>
+       <x>170</x>
        <y>0</y>
-       <width>72</width>
+       <width>81</width>
        <height>48</height>
       </rect>
      </property>
@@ -3657,9 +3657,9 @@ Scope</string>
     <widget class="ActionButton" name="hal_meter_button">
      <property name="geometry">
       <rect>
-       <x>76</x>
+       <x>85</x>
        <y>0</y>
-       <width>72</width>
+       <width>81</width>
        <height>48</height>
       </rect>
      </property>
@@ -3679,7 +3679,7 @@ Meter</string>
       <rect>
        <x>0</x>
        <y>0</y>
-       <width>72</width>
+       <width>81</width>
        <height>48</height>
       </rect>
      </property>
@@ -3743,6 +3743,34 @@ Show</string>
     <property name="text">
      <string/>
     </property>
+    <property name="alignment">
+     <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+    </property>
+    <property name="wordWrap">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QPlainTextEdit" name="error_text">
+    <property name="geometry">
+     <rect>
+      <x>826</x>
+      <y>642</y>
+      <width>196</width>
+      <height>100</height>
+     </rect>
+    </property>
+    <property name="verticalScrollBarPolicy">
+     <enum>Qt::ScrollBarAlwaysOn</enum>
+    </property>
+    <property name="horizontalScrollBarPolicy">
+     <enum>Qt::ScrollBarAlwaysOff</enum>
+    </property>
+    <property name="documentTitle">
+     <string>Errors...</string>
+    </property>
+    <property name="readOnly">
+     <bool>true</bool>
+    </property>
    </widget>
    <zorder>mdi_history</zorder>
    <zorder>button_bottom_frame</zorder>
@@ -3758,6 +3786,7 @@ Show</string>
    <zorder>gcoder</zorder>
    <zorder>preview</zorder>
    <zorder>error_label</zorder>
+   <zorder>error_text</zorder>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="actionOPen">
