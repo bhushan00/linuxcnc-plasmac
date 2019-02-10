@@ -8,7 +8,7 @@ toolDialog_sound_type = RING
 CamViewDialog-geometry = 789 451 358 315
 
 [BOOK_KEEPING]
-last_file_path = /home/phill/linuxcnc/nc_files/samples
+last_file_path = /home/phill/linuxcnc/nc_files/plasma
 
 [SCREEN_OPTIONS]
 catch_errors = True

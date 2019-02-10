@@ -3772,6 +3772,7 @@ Show</string>
      <bool>true</bool>
     </property>
    </widget>
+   <zorder>error_text</zorder>
    <zorder>mdi_history</zorder>
    <zorder>button_bottom_frame</zorder>
    <zorder>control_frame</zorder>
@@ -3783,10 +3784,9 @@ Show</string>
    <zorder>status</zorder>
    <zorder>dro_frame</zorder>
    <zorder>button_layout</zorder>
-   <zorder>gcoder</zorder>
    <zorder>preview</zorder>
    <zorder>error_label</zorder>
-   <zorder>error_text</zorder>
+   <zorder>gcoder</zorder>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="actionOPen">

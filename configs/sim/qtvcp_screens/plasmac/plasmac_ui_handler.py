@@ -7,6 +7,7 @@ from qtvcp.widgets.origin_offsetview import OriginOffsetView as OFFVIEW_WIDGET
 from qtvcp.widgets.dialog_widget import CamViewDialog as CAMVIEW
 from qtvcp.widgets.dialog_widget import MacroTabDialog as LATHEMACRO
 from qtvcp.widgets.mdi_line import MDILine as MDI_WIDGET
+from qtvcp.widgets.gcode_editor import GcodeEditor as GCODE
 from qtvcp.lib.keybindings import Keylookup
 from qtvcp.core import Status, Action
 
@@ -110,6 +111,9 @@ class HandlerClass:
             #print 'from %s'% receiver
             return False
 
+    def class_patch__(self):
+        GCODE.exitCall = self.editor_exit
+
     ########################
     # callbacks from STATUS #
     ########################
@@ -121,11 +125,12 @@ class HandlerClass:
     def edit_clicked(self, mode):
         if self.w.gcoder.width() == 300:
             self.w.edit_button.setText('View')
-            self.w.gcoder.setGeometry(522,434,500,308)
+#            self.w.gcoder.setGeometry(522,434,500,308)
+            self.w.gcoder.setGeometry(522,78,500,664)
             self.w.gcoder.editMode()
         elif self.w.gcoder.width() == 500:
             self.w.edit_button.setText('Edit')
-            self.w.gcoder.setGeometry(522,434,300,256)
+            self.w.gcoder.setGeometry(522,434,300,308)
             self.w.gcoder.readOnlyMode()
 
     def spin_value_changed(self,value):
@@ -219,6 +224,13 @@ class HandlerClass:
     #####################
     # general functions #
     #####################
+
+    def editor_exit(self):
+        print 'editor exit pressed'
+        self.w.edit_button.setText('Edit')
+        self.w.gcoder.setGeometry(522,434,300,308)
+        self.w.gcoder.readOnlyMode()
+        self.w.gcoder.exit()
 
     def error__(self, w, kind ,error):
         if kind in (linuxcnc.NML_ERROR, linuxcnc.OPERATOR_ERROR):
