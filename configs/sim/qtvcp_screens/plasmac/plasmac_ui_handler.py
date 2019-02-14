@@ -7,7 +7,8 @@ from qtvcp.widgets.origin_offsetview import OriginOffsetView as OFFVIEW_WIDGET
 from qtvcp.widgets.dialog_widget import CamViewDialog as CAMVIEW
 from qtvcp.widgets.dialog_widget import MacroTabDialog as LATHEMACRO
 from qtvcp.widgets.mdi_line import MDILine as MDI_WIDGET
-from qtvcp.widgets.gcode_editor import GcodeEditor as GCODE
+from qtvcp.widgets.gcode_editor import GcodeEditor as GCODE_EDITOR
+from qtvcp.widgets.gcode_editor import GcodeDisplay as GCODE_DISPLAY
 from qtvcp.lib.keybindings import Keylookup
 from qtvcp.core import Status, Action
 
@@ -69,20 +70,18 @@ class HandlerClass:
         self.w.probe_feed_rate.setMaximum(self.w.setup_feed_rate.value())
         self.check_materials_file()
         self.get_materials()
-        STATUS.connect('error', self.error__)
         self.w.ho_label.setText('%d' % self.w.height_override.value())
         self.w.tp_label.setText('%0.1f Sec' % (float(self.w.torch_pulse_time.value()) * 0.1))
         self.w.pm_label.setText('%s%%' % self.w.paused_motion_speed.value())
-
-
-
+        STATUS.connect('error', self.error__)
         gobject.timeout_add(100, self.periodic)
 
-
-    def your_function(a,b):
-        print 'double clicked'
-        print a
-        print b
+    def class_patch__(self):
+        GCODE_EDITOR.exitCall = self.editor_exit
+        GCODE_EDITOR.openCall = self.editor_open
+        #GCODE_EDITOR.setModified(False)
+        #print dir(GCODE_EDITOR)
+        #print GCODE_EDITOR.children()
         
     def processed_key_event__(self,receiver,event,is_pressed,key,code,shift,cntrl):
         # when typing in MDI, we don't want keybinding to call functions
@@ -92,7 +91,10 @@ class HandlerClass:
                     QtCore.Qt.Key_F3,QtCore.Qt.Key_F5,QtCore.Qt.Key_F5):
             if isinstance(receiver, OFFVIEW_WIDGET)\
             or isinstance(receiver, MDI_WIDGET)\
-            or isinstance(receiver, QtWidgets.QDoubleSpinBox):
+            or isinstance(receiver, QtWidgets.QDoubleSpinBox)\
+            or isinstance(receiver, GCODE_EDITOR)\
+            or isinstance(receiver, GCODE_DISPLAY)\
+            or isinstance(receiver, QtWidgets.QListView):
                 if is_pressed:
                     receiver.keyPressEvent(event)
                     event.accept()
@@ -105,14 +107,12 @@ class HandlerClass:
             return True
         except Exception as e:
             #log.debug('Exception loading Macros:', exc_info=e)
-            print 'Error in, or no function for: %s in handler file for-%s'%(KEYBIND.convert(event),key)
-            if e:
-                print e
-            #print 'from %s'% receiver
+            if not isinstance(receiver, QtWidgets.QLineEdit) and not isinstance(receiver, QtWidgets.QListView):
+                print 'Error in, or no function for: %s in handler file for-%s'%(KEYBIND.convert(event),key)
+                if e:
+                    print 'Exception:', e
+                #print 'from %s'% receiver
             return False
-
-    def class_patch__(self):
-        GCODE.exitCall = self.editor_exit
 
     ########################
     # callbacks from STATUS #
@@ -123,15 +123,12 @@ class HandlerClass:
     #######################
 
     def edit_clicked(self, mode):
-        if self.w.gcoder.width() == 300:
-            self.w.edit_button.setText('View')
-#            self.w.gcoder.setGeometry(522,434,500,308)
+        if hal.get_value('halui.program.is-idle'):
+            self.w.edit_button.setEnabled(False)
             self.w.gcoder.setGeometry(522,78,500,664)
             self.w.gcoder.editMode()
-        elif self.w.gcoder.width() == 500:
-            self.w.edit_button.setText('Edit')
-            self.w.gcoder.setGeometry(522,434,300,308)
-            self.w.gcoder.readOnlyMode()
+            self.w.gcoder.topMenu.setFrameShape(QtWidgets.QFrame.StyledPanel)
+            self.w.gcoder.bottomMenu.setFrameShape(QtWidgets.QFrame.StyledPanel)
 
     def spin_value_changed(self,value):
         name = 'plasmac.' + self.w.sender().objectName().replace('_','-')
@@ -188,8 +185,6 @@ class HandlerClass:
 
     def paused_motion_speed_changed(self, speed):
         self.w.pm_label.setText('%s%%' % speed)
-        print 'MOTION SPEED CHANGED'
-        print float(speed) * 0.1
 
     def forward_pressed(self):
         speed = self.w.paused_motion_speed.value() * 0.01
@@ -215,40 +210,58 @@ class HandlerClass:
         hal.set_p('plasmac.torch-pulse-time','0')
 
     def hal_scope_clicked(self):
-        print 'launch halscope'
         os.system('halscope')
 
-    def gcoder_percent_done(self, pcd):
-        print pcd,'DUN...'
+    def save_clicked(self):
+        self.save_settings()
+        self.materialsList[0][1] = self.w.pierce_height.value()
+        self.materialsList[0][2] = self.w.pierce_delay.value()
+        self.materialsList[0][3] = self.w.puddle_jump_height.value()
+        self.materialsList[0][4] = self.w.puddle_jump_delay.value()
+        self.materialsList[0][5] = self.w.cut_height.value()
+        self.materialsList[0][6] = self.w.cut_feed_rate.value()
+        self.materialsList[0][7] = self.w.cut_amps.value()
+        self.materialsList[0][8] = self.w.cut_volts.value()
+        self.w.materials.setCurrentIndex(0)
+
+    def reload_clicked(self):
+        self.materialsUpdate = True
+        self.load_settings()
+        self.materialsList = []
+        self.w.materials.clear()
+        self.get_materials()
+        self.materialsUpdate = False
 
     #####################
     # general functions #
     #####################
 
     def editor_exit(self):
-        print 'editor exit pressed'
-        self.w.edit_button.setText('Edit')
-        self.w.gcoder.setGeometry(522,434,300,308)
-        self.w.gcoder.readOnlyMode()
-        self.w.gcoder.exit()
+        if self.w.gcoder.editor.isModified():
+            result = self.w.gcoder.killCheck()
+            if result:
+                self.w.gcoder.editor.reload_last(self)
+                self.w.edit_button.setEnabled(True)
+                self.w.gcoder.setGeometry(522,434,300,308)
+                self.w.gcoder.readOnlyMode()
+        else:
+            self.w.edit_button.setEnabled(True)
+            self.w.gcoder.setGeometry(522,434,300,308)
+            self.w.gcoder.readOnlyMode()
+
+    def editor_open(self):
+        print 'opening from here'
+        STATUS.emit('load-file-request')
+        self.w.gcoder.editor.setModified(False)
 
     def error__(self, w, kind ,error):
         if kind in (linuxcnc.NML_ERROR, linuxcnc.OPERATOR_ERROR):
             eType = 'ERROR'
         else:
             eType = 'INFO'
-        
-        #self.w.error_label.setText(self.w.error_label.text() + '\n' + eType +': ' + error)
-        #self.w.error_text.appendPlainText(eType +': ' + error + '\n')
+        print '%s: %s' %(eType,error)
         self.w.error_text.appendPlainText(eType +': ' + error)
 
-#    def mouseDoubleClickEvent(self, event):
-#        #name = 'plasmac.' + self.w.sender().objectName().replace('_','-')
-#        widget = self.w.sender()
-#        print widget
-#        #widget = self.childAt(event.pos())
-##        if widget is not None and widget.objectName():
-##            print('dblclick:', widget.objectName())
 
     # keyboard jogging from key binding calls
     # double the rate if fast is true 
@@ -343,10 +356,16 @@ class HandlerClass:
                 widget = getattr(self.w,item.replace('-','_'),None)
                 if isinstance(widget,QtWidgets.QDoubleSpinBox):
                     if item in tmpDict:
-                        widget.setValue(float(self.configDict.get(item)))
+                        if item == 'puddle-jump-height' and float(self.configDict.get(item)) < 50:
+                            widget.setValue(100)
+                        else:
+                            widget.setValue(float(self.configDict.get(item)))
                     else:
-                        widget.setValue(0)
-                        print '***', item, 'missing from', self.configFile
+                        if item == 'puddle-jump-height':
+                            widget.setValue(100)
+                        else:
+                            widget.setValue(0)
+                            print '***', item, 'missing from', self.configFile
                 elif isinstance(widget, QtWidgets.QCheckBox):
                     if item in tmpDict:
                         if int(self.configDict.get(item)) == 0:
@@ -389,8 +408,13 @@ class HandlerClass:
                     elif isinstance(widget, QtWidgets.QCheckBox):
                         value = widget.checkState()
                         f_out.write(key + '=' + str(value) + '\n')
-                    elif key == 'torchPulseTime' or key == 'pausedMotionSpeed':
-                        value = widget.getValue()
+                    elif key == 'torch-pulse-time':
+                        print 'tpt'
+                        value = widget.value() * 0.1
+                        f_out.write(key + '=' + str(value) + '\n')
+                    elif key == 'paused-motion-speed':
+                        print 'pms'
+                        value = widget.value() * 0.01
                         f_out.write(key + '=' + str(value) + '\n')
         except:
             print '*** error opening', self.configFile
@@ -467,7 +491,10 @@ class HandlerClass:
                         elif line.startswith('PIERCE_DELAY'):
                             p_delay = float(line.split('=')[1].strip())
                         elif line.startswith('PUDDLE_JUMP_HEIGHT'):
-                            pj_height = float(line.split('=')[1].strip())
+                            if float(line.split('=')[1].strip()) < 50:
+                                pj_height = 100
+                            else:
+                                pj_height = float(line.split('=')[1].strip())
                         elif line.startswith('PUDDLE_JUMP_DELAY'):
                             pj_delay = float(line.split('=')[1].strip())
                         elif line.startswith('CUT_HEIGHT'):
@@ -653,39 +680,39 @@ class HandlerClass:
     # PERIODIC CALLED EVERY 100mS #
     ###############################
 
-
-
-#    print self.error
-
-
-
     def periodic(self):
-        self.stat.poll()
-        gcodeRaw = []
-        for n in self.stat.gcodes:
-            if n > 0:
-                if n % 10:
-                    gcodeRaw.append(float(str(n/10) + '.' + str(n %10)))
-                else:
-                    gcodeRaw.append(n/10)
-        gcodeSorted = sorted(gcodeRaw)
-        if 21 in gcodeSorted:
-            gCode ='METRIC     '
+        if STATUS['old']['metric'] == True:
+            units = 'Metric     '
         else:
-            gCode ='INCH     '
-        for code in range(len(gcodeSorted)):
-            gCode = gCode + 'G' + str(gcodeSorted[code]) + ','
-        mCodeRaw = []
-        for n in self.stat.mcodes:
-            if n > 0: mCodeRaw.append(n)
-        mCodeSorted = sorted(mCodeRaw)
-        mCode =''
-        for code in range(len(mCodeSorted)):
-            mCode = mCode + 'M' + str(mCodeSorted[code]) + ','
-        self.w.status.setText(gCode[0:-1] + '     ' + mCode[0:-1])
-
-#        if hal.get_value('halui.program.is-idle'):
-#            self.builder.get_object('pausedMotionSpeedAdj').set_value(0)
+            units = 'Inch       '
+        self.w.status.setText(units + \
+                              STATUS['old']['g-code'].replace(' ',',')[0:-1] + \
+                              '     ' + \
+                              STATUS['old']['m-code'].replace(' ',',')[3:-1])
+        if hal.get_value('halui.machine.is-on') and hal.get_value('halui.program.is-idle'):
+            self.w.edit_button.setEnabled(True)
+            self.w.torch_pulse_start.setEnabled(True)
+            self.w.reverse.setEnabled(False)
+            self.w.forward.setEnabled(False)
+        elif hal.get_value('halui.machine.is-on') and \
+            (hal.get_value('halui.program.is-paused') or self.w.reverse.isDown() or self.w.forward.isDown()):
+            self.w.edit_button.setEnabled(False)
+            self.w.torch_pulse_start.setEnabled(False)
+            self.w.reverse.setEnabled(True)
+            self.w.forward.setEnabled(True)
+        else:
+            self.w.edit_button.setEnabled(False)
+            self.w.torch_pulse_start.setEnabled(False)
+            self.w.reverse.setEnabled(False)
+            self.w.forward.setEnabled(False)
+        if STATUS.is_all_homed():
+            self.w.x_label.setStyleSheet('color: green')
+            self.w.y_label.setStyleSheet('color: green')
+            self.w.z_label.setStyleSheet('color: green')
+        else:
+            self.w.x_label.setStyleSheet('color: red')
+            self.w.y_label.setStyleSheet('color: red')
+            self.w.z_label.setStyleSheet('color: red')
         self.w.plasmac_settings_tabs.setTabEnabled(1, not hal.get_value('plasmac_ui.config_disable'))
         mode = hal.get_value('plasmac.mode')
         if mode != self.oldMode: self.set_mode(mode)

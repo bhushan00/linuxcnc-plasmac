@@ -87,7 +87,7 @@
      <enum>QTabWidget::Rounded</enum>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>1</number>
     </property>
     <widget class="QWidget" name="run_tab">
      <property name="sizePolicy">
@@ -1711,6 +1711,61 @@
        </widget>
       </widget>
      </widget>
+     <widget class="QFrame" name="settings_frame">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>486</y>
+        <width>174</width>
+        <height>73</height>
+       </rect>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::StyledPanel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
+      </property>
+      <widget class="QGroupBox" name="settings_box">
+       <property name="geometry">
+        <rect>
+         <x>1</x>
+         <y>1</y>
+         <width>172</width>
+         <height>71</height>
+        </rect>
+       </property>
+       <property name="title">
+        <string>Settings</string>
+       </property>
+       <widget class="QPushButton" name="save">
+        <property name="geometry">
+         <rect>
+          <x>2</x>
+          <y>20</y>
+          <width>82</width>
+          <height>48</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Save</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="reload">
+        <property name="geometry">
+         <rect>
+          <x>88</x>
+          <y>20</y>
+          <width>82</width>
+          <height>48</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Reload</string>
+        </property>
+       </widget>
+      </widget>
+     </widget>
     </widget>
    </widget>
    <widget class="QFrame" name="button_top_frame">
@@ -2566,6 +2621,9 @@ Home</string>
      <property name="indicator_option" stdset="0">
       <bool>true</bool>
      </property>
+     <property name="indicator_HAL_pin_option" stdset="0">
+      <bool>false</bool>
+     </property>
      <property name="checked_state_text_option" stdset="0">
       <bool>true</bool>
      </property>
@@ -2587,7 +2645,8 @@ Home</string>
       <double>0.300000000000000</double>
      </property>
      <property name="true_state_string" stdset="0">
-      <string>Homed</string>
+      <string>All
+Home</string>
      </property>
      <property name="false_state_string" stdset="0">
       <string>All
@@ -3226,13 +3285,13 @@ Z+</string>
      <property name="geometry">
       <rect>
        <x>0</x>
-       <y>14</y>
+       <y>16</y>
        <width>100</width>
-       <height>34</height>
+       <height>32</height>
       </rect>
      </property>
     </widget>
-    <widget class="QLabel" name="label">
+    <widget class="QLabel" name="x_label">
      <property name="geometry">
       <rect>
        <x>156</x>
@@ -3248,7 +3307,7 @@ Z+</string>
       </font>
      </property>
      <property name="styleSheet">
-      <string notr="true">color: rgb(239, 41, 41);</string>
+      <string notr="true"/>
      </property>
      <property name="text">
       <string>X</string>
@@ -3257,7 +3316,7 @@ Z+</string>
       <set>Qt::AlignCenter</set>
      </property>
     </widget>
-    <widget class="QLabel" name="label_2">
+    <widget class="QLabel" name="y_label">
      <property name="geometry">
       <rect>
        <x>156</x>
@@ -3273,7 +3332,7 @@ Z+</string>
       </font>
      </property>
      <property name="styleSheet">
-      <string notr="true">color: rgb(239, 41, 41);</string>
+      <string notr="true"/>
      </property>
      <property name="text">
       <string>Y</string>
@@ -3282,7 +3341,7 @@ Z+</string>
       <set>Qt::AlignCenter</set>
      </property>
     </widget>
-    <widget class="QLabel" name="label_3">
+    <widget class="QLabel" name="z_label">
      <property name="geometry">
       <rect>
        <x>156</x>
@@ -3298,7 +3357,7 @@ Z+</string>
       </font>
      </property>
      <property name="styleSheet">
-      <string notr="true">color: rgb(239, 41, 41);</string>
+      <string notr="true"/>
      </property>
      <property name="text">
       <string>Z</string>
@@ -3313,14 +3372,14 @@ Z+</string>
        <x>0</x>
        <y>0</y>
        <width>100</width>
-       <height>14</height>
+       <height>16</height>
       </rect>
      </property>
      <property name="text">
       <string>Jog Increment</string>
      </property>
      <property name="alignment">
-      <set>Qt::AlignCenter</set>
+      <set>Qt::AlignHCenter|Qt::AlignTop</set>
      </property>
     </widget>
     <widget class="LCDNumber" name="arc_voltage">
@@ -3523,9 +3582,9 @@ Z+</string>
     <zorder>jog_z_minus_button</zorder>
     <zorder>jog_z_plus_button</zorder>
     <zorder>jog_increments_button</zorder>
-    <zorder>label</zorder>
-    <zorder>label_2</zorder>
-    <zorder>label_3</zorder>
+    <zorder>x_label</zorder>
+    <zorder>y_label</zorder>
+    <zorder>z_label</zorder>
     <zorder>label_11</zorder>
     <zorder>arc_voltage</zorder>
     <zorder>aVLabel</zorder>
@@ -3548,6 +3607,9 @@ Z+</string>
       <width>336</width>
       <height>100</height>
      </rect>
+    </property>
+    <property name="is_homed_status" stdset="0">
+     <bool>true</bool>
     </property>
     <widget class="PushButton" name="x_to_home">
      <property name="geometry">
@@ -3692,22 +3754,6 @@ Show</string>
      </property>
     </widget>
    </widget>
-   <widget class="GcodeEditor" name="gcoder">
-    <property name="geometry">
-     <rect>
-      <x>522</x>
-      <y>434</y>
-      <width>300</width>
-      <height>308</height>
-     </rect>
-    </property>
-    <property name="minimumSize">
-     <size>
-      <width>250</width>
-      <height>200</height>
-     </size>
-    </property>
-   </widget>
    <widget class="GCodeGraphics" name="preview">
     <property name="geometry">
      <rect>
@@ -3726,28 +3772,6 @@ Show</string>
       <green>0</green>
       <blue>0</blue>
      </color>
-    </property>
-   </widget>
-   <widget class="QLabel" name="error_label">
-    <property name="geometry">
-     <rect>
-      <x>826</x>
-      <y>638</y>
-      <width>196</width>
-      <height>104</height>
-     </rect>
-    </property>
-    <property name="frameShape">
-     <enum>QFrame::StyledPanel</enum>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-    <property name="alignment">
-     <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
-    </property>
-    <property name="wordWrap">
-     <bool>true</bool>
     </property>
    </widget>
    <widget class="QPlainTextEdit" name="error_text">
@@ -3772,6 +3796,31 @@ Show</string>
      <bool>true</bool>
     </property>
    </widget>
+   <widget class="GcodeEditor" name="gcoder">
+    <property name="geometry">
+     <rect>
+      <x>522</x>
+      <y>434</y>
+      <width>300</width>
+      <height>308</height>
+     </rect>
+    </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>0</width>
+      <height>0</height>
+     </size>
+    </property>
+    <property name="auto_show_mdi_status" stdset="0">
+     <bool>false</bool>
+    </property>
+   </widget>
    <zorder>error_text</zorder>
    <zorder>mdi_history</zorder>
    <zorder>button_bottom_frame</zorder>
@@ -3785,7 +3834,6 @@ Show</string>
    <zorder>dro_frame</zorder>
    <zorder>button_layout</zorder>
    <zorder>preview</zorder>
-   <zorder>error_label</zorder>
    <zorder>gcoder</zorder>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
@@ -3902,6 +3950,36 @@ Show</string>
   <tabstop>stop_button</tabstop>
   <tabstop>pause_button</tabstop>
   <tabstop>edit_button</tabstop>
+  <tabstop>jog_increments_button</tabstop>
+  <tabstop>jog_x_plus_button</tabstop>
+  <tabstop>jog_x_minus_button</tabstop>
+  <tabstop>zero_x_button</tabstop>
+  <tabstop>jog_y_minus_button</tabstop>
+  <tabstop>jog_y_plus_button</tabstop>
+  <tabstop>zero_y_button</tabstop>
+  <tabstop>jog_z_minus_button</tabstop>
+  <tabstop>jog_z_plus_button</tabstop>
+  <tabstop>zero_z_button</tabstop>
+  <tabstop>feed_override_slider</tabstop>
+  <tabstop>rapid_override_slider</tabstop>
+  <tabstop>jog_rate_slider</tabstop>
+  <tabstop>x_to_home</tabstop>
+  <tabstop>y_to_home</tabstop>
+  <tabstop>z_to_home</tabstop>
+  <tabstop>dry_run</tabstop>
+  <tabstop>torch_pulse_start</tabstop>
+  <tabstop>reverse</tabstop>
+  <tabstop>hal_show_button</tabstop>
+  <tabstop>hal_meter_button</tabstop>
+  <tabstop>hal_scope_button</tabstop>
+  <tabstop>status_show_button</tabstop>
+  <tabstop>forward</tabstop>
+  <tabstop>plasmac_settings_tabs</tabstop>
+  <tabstop>materials</tabstop>
+  <tabstop>pierce_height</tabstop>
+  <tabstop>pierce_delay</tabstop>
+  <tabstop>puddle_jump_height</tabstop>
+  <tabstop>puddle_jump_delay</tabstop>
   <tabstop>cut_height</tabstop>
   <tabstop>cut_feed_rate</tabstop>
   <tabstop>cut_amps</tabstop>
@@ -3910,6 +3988,8 @@ Show</string>
   <tabstop>use_auto_volts</tabstop>
   <tabstop>thc_threshold</tabstop>
   <tabstop>pid_p_gain</tabstop>
+  <tabstop>cornerlock_enable</tabstop>
+  <tabstop>cornerlock_threshold</tabstop>
   <tabstop>kerfcross_enable</tabstop>
   <tabstop>kerfcross_threshold</tabstop>
   <tabstop>safe_height</tabstop>
@@ -3927,44 +4007,15 @@ Show</string>
   <tabstop>setup_feed_rate</tabstop>
   <tabstop>pid_i_gain</tabstop>
   <tabstop>pid_d_gain</tabstop>
+  <tabstop>save</tabstop>
+  <tabstop>reload</tabstop>
+  <tabstop>error_text</tabstop>
+  <tabstop>work_coordinates_button</tabstop>
   <tabstop>viewz</tabstop>
   <tabstop>viewz2</tabstop>
   <tabstop>viewp</tabstop>
   <tabstop>clear</tabstop>
-  <tabstop>plasmac_settings_tabs</tabstop>
-  <tabstop>cornerlock_enable</tabstop>
-  <tabstop>materials</tabstop>
-  <tabstop>pierce_height</tabstop>
-  <tabstop>puddle_jump_height</tabstop>
-  <tabstop>pierce_delay</tabstop>
   <tabstop>pushButton_4</tabstop>
-  <tabstop>puddle_jump_delay</tabstop>
-  <tabstop>hal_show_button</tabstop>
-  <tabstop>forward</tabstop>
-  <tabstop>reverse</tabstop>
-  <tabstop>torch_pulse_start</tabstop>
-  <tabstop>cornerlock_threshold</tabstop>
-  <tabstop>feed_override_slider</tabstop>
-  <tabstop>rapid_override_slider</tabstop>
-  <tabstop>jog_rate_slider</tabstop>
-  <tabstop>zero_z_button</tabstop>
-  <tabstop>zero_y_button</tabstop>
-  <tabstop>zero_x_button</tabstop>
-  <tabstop>work_coordinates_button</tabstop>
-  <tabstop>jog_x_plus_button</tabstop>
-  <tabstop>jog_x_minus_button</tabstop>
-  <tabstop>jog_y_minus_button</tabstop>
-  <tabstop>jog_y_plus_button</tabstop>
-  <tabstop>jog_z_minus_button</tabstop>
-  <tabstop>jog_z_plus_button</tabstop>
-  <tabstop>jog_increments_button</tabstop>
-  <tabstop>x_to_home</tabstop>
-  <tabstop>y_to_home</tabstop>
-  <tabstop>z_to_home</tabstop>
-  <tabstop>dry_run</tabstop>
-  <tabstop>hal_meter_button</tabstop>
-  <tabstop>status_show_button</tabstop>
-  <tabstop>hal_scope_button</tabstop>
  </tabstops>
  <resources/>
  <connections>
@@ -4704,6 +4755,38 @@ Show</string>
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>save</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>save_clicked()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>45</x>
+     <y>590</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>35</x>
+     <y>744</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>reload</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>reload_clicked()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>136</x>
+     <y>584</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>132</x>
+     <y>745</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <designerdata>
   <property name="gridDeltaX">
@@ -4740,5 +4823,7 @@ Show</string>
   <slot>height_override_changed()</slot>
   <slot>paused_motion_speed_changed()</slot>
   <slot>hal_scope_clicked()</slot>
+  <slot>save_clicked()</slot>
+  <slot>reload_clicked()</slot>
  </slots>
 </ui>
