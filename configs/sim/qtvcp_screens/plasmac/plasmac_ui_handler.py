@@ -74,6 +74,10 @@ class HandlerClass:
         self.w.tp_label.setText('%0.1f Sec' % (float(self.w.torch_pulse_time.value()) * 0.1))
         self.w.pm_label.setText('%s%%' % self.w.paused_motion_speed.value())
         STATUS.connect('error', self.error__)
+        STATUS.connect('all-homed', self.is_homed)
+        STATUS.connect('not-all-homed', self.is_not_homed)
+        #self.w.mdi_history.MDILine.setStyleSheet("""QLineEdit { background-color: green; color: white }""")
+
         gobject.timeout_add(100, self.periodic)
 
     def class_patch__(self):
@@ -117,6 +121,28 @@ class HandlerClass:
     ########################
     # callbacks from STATUS #
     ########################
+
+    def error__(self, w, kind ,error):
+        if kind in (linuxcnc.NML_ERROR, linuxcnc.OPERATOR_ERROR):
+            eType = 'ERROR'
+        else:
+            eType = 'INFO'
+        print '%s: %s' %(eType,error)
+        self.w.error_text.appendPlainText(eType +': ' + error)
+
+    def is_homed(self, w):
+        self.w.x_label.setStyleSheet('color: green')
+        self.w.y_label.setStyleSheet('color: green')
+        self.w.z_label.setStyleSheet('color: green')
+        self.w.mdi_history.setEnabled(1)
+        self.w.mdi_history.MDILine.setStyleSheet("""QLineEdit { background-color: rgb(250,250,250) }""")
+
+    def is_not_homed(self, w, joints):
+        self.w.x_label.setStyleSheet('color: red')
+        self.w.y_label.setStyleSheet('color: red')
+        self.w.z_label.setStyleSheet('color: red')
+        self.w.mdi_history.setEnabled(0)
+        self.w.mdi_history.MDILine.setStyleSheet("""QLineEdit { background-color: rgb(220,220,220) }""")
 
     #######################
     # callbacks from form #
@@ -253,15 +279,6 @@ class HandlerClass:
         print 'opening from here'
         STATUS.emit('load-file-request')
         self.w.gcoder.editor.setModified(False)
-
-    def error__(self, w, kind ,error):
-        if kind in (linuxcnc.NML_ERROR, linuxcnc.OPERATOR_ERROR):
-            eType = 'ERROR'
-        else:
-            eType = 'INFO'
-        print '%s: %s' %(eType,error)
-        self.w.error_text.appendPlainText(eType +': ' + error)
-
 
     # keyboard jogging from key binding calls
     # double the rate if fast is true 
@@ -705,14 +722,18 @@ class HandlerClass:
             self.w.torch_pulse_start.setEnabled(False)
             self.w.reverse.setEnabled(False)
             self.w.forward.setEnabled(False)
-        if STATUS.is_all_homed():
-            self.w.x_label.setStyleSheet('color: green')
-            self.w.y_label.setStyleSheet('color: green')
-            self.w.z_label.setStyleSheet('color: green')
-        else:
-            self.w.x_label.setStyleSheet('color: red')
-            self.w.y_label.setStyleSheet('color: red')
-            self.w.z_label.setStyleSheet('color: red')
+        #if STATUS.is_all_homed():
+            #self.w.x_label.setStyleSheet('color: green')
+            #self.w.y_label.setStyleSheet('color: green')
+            #self.w.z_label.setStyleSheet('color: green')
+            #self.w.mdi_history.setEnabled(1)
+            #self.w.mdi_history.MDILine.setStyleSheet("""QLineEdit { background-color: rgb(250,250,250) }""")
+        #else:
+            #self.w.x_label.setStyleSheet('color: red')
+            #self.w.y_label.setStyleSheet('color: red')
+            #self.w.z_label.setStyleSheet('color: red')
+            #self.w.mdi_history.setEnabled(0)
+            #self.w.mdi_history.MDILine.setStyleSheet("""QLineEdit { background-color: rgb(220,220,220) }""")
         self.w.plasmac_settings_tabs.setTabEnabled(1, not hal.get_value('plasmac_ui.config_disable'))
         mode = hal.get_value('plasmac.mode')
         if mode != self.oldMode: self.set_mode(mode)
