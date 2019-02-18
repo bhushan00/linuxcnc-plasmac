@@ -697,8 +697,10 @@ def torch_pulse(value):
     hal.set_p('plasmac.torch-pulse-start',value)
 
 def paused_motion(direction):
-    speed = float(root_window.tk.call(fpausedmotion + '.paused-motion-speed','get'))
-    hal.set_p('plasmac.paused-motion-speed','%f' % (speed * int(direction)))
+    if root_window.tk.call(fpausedmotion + '.forward','cget','-state') == 'normal' or\
+       root_window.tk.call(fpausedmotion + '.reverse','cget','-state') == 'normal':
+        speed = float(root_window.tk.call(fpausedmotion + '.paused-motion-speed','get'))
+        hal.set_p('plasmac.paused-motion-speed','%f' % (speed * int(direction)))
 
 def goto_home(axis):
     if hal.get_value('halui.program.is-idle'):
