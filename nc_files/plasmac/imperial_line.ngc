@@ -2,7 +2,7 @@
 
 G20
 G64 P0.0005
-M52 P1
+M52 P1 ;to enable reverse-run
 F30
 
 G0 X0.5 Y0.5

@@ -8,7 +8,7 @@
 
 G21
 G64 P0.005
-M52 P1
+M52 P1 ;to enable reverse-run
 F#3
 
 o100 repeat [#2]
