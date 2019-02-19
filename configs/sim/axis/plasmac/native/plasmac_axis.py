@@ -18,32 +18,33 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 '''
 
 
+w = root_window.tk.call
 
 ################################################################################
 # set the window size
 # change pad_width and pad_height to suit your setup
-# then uncomment the next 13 lines
+# then uncomment the next 11 lines
 
-#maxgeo=root_window.tk.call('wm','maxsize','.')
+pad_width=0
+pad_height=0
+#maxgeo=w('wm','maxsize','.')
 #if type(maxgeo) == tuple:
 #    fullsize=str(maxgeo[0]),str(maxgeo[1])
 #else:
 #    fullsize=maxgeo.split(' ')[0],maxgeo.split(' ')[1]
-#pad_width=60
-#pad_height=60
 #width=str(int(fullsize[0])-pad_width)
 #height=str(int(fullsize[1])-pad_height)
 #x=str(pad_width/2)
 #y=str(pad_height/2)
 #print '\nAxis window is', width, 'x', height, 'and starts at', x, 'x', y, '\n'
-#root_window.tk.call('wm','geometry','.',width + 'x' + height + '+' + x + '+' + y)
+#w('wm','geometry','.',width + 'x' + height + '+' + x + '+' + y)
 
 
 
 ################################################################################
 # disable the 'do you want to close' dialog
 
-root_window.tk.call('wm','protocol','.','WM_DELETE_WINDOW','destroy .')
+w('wm','protocol','.','WM_DELETE_WINDOW','destroy .')
 
 
 
@@ -52,14 +53,16 @@ root_window.tk.call('wm','protocol','.','WM_DELETE_WINDOW','destroy .')
 
 font = inifile.find("PLASMAC","FONT") or 'sans 10'
 fname, fsize = font.split()
-root_window.tk.call('font','configure','TkDefaultFont','-family', fname, '-size', fsize)
-root_window.tk.call('.pane.bottom.t.text','configure','-height','10','-font', font, '-foreground','blue')
-root_window.tk.call('DynamicHelp::configure','-borderwidth','5','-topbackground','yellow','-bg','yellow')
+w('font','configure','TkDefaultFont','-family', fname, '-size', fsize)
+w('.pane.bottom.t.text','configure','-height','10','-font', font, '-foreground','blue')
+w('DynamicHelp::configure','-borderwidth','5','-topbackground','yellow','-bg','yellow')
+
+
 
 ################################################################################
 # change dro screen
 
-root_window.tk.call('.pane.top.right.fnumbers.text','configure','-foreground','green','-background','black')
+w('.pane.top.right.fnumbers.text','configure','-foreground','green','-background','black')
 
 
 
@@ -95,54 +98,56 @@ fcornerlock = '.plasmac.frun.locks.cornerlock'
 fkerflock = '.plasmac.frun.locks.kerflock'
 
 # redo the text in tabs so they resize for the new default font
-root_window.tk.call(ftop + '.tabs','itemconfigure','manual','-text',' Manual - F3 ')
-root_window.tk.call(ftop + '.tabs','itemconfigure','mdi','-text',' MDI - F5 ')
-root_window.tk.call(ftop + '.right','itemconfigure','preview','-text',' Preview ')
-root_window.tk.call(ftop + '.right','itemconfigure','numbers','-text',' DRO ')
+w(ftop + '.tabs','configure','-arcradius','2','-tabbevelsize','8')
+w(ftop + '.tabs','itemconfigure','manual','-text',' Manual - F3 ')
+w(ftop + '.tabs','itemconfigure','mdi','-text',' MDI - F5 ')
+w(ftop + '.right','configure','-arcradius','2','-tabbevelsize','8')
+w(ftop + '.right','itemconfigure','preview','-text',' Preview ')
+w(ftop + '.right','itemconfigure','numbers','-text',' DRO ')
 
 # hide some original widgets
-root_window.tk.call('pack','forget','.toolbar.rule0')
-root_window.tk.call('pack','forget','.toolbar.rule4')
-root_window.tk.call('pack','forget','.toolbar.rule8')
-root_window.tk.call('pack','forget','.toolbar.rule9')
-root_window.tk.call('grid','forget',fmanual + '.axis')
-root_window.tk.call('grid','forget',fmanual + '.jogf')
-root_window.tk.call('grid','forget',fmanual + '.space2')
-root_window.tk.call('grid','forget',fmanual + '.spindlel')
-root_window.tk.call('grid','forget',fmanual + '.spindlef')
-root_window.tk.call('grid','forget',fmanual + '.space2')
-root_window.tk.call('grid','forget',fmanual + '.coolant')
-root_window.tk.call('grid','forget',fmanual + '.mist')
-root_window.tk.call('grid','forget',fmanual + '.flood')
-root_window.tk.call('grid','forget',ftop + '.spinoverride')
+w('pack','forget','.toolbar.rule0')
+w('pack','forget','.toolbar.rule4')
+w('pack','forget','.toolbar.rule8')
+w('pack','forget','.toolbar.rule9')
+w('grid','forget',fmanual + '.axis')
+w('grid','forget',fmanual + '.jogf')
+w('grid','forget',fmanual + '.space2')
+w('grid','forget',fmanual + '.spindlel')
+w('grid','forget',fmanual + '.spindlef')
+w('grid','forget',fmanual + '.space2')
+w('grid','forget',fmanual + '.coolant')
+w('grid','forget',fmanual + '.mist')
+w('grid','forget',fmanual + '.flood')
+w('grid','forget',ftop + '.spinoverride')
 
 # change layout for some scales
-root_window.tk.call('pack','forget',ftop + '.jogspeed.l0')
-root_window.tk.call('pack','forget',ftop + '.jogspeed.l')
-root_window.tk.call('pack','forget',ftop + '.jogspeed.l1')
-root_window.tk.call('pack','forget',ftop + '.jogspeed.s')
-root_window.tk.call('pack','forget',ftop + '.maxvel.l0')
-root_window.tk.call('pack','forget',ftop + '.maxvel.l')
-root_window.tk.call('pack','forget',ftop + '.maxvel.l1')
-root_window.tk.call('pack','forget',ftop + '.maxvel.s')
-root_window.tk.call('pack',ftop + '.jogspeed.s','-side','right')
-root_window.tk.call('pack',ftop + '.jogspeed.l1','-side','right')
-root_window.tk.call('pack',ftop + '.jogspeed.l','-side','right')
-root_window.tk.call('pack',ftop + '.jogspeed.l0','-side','left')
-root_window.tk.call('pack',ftop + '.maxvel.s','-side','right')
-root_window.tk.call('pack',ftop + '.maxvel.l1','-side','right')
-root_window.tk.call('pack',ftop + '.maxvel.l','-side','right')
-root_window.tk.call('pack',ftop + '.maxvel.l0','-side','left')
+w('pack','forget',ftop + '.jogspeed.l0')
+w('pack','forget',ftop + '.jogspeed.l')
+w('pack','forget',ftop + '.jogspeed.l1')
+w('pack','forget',ftop + '.jogspeed.s')
+w('pack','forget',ftop + '.maxvel.l0')
+w('pack','forget',ftop + '.maxvel.l')
+w('pack','forget',ftop + '.maxvel.l1')
+w('pack','forget',ftop + '.maxvel.s')
+w('pack',ftop + '.jogspeed.s','-side','right')
+w('pack',ftop + '.jogspeed.l1','-side','right')
+w('pack',ftop + '.jogspeed.l','-side','right')
+w('pack',ftop + '.jogspeed.l0','-side','left')
+w('pack',ftop + '.maxvel.s','-side','right')
+w('pack',ftop + '.maxvel.l1','-side','right')
+w('pack',ftop + '.maxvel.l','-side','right')
+w('pack',ftop + '.maxvel.l0','-side','left')
 
 # modify the toolbar
-root_window.tk.call('label','.toolbar.space1','-width','5')
-root_window.tk.call('label','.toolbar.space2','-width','5')
-root_window.tk.call('label','.toolbar.space3','-width','5')
-root_window.tk.call('label','.toolbar.space4','-width','10')
-root_window.tk.call('pack','.toolbar.space1','-after','.toolbar.machine_power','-side','left')
-root_window.tk.call('pack','.toolbar.space2','-after','.toolbar.reload','-side','left')
-root_window.tk.call('pack','.toolbar.space3','-after','.toolbar.program_stop','-side','left')
-root_window.tk.call('pack','.toolbar.space4','-after','.toolbar.program_optpause','-side','left')
+w('label','.toolbar.space1','-width','5')
+w('label','.toolbar.space2','-width','5')
+w('label','.toolbar.space3','-width','5')
+w('label','.toolbar.space4','-width','10')
+w('pack','.toolbar.space1','-after','.toolbar.machine_power','-side','left')
+w('pack','.toolbar.space2','-after','.toolbar.reload','-side','left')
+w('pack','.toolbar.space3','-after','.toolbar.program_stop','-side','left')
+w('pack','.toolbar.space4','-after','.toolbar.program_optpause','-side','left')
 
 # set sizes for widgets
 swidth = 5  # spinboxes width
@@ -156,13 +161,13 @@ ledx = cwidth-ledwidth # led x start
 ledy = cheight-ledheight # led y start
 
 # rework the axis/joints frame
-root_window.tk.call('destroy',faxes)
-root_window.tk.call('labelframe',faxes,'-text','Axis:','-relief','ridge')
-root_window.tk.call('destroy',fjoints)
-root_window.tk.call('labelframe',fjoints,'-text','Joint:','-relief','ridge')
+w('destroy',faxes)
+w('labelframe',faxes,'-text','Axis:','-relief','ridge')
+w('destroy',fjoints)
+w('labelframe',fjoints,'-text','Joint:','-relief','ridge')
 # make axis radiobuttons
 for letter in 'xyzabcuvw':
-    root_window.tk.call('radiobutton',faxes + '.axis' + letter,\
+    w('radiobutton',faxes + '.axis' + letter,\
                         '-anchor','w',\
                         '-padx','0',\
                         '-value',letter,\
@@ -180,12 +185,12 @@ for row in range(0,2):
         if letters[count] in trajcoordinates:
             if first_axis == '':
                 first_axis = letters[count]
-            root_window.tk.call('grid',faxes + '.axis' + letters[count],'-row',row,'-column',column,'-padx','4')
+            w('grid',faxes + '.axis' + letters[count],'-row',row,'-column',column,'-padx','4')
         count += 1
         if count == 9: break
 # make joints radiobuttons
 for number in range(0,linuxcnc.MAX_JOINTS):
-    root_window.tk.call('radiobutton',fjoints + '.joint' + str(number),\
+    w('radiobutton',fjoints + '.joint' + str(number),\
                         '-anchor','w',\
                         '-padx','0',\
                         '-value',number,\
@@ -199,440 +204,440 @@ count = 0
 for row in range(0,2):
     for column in range(0,5):
         if count == jointcount: break
-        root_window.tk.call('grid',fjoints + '.joint' + str(count),'-row',row,'-column',column,'-padx','4')
+        w('grid',fjoints + '.joint' + str(count),'-row',row,'-column',column,'-padx','4')
         count += 1
 
 # rework the jogf frame
-root_window.tk.call('destroy',fjogf)
-root_window.tk.call('labelframe',fjogf,'-relief','flat','-bd','0')
-root_window.tk.call('labelframe',fjogf + '.jog','-text','Jog','-relief','ridge')
-root_window.tk.call('button',fjogf + '.jog.jogminus','-command','if ![is_continuous] {jog_minus 1}','-height','1','-text','-')
-root_window.tk.call('bind',fjogf + '.jog.jogminus','<Button-1>','if [is_continuous] {jog_minus}')
-root_window.tk.call('bind',fjogf + '.jog.jogminus','<ButtonRelease-1>','if [is_continuous] {jog_stop}')
-root_window.tk.call('button',fjogf + '.jog.jogplus','-command','if ![is_continuous] {jog_plus 1}','-height','1','-text','+')
-root_window.tk.call('bind',fjogf + '.jog.jogplus','<Button-1>','if [is_continuous] {jog_plus}')
-root_window.tk.call('bind',fjogf + '.jog.jogplus','<ButtonRelease-1>','if [is_continuous] {jog_stop}')
-root_window.tk.call('combobox',fjogf + '.jog.jogincr','-editable','0','-textvariable','jogincrement','-value','Continuous','-width','10')
-root_window.tk.call(fjogf + '.jog.jogincr','list','insert','end','Continuous',0.1000,0.0100,0.0010,0.0001)
-root_window.tk.call('labelframe',fjogf + '.zerohome','-text','Zero','-relief','ridge')
-root_window.tk.call('button',fjogf + '.zerohome.home','-command','home_joint','-height','1')
-root_window.tk.call('setup_widget_accel',fjogf + '.zerohome.home','Home Axis')
-root_window.tk.call('button',fjogf + '.zerohome.zero','-command','touch_off_system','-height','1')
-root_window.tk.call('setup_widget_accel',fjogf + '.zerohome.zero','Touch Off')
+w('destroy',fjogf)
+w('labelframe',fjogf,'-relief','flat','-bd','0')
+w('labelframe',fjogf + '.jog','-text','Jog','-relief','ridge')
+w('button',fjogf + '.jog.jogminus','-command','if ![is_continuous] {jog_minus 1}','-height','1','-text','-')
+w('bind',fjogf + '.jog.jogminus','<Button-1>','if [is_continuous] {jog_minus}')
+w('bind',fjogf + '.jog.jogminus','<ButtonRelease-1>','if [is_continuous] {jog_stop}')
+w('button',fjogf + '.jog.jogplus','-command','if ![is_continuous] {jog_plus 1}','-height','1','-text','+')
+w('bind',fjogf + '.jog.jogplus','<Button-1>','if [is_continuous] {jog_plus}')
+w('bind',fjogf + '.jog.jogplus','<ButtonRelease-1>','if [is_continuous] {jog_stop}')
+w('combobox',fjogf + '.jog.jogincr','-editable','0','-textvariable','jogincrement','-value','Continuous','-width','10')
+w(fjogf + '.jog.jogincr','list','insert','end','Continuous',0.1000,0.0100,0.0010,0.0001)
+w('labelframe',fjogf + '.zerohome','-text','Zero','-relief','ridge')
+w('button',fjogf + '.zerohome.home','-command','home_joint','-height','1')
+w('setup_widget_accel',fjogf + '.zerohome.home','Home Axis')
+w('button',fjogf + '.zerohome.zero','-command','touch_off_system','-height','1')
+w('setup_widget_accel',fjogf + '.zerohome.zero','Touch Off')
 # unused, just for tcl hierarchy
-root_window.tk.call('button',fjogf + '.zerohome.tooltouch')
-root_window.tk.call('checkbutton',fjogf + '.override')
+w('button',fjogf + '.zerohome.tooltouch')
+w('checkbutton',fjogf + '.override')
 # populate the jog frame
-root_window.tk.call('grid',fjogf + '.jog.jogminus','-row','0','-column','0','-padx','0 3','-sticky','nsew')
-root_window.tk.call('grid',fjogf + '.jog.jogplus','-row','0','-column','1','-padx','3 3','-sticky','nsew')
-root_window.tk.call('grid',fjogf + '.jog.jogincr','-row','0','-column','2','-padx','3 0','-sticky','nsew')
-root_window.tk.call('grid',fjogf + '.jog','-row','0','-column','0','-sticky','ew')
-root_window.tk.call('grid',fjogf + '.zerohome.home','-row','0','-column','0','-padx','0 3','-sticky','ew')
-root_window.tk.call('grid',fjogf + '.zerohome.zero','-row','0','-column','1','-padx','3 0','-sticky','ew')
-root_window.tk.call('grid',fjogf + '.zerohome','-row','1','-column','0','-pady','4 0','-sticky','ew')
-root_window.tk.call('grid',fjogf,'-column','0','-row','1','-padx','4','-pady','2 0','-sticky','ew')
-root_window.tk.call('grid','columnconfigure',fmanual,'0','-weight','1')
-root_window.tk.call('grid','columnconfigure',fjogf,'0','-weight','1')
-root_window.tk.call('grid','columnconfigure',fjogf + '.jog','0 1 2','-weight','1')
-root_window.tk.call('grid','columnconfigure',fjogf + '.zerohome','0 1','-weight','1')
-root_window.tk.call('DynamicHelp::add',fjogf + '.jog.jogminus','-text','Jog selected axis\nin negative direction')
-root_window.tk.call('DynamicHelp::add',fjogf + '.jog.jogplus','-text','Jog selected axis\nin positive direction')
-root_window.tk.call('DynamicHelp::add',fjogf + '.jog.jogincr','-text','Select jog increment')
+w('grid',fjogf + '.jog.jogminus','-row','0','-column','0','-padx','0 3','-sticky','nsew')
+w('grid',fjogf + '.jog.jogplus','-row','0','-column','1','-padx','3 3','-sticky','nsew')
+w('grid',fjogf + '.jog.jogincr','-row','0','-column','2','-padx','3 0','-sticky','nsew')
+w('grid',fjogf + '.jog','-row','0','-column','0','-sticky','ew')
+w('grid',fjogf + '.zerohome.home','-row','0','-column','0','-padx','0 3','-sticky','ew')
+w('grid',fjogf + '.zerohome.zero','-row','0','-column','1','-padx','3 0','-sticky','ew')
+w('grid',fjogf + '.zerohome','-row','1','-column','0','-pady','4 0','-sticky','ew')
+w('grid',fjogf,'-column','0','-row','1','-padx','4','-pady','2 0','-sticky','ew')
+w('grid','columnconfigure',fmanual,'0','-weight','1')
+w('grid','columnconfigure',fjogf,'0','-weight','1')
+w('grid','columnconfigure',fjogf + '.jog','0 1 2','-weight','1')
+w('grid','columnconfigure',fjogf + '.zerohome','0 1','-weight','1')
+w('DynamicHelp::add',fjogf + '.jog.jogminus','-text','Jog selected axis\nin negative direction')
+w('DynamicHelp::add',fjogf + '.jog.jogplus','-text','Jog selected axis\nin positive direction')
+w('DynamicHelp::add',fjogf + '.jog.jogincr','-text','Select jog increment')
 if homing_order_defined:
     if ja_name.startswith('A'):
         hbName = 'axes'
     else:
         hbName ='joints'
     widgets.homebutton.configure(text='Home All', command='home_all_joints')
-    root_window.tk.call('DynamicHelp::add',fjogf + '.zerohome.home','-text','Home all %s [Ctrl-Home]' % hbName)
+    w('DynamicHelp::add',fjogf + '.zerohome.home','-text','Home all %s [Ctrl-Home]' % hbName)
 else:
-    root_window.tk.call('DynamicHelp::add',fjogf + '.zerohome.home','-text','Home selected %s [Home]' % ja_name.lower())
-root_window.tk.call('DynamicHelp::add',fjogf + '.zerohome.zero','-text','Touch off selected axis\nto workpiece [Home]')
+    w('DynamicHelp::add',fjogf + '.zerohome.home','-text','Home selected %s [Home]' % ja_name.lower())
+w('DynamicHelp::add',fjogf + '.zerohome.zero','-text','Touch off selected axis\nto workpiece [Home]')
 
 # torch frame
-root_window.tk.call('labelframe',ftorch,'-text','Torch:','-relief','ridge')
-root_window.tk.call('Button',ftorch + '.torch-button','-text','PULSE','-takefocus','0','-width','3')
-root_window.tk.call('bind',ftorch + '.torch-button','<Button-1>','torch_pulse 1')
-root_window.tk.call('bind',ftorch + '.torch-button','<ButtonRelease-1>','torch_pulse 0')
-root_window.tk.call('append','manualgroup',' ' + ftorch + '.torch-button')
-root_window.tk.call('scale',ftorch + '.torch-pulse-time','-orient','horizontal','-variable','torchPulse','-showvalue','0')
-root_window.tk.call('label',ftorch + '.torch-time','-textvariable','torchPulse','-width','3','-anchor','e')
-root_window.tk.call('label',ftorch + '.torch-label','-text','Sec','-anchor','e')
-root_window.tk.call('pack',ftorch + '.torch-button','-side','left','-pady','2')
-root_window.tk.call('pack',ftorch + '.torch-pulse-time','-side','left','-fill','x','-expand','1')
-root_window.tk.call('pack',ftorch + '.torch-label','-side','right')
-root_window.tk.call('pack',ftorch + '.torch-time','-side','right')
-root_window.tk.call('grid',ftorch,'-column','0','-row','2','-columnspan','1','-padx','4','-pady','2 0','-sticky','ew')
-root_window.tk.call('DynamicHelp::add',ftorch + '.torch-button','-text','Pulse torch on for\nselected time')
-root_window.tk.call('DynamicHelp::add',ftorch + '.torch-pulse-time','-text','Length of torch pulse (seconds)')
+w('labelframe',ftorch,'-text','Torch:','-relief','ridge')
+w('Button',ftorch + '.torch-button','-text','PULSE','-takefocus','0','-width','3')
+w('bind',ftorch + '.torch-button','<Button-1>','torch_pulse 1')
+w('bind',ftorch + '.torch-button','<ButtonRelease-1>','torch_pulse 0')
+w('append','manualgroup',' ' + ftorch + '.torch-button')
+w('scale',ftorch + '.torch-pulse-time','-orient','horizontal','-variable','torchPulse','-showvalue','0')
+w('label',ftorch + '.torch-time','-textvariable','torchPulse','-width','3','-anchor','e')
+w('label',ftorch + '.torch-label','-text','Sec','-anchor','e')
+w('pack',ftorch + '.torch-button','-side','left','-pady','2')
+w('pack',ftorch + '.torch-pulse-time','-side','left','-fill','x','-expand','1')
+w('pack',ftorch + '.torch-label','-side','right')
+w('pack',ftorch + '.torch-time','-side','right')
+w('grid',ftorch,'-column','0','-row','2','-columnspan','1','-padx','4','-pady','2 0','-sticky','ew')
+w('DynamicHelp::add',ftorch + '.torch-button','-text','Pulse torch on for\nselected time')
+w('DynamicHelp::add',ftorch + '.torch-pulse-time','-text','Length of torch pulse (seconds)')
 
 # override frame
-root_window.tk.call('labelframe',foverride,'-text','Height Override:','-relief','ridge')
-root_window.tk.call('scale',foverride + '.height-override','-orient','horizontal')
-root_window.tk.call('pack',foverride + '.height-override','-fill','x','-expand','1')
-root_window.tk.call('grid',foverride,'-column','0','-row','3','-columnspan','1','-padx','4','-pady','2 0','-sticky','ew')
-root_window.tk.call('DynamicHelp::add',foverride + '.height-override','-text','Adjust torch height dynamically')
+w('labelframe',foverride,'-text','Height Override:','-relief','ridge')
+w('scale',foverride + '.height-override','-orient','horizontal')
+w('pack',foverride + '.height-override','-fill','x','-expand','1')
+w('grid',foverride,'-column','0','-row','3','-columnspan','1','-padx','4','-pady','2 0','-sticky','ew')
+w('DynamicHelp::add',foverride + '.height-override','-text','Adjust torch height dynamically')
 
 # paused motion frame
-root_window.tk.call('labelframe',fpausedmotion,'-text','Paused Motion Speed:','-relief','ridge')
-root_window.tk.call('Button',fpausedmotion + '.reverse','-text','Rev','-takefocus','0','-width','3')
-root_window.tk.call('bind',fpausedmotion + '.reverse','<Button-1>','paused_motion -1')
-root_window.tk.call('bind',fpausedmotion + '.reverse','<ButtonRelease-1>','paused_motion 0')
-root_window.tk.call('scale',fpausedmotion + '.paused-motion-speed','-orient','horizontal')
-root_window.tk.call('Button',fpausedmotion + '.forward','-text','Fwd','-takefocus','0','-width','3')
-root_window.tk.call('bind',fpausedmotion + '.forward','<Button-1>','paused_motion 1')
-root_window.tk.call('bind',fpausedmotion + '.forward','<ButtonRelease-1>','paused_motion 0')
-root_window.tk.call('pack',fpausedmotion + '.reverse','-side','left','-fill','y')
-root_window.tk.call('pack',fpausedmotion + '.paused-motion-speed','-side','left','-fill','x','-expand','1')
-root_window.tk.call('pack',fpausedmotion + '.forward','-side','right','-fill','y')
-root_window.tk.call('grid',fpausedmotion,'-column','0','-row','4','-columnspan','1','-padx','4','-pady','2 0','-sticky','ew')
-root_window.tk.call('DynamicHelp::add',fpausedmotion + '.reverse','-text','Move while paused\nin reverse direction')
-root_window.tk.call('DynamicHelp::add',fpausedmotion + '.forward','-text','Move while paused\nin foward direction')
-root_window.tk.call('DynamicHelp::add',fpausedmotion + '.paused-motion-speed','-text','Paused motion speed (% of feed rate)')
+w('labelframe',fpausedmotion,'-text','Paused Motion Speed:','-relief','ridge')
+w('Button',fpausedmotion + '.reverse','-text','Rev','-takefocus','0','-width','3')
+w('bind',fpausedmotion + '.reverse','<Button-1>','paused_motion -1')
+w('bind',fpausedmotion + '.reverse','<ButtonRelease-1>','paused_motion 0')
+w('scale',fpausedmotion + '.paused-motion-speed','-orient','horizontal')
+w('Button',fpausedmotion + '.forward','-text','Fwd','-takefocus','0','-width','3')
+w('bind',fpausedmotion + '.forward','<Button-1>','paused_motion 1')
+w('bind',fpausedmotion + '.forward','<ButtonRelease-1>','paused_motion 0')
+w('pack',fpausedmotion + '.reverse','-side','left','-fill','y')
+w('pack',fpausedmotion + '.paused-motion-speed','-side','left','-fill','x','-expand','1')
+w('pack',fpausedmotion + '.forward','-side','right','-fill','y')
+w('grid',fpausedmotion,'-column','0','-row','4','-columnspan','1','-padx','4','-pady','2 0','-sticky','ew')
+w('DynamicHelp::add',fpausedmotion + '.reverse','-text','Move while paused\nin reverse direction')
+w('DynamicHelp::add',fpausedmotion + '.forward','-text','Move while paused\nin foward direction')
+w('DynamicHelp::add',fpausedmotion + '.paused-motion-speed','-text','Paused motion speed (% of feed rate)')
 
 # hide bottom pane until modified
-root_window.tk.call('pack','forget','.pane.bottom.t.text')
-root_window.tk.call('pack','forget','.pane.bottom.t.sb')
+w('pack','forget','.pane.bottom.t.text')
+w('pack','forget','.pane.bottom.t.sb')
 
 # common frame
-root_window.tk.call('labelframe',fcommon,'-text','','-relief','raised')
+w('labelframe',fcommon,'-text','','-relief','raised')
 
 # monitor frame
-root_window.tk.call('labelframe',fmonitor,'-text','','-relief','flat')
+w('labelframe',fmonitor,'-text','','-relief','flat')
 arcfont = fname + ' ' + str(int(fsize) + 2) + ' bold'
-root_window.tk.call('label',fmonitor + '.arc-voltage','-anchor','e','-width',swidth,'-fg','blue','-font',arcfont)
-root_window.tk.call('label',fmonitor + '.aVlab','-text','Arc Voltage')
-root_window.tk.call('canvas',fmonitor + '.led-float','-width',cwidth,'-height',cheight)
-root_window.tk.call(fmonitor + '.led-float','create','oval',ledx,ledy,ledwidth,ledheight,'-fill','red','-disabledfill','grey')
-root_window.tk.call('label',fmonitor + '.lFlab','-text','Float Switch')
-root_window.tk.call('canvas',fmonitor + '.led-torch','-width',cwidth,'-height',cheight)
-root_window.tk.call(fmonitor + '.led-torch','create','oval',ledx,ledy,ledwidth,ledheight,'-fill','orange','-disabledfill','grey')
-root_window.tk.call('label',fmonitor + '.lTlab','-text','Torch On')
-root_window.tk.call('canvas',fmonitor + '.led-breakaway','-width',cwidth,'-height',cheight)
-root_window.tk.call(fmonitor + '.led-breakaway','create','oval',ledx,ledy,ledwidth,ledheight,'-fill','red','-disabledfill','grey')
-root_window.tk.call('label',fmonitor + '.lBlab','-text','Breakaway')
-root_window.tk.call('canvas',fmonitor + '.led-arc-ok','-width',cwidth,'-height',cheight)
-root_window.tk.call(fmonitor + '.led-arc-ok','create','oval',ledx,ledy,ledwidth,ledheight,'-fill','lightgreen','-disabledfill','grey')
-root_window.tk.call('label',fmonitor + '.lAOlab','-text','Ark OK')
-root_window.tk.call('canvas',fmonitor + '.led-safe-height','-width',cwidth,'-height',cheight)
-root_window.tk.call(fmonitor + '.led-safe-height','create','oval',ledx,ledy,ledwidth,ledheight,'-fill','red','-disabledfill','grey')
-root_window.tk.call('label',fmonitor + '.lSHlab','-text','Safe Limited')
-root_window.tk.call('grid',fmonitor + '.arc-voltage','-row','0','-column','0','-sticky','e')
-root_window.tk.call('grid',fmonitor + '.aVlab','-row','0','-column','1',)
-root_window.tk.call('grid',fmonitor + '.led-torch','-row','1','-column','0','-sticky','e')
-root_window.tk.call('grid',fmonitor + '.lTlab','-row','1','-column','1')
-root_window.tk.call('grid',fmonitor + '.led-float','-row','2','-column','0','-sticky','e')
-root_window.tk.call('grid',fmonitor + '.lFlab','-row','2','-column','1')
-root_window.tk.call('grid',fmonitor + '.led-breakaway','-row','3','-column','0','-sticky','e')
-root_window.tk.call('grid',fmonitor + '.lBlab','-row','3','-column','1')
-root_window.tk.call('grid',fmonitor + '.led-arc-ok','-row','4','-column','0','-sticky','e')
-root_window.tk.call('grid',fmonitor + '.lAOlab','-row','4','-column','1')
-root_window.tk.call('grid',fmonitor + '.led-safe-height','-row','5','-column','0','-sticky','e')
-root_window.tk.call('grid',fmonitor + '.lSHlab','-row','5','-column','1')
-root_window.tk.call('grid','rowconfigure',fmonitor,'0 1 2 3 4 5','-pad','4')
-root_window.tk.call('DynamicHelp::add',fmonitor + '.arc-voltage','-text','Current arc voltage')
-root_window.tk.call('DynamicHelp::add',fmonitor + '.led-torch','-text','Torch status indicator')
-root_window.tk.call('DynamicHelp::add',fmonitor + '.led-float','-text','Float switch status indicator')
-root_window.tk.call('DynamicHelp::add',fmonitor + '.led-breakaway','-text','Breakaway switch status indicator')
-root_window.tk.call('DynamicHelp::add',fmonitor + '.led-arc-ok','-text','Arc OK status indicator')
-root_window.tk.call('DynamicHelp::add',fmonitor + '.led-safe-height','-text','Safe height reduced status indicator')
+w('label',fmonitor + '.arc-voltage','-anchor','e','-width',swidth,'-fg','blue','-font',arcfont)
+w('label',fmonitor + '.aVlab','-text','Arc Voltage')
+w('canvas',fmonitor + '.led-float','-width',cwidth,'-height',cheight)
+w(fmonitor + '.led-float','create','oval',ledx,ledy,ledwidth,ledheight,'-fill','red','-disabledfill','grey')
+w('label',fmonitor + '.lFlab','-text','Float Switch')
+w('canvas',fmonitor + '.led-torch','-width',cwidth,'-height',cheight)
+w(fmonitor + '.led-torch','create','oval',ledx,ledy,ledwidth,ledheight,'-fill','orange','-disabledfill','grey')
+w('label',fmonitor + '.lTlab','-text','Torch On')
+w('canvas',fmonitor + '.led-breakaway','-width',cwidth,'-height',cheight)
+w(fmonitor + '.led-breakaway','create','oval',ledx,ledy,ledwidth,ledheight,'-fill','red','-disabledfill','grey')
+w('label',fmonitor + '.lBlab','-text','Breakaway')
+w('canvas',fmonitor + '.led-arc-ok','-width',cwidth,'-height',cheight)
+w(fmonitor + '.led-arc-ok','create','oval',ledx,ledy,ledwidth,ledheight,'-fill','lightgreen','-disabledfill','grey')
+w('label',fmonitor + '.lAOlab','-text','Ark OK')
+w('canvas',fmonitor + '.led-safe-height','-width',cwidth,'-height',cheight)
+w(fmonitor + '.led-safe-height','create','oval',ledx,ledy,ledwidth,ledheight,'-fill','red','-disabledfill','grey')
+w('label',fmonitor + '.lSHlab','-text','Safe Limited')
+w('grid',fmonitor + '.arc-voltage','-row','0','-column','0','-sticky','e')
+w('grid',fmonitor + '.aVlab','-row','0','-column','1',)
+w('grid',fmonitor + '.led-torch','-row','1','-column','0','-sticky','e')
+w('grid',fmonitor + '.lTlab','-row','1','-column','1')
+w('grid',fmonitor + '.led-float','-row','2','-column','0','-sticky','e')
+w('grid',fmonitor + '.lFlab','-row','2','-column','1')
+w('grid',fmonitor + '.led-breakaway','-row','3','-column','0','-sticky','e')
+w('grid',fmonitor + '.lBlab','-row','3','-column','1')
+w('grid',fmonitor + '.led-arc-ok','-row','4','-column','0','-sticky','e')
+w('grid',fmonitor + '.lAOlab','-row','4','-column','1')
+w('grid',fmonitor + '.led-safe-height','-row','5','-column','0','-sticky','e')
+w('grid',fmonitor + '.lSHlab','-row','5','-column','1')
+w('grid','rowconfigure',fmonitor,'0 1 2 3 4 5','-pad','4')
+w('DynamicHelp::add',fmonitor + '.arc-voltage','-text','Current arc voltage')
+w('DynamicHelp::add',fmonitor + '.led-torch','-text','Torch status indicator')
+w('DynamicHelp::add',fmonitor + '.led-float','-text','Float switch status indicator')
+w('DynamicHelp::add',fmonitor + '.led-breakaway','-text','Breakaway switch status indicator')
+w('DynamicHelp::add',fmonitor + '.led-arc-ok','-text','Arc OK status indicator')
+w('DynamicHelp::add',fmonitor + '.led-safe-height','-text','Safe height reduced status indicator')
 
 # buttons frame
-root_window.tk.call('labelframe',fbuttons,'-relief','flat')
-root_window.tk.call('button',fbuttons + '.xtohome','-text','X to Home','-command','x_to_home','-width',bwidth)
-root_window.tk.call('button',fbuttons + '.ytohome','-text','Y to Home','-command','y_to_home','-width',bwidth)
-root_window.tk.call('button',fbuttons + '.ztohome','-text','Z to Home','-command','z_to_home','-width',bwidth)
-root_window.tk.call('button',fbuttons + '.dryRun','-text','Dry Run','-width',bwidth)
-root_window.tk.call('bind',fbuttons + '.dryRun','<Button-1>','dry_run 1')
-root_window.tk.call('bind',fbuttons + '.dryRun','<ButtonRelease-1>','dry_run 0')
-root_window.tk.call('grid',fbuttons + '.xtohome','-row','0','-column','0')
-root_window.tk.call('grid',fbuttons + '.ytohome','-row','1','-column','0')
-root_window.tk.call('grid',fbuttons + '.ztohome','-row','2','-column','0')
-root_window.tk.call('grid',fbuttons + '.dryRun','-row','3','-column','0')
-root_window.tk.call('grid','columnconfigure',fbuttons,0,'-weight','1')
-root_window.tk.call('DynamicHelp::add',fbuttons + '.xtohome','-text','Send the X axis to the home position')
-root_window.tk.call('DynamicHelp::add',fbuttons + '.ytohome','-text','Send the Y axis to the home position')
-root_window.tk.call('DynamicHelp::add',fbuttons + '.ztohome','-text','Send the Z axis to the home position')
-root_window.tk.call('DynamicHelp::add',fbuttons + '.dryRun','-text','Start a dry run\nFollows all gcode without torch')
+w('labelframe',fbuttons,'-relief','flat')
+w('button',fbuttons + '.xtohome','-text','X to Home','-command','x_to_home','-width',bwidth)
+w('button',fbuttons + '.ytohome','-text','Y to Home','-command','y_to_home','-width',bwidth)
+w('button',fbuttons + '.ztohome','-text','Z to Home','-command','z_to_home','-width',bwidth)
+w('button',fbuttons + '.dryRun','-text','Dry Run','-width',bwidth)
+w('bind',fbuttons + '.dryRun','<Button-1>','dry_run 1')
+w('bind',fbuttons + '.dryRun','<ButtonRelease-1>','dry_run 0')
+w('grid',fbuttons + '.xtohome','-row','0','-column','0')
+w('grid',fbuttons + '.ytohome','-row','1','-column','0')
+w('grid',fbuttons + '.ztohome','-row','2','-column','0')
+w('grid',fbuttons + '.dryRun','-row','3','-column','0')
+w('grid','columnconfigure',fbuttons,0,'-weight','1')
+w('DynamicHelp::add',fbuttons + '.xtohome','-text','Send the X axis to the home position')
+w('DynamicHelp::add',fbuttons + '.ytohome','-text','Send the Y axis to the home position')
+w('DynamicHelp::add',fbuttons + '.ztohome','-text','Send the Z axis to the home position')
+w('DynamicHelp::add',fbuttons + '.dryRun','-text','Start a dry run\nFollows all gcode without torch')
 
 # populate bottom frame
-root_window.tk.call('frame',fcommon + '.spaceframe','-relief','sunken')
-root_window.tk.call('pack',fmonitor,'-fill','y','-side','left')
-root_window.tk.call('pack',fcommon + '.spaceframe','-fill','x','-side','left')
-root_window.tk.call('pack',fbuttons,'-fill','y','-side','left')
-root_window.tk.call(ft,'configure','-relief','flat')
-root_window.tk.call(ft + '.text','configure','-borderwidth','2','-relief','sunken')
-root_window.tk.call('pack',fcommon,'-fill','both','-side','left')
-root_window.tk.call('pack',ft + '.sb','-fill','y','-side','left','-padx','4')
-#root_window.tk.call(ft +'.text','configure','-width','20')
-root_window.tk.call('pack',ft + '.text','-fill','both','-expand','1','-side','left','-padx','0','-pady','0')
+w('frame',fcommon + '.spaceframe','-relief','sunken')
+w('pack',fmonitor,'-fill','y','-side','left')
+w('pack',fcommon + '.spaceframe','-fill','x','-side','left')
+w('pack',fbuttons,'-fill','y','-side','left')
+w(ft,'configure','-relief','flat')
+w(ft + '.text','configure','-borderwidth','2','-relief','sunken')
+w('pack',fcommon,'-fill','both','-side','left')
+w('pack',ft + '.sb','-fill','y','-side','left','-padx','4')
+#w(ft +'.text','configure','-width','20')
+w('pack',ft + '.text','-fill','both','-expand','1','-side','left','-padx','0','-pady','0')
 
 # new notebook for plasmac stuff
-root_window.tk.call('NoteBook','.plasmac','-borderwidth','2','-arcradius','3')
-root_window.tk.call('.plasmac','insert','end','run','-text','Run')
-root_window.tk.call('.plasmac','insert','end','config','-text','Configure')
+w('NoteBook','.plasmac','-borderwidth','2','-arcradius','2','-tabbevelsize','8')
+w('.plasmac','insert','end','run','-text','Run')
+w('.plasmac','insert','end','config','-text','Configure')
 
 # frames for run tab
-root_window.tk.call('labelframe',fmaterial,'-text','Material','-relief','ridge')
-root_window.tk.call('labelframe',fcutparms,'-text','Cut Parameters','-relief','ridge')
-root_window.tk.call('labelframe',fthc,'-text','THC','-relief','ridge')
-root_window.tk.call('labelframe',flocks,'-text','Locks','-relief','ridge')
+w('labelframe',fmaterial,'-text','Material','-relief','ridge')
+w('labelframe',fcutparms,'-text','Cut Parameters','-relief','ridge')
+w('labelframe',fthc,'-text','THC','-relief','ridge')
+w('labelframe',flocks,'-text','Locks','-relief','ridge')
 
 # frames for config tab
-root_window.tk.call('labelframe',fmotion,'-text','Motion','-relief','ridge')
-root_window.tk.call('labelframe',farc,'-text','Arc','-relief','ridge')
-root_window.tk.call('labelframe',foffsets,'-text','Offsets','-relief','ridge')
-root_window.tk.call('labelframe',fsettings,'-text','Settings','-relief','ridge')
+w('labelframe',fmotion,'-text','Motion','-relief','ridge')
+w('labelframe',farc,'-text','Arc','-relief','ridge')
+w('labelframe',foffsets,'-text','Offsets','-relief','ridge')
+w('labelframe',fsettings,'-text','Settings','-relief','ridge')
 
 # material frame
-root_window.tk.call('ComboBox',fmaterial + '.materials','-modifycmd','material_changed')
-root_window.tk.call('DynamicHelp::add',fmaterial + '.materials','-text','select material from materials file')
-root_window.tk.call('pack',fmaterial + '.materials','-fill','x')
-root_window.tk.call('DynamicHelp::add',fmaterial + '.materials','-text','Select the material to be cut')
+w('ComboBox',fmaterial + '.materials','-modifycmd','material_changed')
+w('DynamicHelp::add',fmaterial + '.materials','-text','select material from materials file')
+w('pack',fmaterial + '.materials','-fill','x')
+w('DynamicHelp::add',fmaterial + '.materials','-text','Select the material to be cut')
 
 # cut parameters frame
-root_window.tk.call('spinbox',fcutparms + '.pierce-height')
-root_window.tk.call('DynamicHelp::add',fcutparms + '.pierce-height','-text','piercing height\nin machine units')
-root_window.tk.call('label',fcutparms + '.pHlab','-text','Pierce Height')
-root_window.tk.call('spinbox',fcutparms + '.pierce-delay')
-root_window.tk.call('label',fcutparms + '.pDlab','-text','Pierce Delay')
-root_window.tk.call('spinbox',fcutparms + '.cut-height')
-root_window.tk.call('label',fcutparms + '.cHlab','-text','Cut Height')
-root_window.tk.call('spinbox',fcutparms + '.cut-feed-rate')
-root_window.tk.call('label',fcutparms + '.cFRlab','-text','Cut Feed Rate')
-root_window.tk.call('spinbox',fcutparms + '.puddle-jump-height')
-root_window.tk.call('label',fcutparms + '.pJHlab','-text','P-J Height')
-root_window.tk.call('spinbox',fcutparms + '.puddle-jump-delay')
-root_window.tk.call('label',fcutparms + '.pJDlab','-text','P-J Delay')
-root_window.tk.call('spinbox',fcutparms + '.cut-amps')
-root_window.tk.call('label',fcutparms + '.cAlab','-text','Cut Amps')
-root_window.tk.call('spinbox',fcutparms + '.cut-volts')
-root_window.tk.call('label',fcutparms + '.cVlab','-text','Cut Volts')
-root_window.tk.call('grid',fcutparms + '.pierce-height','-row','0','-column','0')
-root_window.tk.call('grid',fcutparms + '.pHlab','-row','0','-column','1')
-root_window.tk.call('grid',fcutparms + '.pierce-delay','-row','1','-column','0')
-root_window.tk.call('grid',fcutparms + '.pDlab','-row','1','-column','1')
-root_window.tk.call('grid',fcutparms + '.cut-height','-row','2','-column','0')
-root_window.tk.call('grid',fcutparms + '.cHlab','-row','2','-column','1')
-root_window.tk.call('grid',fcutparms + '.cut-feed-rate','-row','3','-column','0')
-root_window.tk.call('grid',fcutparms + '.cFRlab','-row','3','-column','1')
-root_window.tk.call('grid',fcutparms + '.puddle-jump-height','-row','4','-column','0')
-root_window.tk.call('grid',fcutparms + '.pJHlab','-row','4','-column','1')
-root_window.tk.call('grid',fcutparms + '.puddle-jump-delay','-row','5','-column','0')
-root_window.tk.call('grid',fcutparms + '.pJDlab','-row','5','-column','1')
-root_window.tk.call('grid',fcutparms + '.cut-amps','-row','6','-column','0')
-root_window.tk.call('grid',fcutparms + '.cAlab','-row','6','-column','1')
-root_window.tk.call('grid',fcutparms + '.cut-volts','-row','7','-column','0')
-root_window.tk.call('grid',fcutparms + '.cVlab','-row','7','-column','1')
-root_window.tk.call('grid','rowconfigure',fcutparms,'0 1 2 3 4 5 6 7','-pad','2')
-root_window.tk.call('grid','columnconfigure',fcutparms,'0 1 2 3','-weight','1')
-root_window.tk.call('DynamicHelp::add',fcutparms + '.pierce-height','-text','Piercing height\n(machine units)')
-root_window.tk.call('DynamicHelp::add',fcutparms + '.pierce-delay','-text','Piercing time before moving\n(seconds)')
-root_window.tk.call('DynamicHelp::add',fcutparms + '.cut-height','-text','Cutting height\n(machine units)')
-root_window.tk.call('DynamicHelp::add',fcutparms + '.cut-feed-rate','-text','Cutting speed\n(machine units per minute)')
-root_window.tk.call('DynamicHelp::add',fcutparms + '.puddle-jump-height','-text','Puddle jump height\n(% of pierce height)')
-root_window.tk.call('DynamicHelp::add',fcutparms + '.puddle-jump-delay','-text','Puddle jump wait time\nbefore moving (seconds)')
-root_window.tk.call('DynamicHelp::add',fcutparms + '.cut-amps','-text','Cut amperage')
-root_window.tk.call('DynamicHelp::add',fcutparms + '.cut-volts','-text','Cut voltage')
+w('spinbox',fcutparms + '.pierce-height')
+w('DynamicHelp::add',fcutparms + '.pierce-height','-text','piercing height\nin machine units')
+w('label',fcutparms + '.pHlab','-text','Pierce Height')
+w('spinbox',fcutparms + '.pierce-delay')
+w('label',fcutparms + '.pDlab','-text','Pierce Delay')
+w('spinbox',fcutparms + '.cut-height')
+w('label',fcutparms + '.cHlab','-text','Cut Height')
+w('spinbox',fcutparms + '.cut-feed-rate')
+w('label',fcutparms + '.cFRlab','-text','Cut Feed Rate')
+w('spinbox',fcutparms + '.puddle-jump-height')
+w('label',fcutparms + '.pJHlab','-text','P-J Height')
+w('spinbox',fcutparms + '.puddle-jump-delay')
+w('label',fcutparms + '.pJDlab','-text','P-J Delay')
+w('spinbox',fcutparms + '.cut-amps')
+w('label',fcutparms + '.cAlab','-text','Cut Amps')
+w('spinbox',fcutparms + '.cut-volts')
+w('label',fcutparms + '.cVlab','-text','Cut Volts')
+w('grid',fcutparms + '.pierce-height','-row','0','-column','0')
+w('grid',fcutparms + '.pHlab','-row','0','-column','1')
+w('grid',fcutparms + '.pierce-delay','-row','1','-column','0')
+w('grid',fcutparms + '.pDlab','-row','1','-column','1')
+w('grid',fcutparms + '.cut-height','-row','2','-column','0')
+w('grid',fcutparms + '.cHlab','-row','2','-column','1')
+w('grid',fcutparms + '.cut-feed-rate','-row','3','-column','0')
+w('grid',fcutparms + '.cFRlab','-row','3','-column','1')
+w('grid',fcutparms + '.puddle-jump-height','-row','4','-column','0')
+w('grid',fcutparms + '.pJHlab','-row','4','-column','1')
+w('grid',fcutparms + '.puddle-jump-delay','-row','5','-column','0')
+w('grid',fcutparms + '.pJDlab','-row','5','-column','1')
+w('grid',fcutparms + '.cut-amps','-row','6','-column','0')
+w('grid',fcutparms + '.cAlab','-row','6','-column','1')
+w('grid',fcutparms + '.cut-volts','-row','7','-column','0')
+w('grid',fcutparms + '.cVlab','-row','7','-column','1')
+w('grid','rowconfigure',fcutparms,'0 1 2 3 4 5 6 7','-pad','2')
+w('grid','columnconfigure',fcutparms,'0 1 2 3','-weight','1')
+w('DynamicHelp::add',fcutparms + '.pierce-height','-text','Piercing height\n(machine units)')
+w('DynamicHelp::add',fcutparms + '.pierce-delay','-text','Piercing time before moving\n(seconds)')
+w('DynamicHelp::add',fcutparms + '.cut-height','-text','Cutting height\n(machine units)')
+w('DynamicHelp::add',fcutparms + '.cut-feed-rate','-text','Cutting speed\n(machine units per minute)')
+w('DynamicHelp::add',fcutparms + '.puddle-jump-height','-text','Puddle jump height\n(% of pierce height)')
+w('DynamicHelp::add',fcutparms + '.puddle-jump-delay','-text','Puddle jump wait time\nbefore moving (seconds)')
+w('DynamicHelp::add',fcutparms + '.cut-amps','-text','Cut amperage')
+w('DynamicHelp::add',fcutparms + '.cut-volts','-text','Cut voltage')
 
 # thc frame
-root_window.tk.call('checkbutton',fthc + '.thc-enable')
-root_window.tk.call('label',fthc + '.tElab','-text','Enable')
-root_window.tk.call('checkbutton',fthc + '.use-auto-volts')
-root_window.tk.call('label',fthc + '.uAVlab','-text','Use Auto Volts')
-root_window.tk.call('spinbox',fthc + '.thc-threshold')
-root_window.tk.call('label',fthc + '.tTlab','-text','Threshold')
-root_window.tk.call('spinbox',fthc + '.pid-p-gain')
-root_window.tk.call('label',fthc + '.pPGlab','-text','Speed (PID P)')
-root_window.tk.call('canvas',fthc + '.led-up','-width',cwidth,'-height',cheight)
-root_window.tk.call(fthc + '.led-up','create','oval',ledx,ledy,ledwidth,ledheight,'-fill','yellow','-disabledfill','grey')
-root_window.tk.call('label',fthc + '.lUlab','-text','Move Up')
-root_window.tk.call('canvas',fthc + '.led-down','-width',cwidth,'-height',cheight)
-root_window.tk.call(fthc + '.led-down','create','oval',ledx,ledy,ledwidth,ledheight,'-fill','yellow','-disabledfill','grey')
-root_window.tk.call('label',fthc + '.lDlab','-text','Move Down')
-root_window.tk.call('grid',fthc + '.thc-enable','-row','0','-column','0')
-root_window.tk.call('grid',fthc + '.tElab','-row','0','-column','1')
-root_window.tk.call('grid',fthc + '.use-auto-volts','-row','1','-column','0')
-root_window.tk.call('grid',fthc + '.uAVlab','-row','1','-column','1')
-root_window.tk.call('grid',fthc + '.thc-threshold','-row','2','-column','0')
-root_window.tk.call('grid',fthc + '.tTlab','-row','2','-column','1')
-root_window.tk.call('grid',fthc + '.pid-p-gain','-row','3','-column','0')
-root_window.tk.call('grid',fthc + '.pPGlab','-row','3','-column','1')
-root_window.tk.call('grid',fthc + '.led-up','-row','4','-column','0')
-root_window.tk.call('grid',fthc + '.lUlab','-row','4','-column','1')
-root_window.tk.call('grid',fthc + '.led-down','-row','5','-column','0')
-root_window.tk.call('grid',fthc + '.lDlab','-row','5','-column','1')
-root_window.tk.call('grid','rowconfigure',fthc,'2 3','-pad','2')
-root_window.tk.call('grid','columnconfigure',fthc,'0 1 2 3','-weight','1')
-root_window.tk.call('DynamicHelp::add',fthc + '.thc-enable','-text','Enable torch height control')
-root_window.tk.call('DynamicHelp::add',fthc + '.use-auto-volts','-text','Use sample voltage from cut\nrather than Cut Volts from above')
-root_window.tk.call('DynamicHelp::add',fthc + '.thc-threshold','-text','Voltage changes below this value\nwill not cause THC movement')
-root_window.tk.call('DynamicHelp::add',fthc + '.pid-p-gain','-text','Speed of THC movement')
-root_window.tk.call('DynamicHelp::add',fthc + '.led-up','-text','Torch is moving up')
-root_window.tk.call('DynamicHelp::add',fthc + '.led-down','-text','Torch id moving down')
+w('checkbutton',fthc + '.thc-enable')
+w('label',fthc + '.tElab','-text','Enable')
+w('checkbutton',fthc + '.use-auto-volts')
+w('label',fthc + '.uAVlab','-text','Use Auto Volts')
+w('spinbox',fthc + '.thc-threshold')
+w('label',fthc + '.tTlab','-text','Threshold')
+w('spinbox',fthc + '.pid-p-gain')
+w('label',fthc + '.pPGlab','-text','Speed (PID P)')
+w('canvas',fthc + '.led-up','-width',cwidth,'-height',cheight)
+w(fthc + '.led-up','create','oval',ledx,ledy,ledwidth,ledheight,'-fill','yellow','-disabledfill','grey')
+w('label',fthc + '.lUlab','-text','Move Up')
+w('canvas',fthc + '.led-down','-width',cwidth,'-height',cheight)
+w(fthc + '.led-down','create','oval',ledx,ledy,ledwidth,ledheight,'-fill','yellow','-disabledfill','grey')
+w('label',fthc + '.lDlab','-text','Move Down')
+w('grid',fthc + '.thc-enable','-row','0','-column','0')
+w('grid',fthc + '.tElab','-row','0','-column','1')
+w('grid',fthc + '.use-auto-volts','-row','1','-column','0')
+w('grid',fthc + '.uAVlab','-row','1','-column','1')
+w('grid',fthc + '.thc-threshold','-row','2','-column','0')
+w('grid',fthc + '.tTlab','-row','2','-column','1')
+w('grid',fthc + '.pid-p-gain','-row','3','-column','0')
+w('grid',fthc + '.pPGlab','-row','3','-column','1')
+w('grid',fthc + '.led-up','-row','4','-column','0')
+w('grid',fthc + '.lUlab','-row','4','-column','1')
+w('grid',fthc + '.led-down','-row','5','-column','0')
+w('grid',fthc + '.lDlab','-row','5','-column','1')
+w('grid','rowconfigure',fthc,'2 3','-pad','2')
+w('grid','columnconfigure',fthc,'0 1 2 3','-weight','1')
+w('DynamicHelp::add',fthc + '.thc-enable','-text','Enable torch height control')
+w('DynamicHelp::add',fthc + '.use-auto-volts','-text','Use sample voltage from cut\nrather than Cut Volts from above')
+w('DynamicHelp::add',fthc + '.thc-threshold','-text','Voltage changes below this value\nwill not cause THC movement')
+w('DynamicHelp::add',fthc + '.pid-p-gain','-text','Speed of THC movement')
+w('DynamicHelp::add',fthc + '.led-up','-text','Torch is moving up')
+w('DynamicHelp::add',fthc + '.led-down','-text','Torch id moving down')
 
 # locks frame
-root_window.tk.call('labelframe',fcornerlock,'-text','Corner','-relief','sunken')
-root_window.tk.call('checkbutton',fcornerlock + '.cornerlock-enable')
-root_window.tk.call('label',fcornerlock + '.cElab','-text','Enable')
-root_window.tk.call('spinbox',fcornerlock + '.cornerlock-threshold')
-root_window.tk.call('label',fcornerlock + '.cTlab','-text','Threshold(%)')
-root_window.tk.call('canvas',fcornerlock + '.led-cornerlock','-width',cwidth,'-height',cheight)
-root_window.tk.call(fcornerlock + '.led-cornerlock','create','oval',ledx,ledy,ledwidth,ledheight,'-fill','red','-disabledfill','grey')
-root_window.tk.call('label',fcornerlock + '.lClab','-text','Locked(%)')
-root_window.tk.call('labelframe',fkerflock,'-text','Kerf','-relief','sunken')
-root_window.tk.call('checkbutton',fkerflock + '.kerfcross-enable')
-root_window.tk.call('label',fkerflock + '.kElab','-text','Enable')
-root_window.tk.call('spinbox',fkerflock + '.kerfcross-threshold')
-root_window.tk.call('label',fkerflock + '.kTlab','-text','Threshold(V)')
-root_window.tk.call('canvas',fkerflock + '.led-kerfcross','-width',cwidth,'-height',cheight)
-root_window.tk.call(fkerflock + '.led-kerfcross','create','oval',ledx,ledy,ledwidth,ledheight,'-fill','red','-disabledfill','grey')
-root_window.tk.call('label',fkerflock + '.lKlab','-text','Locked(%)')
-root_window.tk.call('grid',fcornerlock + '.cornerlock-enable','-row','0','-column','0')
-root_window.tk.call('grid',fcornerlock + '.cElab','-row','0','-column','1')
-root_window.tk.call('grid',fcornerlock + '.cornerlock-threshold','-row','1','-column','0')
-root_window.tk.call('grid',fcornerlock + '.cTlab','-row','1','-column','1')
-root_window.tk.call('grid',fcornerlock + '.led-cornerlock','-row','2','-column','0')
-root_window.tk.call('grid',fcornerlock + '.lClab','-row','2','-column','1')
-root_window.tk.call('grid',fkerflock + '.kerfcross-enable','-row','0','-column','0')
-root_window.tk.call('grid',fkerflock + '.kElab','-row','0','-column','1')
-root_window.tk.call('grid',fkerflock + '.kerfcross-threshold','-row','1','-column','0')
-root_window.tk.call('grid',fkerflock + '.kTlab','-row','1','-column','1')
-root_window.tk.call('grid',fkerflock + '.led-kerfcross','-row','2','-column','0')
-root_window.tk.call('grid',fkerflock + '.lKlab','-row','2','-column','1')
-root_window.tk.call('pack',fcornerlock,'-side','top','-padx','1','-pady','2','-fill','x')
-root_window.tk.call('pack',fkerflock,'-side','top','-padx','1','-pady','2','-fill','x')
-root_window.tk.call('grid','rowconfigure',fcornerlock,'1','-pad','2')
-root_window.tk.call('grid','rowconfigure',fkerflock,'1','-pad','2')
-root_window.tk.call('grid','columnconfigure',flocks,'0','-weight','1')
-root_window.tk.call('DynamicHelp::add',fcornerlock + '.cornerlock-enable','-text','Enable corner lock')
-root_window.tk.call('DynamicHelp::add',fcornerlock + '.cornerlock-threshold','-text','Corner lock is locked below this speed\n(% of feed rate)')
-root_window.tk.call('DynamicHelp::add',fcornerlock + '.led-cornerlock','-text','Corner lock is locked')
-root_window.tk.call('DynamicHelp::add',fkerflock + '.kerfcross-enable','-text','Enable kerf cross lock')
-root_window.tk.call('DynamicHelp::add',fkerflock + '.kerfcross-threshold','-text','Kerf cross lock is locked at changes above this voltage')
-root_window.tk.call('DynamicHelp::add',fkerflock + '.led-kerfcross','-text','Kerf cross lock is locked')
+w('labelframe',fcornerlock,'-text','Corner','-relief','sunken')
+w('checkbutton',fcornerlock + '.cornerlock-enable')
+w('label',fcornerlock + '.cElab','-text','Enable')
+w('spinbox',fcornerlock + '.cornerlock-threshold')
+w('label',fcornerlock + '.cTlab','-text','Threshold(%)')
+w('canvas',fcornerlock + '.led-cornerlock','-width',cwidth,'-height',cheight)
+w(fcornerlock + '.led-cornerlock','create','oval',ledx,ledy,ledwidth,ledheight,'-fill','red','-disabledfill','grey')
+w('label',fcornerlock + '.lClab','-text','Locked(%)')
+w('labelframe',fkerflock,'-text','Kerf','-relief','sunken')
+w('checkbutton',fkerflock + '.kerfcross-enable')
+w('label',fkerflock + '.kElab','-text','Enable')
+w('spinbox',fkerflock + '.kerfcross-threshold')
+w('label',fkerflock + '.kTlab','-text','Threshold(V)')
+w('canvas',fkerflock + '.led-kerfcross','-width',cwidth,'-height',cheight)
+w(fkerflock + '.led-kerfcross','create','oval',ledx,ledy,ledwidth,ledheight,'-fill','red','-disabledfill','grey')
+w('label',fkerflock + '.lKlab','-text','Locked(%)')
+w('grid',fcornerlock + '.cornerlock-enable','-row','0','-column','0')
+w('grid',fcornerlock + '.cElab','-row','0','-column','1')
+w('grid',fcornerlock + '.cornerlock-threshold','-row','1','-column','0')
+w('grid',fcornerlock + '.cTlab','-row','1','-column','1')
+w('grid',fcornerlock + '.led-cornerlock','-row','2','-column','0')
+w('grid',fcornerlock + '.lClab','-row','2','-column','1')
+w('grid',fkerflock + '.kerfcross-enable','-row','0','-column','0')
+w('grid',fkerflock + '.kElab','-row','0','-column','1')
+w('grid',fkerflock + '.kerfcross-threshold','-row','1','-column','0')
+w('grid',fkerflock + '.kTlab','-row','1','-column','1')
+w('grid',fkerflock + '.led-kerfcross','-row','2','-column','0')
+w('grid',fkerflock + '.lKlab','-row','2','-column','1')
+w('pack',fcornerlock,'-side','top','-padx','1','-pady','2','-fill','x')
+w('pack',fkerflock,'-side','top','-padx','1','-pady','2','-fill','x')
+w('grid','rowconfigure',fcornerlock,'1','-pad','2')
+w('grid','rowconfigure',fkerflock,'1','-pad','2')
+w('grid','columnconfigure',flocks,'0','-weight','1')
+w('DynamicHelp::add',fcornerlock + '.cornerlock-enable','-text','Enable corner lock')
+w('DynamicHelp::add',fcornerlock + '.cornerlock-threshold','-text','Corner lock is locked below this speed\n(% of feed rate)')
+w('DynamicHelp::add',fcornerlock + '.led-cornerlock','-text','Corner lock is locked')
+w('DynamicHelp::add',fkerflock + '.kerfcross-enable','-text','Enable kerf cross lock')
+w('DynamicHelp::add',fkerflock + '.kerfcross-threshold','-text','Kerf cross lock is locked at changes above this voltage')
+w('DynamicHelp::add',fkerflock + '.led-kerfcross','-text','Kerf cross lock is locked')
 
 # motion frame
-root_window.tk.call('spinbox',fmotion + '.safe-height')
-root_window.tk.call('label',fmotion + '.sHlab','-text','Safe Height')
-root_window.tk.call('spinbox',fmotion + '.float-switch-travel')
-root_window.tk.call('label',fmotion + '.fSTlab','-text','Float Travel')
-root_window.tk.call('spinbox',fmotion + '.probe-feed-rate')
-root_window.tk.call('label',fmotion + '.pFRlab','-text','Probe Speed')
-root_window.tk.call('spinbox',fmotion + '.skip-ihs-distance','-from','0','-to','20')
-root_window.tk.call('label',fmotion + '.sIDlab','-text','Skip IHS')
-root_window.tk.call('grid',fmotion + '.safe-height','-row','0','-column','0')
-root_window.tk.call('grid',fmotion + '.sHlab','-row','0','-column','1')
-root_window.tk.call('grid',fmotion + '.float-switch-travel','-row','1','-column','0')
-root_window.tk.call('grid',fmotion + '.fSTlab','-row','1','-column','1')
-root_window.tk.call('grid',fmotion + '.probe-feed-rate','-row','2','-column','0')
-root_window.tk.call('grid',fmotion + '.pFRlab','-row','2','-column','1')
-root_window.tk.call('grid',fmotion + '.skip-ihs-distance','-row','3','-column','0')
-root_window.tk.call('grid',fmotion + '.sIDlab','-row','3','-column','1')
-root_window.tk.call('grid','rowconfigure',fmotion,'0 1 2 3','-pad','2')
-root_window.tk.call('grid','columnconfigure',fmotion,'0 1 2 3','-weight','1')
-root_window.tk.call('DynamicHelp::add',fmotion + '.safe-height','-text','Safe height above stock for rapid traverse\n(machine units)')
-root_window.tk.call('DynamicHelp::add',fmotion + '.float-switch-travel','-text','Float switch travel\n(machine units)')
-root_window.tk.call('DynamicHelp::add',fmotion + '.probe-feed-rate','-text','Probing speed\n(machine units per minute)')
-root_window.tk.call('DynamicHelp::add',fmotion + '.skip-ihs-distance','-text','Skip probing if start of cut\nis less than this distance\nfrom end of last cut')
+w('spinbox',fmotion + '.safe-height')
+w('label',fmotion + '.sHlab','-text','Safe Height')
+w('spinbox',fmotion + '.float-switch-travel')
+w('label',fmotion + '.fSTlab','-text','Float Travel')
+w('spinbox',fmotion + '.probe-feed-rate')
+w('label',fmotion + '.pFRlab','-text','Probe Speed')
+w('spinbox',fmotion + '.skip-ihs-distance','-from','0','-to','20')
+w('label',fmotion + '.sIDlab','-text','Skip IHS')
+w('grid',fmotion + '.safe-height','-row','0','-column','0')
+w('grid',fmotion + '.sHlab','-row','0','-column','1')
+w('grid',fmotion + '.float-switch-travel','-row','1','-column','0')
+w('grid',fmotion + '.fSTlab','-row','1','-column','1')
+w('grid',fmotion + '.probe-feed-rate','-row','2','-column','0')
+w('grid',fmotion + '.pFRlab','-row','2','-column','1')
+w('grid',fmotion + '.skip-ihs-distance','-row','3','-column','0')
+w('grid',fmotion + '.sIDlab','-row','3','-column','1')
+w('grid','rowconfigure',fmotion,'0 1 2 3','-pad','2')
+w('grid','columnconfigure',fmotion,'0 1 2 3','-weight','1')
+w('DynamicHelp::add',fmotion + '.safe-height','-text','Safe height above stock for rapid traverse\n(machine units)')
+w('DynamicHelp::add',fmotion + '.float-switch-travel','-text','Float switch travel\n(machine units)')
+w('DynamicHelp::add',fmotion + '.probe-feed-rate','-text','Probing speed\n(machine units per minute)')
+w('DynamicHelp::add',fmotion + '.skip-ihs-distance','-text','Skip probing if start of cut\nis less than this distance\nfrom end of last cut')
 
 # arc frame
-root_window.tk.call('spinbox',farc + '.arc-fail-delay')
-root_window.tk.call('label',farc + '.aFDlab','-text','Fail Timeout')
-root_window.tk.call('spinbox',farc + '.arc-max-starts')
-root_window.tk.call('label',farc + '.aMSlab','-text','Max. Starts')
-root_window.tk.call('spinbox',farc + '.restart-delay')
-root_window.tk.call('label',farc + '.aRDlab','-text','Retry Delay')
-root_window.tk.call('spinbox',farc + '.torch-off-delay')
-root_window.tk.call('label',farc + '.tODlab','-text','Off Delay')
-root_window.tk.call('spinbox',farc + '.arc-voltage-scale')
-root_window.tk.call('label',farc + '.aVSlab','-text','Voltage Scale')
-root_window.tk.call('spinbox',farc + '.arc-voltage-offset')
-root_window.tk.call('label',farc + '.aVOlab','-text','Voltage Offset')
-root_window.tk.call('spinbox',farc + '.arc-ok-high')
-root_window.tk.call('label',farc + '.aOHlab','-text','OK High Volts')
-root_window.tk.call('spinbox',farc + '.arc-ok-low')
-root_window.tk.call('label',farc + '.aOLlab','-text','OK Low Volts')
-root_window.tk.call('grid',farc + '.arc-fail-delay','-row','0','-column','0')
-root_window.tk.call('grid',farc + '.aFDlab','-row','0','-column','1')
-root_window.tk.call('grid',farc + '.arc-max-starts','-row','1','-column','0')
-root_window.tk.call('grid',farc + '.aMSlab','-row','1','-column','1')
-root_window.tk.call('grid',farc + '.restart-delay','-row','2','-column','0')
-root_window.tk.call('grid',farc + '.aRDlab','-row','2','-column','1')
-root_window.tk.call('grid',farc + '.torch-off-delay','-row','3','-column','0')
-root_window.tk.call('grid',farc + '.tODlab','-row','3','-column','1')
-root_window.tk.call('grid',farc + '.arc-voltage-scale','-row','4','-column','0')
-root_window.tk.call('grid',farc + '.aVSlab','-row','4','-column','1')
-root_window.tk.call('grid',farc + '.arc-voltage-offset','-row','5','-column','0')
-root_window.tk.call('grid',farc + '.aVOlab','-row','5','-column','1')
-root_window.tk.call('grid',farc + '.arc-ok-high','-row','6','-column','0')
-root_window.tk.call('grid',farc + '.aOHlab','-row','6','-column','1')
-root_window.tk.call('grid',farc + '.arc-ok-low','-row','7','-column','0')
-root_window.tk.call('grid',farc + '.aOLlab','-row','7','-column','1')
-root_window.tk.call('grid','rowconfigure',farc,'0 1 2 3 4 5 6 7','-pad','2')
-root_window.tk.call('grid','columnconfigure',farc,'0 1 2 3','-weight','1')
-root_window.tk.call('DynamicHelp::add',farc + '.arc-fail-delay','-text','Time to wait for arc ok signal\n(seconds)')
-root_window.tk.call('DynamicHelp::add',farc + '.arc-max-starts','-text','Maximum number of attemps\nto sart the torch')
-root_window.tk.call('DynamicHelp::add',farc + '.restart-delay','-text','Time to wait between arc start attempts')
-root_window.tk.call('DynamicHelp::add',farc + '.torch-off-delay','-text','Torch off time delay\n(seconds)')
-root_window.tk.call('DynamicHelp::add',farc + '.arc-voltage-scale','-text','Scale value to set correct voltage')
-root_window.tk.call('DynamicHelp::add',farc + '.arc-voltage-offset','-text','Offset value to set correct')
-root_window.tk.call('DynamicHelp::add',farc + '.arc-ok-high','-text','Maximum voltage for an arc ok signal')
-root_window.tk.call('DynamicHelp::add',farc + '.arc-ok-low','-text','Minimum voltage for an arc ok signal')
+w('spinbox',farc + '.arc-fail-delay')
+w('label',farc + '.aFDlab','-text','Fail Timeout')
+w('spinbox',farc + '.arc-max-starts')
+w('label',farc + '.aMSlab','-text','Max. Starts')
+w('spinbox',farc + '.restart-delay')
+w('label',farc + '.aRDlab','-text','Retry Delay')
+w('spinbox',farc + '.torch-off-delay')
+w('label',farc + '.tODlab','-text','Off Delay')
+w('spinbox',farc + '.arc-voltage-scale')
+w('label',farc + '.aVSlab','-text','Voltage Scale')
+w('spinbox',farc + '.arc-voltage-offset')
+w('label',farc + '.aVOlab','-text','Voltage Offset')
+w('spinbox',farc + '.arc-ok-high')
+w('label',farc + '.aOHlab','-text','OK High Volts')
+w('spinbox',farc + '.arc-ok-low')
+w('label',farc + '.aOLlab','-text','OK Low Volts')
+w('grid',farc + '.arc-fail-delay','-row','0','-column','0')
+w('grid',farc + '.aFDlab','-row','0','-column','1')
+w('grid',farc + '.arc-max-starts','-row','1','-column','0')
+w('grid',farc + '.aMSlab','-row','1','-column','1')
+w('grid',farc + '.restart-delay','-row','2','-column','0')
+w('grid',farc + '.aRDlab','-row','2','-column','1')
+w('grid',farc + '.torch-off-delay','-row','3','-column','0')
+w('grid',farc + '.tODlab','-row','3','-column','1')
+w('grid',farc + '.arc-voltage-scale','-row','4','-column','0')
+w('grid',farc + '.aVSlab','-row','4','-column','1')
+w('grid',farc + '.arc-voltage-offset','-row','5','-column','0')
+w('grid',farc + '.aVOlab','-row','5','-column','1')
+w('grid',farc + '.arc-ok-high','-row','6','-column','0')
+w('grid',farc + '.aOHlab','-row','6','-column','1')
+w('grid',farc + '.arc-ok-low','-row','7','-column','0')
+w('grid',farc + '.aOLlab','-row','7','-column','1')
+w('grid','rowconfigure',farc,'0 1 2 3 4 5 6 7','-pad','2')
+w('grid','columnconfigure',farc,'0 1 2 3','-weight','1')
+w('DynamicHelp::add',farc + '.arc-fail-delay','-text','Time to wait for arc ok signal\n(seconds)')
+w('DynamicHelp::add',farc + '.arc-max-starts','-text','Maximum number of attemps\nto sart the torch')
+w('DynamicHelp::add',farc + '.restart-delay','-text','Time to wait between arc start attempts')
+w('DynamicHelp::add',farc + '.torch-off-delay','-text','Torch off time delay\n(seconds)')
+w('DynamicHelp::add',farc + '.arc-voltage-scale','-text','Scale value to set correct voltage')
+w('DynamicHelp::add',farc + '.arc-voltage-offset','-text','Offset value to set correct')
+w('DynamicHelp::add',farc + '.arc-ok-high','-text','Maximum voltage for an arc ok signal')
+w('DynamicHelp::add',farc + '.arc-ok-low','-text','Minimum voltage for an arc ok signal')
 
 # offsets frame
-root_window.tk.call('label',foffsets + '.maxspeed','-text','0','-anchor','e','-width',swidth)
-root_window.tk.call('label',foffsets + '.msplab','-text','Max. Speed')
-root_window.tk.call('spinbox',foffsets + '.setup-feed-rate')
-root_window.tk.call('label',foffsets + '.sFRlab','-text','Setup Speed')
-root_window.tk.call('spinbox',foffsets + '.pid-i-gain')
-root_window.tk.call('label',foffsets + '.pIGlab','-text','PID I Gain')
-root_window.tk.call('spinbox',foffsets + '.pid-d-gain','-from','0','-to','20')
-root_window.tk.call('label',foffsets + '.pDGlab','-text','PID D Gain')
-root_window.tk.call('grid',foffsets + '.maxspeed','-row','0','-column','0')
-root_window.tk.call('grid',foffsets + '.msplab','-row','0','-column','1')
-root_window.tk.call('grid',foffsets + '.setup-feed-rate','-row','1','-column','0')
-root_window.tk.call('grid',foffsets + '.sFRlab','-row','1','-column','1')
-root_window.tk.call('grid',foffsets + '.pid-i-gain','-row','2','-column','0')
-root_window.tk.call('grid',foffsets + '.pIGlab','-row','2','-column','1')
-root_window.tk.call('grid',foffsets + '.pid-d-gain','-row','3','-column','0')
-root_window.tk.call('grid',foffsets + '.pDGlab','-row','3','-column','1')
-root_window.tk.call('grid','rowconfigure',foffsets,'0 1 2 3','-pad','2')
-root_window.tk.call('grid','columnconfigure',foffsets,'0 1 2 3','-weight','1')
-root_window.tk.call('DynamicHelp::add',foffsets + '.maxspeed','-text','Maximum allowed speed for Z axis')
-root_window.tk.call('DynamicHelp::add',foffsets + '.setup-feed-rate','-text','Speed of Z axis for start of cut moves\neg pierce, puddle jump and cut heights')
-root_window.tk.call('DynamicHelp::add',foffsets + '.pid-i-gain','-text','PID I gain')
-root_window.tk.call('DynamicHelp::add',foffsets + '.pid-d-gain','-text','PID D gain')
+w('label',foffsets + '.maxspeed','-text','0','-anchor','e','-width',swidth)
+w('label',foffsets + '.msplab','-text','Max. Speed')
+w('spinbox',foffsets + '.setup-feed-rate')
+w('label',foffsets + '.sFRlab','-text','Setup Speed')
+w('spinbox',foffsets + '.pid-i-gain')
+w('label',foffsets + '.pIGlab','-text','PID I Gain')
+w('spinbox',foffsets + '.pid-d-gain','-from','0','-to','20')
+w('label',foffsets + '.pDGlab','-text','PID D Gain')
+w('grid',foffsets + '.maxspeed','-row','0','-column','0')
+w('grid',foffsets + '.msplab','-row','0','-column','1')
+w('grid',foffsets + '.setup-feed-rate','-row','1','-column','0')
+w('grid',foffsets + '.sFRlab','-row','1','-column','1')
+w('grid',foffsets + '.pid-i-gain','-row','2','-column','0')
+w('grid',foffsets + '.pIGlab','-row','2','-column','1')
+w('grid',foffsets + '.pid-d-gain','-row','3','-column','0')
+w('grid',foffsets + '.pDGlab','-row','3','-column','1')
+w('grid','rowconfigure',foffsets,'0 1 2 3','-pad','2')
+w('grid','columnconfigure',foffsets,'0 1 2 3','-weight','1')
+w('DynamicHelp::add',foffsets + '.maxspeed','-text','Maximum allowed speed for Z axis')
+w('DynamicHelp::add',foffsets + '.setup-feed-rate','-text','Speed of Z axis for start of cut moves\neg pierce, puddle jump and cut heights')
+w('DynamicHelp::add',foffsets + '.pid-i-gain','-text','PID I gain')
+w('DynamicHelp::add',foffsets + '.pid-d-gain','-text','PID D gain')
 
 # settings frame
-root_window.tk.call('button',fsettings + '.save','-text','Save','-command','save_config','-width',bwidth)
-root_window.tk.call('button',fsettings + '.reload','-text','Reload','-width',bwidth,'-command','reload_config')
-root_window.tk.call('grid',fsettings + '.save','-row','0','-column','0')
-root_window.tk.call('grid',fsettings + '.reload','-row','0','-column','1')
-root_window.tk.call('grid','columnconfigure',fsettings,'0 1','-weight','1','-pad','2')
-root_window.tk.call('DynamicHelp::add',fsettings + '.save','-text','Save all current settings to file\nthis will also cause current cut\nparameters to be set as default')
-root_window.tk.call('DynamicHelp::add',fsettings + '.reload','-text','Reload all settings from file')
+w('button',fsettings + '.save','-text','Save','-command','save_config','-width',bwidth)
+w('button',fsettings + '.reload','-text','Reload','-width',bwidth,'-command','reload_config')
+w('grid',fsettings + '.save','-row','0','-column','0')
+w('grid',fsettings + '.reload','-row','0','-column','1')
+w('grid','columnconfigure',fsettings,'0 1','-weight','1','-pad','2')
+w('DynamicHelp::add',fsettings + '.save','-text','Save all current settings to file\nthis will also cause current cut\nparameters to be set as default')
+w('DynamicHelp::add',fsettings + '.reload','-text','Reload all settings from file')
 
 # populate run tab
-root_window.tk.call('pack',fmaterial,'-fill','x')
-root_window.tk.call('pack',fcutparms,'-fill','x')
-root_window.tk.call('pack',fthc,'-fill','x')
-root_window.tk.call('pack',flocks,'-fill','x')
+w('pack',fmaterial,'-fill','x')
+w('pack',fcutparms,'-fill','x')
+w('pack',fthc,'-fill','x')
+w('pack',flocks,'-fill','x')
 
 # populate config tab
-root_window.tk.call('pack',fmotion,'-fill','x','-expand','0')
-root_window.tk.call('pack',farc,'-fill','x','-expand','0')
-root_window.tk.call('pack',foffsets,'-fill','x','-expand','0')
-root_window.tk.call('pack',fsettings,'-fill','x','-expand','0')
+w('pack',fmotion,'-fill','x','-expand','0')
+w('pack',farc,'-fill','x','-expand','0')
+w('pack',foffsets,'-fill','x','-expand','0')
+w('pack',fsettings,'-fill','x','-expand','0')
 
 # move original pane to right
-root_window.tk.call('grid','.pane','-column','1','-row','1','-sticky','nsew','-rowspan','2')
+w('grid','.pane','-column','1','-row','1','-sticky','nsew','-rowspan','2')
 
 # place new notebook left of original pane
-root_window.tk.call('.plasmac','raise','run')
-root_window.tk.call('grid','.plasmac','-column','0','-row','1','-sticky','nsew','-rowspan','2')
-root_window.tk.call('grid','columnconfigure','.','0','-weight','0')
-root_window.tk.call('grid','columnconfigure','.','1','-weight','1')
+w('.plasmac','raise','run')
+w('grid','.plasmac','-column','0','-row','1','-sticky','nsew','-rowspan','2','-pady','3')
+w('grid','columnconfigure','.','0','-weight','0')
+w('grid','columnconfigure','.','1','-weight','1')
 
 
 
@@ -640,15 +645,15 @@ root_window.tk.call('grid','columnconfigure','.','1','-weight','1')
 # some new commands for TCL
 def material_changed():
     if not materialsUpdate:
-        newmaterial = root_window.tk.call(fmaterial + '.materials','getvalue')
-        root_window.tk.call(fcutparms + '.pierce-height','set',materialsList[newmaterial][1])
-        root_window.tk.call(fcutparms + '.pierce-delay','set',materialsList[newmaterial][2])
-        root_window.tk.call(fcutparms + '.puddle-jump-height','set',materialsList[newmaterial][3])
-        root_window.tk.call(fcutparms + '.puddle-jump-delay','set',materialsList[newmaterial][4])
-        root_window.tk.call(fcutparms + '.cut-height','set',materialsList[newmaterial][5])
-        root_window.tk.call(fcutparms + '.cut-feed-rate','set',materialsList[newmaterial][6])
-        root_window.tk.call(fcutparms + '.cut-amps','set',materialsList[newmaterial][7])
-        root_window.tk.call(fcutparms + '.cut-volts','set',materialsList[newmaterial][8])
+        newmaterial = w(fmaterial + '.materials','getvalue')
+        w(fcutparms + '.pierce-height','set',materialsList[newmaterial][1])
+        w(fcutparms + '.pierce-delay','set',materialsList[newmaterial][2])
+        w(fcutparms + '.puddle-jump-height','set',materialsList[newmaterial][3])
+        w(fcutparms + '.puddle-jump-delay','set',materialsList[newmaterial][4])
+        w(fcutparms + '.cut-height','set',materialsList[newmaterial][5])
+        w(fcutparms + '.cut-feed-rate','set',materialsList[newmaterial][6])
+        w(fcutparms + '.cut-amps','set',materialsList[newmaterial][7])
+        w(fcutparms + '.cut-volts','set',materialsList[newmaterial][8])
 
 def save_config():
     try:
@@ -658,11 +663,11 @@ def save_config():
                 for widget in wCheckbuttons + wSpinboxes + wScalesConfig:
                     if widget.endswith(key):
                         if widget in wCheckbuttons:
-                            value = root_window.tk.call('set',key)
+                            value = w('set',key)
                             f_out.write(key + ' = ' + str(value) + '\n')
                             break
                         elif widget in wSpinboxes + wScalesConfig:
-                            value = root_window.tk.call(widget,'get')
+                            value = w(widget,'get')
                             f_out.write(key + ' = ' + str(value) + '\n')
                             break
     except:
@@ -677,7 +682,7 @@ def reload_config():
     load_settings()
     global materialsList
     materialsList = []
-    root_window.tk.call(fmaterial + '.materials','configure','-values','')
+    w(fmaterial + '.materials','configure','-values','')
     get_materials()
     materialsUpdate = False
 
@@ -697,9 +702,9 @@ def torch_pulse(value):
     hal.set_p('plasmac.torch-pulse-start',value)
 
 def paused_motion(direction):
-    if root_window.tk.call(fpausedmotion + '.forward','cget','-state') == 'normal' or\
-       root_window.tk.call(fpausedmotion + '.reverse','cget','-state') == 'normal':
-        speed = float(root_window.tk.call(fpausedmotion + '.paused-motion-speed','get'))
+    if w(fpausedmotion + '.forward','cget','-state') == 'normal' or\
+       w(fpausedmotion + '.reverse','cget','-state') == 'normal':
+        speed = float(w(fpausedmotion + '.paused-motion-speed','get'))
         hal.set_p('plasmac.paused-motion-speed','%f' % (speed * int(direction)))
 
 def goto_home(axis):
@@ -712,14 +717,14 @@ def goto_home(axis):
 
 def joint_mode_switch(a,b,c):
     if vars.motion_mode.get() == linuxcnc.TRAJ_MODE_FREE and s.kinematics_type != linuxcnc.KINEMATICS_IDENTITY:
-        root_window.tk.call('grid','forget',fmanual + '.axes')
-        root_window.tk.call('grid',fmanual + '.joints','-column','0','-row','0','-padx','4','-pady','0','-sticky','ew')
+        w('grid','forget',fmanual + '.axes')
+        w('grid',fmanual + '.joints','-column','0','-row','0','-padx','4','-pady','0','-sticky','ew')
         widget = getattr(widgets, "joint_%d" % 0)
         widget.focus()
         vars.ja_rbutton.set(0)
     else:
-        root_window.tk.call('grid','forget',fmanual + '.joints')
-        root_window.tk.call('grid',fmanual + '.axes','-column','0','-row','0','-padx','4','-pady','0','-sticky','ew')
+        w('grid','forget',fmanual + '.joints')
+        w('grid',fmanual + '.axes','-column','0','-row','0','-padx','4','-pady','0','-sticky','ew')
         widget = getattr(widgets, "axis_%s" % first_axis)
         widget.focus()
         vars.ja_rbutton.set(first_axis)
@@ -758,15 +763,15 @@ def user_live_update():
     if not firstrundone:
         configDisable = inifile.find('PLASMAC', 'CONFIG_DISABLE') or '0'
         hal.set_p('axisui.config-disable',configDisable)
-        spaceWidth = root_window.tk.call('winfo','width',fmanual)
-        spaceWidth -= root_window.tk.call('winfo','width',fmonitor)
-        spaceWidth -= root_window.tk.call('winfo','width',fbuttons)
-        root_window.tk.call(fcommon + '.spaceframe','configure','-width',spaceWidth)
+        spaceWidth = w('winfo','width',fmanual)
+        spaceWidth -= w('winfo','width',fmonitor)
+        spaceWidth -= w('winfo','width',fbuttons)
+        w(fcommon + '.spaceframe','configure','-width',spaceWidth)
         firstrundone = 1
     for widget in wSpinboxes + wScalesHal:
         tmp, item = widget.rsplit('.',1)
         if item != 'cut-amps':
-            value = float(root_window.tk.call(widget,'get'))
+            value = float(w(widget,'get'))
             if value != widgetValues[widget]:
                 widgetValues[widget] = value
                 if item == 'arc-max-starts':
@@ -774,10 +779,10 @@ def user_live_update():
                 else:
                     hal.set_p('plasmac.%s' % (item),'%f' % (value))
                 if item == 'setup-feed-rate': #limit max probe feed rate to setup feed rate
-                    root_window.tk.call(fmotion + '.probe-feed-rate','configure','-to',value)
+                    w(fmotion + '.probe-feed-rate','configure','-to',value)
     for widget in wCheckbuttons:
         tmp, item = widget.rsplit('.',1)
-        value = int(root_window.tk.call('set',item))
+        value = int(w('set',item))
         if value != widgetValues[widget]:
             widgetValues[widget] = value
             hal.set_p('plasmac.%s' % (item),'%d' % (value))
@@ -786,34 +791,34 @@ def user_live_update():
         if comp[item] != widgetValues[widget]:
             widgetValues[widget] = comp[item]
             if comp[item] == 1:
-                root_window.tk.call(widget,'configure','-state','normal')
+                w(widget,'configure','-state','normal')
             else:
-                root_window.tk.call(widget,'configure','-state','disabled')
-    root_window.tk.call(fmonitor + '.arc-voltage','configure','-text','%0.1f' % (comp['arc-voltage']))
+                w(widget,'configure','-state','disabled')
+    w(fmonitor + '.arc-voltage','configure','-text','%0.1f' % (comp['arc-voltage']))
     if all_homed() and hal.get_value('halui.program.is-idle'):
-        root_window.tk.call(fbuttons + '.xtohome','configure','-state','normal')
-        root_window.tk.call(fbuttons + '.ytohome','configure','-state','normal')
-        root_window.tk.call(fbuttons + '.ztohome','configure','-state','normal')
-        root_window.tk.call(fbuttons + '.dryRun','configure','-state','normal')
+        w(fbuttons + '.xtohome','configure','-state','normal')
+        w(fbuttons + '.ytohome','configure','-state','normal')
+        w(fbuttons + '.ztohome','configure','-state','normal')
+        w(fbuttons + '.dryRun','configure','-state','normal')
     else:
-        root_window.tk.call(fbuttons + '.xtohome','configure','-state','disabled')
-        root_window.tk.call(fbuttons + '.ytohome','configure','-state','disabled')
-        root_window.tk.call(fbuttons + '.ztohome','configure','-state','disabled')
-        root_window.tk.call(fbuttons + '.dryRun','configure','-state','disabled')
+        w(fbuttons + '.xtohome','configure','-state','disabled')
+        w(fbuttons + '.ytohome','configure','-state','disabled')
+        w(fbuttons + '.ztohome','configure','-state','disabled')
+        w(fbuttons + '.dryRun','configure','-state','disabled')
     if hal.get_value('halui.machine.is-on') and hal.get_value('halui.program.is-idle'):
-        root_window.tk.call(ftorch + '.torch-button','configure','-state','normal')
+        w(ftorch + '.torch-button','configure','-state','normal')
     else:
-        root_window.tk.call(ftorch + '.torch-button','configure','-state','disabled')
+        w(ftorch + '.torch-button','configure','-state','disabled')
     if hal.get_value('halui.program.is-paused') or hal.get_value('plasmac.paused-motion-speed'):
-        root_window.tk.call(fpausedmotion + '.reverse','configure','-state','normal')
-        root_window.tk.call(fpausedmotion + '.forward','configure','-state','normal')
+        w(fpausedmotion + '.reverse','configure','-state','normal')
+        w(fpausedmotion + '.forward','configure','-state','normal')
     else:
-        root_window.tk.call(fpausedmotion + '.reverse','configure','-state','disabled')
-        root_window.tk.call(fpausedmotion + '.forward','configure','-state','disabled')
+        w(fpausedmotion + '.reverse','configure','-state','disabled')
+        w(fpausedmotion + '.forward','configure','-state','disabled')
     if hal.get_value('axisui.config-disable'):
-        root_window.tk.call('.plasmac','itemconfigure','config','-state','disabled')
+        w('.plasmac','itemconfigure','config','-state','disabled')
     else:
-        root_window.tk.call('.plasmac','itemconfigure','config','-state','normal')
+        w('.plasmac','itemconfigure','config','-state','normal')
 
 
 def user_hal_pins():
@@ -851,50 +856,50 @@ def user_hal_pins():
     hal.connect('axisui.led-torch','plasmac:torch-on')
 
 def configure_widgets():
-    root_window.tk.call(ftorch + '.torch-pulse-time','configure','-from','0','-to','3','-resolution','0.1')
-    root_window.tk.call(foverride + '.height-override','configure','-from','-10','-to','10','-resolution','0.1') #0
-    root_window.tk.call(fpausedmotion + '.paused-motion-speed','configure','-from','.01','-to','1','-resolution','0.01') #0
-    root_window.tk.call(fcutparms + '.pierce-delay','configure','-from','0','-to','10','-increment','0.1','-format','%0.1f') #0.1
-    root_window.tk.call(fcutparms + '.puddle-jump-height','configure','-from','0','-to','200','-increment','1','-format','%0.0f') #0
-    root_window.tk.call(fcutparms + '.puddle-jump-delay','configure','-from','0','-to','9','-increment','0.01','-format','%0.2f') #0
-    root_window.tk.call(fcutparms + '.cut-amps','configure','-from','0','-to','999','-increment','1','-format','%0.0f') #45
-    root_window.tk.call(fcutparms + '.cut-volts','configure','-from','50','-to','300','-increment','0.1','-format','%0.1f') #122
-    root_window.tk.call(fthc + '.use-auto-volts','select')
-    root_window.tk.call(fthc + '.thc-enable','select')
-    root_window.tk.call(fthc + '.thc-threshold','configure','-from','0.05','-to','9','-increment','0.01','-format','%0.2f') #1
-    root_window.tk.call(fcornerlock + '.cornerlock-enable','select')
-    root_window.tk.call(fcornerlock + '.cornerlock-threshold','configure','-from','1','-to','99','-increment','1','-format','%0.0f') #90
-    root_window.tk.call(fkerflock + '.kerfcross-enable','select')
-    root_window.tk.call(fkerflock + '.kerfcross-threshold','configure','-from','1','-to','10','-increment','0.1','-format','%0.1f') #3
-    root_window.tk.call(farc + '.torch-off-delay','configure','-from','0','-to','9','-increment','0.1','-format','%0.1f') #0
-    root_window.tk.call(farc + '.arc-fail-delay','configure','-from','0','-to','60','-increment','0.1','-format','%0.1f') #1
-    root_window.tk.call(farc + '.arc-ok-low','configure','-from','0','-to','200','-increment','0.5','-format','%0.1f') #0
-    root_window.tk.call(farc + '.arc-ok-high','configure','-from','50','-to','200','-increment','0.5','-format','%0.1f') #50
-    root_window.tk.call(farc + '.arc-max-starts','configure','-from','1','-to','9','-increment','1','-format','%0.0f') #3
-    root_window.tk.call(farc + '.restart-delay','configure','-from','1','-to','60','-increment','1','-format','%0.0f') #1
-    root_window.tk.call(farc + '.arc-voltage-offset','configure','-from','-100','-to','100','-increment','0.1','-format','%0.1f') #0
-    root_window.tk.call(farc + '.arc-voltage-scale','configure','-from','0.01','-to','99','-increment','0.01','-format','%0.2f') #1
-    root_window.tk.call(foffsets + '.maxspeed','configure','-text',str(int(thcFeedRate)))
-    root_window.tk.call(foffsets + '.pid-i-gain','configure','-from','0','-to','1000','-increment','1','-format','%0.0f') #0
-    root_window.tk.call(foffsets + '.pid-d-gain','configure','-from','0','-to','1000','-increment','1','-format','%0.0f') #0
+    w(ftorch + '.torch-pulse-time','configure','-from','0','-to','3','-resolution','0.1')
+    w(foverride + '.height-override','configure','-from','-10','-to','10','-resolution','0.1') #0
+    w(fpausedmotion + '.paused-motion-speed','configure','-from','.01','-to','1','-resolution','0.01') #0
+    w(fcutparms + '.pierce-delay','configure','-from','0','-to','10','-increment','0.1','-format','%0.1f') #0.1
+    w(fcutparms + '.puddle-jump-height','configure','-from','0','-to','200','-increment','1','-format','%0.0f') #0
+    w(fcutparms + '.puddle-jump-delay','configure','-from','0','-to','9','-increment','0.01','-format','%0.2f') #0
+    w(fcutparms + '.cut-amps','configure','-from','0','-to','999','-increment','1','-format','%0.0f') #45
+    w(fcutparms + '.cut-volts','configure','-from','50','-to','300','-increment','0.1','-format','%0.1f') #122
+    w(fthc + '.use-auto-volts','select')
+    w(fthc + '.thc-enable','select')
+    w(fthc + '.thc-threshold','configure','-from','0.05','-to','9','-increment','0.01','-format','%0.2f') #1
+    w(fcornerlock + '.cornerlock-enable','select')
+    w(fcornerlock + '.cornerlock-threshold','configure','-from','1','-to','99','-increment','1','-format','%0.0f') #90
+    w(fkerflock + '.kerfcross-enable','select')
+    w(fkerflock + '.kerfcross-threshold','configure','-from','1','-to','10','-increment','0.1','-format','%0.1f') #3
+    w(farc + '.torch-off-delay','configure','-from','0','-to','9','-increment','0.1','-format','%0.1f') #0
+    w(farc + '.arc-fail-delay','configure','-from','0','-to','60','-increment','0.1','-format','%0.1f') #1
+    w(farc + '.arc-ok-low','configure','-from','0','-to','200','-increment','0.5','-format','%0.1f') #0
+    w(farc + '.arc-ok-high','configure','-from','50','-to','200','-increment','0.5','-format','%0.1f') #50
+    w(farc + '.arc-max-starts','configure','-from','1','-to','9','-increment','1','-format','%0.0f') #3
+    w(farc + '.restart-delay','configure','-from','1','-to','60','-increment','1','-format','%0.0f') #1
+    w(farc + '.arc-voltage-offset','configure','-from','-100','-to','100','-increment','0.1','-format','%0.1f') #0
+    w(farc + '.arc-voltage-scale','configure','-from','0.01','-to','99','-increment','0.01','-format','%0.2f') #1
+    w(foffsets + '.maxspeed','configure','-text',str(int(thcFeedRate)))
+    w(foffsets + '.pid-i-gain','configure','-from','0','-to','1000','-increment','1','-format','%0.0f') #0
+    w(foffsets + '.pid-d-gain','configure','-from','0','-to','1000','-increment','1','-format','%0.0f') #0
     if inifile.find('TRAJ','LINEAR_UNITS').lower() == 'mm':
-        root_window.tk.call(fcutparms + '.cut-feed-rate','configure','-from','50','-to','9999','-increment','1','-format','%0.0f') #4000
-        root_window.tk.call(fcutparms + '.cut-height','configure','-from','0','-to','25.4','-increment','0.1','-format','%0.1f') #1
-        root_window.tk.call(fcutparms + '.pierce-height','configure','-from','0','-to','25.4','-increment','0.1','-format','%0.1f') #4
-        root_window.tk.call(fmotion + '.float-switch-travel','configure','-from','0','-to','20','-increment','0.01','-format','%0.2f') #1.5
-        root_window.tk.call(fmotion + '.probe-feed-rate','configure','-from','1','-to',thcFeedRate,'-increment','1','-format','%0.0f') #300
-        root_window.tk.call(fmotion + '.safe-height','configure','-from','1','-to','99','-increment','1','-format','%0.0f') #20
-        root_window.tk.call(fmotion + '.skip-ihs-distance','configure','-from','0','-to','999','-increment','1','-format','%0.0f') #0
-        root_window.tk.call(foffsets + '.setup-feed-rate','configure','-from','1','-to',thcFeedRate,'-increment','1','-format','%0.0f') #int(thcFeedRate * 0.8)
+        w(fcutparms + '.cut-feed-rate','configure','-from','50','-to','9999','-increment','1','-format','%0.0f') #4000
+        w(fcutparms + '.cut-height','configure','-from','0','-to','25.4','-increment','0.1','-format','%0.1f') #1
+        w(fcutparms + '.pierce-height','configure','-from','0','-to','25.4','-increment','0.1','-format','%0.1f') #4
+        w(fmotion + '.float-switch-travel','configure','-from','0','-to','20','-increment','0.01','-format','%0.2f') #1.5
+        w(fmotion + '.probe-feed-rate','configure','-from','1','-to',thcFeedRate,'-increment','1','-format','%0.0f') #300
+        w(fmotion + '.safe-height','configure','-from','1','-to','99','-increment','1','-format','%0.0f') #20
+        w(fmotion + '.skip-ihs-distance','configure','-from','0','-to','999','-increment','1','-format','%0.0f') #0
+        w(foffsets + '.setup-feed-rate','configure','-from','1','-to',thcFeedRate,'-increment','1','-format','%0.0f') #int(thcFeedRate * 0.8)
     elif inifile.find('TRAJ','LINEAR_UNITS').lower() == 'inch':
-        root_window.tk.call(fcutparms + '.cut-feed-rate','configure','-from','2','-to','400','-increment','0.1','-format','%0.1f') #160
-        root_window.tk.call(fcutparms + '.cut-height','configure','-from','0','-to','1','-increment','0.01','-format','%0.2f') #0.04
-        root_window.tk.call(fcutparms + '.pierce-height','configure','-from','0','-to','1','-increment','0.01','-format','%0.2f') #0.16
-        root_window.tk.call(fmotion + '.float-switch-travel','configure','-from','0','-to','0.75','-increment','0.001','-format','%0.3f') #0.06
-        root_window.tk.call(fmotion + '.probe-feed-rate','configure','-from','0.1','-to',thcFeedRate,'-increment','0.1','-format','%0.1f') #12
-        root_window.tk.call(fmotion + '.safe-height','configure','-from','0.04','-to','4','-increment','0.01','-format','%0.2f') #0.75
-        root_window.tk.call(fmotion + '.skip-ihs-distance','configure','-from','0','-to','99','-increment','0.1','-format','%0.1f') #0
-        root_window.tk.call(foffsets + '.setup-feed-rate','configure','-from','0.1','-to',thcFeedRate,'-increment','0.1','-format','%0.1f') #int(thcFeedRate * 0.8)
+        w(fcutparms + '.cut-feed-rate','configure','-from','2','-to','400','-increment','0.1','-format','%0.1f') #160
+        w(fcutparms + '.cut-height','configure','-from','0','-to','1','-increment','0.01','-format','%0.2f') #0.04
+        w(fcutparms + '.pierce-height','configure','-from','0','-to','1','-increment','0.01','-format','%0.2f') #0.16
+        w(fmotion + '.float-switch-travel','configure','-from','0','-to','0.75','-increment','0.001','-format','%0.3f') #0.06
+        w(fmotion + '.probe-feed-rate','configure','-from','0.1','-to',thcFeedRate,'-increment','0.1','-format','%0.1f') #12
+        w(fmotion + '.safe-height','configure','-from','0.04','-to','4','-increment','0.01','-format','%0.2f') #0.75
+        w(fmotion + '.skip-ihs-distance','configure','-from','0','-to','99','-increment','0.1','-format','%0.1f') #0
+        w(foffsets + '.setup-feed-rate','configure','-from','0.1','-to',thcFeedRate,'-increment','0.1','-format','%0.1f') #int(thcFeedRate * 0.8)
     else:
         print '*** incorrect [TRAJ]LINEAR_UNITS in ini file'
 
@@ -928,26 +933,26 @@ def load_settings():
             if widget in wCheckbuttons:
                 if item in tmpDict:
                     if configDict.get(item) == '1':
-                        root_window.tk.call(widget,'select')
+                        w(widget,'select')
                         hal.set_p('plasmac.%s' % (item),'1')
                     else:
-                        root_window.tk.call(widget,'deselect')
+                        w(widget,'deselect')
                         hal.set_p('plasmac.%s' % (item),'0')
                 else:
-                    root_window.tk.call(widget,'deselect')
+                    w(widget,'deselect')
                     hal.set_p('plasmac.%s' % (item),'0')
                     print '***', item, 'missing from', configFile
             elif widget in wSpinboxes + wScalesConfig:
                 if item in tmpDict:
                     if item == 'setup-feed-rate' and float(configDict.get(item)) > thcFeedRate:
                         configDict[item] = thcFeedRate
-                    root_window.tk.call(widget,'set',configDict.get(item))
+                    w(widget,'set',configDict.get(item))
                     if item == 'arc-max-starts':
                         hal.set_p('plasmac.%s' % (item),'%d' % (float(configDict.get(item))))
                     elif item != 'cut-amps' and item != 'paused-motion-speed':
                         hal.set_p('plasmac.%s' % (item),'%f' % (float(configDict.get(item))))
                 else:
-                    root_window.tk.call(widget,'set','0')
+                    w(widget,'set','0')
                     print '***', item, 'missing from', configFile
         if convertFile:
             print '*** converting', configFile, 'to new format'
@@ -1004,21 +1009,21 @@ def check_materials_file():
 
 def get_materials():
     name = 'Default'
-    p_height = root_window.tk.call(fcutparms + '.pierce-height','get')
-    p_delay = root_window.tk.call(fcutparms + '.pierce-delay','get')
-    pj_height = root_window.tk.call(fcutparms + '.puddle-jump-height','get')
-    pj_delay = root_window.tk.call(fcutparms + '.puddle-jump-delay','get')
-    c_height = root_window.tk.call(fcutparms + '.cut-height','get')
-    c_speed = root_window.call(fcutparms + '.cut-feed-rate','get')
-    c_amps = root_window.tk.call(fcutparms + '.cut-amps','get')
-    c_volts = root_window.tk.call(fcutparms + '.cut-volts','get')
+    p_height = w(fcutparms + '.pierce-height','get')
+    p_delay = w(fcutparms + '.pierce-delay','get')
+    pj_height = w(fcutparms + '.puddle-jump-height','get')
+    pj_delay = w(fcutparms + '.puddle-jump-delay','get')
+    c_height = w(fcutparms + '.cut-height','get')
+    c_speed = w(fcutparms + '.cut-feed-rate','get')
+    c_amps = w(fcutparms + '.cut-amps','get')
+    c_volts = w(fcutparms + '.cut-volts','get')
     try:
         with open(materialsFile, 'r') as f_in:
             for line in f_in:
                 if not line.startswith('#'):
                     if line.startswith('[') and line.strip().endswith(']') and not 'VERSION' in line:
                         materialsList.append([name, p_height, p_delay, pj_height, pj_delay, c_height, c_speed, c_amps, c_volts])
-                        root_window.tk.call(fmaterial + '.materials','insert','end',name)
+                        w(fmaterial + '.materials','insert','end',name)
                         name = line.strip().lstrip('[').rstrip(']')
                         p_height = p_delay = pj_height = pj_delay = c_height = c_speed = c_amps = c_volts = 0
                     elif line.startswith('PIERCE_HEIGHT'):
@@ -1038,8 +1043,8 @@ def get_materials():
                     elif line.startswith('CUT_VOLTS'):
                         c_volts = float(line.split('=')[1].strip())
             materialsList.append([name, p_height, p_delay, pj_height, pj_delay, c_height, c_speed, c_amps, c_volts])
-            root_window.tk.call(fmaterial + '.materials','insert','end',name)
-        root_window.tk.call(fmaterial + '.materials','setvalue','first')
+            w(fmaterial + '.materials','insert','end',name)
+        w(fmaterial + '.materials','setvalue','first')
     except:
         print '*** materials file,', materialsFile, 'is invalid'
     finally:
@@ -1047,35 +1052,35 @@ def get_materials():
 
 def set_mode(mode):
     if mode == '0':
-        root_window.tk.call(fthc + '.pid-p-gain','configure','-from','0','-to',maxPidP,'-increment','1','-format','%0.0f') #25
+        w(fthc + '.pid-p-gain','configure','-from','0','-to',maxPidP,'-increment','1','-format','%0.0f') #25
     elif mode == '1':
-        root_window.tk.call(fthc + '.pid-p-gain','configure','-from','0','-to',maxPidP,'-increment','1','-format','%0.0f') #25
-        root_window.tk.call('grid','forget',farc + '.arc-ok-high')
-        root_window.tk.call('grid','forget',farc + '.aOHlab')
-        root_window.tk.call('grid','forget',farc + '.arc-ok-low')
-        root_window.tk.call('grid','forget',farc + '.aOLlab')
+        w(fthc + '.pid-p-gain','configure','-from','0','-to',maxPidP,'-increment','1','-format','%0.0f') #25
+        w('grid','forget',farc + '.arc-ok-high')
+        w('grid','forget',farc + '.aOHlab')
+        w('grid','forget',farc + '.arc-ok-low')
+        w('grid','forget',farc + '.aOLlab')
     elif mode == '2':
-        root_window.tk.call(fthc + '.pid-p-gain','configure','-from','0','-to','100','-increment','1','-format','%0.0f') #25
-        root_window.tk.call(fthc + '.pPGlab','configure','-text','Speed (%)')
-        root_window.tk.call('grid','forget',fthc + '.use-auto-volts')
-        root_window.tk.call('grid','forget',fthc + '.uAVlab') 
-        root_window.tk.call('grid','forget',fthc + '.thc-threshold')
-        root_window.tk.call('grid','forget',fthc + '.tTlab')
-        root_window.tk.call('pack','forget',fkerflock)
-        root_window.tk.call('grid','forget',farc + '.arc-ok-high')
-        root_window.tk.call('grid','forget',farc + '.aOHlab')
-        root_window.tk.call('grid','forget',farc + '.arc-ok-low')
-        root_window.tk.call('grid','forget',farc + '.aOLlab')
-        root_window.tk.call('grid','forget',farc + '.arc-voltage-scale')
-        root_window.tk.call('grid','forget',farc + '.aVSlab')
-        root_window.tk.call('grid','forget',farc + '.arc-voltage-offset')
-        root_window.tk.call('grid','forget',farc + '.aVOlab')
-        root_window.tk.call('grid','forget',foffsets + '.pid-i-gain')
-        root_window.tk.call('grid','forget',foffsets + '.pIGlab')
-        root_window.tk.call('grid','forget',foffsets + '.pid-d-gain')
-        root_window.tk.call('grid','forget',foffsets + '.pDGlab')
-        root_window.tk.call('grid','forget',fmonitor + '.arc-voltage')
-        root_window.tk.call('grid','forget',fmonitor + '.aVlab')
+        w(fthc + '.pid-p-gain','configure','-from','0','-to','100','-increment','1','-format','%0.0f') #25
+        w(fthc + '.pPGlab','configure','-text','Speed (%)')
+        w('grid','forget',fthc + '.use-auto-volts')
+        w('grid','forget',fthc + '.uAVlab') 
+        w('grid','forget',fthc + '.thc-threshold')
+        w('grid','forget',fthc + '.tTlab')
+        w('pack','forget',fkerflock)
+        w('grid','forget',farc + '.arc-ok-high')
+        w('grid','forget',farc + '.aOHlab')
+        w('grid','forget',farc + '.arc-ok-low')
+        w('grid','forget',farc + '.aOLlab')
+        w('grid','forget',farc + '.arc-voltage-scale')
+        w('grid','forget',farc + '.aVSlab')
+        w('grid','forget',farc + '.arc-voltage-offset')
+        w('grid','forget',farc + '.aVOlab')
+        w('grid','forget',foffsets + '.pid-i-gain')
+        w('grid','forget',foffsets + '.pIGlab')
+        w('grid','forget',foffsets + '.pid-d-gain')
+        w('grid','forget',foffsets + '.pDGlab')
+        w('grid','forget',fmonitor + '.arc-voltage')
+        w('grid','forget',fmonitor + '.aVlab')
     hal.set_p('plasmac.mode','%d' % (int(mode)))
 
 
@@ -1204,19 +1209,19 @@ load_settings()
 check_materials_file()
 get_materials()
 for widget in wSpinboxes:
-    root_window.tk.call(widget,'configure','-wrap','1','-width',swidth,'-font',font,'-justify','r')
+    w(widget,'configure','-wrap','1','-width',swidth,'-font',font,'-justify','r')
 for widget in wLabels:
-    root_window.tk.call(widget,'configure','-anchor','w','-width',lwidth)
+    w(widget,'configure','-anchor','w','-width',lwidth)
 widgetValues={}
 for widget in wSpinboxes + wScales:
-        widgetValues[widget] = float(root_window.tk.call(widget,'get'))
+        widgetValues[widget] = float(w(widget,'get'))
 for widget in wCheckbuttons:
     tmp, item = widget.rsplit('.',1)
-    widgetValues[widget] = int(root_window.tk.call('set',item))
+    widgetValues[widget] = int(w('set',item))
 for widget in wLeds:
-    root_window.tk.call(widget,'configure','-state','disabled')
+    w(widget,'configure','-state','disabled')
     widgetValues[widget] = 0
-root_window.tk.call(fmotion + '.probe-feed-rate','configure','-to',widgetValues[foffsets + '.setup-feed-rate'])
+w(fmotion + '.probe-feed-rate','configure','-to',widgetValues[foffsets + '.setup-feed-rate'])
 units = hal.get_value('halui.machine.units-per-mm')
 maxPidP = thcFeedRate / units * 0.1
 mode = inifile.find('PLASMAC','MODE') or '0'
@@ -1256,13 +1261,13 @@ my_widget = [\
 ]
 for widget in my_widget:
     print '\n********** BEGIN',widget,'**********'
-    print '\nwidget',widget,'is a',root_window.tk.call('winfo','class',widget)
-    print '\nmanager =',root_window.tk.call('winfo','manager',widget)
-    print '\nparent is:',root_window.tk.call('winfo','parent',widget)
+    print '\nwidget',widget,'is a',w('winfo','class',widget)
+    print '\nmanager =',w('winfo','manager',widget)
+    print '\nparent is:',w('winfo','parent',widget)
     print '\nchildren are:'
-    for item in root_window.tk.call('winfo','children',widget):
-        print '  ',item,'which is managed by',root_window.tk.call('winfo','manager',item)
+    for item in w('winfo','children',widget):
+        print '  ',item,'which is managed by',w('winfo','manager',item)
     print '\nvalid options are:'
-    for item in range (len(root_window.tk.call(widget,'configure'))):
-        print '  ',root_window.tk.call(widget,'configure')[item]
+    for item in range (len(w(widget,'configure'))):
+        print '  ',w(widget,'configure')[item]
     print '\n********** END',widget,'**********\n'
