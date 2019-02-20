@@ -1,0 +1,49 @@
+QWidget {
+    background-color: rgb(180, 180, 180)
+}
+
+QPushButton::disabled {
+    color: rgb(220, 220, 220)
+}
+
+QScrollBar {
+    background-color: rgb(130, 130, 130)
+}
+
+QScrollBar::down-button {
+    width: 24px;
+    height:24px;
+    subcontrol-origin: border;
+    subcontrol-position: top right
+}
+
+QDoubleSpinBox {
+/*    padding-right: 23px; /* make room for the arrows */
+    background-color: rgb(220, 220, 220);
+    border: 2px solid rgb(125, 125, 125);
+    border-radius: 5px
+}
+
+QDoubleSpinBox::up-button {
+    width: 24px;
+    height: 24px;
+    subcontrol-origin: border;
+    subcontrol-position: top left;
+/*    border-right: 1px solid rgb(0, 0, 0)*/
+}
+
+QDoubleSpinBox::down-button {
+    width: 24px;
+    height:24px;
+    subcontrol-origin: border;
+    subcontrol-position: top right;
+/*    border-left: 1px solid rgb(0, 0, 0)*/
+}
+/*
+QDoubleSpinBox::up-arrow {
+    image: url(:/images/up_arrow.png);
+    text: +;
+    width: 3px;
+    height: 3px;
+}
+*/

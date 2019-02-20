@@ -6,6 +6,10 @@ EntryDialog-geometry = 6 51 640 480
 toolDialog_play_sound = True
 toolDialog_sound_type = RING
 CamViewDialog-geometry = 789 451 358 315
+OriginOffsetDialog-geometry = 135 55 360 243
+CalculatorDialog-geometry = 0 0 640 480
+CalculatorDialog_play_sound = True
+CalculatorDialog_sound_type = RING
 
 [BOOK_KEEPING]
 last_file_path = /home/phill/linuxcnc/nc_files/plasmac
@@ -15,6 +19,7 @@ catch_errors = True
 desktop_notify = False
 shutdown_check = False
 sound_player_on = False
+mainwindow_geometry = 288 149 1062 740
 
 [MCH_MSG_OPTIONS]
 mchnMsg_play_sound = True

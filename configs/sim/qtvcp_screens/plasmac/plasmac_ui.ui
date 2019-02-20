@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1024</width>
-    <height>768</height>
+    <width>1062</width>
+    <height>740</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -18,14 +18,14 @@
   </property>
   <property name="minimumSize">
    <size>
-    <width>1024</width>
-    <height>768</height>
+    <width>1062</width>
+    <height>740</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
-    <width>1024</width>
-    <height>768</height>
+    <width>1062</width>
+    <height>740</height>
    </size>
   </property>
   <property name="font">
@@ -38,7 +38,7 @@
    <string>PLASMAP</string>
   </property>
   <property name="styleSheet">
-   <string notr="true">background-color: rgb(186, 189, 182);</string>
+   <string notr="true"/>
   </property>
   <property name="animated">
    <bool>false</bool>
@@ -66,8 +66,8 @@
     <property name="geometry">
      <rect>
       <x>2</x>
-      <y>26</y>
-      <width>178</width>
+      <y>2</y>
+      <width>216</width>
       <height>717</height>
      </rect>
     </property>
@@ -104,7 +104,7 @@
        <rect>
         <x>0</x>
         <y>461</y>
-        <width>174</width>
+        <width>212</width>
         <height>102</height>
        </rect>
       </property>
@@ -119,7 +119,7 @@
         <rect>
          <x>2</x>
          <y>2</y>
-         <width>170</width>
+         <width>208</width>
          <height>98</height>
         </rect>
        </property>
@@ -138,7 +138,7 @@
        <widget class="QCheckBox" name="cornerlock_enable">
         <property name="geometry">
          <rect>
-          <x>50</x>
+          <x>90</x>
           <y>20</y>
           <width>118</width>
           <height>24</height>
@@ -153,7 +153,7 @@
          <rect>
           <x>2</x>
           <y>46</y>
-          <width>62</width>
+          <width>102</width>
           <height>24</height>
          </rect>
         </property>
@@ -179,7 +179,7 @@
        <widget class="QLabel" name="label_15">
         <property name="geometry">
          <rect>
-          <x>70</x>
+          <x>110</x>
           <y>46</y>
           <width>98</width>
           <height>24</height>
@@ -192,7 +192,7 @@
        <widget class="QLabel" name="label_18">
         <property name="geometry">
          <rect>
-          <x>70</x>
+          <x>110</x>
           <y>72</y>
           <width>98</width>
           <height>24</height>
@@ -205,7 +205,7 @@
        <widget class="LED" name="cornerlock_locked_led">
         <property name="geometry">
          <rect>
-          <x>46</x>
+          <x>86</x>
           <y>74</y>
           <width>24</width>
           <height>24</height>
@@ -226,7 +226,7 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>174</width>
+        <width>212</width>
         <height>48</height>
        </rect>
       </property>
@@ -241,7 +241,7 @@
         <rect>
          <x>1</x>
          <y>1</y>
-         <width>170</width>
+         <width>212</width>
          <height>46</height>
         </rect>
        </property>
@@ -256,7 +256,7 @@
          <rect>
           <x>2</x>
           <y>20</y>
-          <width>168</width>
+          <width>206</width>
           <height>24</height>
          </rect>
         </property>
@@ -274,7 +274,7 @@
        <rect>
         <x>0</x>
         <y>49</y>
-        <width>174</width>
+        <width>212</width>
         <height>230</height>
        </rect>
       </property>
@@ -292,7 +292,7 @@
         <rect>
          <x>1</x>
          <y>1</y>
-         <width>170</width>
+         <width>208</width>
          <height>228</height>
         </rect>
        </property>
@@ -310,7 +310,7 @@
          <rect>
           <x>2</x>
           <y>20</y>
-          <width>62</width>
+          <width>102</width>
           <height>24</height>
          </rect>
         </property>
@@ -338,7 +338,7 @@
          <rect>
           <x>2</x>
           <y>46</y>
-          <width>62</width>
+          <width>102</width>
           <height>24</height>
          </rect>
         </property>
@@ -366,7 +366,7 @@
          <rect>
           <x>2</x>
           <y>72</y>
-          <width>62</width>
+          <width>102</width>
           <height>24</height>
          </rect>
         </property>
@@ -394,7 +394,7 @@
          <rect>
           <x>2</x>
           <y>98</y>
-          <width>62</width>
+          <width>102</width>
           <height>24</height>
          </rect>
         </property>
@@ -422,7 +422,7 @@
          <rect>
           <x>2</x>
           <y>124</y>
-          <width>62</width>
+          <width>102</width>
           <height>24</height>
          </rect>
         </property>
@@ -456,7 +456,7 @@
          <rect>
           <x>2</x>
           <y>150</y>
-          <width>62</width>
+          <width>102</width>
           <height>24</height>
          </rect>
         </property>
@@ -490,7 +490,7 @@
          <rect>
           <x>2</x>
           <y>176</y>
-          <width>62</width>
+          <width>102</width>
           <height>24</height>
          </rect>
         </property>
@@ -515,7 +515,7 @@
          <rect>
           <x>2</x>
           <y>202</y>
-          <width>62</width>
+          <width>102</width>
           <height>24</height>
          </rect>
         </property>
@@ -541,7 +541,7 @@
        <widget class="QLabel" name="cVLabel">
         <property name="geometry">
          <rect>
-          <x>70</x>
+          <x>110</x>
           <y>202</y>
           <width>98</width>
           <height>24</height>
@@ -554,7 +554,7 @@
        <widget class="QLabel" name="label_10">
         <property name="geometry">
          <rect>
-          <x>70</x>
+          <x>110</x>
           <y>176</y>
           <width>98</width>
           <height>24</height>
@@ -567,7 +567,7 @@
        <widget class="QLabel" name="label_9">
         <property name="geometry">
          <rect>
-          <x>70</x>
+          <x>110</x>
           <y>150</y>
           <width>98</width>
           <height>24</height>
@@ -580,7 +580,7 @@
        <widget class="QLabel" name="label_8">
         <property name="geometry">
          <rect>
-          <x>70</x>
+          <x>110</x>
           <y>124</y>
           <width>98</width>
           <height>24</height>
@@ -593,7 +593,7 @@
        <widget class="QLabel" name="label_7">
         <property name="geometry">
          <rect>
-          <x>70</x>
+          <x>110</x>
           <y>98</y>
           <width>98</width>
           <height>24</height>
@@ -606,7 +606,7 @@
        <widget class="QLabel" name="label_6">
         <property name="geometry">
          <rect>
-          <x>70</x>
+          <x>110</x>
           <y>72</y>
           <width>98</width>
           <height>24</height>
@@ -619,7 +619,7 @@
        <widget class="QLabel" name="label_5">
         <property name="geometry">
          <rect>
-          <x>70</x>
+          <x>110</x>
           <y>46</y>
           <width>98</width>
           <height>24</height>
@@ -632,7 +632,7 @@
        <widget class="QLabel" name="label_4">
         <property name="geometry">
          <rect>
-          <x>70</x>
+          <x>110</x>
           <y>20</y>
           <width>98</width>
           <height>24</height>
@@ -649,7 +649,7 @@
        <rect>
         <x>0</x>
         <y>280</y>
-        <width>174</width>
+        <width>212</width>
         <height>180</height>
        </rect>
       </property>
@@ -664,7 +664,7 @@
         <rect>
          <x>2</x>
          <y>2</y>
-         <width>170</width>
+         <width>208</width>
          <height>176</height>
         </rect>
        </property>
@@ -677,7 +677,7 @@
        <widget class="QCheckBox" name="thc_enable">
         <property name="geometry">
          <rect>
-          <x>50</x>
+          <x>90</x>
           <y>20</y>
           <width>118</width>
           <height>24</height>
@@ -690,7 +690,7 @@
        <widget class="QCheckBox" name="use_auto_volts">
         <property name="geometry">
          <rect>
-          <x>50</x>
+          <x>90</x>
           <y>46</y>
           <width>118</width>
           <height>24</height>
@@ -703,7 +703,7 @@
        <widget class="QLabel" name="tTLabel">
         <property name="geometry">
          <rect>
-          <x>70</x>
+          <x>110</x>
           <y>72</y>
           <width>98</width>
           <height>24</height>
@@ -716,7 +716,7 @@
        <widget class="QLabel" name="pPLabel">
         <property name="geometry">
          <rect>
-          <x>70</x>
+          <x>110</x>
           <y>98</y>
           <width>98</width>
           <height>24</height>
@@ -729,7 +729,7 @@
        <widget class="QLabel" name="lULabel">
         <property name="geometry">
          <rect>
-          <x>70</x>
+          <x>110</x>
           <y>124</y>
           <width>98</width>
           <height>24</height>
@@ -742,7 +742,7 @@
        <widget class="QLabel" name="lDLabel">
         <property name="geometry">
          <rect>
-          <x>70</x>
+          <x>110</x>
           <y>150</y>
           <width>98</width>
           <height>24</height>
@@ -757,7 +757,7 @@
          <rect>
           <x>2</x>
           <y>72</y>
-          <width>62</width>
+          <width>102</width>
           <height>24</height>
          </rect>
         </property>
@@ -785,7 +785,7 @@
          <rect>
           <x>2</x>
           <y>98</y>
-          <width>62</width>
+          <width>102</width>
           <height>24</height>
          </rect>
         </property>
@@ -808,7 +808,7 @@
        <widget class="LED" name="up_led">
         <property name="geometry">
          <rect>
-          <x>46</x>
+          <x>86</x>
           <y>126</y>
           <width>24</width>
           <height>23</height>
@@ -825,7 +825,7 @@
        <widget class="LED" name="down_led">
         <property name="geometry">
          <rect>
-          <x>46</x>
+          <x>86</x>
           <y>152</y>
           <width>24</width>
           <height>24</height>
@@ -846,7 +846,7 @@
        <rect>
         <x>0</x>
         <y>564</y>
-        <width>174</width>
+        <width>212</width>
         <height>102</height>
        </rect>
       </property>
@@ -861,7 +861,7 @@
         <rect>
          <x>2</x>
          <y>2</y>
-         <width>170</width>
+         <width>208</width>
          <height>98</height>
         </rect>
        </property>
@@ -880,7 +880,7 @@
        <widget class="QCheckBox" name="kerfcross_enable">
         <property name="geometry">
          <rect>
-          <x>50</x>
+          <x>90</x>
           <y>20</y>
           <width>118</width>
           <height>24</height>
@@ -895,7 +895,7 @@
          <rect>
           <x>2</x>
           <y>46</y>
-          <width>62</width>
+          <width>102</width>
           <height>24</height>
          </rect>
         </property>
@@ -924,7 +924,7 @@
        <widget class="QLabel" name="label_20">
         <property name="geometry">
          <rect>
-          <x>70</x>
+          <x>110</x>
           <y>46</y>
           <width>98</width>
           <height>24</height>
@@ -937,7 +937,7 @@
        <widget class="QLabel" name="label_21">
         <property name="geometry">
          <rect>
-          <x>70</x>
+          <x>110</x>
           <y>72</y>
           <width>98</width>
           <height>24</height>
@@ -950,7 +950,7 @@
        <widget class="LED" name="kerfcross_locked_led">
         <property name="geometry">
          <rect>
-          <x>46</x>
+          <x>86</x>
           <y>74</y>
           <width>24</width>
           <height>24</height>
@@ -982,7 +982,7 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>174</width>
+        <width>212</width>
         <height>126</height>
        </rect>
       </property>
@@ -1000,7 +1000,7 @@
         <rect>
          <x>1</x>
          <y>1</y>
-         <width>170</width>
+         <width>208</width>
          <height>124</height>
         </rect>
        </property>
@@ -1018,7 +1018,7 @@
          <rect>
           <x>2</x>
           <y>20</y>
-          <width>62</width>
+          <width>102</width>
           <height>24</height>
          </rect>
         </property>
@@ -1040,7 +1040,7 @@
          <rect>
           <x>2</x>
           <y>46</y>
-          <width>62</width>
+          <width>102</width>
           <height>24</height>
          </rect>
         </property>
@@ -1062,7 +1062,7 @@
          <rect>
           <x>2</x>
           <y>72</y>
-          <width>62</width>
+          <width>102</width>
           <height>24</height>
          </rect>
         </property>
@@ -1087,7 +1087,7 @@
          <rect>
           <x>2</x>
           <y>98</y>
-          <width>62</width>
+          <width>102</width>
           <height>24</height>
          </rect>
         </property>
@@ -1110,7 +1110,7 @@
        <widget class="QLabel" name="label_24">
         <property name="geometry">
          <rect>
-          <x>70</x>
+          <x>110</x>
           <y>98</y>
           <width>98</width>
           <height>24</height>
@@ -1123,7 +1123,7 @@
        <widget class="QLabel" name="label_25">
         <property name="geometry">
          <rect>
-          <x>70</x>
+          <x>110</x>
           <y>72</y>
           <width>98</width>
           <height>24</height>
@@ -1136,7 +1136,7 @@
        <widget class="QLabel" name="label_26">
         <property name="geometry">
          <rect>
-          <x>70</x>
+          <x>110</x>
           <y>46</y>
           <width>98</width>
           <height>24</height>
@@ -1149,7 +1149,7 @@
        <widget class="QLabel" name="label_27">
         <property name="geometry">
          <rect>
-          <x>70</x>
+          <x>110</x>
           <y>20</y>
           <width>98</width>
           <height>24</height>
@@ -1166,7 +1166,7 @@
        <rect>
         <x>0</x>
         <y>127</y>
-        <width>174</width>
+        <width>212</width>
         <height>230</height>
        </rect>
       </property>
@@ -1184,7 +1184,7 @@
         <rect>
          <x>1</x>
          <y>1</y>
-         <width>170</width>
+         <width>208</width>
          <height>228</height>
         </rect>
        </property>
@@ -1202,7 +1202,7 @@
          <rect>
           <x>2</x>
           <y>20</y>
-          <width>62</width>
+          <width>102</width>
           <height>24</height>
          </rect>
         </property>
@@ -1227,7 +1227,7 @@
          <rect>
           <x>2</x>
           <y>46</y>
-          <width>62</width>
+          <width>102</width>
           <height>24</height>
          </rect>
         </property>
@@ -1252,7 +1252,7 @@
          <rect>
           <x>2</x>
           <y>72</y>
-          <width>62</width>
+          <width>102</width>
           <height>24</height>
          </rect>
         </property>
@@ -1274,7 +1274,7 @@
          <rect>
           <x>2</x>
           <y>98</y>
-          <width>62</width>
+          <width>102</width>
           <height>24</height>
          </rect>
         </property>
@@ -1302,7 +1302,7 @@
          <rect>
           <x>2</x>
           <y>124</y>
-          <width>62</width>
+          <width>102</width>
           <height>24</height>
          </rect>
         </property>
@@ -1336,7 +1336,7 @@
          <rect>
           <x>2</x>
           <y>150</y>
-          <width>62</width>
+          <width>102</width>
           <height>24</height>
          </rect>
         </property>
@@ -1370,7 +1370,7 @@
          <rect>
           <x>2</x>
           <y>176</y>
-          <width>62</width>
+          <width>102</width>
           <height>24</height>
          </rect>
         </property>
@@ -1395,7 +1395,7 @@
          <rect>
           <x>2</x>
           <y>202</y>
-          <width>62</width>
+          <width>102</width>
           <height>24</height>
          </rect>
         </property>
@@ -1418,7 +1418,7 @@
        <widget class="QLabel" name="aOLLabel">
         <property name="geometry">
          <rect>
-          <x>70</x>
+          <x>110</x>
           <y>202</y>
           <width>98</width>
           <height>24</height>
@@ -1431,7 +1431,7 @@
        <widget class="QLabel" name="aOHLabel">
         <property name="geometry">
          <rect>
-          <x>70</x>
+          <x>110</x>
           <y>176</y>
           <width>98</width>
           <height>24</height>
@@ -1444,7 +1444,7 @@
        <widget class="QLabel" name="aVOLabel">
         <property name="geometry">
          <rect>
-          <x>70</x>
+          <x>110</x>
           <y>150</y>
           <width>98</width>
           <height>24</height>
@@ -1457,7 +1457,7 @@
        <widget class="QLabel" name="aVSLabel">
         <property name="geometry">
          <rect>
-          <x>70</x>
+          <x>110</x>
           <y>124</y>
           <width>98</width>
           <height>24</height>
@@ -1470,7 +1470,7 @@
        <widget class="QLabel" name="label_32">
         <property name="geometry">
          <rect>
-          <x>70</x>
+          <x>110</x>
           <y>98</y>
           <width>98</width>
           <height>24</height>
@@ -1483,7 +1483,7 @@
        <widget class="QLabel" name="label_33">
         <property name="geometry">
          <rect>
-          <x>70</x>
+          <x>110</x>
           <y>72</y>
           <width>98</width>
           <height>24</height>
@@ -1496,7 +1496,7 @@
        <widget class="QLabel" name="label_34">
         <property name="geometry">
          <rect>
-          <x>70</x>
+          <x>110</x>
           <y>46</y>
           <width>98</width>
           <height>24</height>
@@ -1509,7 +1509,7 @@
        <widget class="QLabel" name="label_35">
         <property name="geometry">
          <rect>
-          <x>70</x>
+          <x>110</x>
           <y>20</y>
           <width>98</width>
           <height>24</height>
@@ -1526,7 +1526,7 @@
        <rect>
         <x>0</x>
         <y>358</y>
-        <width>174</width>
+        <width>212</width>
         <height>126</height>
        </rect>
       </property>
@@ -1544,7 +1544,7 @@
         <rect>
          <x>1</x>
          <y>1</y>
-         <width>170</width>
+         <width>208</width>
          <height>124</height>
         </rect>
        </property>
@@ -1562,7 +1562,7 @@
          <rect>
           <x>2</x>
           <y>46</y>
-          <width>62</width>
+          <width>102</width>
           <height>24</height>
          </rect>
         </property>
@@ -1587,7 +1587,7 @@
          <rect>
           <x>2</x>
           <y>72</y>
-          <width>62</width>
+          <width>102</width>
           <height>24</height>
          </rect>
         </property>
@@ -1612,7 +1612,7 @@
          <rect>
           <x>2</x>
           <y>98</y>
-          <width>62</width>
+          <width>102</width>
           <height>24</height>
          </rect>
         </property>
@@ -1635,7 +1635,7 @@
        <widget class="QLabel" name="pDLabel">
         <property name="geometry">
          <rect>
-          <x>70</x>
+          <x>110</x>
           <y>98</y>
           <width>98</width>
           <height>24</height>
@@ -1648,7 +1648,7 @@
        <widget class="QLabel" name="pILabel">
         <property name="geometry">
          <rect>
-          <x>70</x>
+          <x>110</x>
           <y>72</y>
           <width>98</width>
           <height>24</height>
@@ -1661,7 +1661,7 @@
        <widget class="QLabel" name="label_38">
         <property name="geometry">
          <rect>
-          <x>70</x>
+          <x>110</x>
           <y>46</y>
           <width>98</width>
           <height>24</height>
@@ -1674,7 +1674,7 @@
        <widget class="QLabel" name="label_39">
         <property name="geometry">
          <rect>
-          <x>70</x>
+          <x>110</x>
           <y>20</y>
           <width>98</width>
           <height>24</height>
@@ -1689,7 +1689,7 @@
          <rect>
           <x>2</x>
           <y>20</y>
-          <width>62</width>
+          <width>102</width>
           <height>24</height>
          </rect>
         </property>
@@ -1716,7 +1716,7 @@
        <rect>
         <x>0</x>
         <y>486</y>
-        <width>174</width>
+        <width>212</width>
         <height>73</height>
        </rect>
       </property>
@@ -1731,7 +1731,7 @@
         <rect>
          <x>1</x>
          <y>1</y>
-         <width>172</width>
+         <width>208</width>
          <height>71</height>
         </rect>
        </property>
@@ -1743,7 +1743,7 @@
          <rect>
           <x>2</x>
           <y>20</y>
-          <width>82</width>
+          <width>100</width>
           <height>48</height>
          </rect>
         </property>
@@ -1754,9 +1754,9 @@
        <widget class="QPushButton" name="reload">
         <property name="geometry">
          <rect>
-          <x>88</x>
+          <x>108</x>
           <y>20</y>
-          <width>82</width>
+          <width>100</width>
           <height>48</height>
          </rect>
         </property>
@@ -1771,8 +1771,8 @@
    <widget class="QFrame" name="button_top_frame">
     <property name="geometry">
      <rect>
-      <x>182</x>
-      <y>26</y>
+      <x>220</x>
+      <y>2</y>
       <width>840</width>
       <height>48</height>
      </rect>
@@ -2201,7 +2201,7 @@
     <widget class="QPushButton" name="edit_button">
      <property name="geometry">
       <rect>
-       <x>392</x>
+       <x>444</x>
        <y>0</y>
        <width>48</width>
        <height>48</height>
@@ -2211,6 +2211,50 @@
       <string>Edit</string>
      </property>
     </widget>
+    <widget class="ActionButton" name="run_from_button">
+     <property name="geometry">
+      <rect>
+       <x>392</x>
+       <y>0</y>
+       <width>48</width>
+       <height>48</height>
+      </rect>
+     </property>
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="font">
+      <font>
+       <kerning>true</kerning>
+      </font>
+     </property>
+     <property name="text">
+      <string>Run
+From
+Line</string>
+     </property>
+     <property name="estop_action" stdset="0">
+      <bool>false</bool>
+     </property>
+     <property name="abort_action" stdset="0">
+      <bool>true</bool>
+     </property>
+     <property name="pause_action" stdset="0">
+      <bool>false</bool>
+     </property>
+     <property name="home_action" stdset="0">
+      <bool>false</bool>
+     </property>
+     <property name="feed_over_action" stdset="0">
+      <bool>false</bool>
+     </property>
+     <property name="joint_number" stdset="0">
+      <number>-1</number>
+     </property>
+    </widget>
    </widget>
    <widget class="MDIHistory" name="mdi_history">
     <property name="enabled">
@@ -2218,8 +2262,8 @@
     </property>
     <property name="geometry">
      <rect>
-      <x>826</x>
-      <y>434</y>
+      <x>864</x>
+      <y>410</y>
       <width>196</width>
       <height>204</height>
      </rect>
@@ -2271,6 +2315,9 @@
     <property name="pref_filename_string" stdset="0">
      <string>.qtvcp_screen_preferences</string>
     </property>
+    <property name="calculatorDialog_option" stdset="0">
+     <bool>true</bool>
+    </property>
    </widget>
    <widget class="FileDialog" name="open_file_dialog">
     <property name="geometry">
@@ -2291,36 +2338,11 @@
      <bool>false</bool>
     </property>
    </widget>
-   <widget class="QLabel" name="status">
-    <property name="geometry">
-     <rect>
-      <x>2</x>
-      <y>2</y>
-      <width>1020</width>
-      <height>22</height>
-     </rect>
-    </property>
-    <property name="sizePolicy">
-     <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-      <horstretch>0</horstretch>
-      <verstretch>0</verstretch>
-     </sizepolicy>
-    </property>
-    <property name="frameShape">
-     <enum>QFrame::StyledPanel</enum>
-    </property>
-    <property name="frameShadow">
-     <enum>QFrame::Sunken</enum>
-    </property>
-    <property name="text">
-     <string>status</string>
-    </property>
-   </widget>
    <widget class="QFrame" name="control_frame">
     <property name="geometry">
      <rect>
-      <x>184</x>
-      <y>538</y>
+      <x>220</x>
+      <y>514</y>
       <width>336</width>
       <height>152</height>
      </rect>
@@ -2342,6 +2364,9 @@
        <width>232</width>
        <height>16</height>
       </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color: rgba(0, 0, 0, 0);</string>
      </property>
      <property name="text">
       <string>Height Override</string>
@@ -2430,21 +2455,29 @@
        <height>24</height>
       </rect>
      </property>
+     <property name="focusPolicy">
+      <enum>Qt::StrongFocus</enum>
+     </property>
      <property name="styleSheet">
-      <string notr="true">
-background-color: rgb(136, 138, 133);</string>
+      <string notr="true"/>
      </property>
      <property name="minimum">
-      <number>-10</number>
+      <number>-100</number>
      </property>
      <property name="maximum">
-      <number>10</number>
+      <number>100</number>
+     </property>
+     <property name="singleStep">
+      <number>1</number>
      </property>
      <property name="value">
       <number>0</number>
      </property>
      <property name="sliderPosition">
       <number>0</number>
+     </property>
+     <property name="tracking">
+      <bool>true</bool>
      </property>
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
@@ -2465,9 +2498,11 @@ background-color: rgb(136, 138, 133);</string>
        <height>24</height>
       </rect>
      </property>
+     <property name="focusPolicy">
+      <enum>Qt::StrongFocus</enum>
+     </property>
      <property name="styleSheet">
-      <string notr="true">
-background-color: rgb(136, 138, 133);</string>
+      <string notr="true"/>
      </property>
      <property name="minimum">
       <number>1</number>
@@ -2500,9 +2535,11 @@ background-color: rgb(136, 138, 133);</string>
        <height>24</height>
       </rect>
      </property>
+     <property name="focusPolicy">
+      <enum>Qt::StrongFocus</enum>
+     </property>
      <property name="styleSheet">
-      <string notr="true">
-background-color: rgb(136, 138, 133);</string>
+      <string notr="true"/>
      </property>
      <property name="minimum">
       <number>1</number>
@@ -2574,6 +2611,18 @@ background-color: rgb(136, 138, 133);</string>
       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
      </property>
     </widget>
+    <zorder>tp_label_1</zorder>
+    <zorder>pm_label_1</zorder>
+    <zorder>forward</zorder>
+    <zorder>reverse</zorder>
+    <zorder>torch_pulse_start</zorder>
+    <zorder>height_override</zorder>
+    <zorder>torch_pulse_time</zorder>
+    <zorder>paused_motion_speed</zorder>
+    <zorder>ho_label</zorder>
+    <zorder>tp_label</zorder>
+    <zorder>pm_label</zorder>
+    <zorder>ho_label_1</zorder>
    </widget>
    <widget class="QFrame" name="dro_frame">
     <property name="enabled">
@@ -2581,8 +2630,8 @@ background-color: rgb(136, 138, 133);</string>
     </property>
     <property name="geometry">
      <rect>
-      <x>184</x>
-      <y>78</y>
+      <x>220</x>
+      <y>54</y>
       <width>336</width>
       <height>352</height>
      </rect>
@@ -3602,8 +3651,8 @@ Z+</string>
    <widget class="StateEnableGridLayout" name="button_layout">
     <property name="geometry">
      <rect>
-      <x>184</x>
-      <y>434</y>
+      <x>220</x>
+      <y>410</y>
       <width>336</width>
       <height>100</height>
      </rect>
@@ -3670,8 +3719,8 @@ Z+</string>
    <widget class="QFrame" name="button_bottom_frame">
     <property name="geometry">
      <rect>
-      <x>184</x>
-      <y>694</y>
+      <x>220</x>
+      <y>670</y>
       <width>336</width>
       <height>48</height>
      </rect>
@@ -3757,8 +3806,8 @@ Show</string>
    <widget class="GCodeGraphics" name="preview">
     <property name="geometry">
      <rect>
-      <x>522</x>
-      <y>78</y>
+      <x>560</x>
+      <y>54</y>
       <width>500</width>
       <height>352</height>
      </rect>
@@ -3777,8 +3826,8 @@ Show</string>
    <widget class="QPlainTextEdit" name="error_text">
     <property name="geometry">
      <rect>
-      <x>826</x>
-      <y>642</y>
+      <x>864</x>
+      <y>618</y>
       <width>196</width>
       <height>100</height>
      </rect>
@@ -3799,8 +3848,8 @@ Show</string>
    <widget class="GcodeEditor" name="gcoder">
     <property name="geometry">
      <rect>
-      <x>522</x>
-      <y>434</y>
+      <x>560</x>
+      <y>410</y>
       <width>300</width>
       <height>308</height>
      </rect>
@@ -3826,17 +3875,23 @@ Show</string>
    <zorder>button_bottom_frame</zorder>
    <zorder>control_frame</zorder>
    <zorder>screen_options</zorder>
-   <zorder>plasmac_settings_tabs</zorder>
    <zorder>config_disable</zorder>
    <zorder>button_top_frame</zorder>
    <zorder>open_file_dialog</zorder>
-   <zorder>status</zorder>
    <zorder>dro_frame</zorder>
    <zorder>button_layout</zorder>
    <zorder>preview</zorder>
    <zorder>gcoder</zorder>
+   <zorder>plasmac_settings_tabs</zorder>
   </widget>
-  <widget class="QStatusBar" name="statusBar"/>
+  <widget class="QStatusBar" name="statusBar">
+   <property name="styleSheet">
+    <string notr="true"/>
+   </property>
+   <property name="sizeGripEnabled">
+    <bool>false</bool>
+   </property>
+  </widget>
   <action name="actionOPen">
    <property name="text">
     <string>OPen</string>
@@ -3942,13 +3997,16 @@ Show</string>
   </customwidget>
  </customwidgets>
  <tabstops>
+  <tabstop>pushButton_4</tabstop>
   <tabstop>estop_button</tabstop>
   <tabstop>power_button</tabstop>
   <tabstop>home_all</tabstop>
+  <tabstop>work_coordinates_button</tabstop>
   <tabstop>open_button</tabstop>
   <tabstop>run_button</tabstop>
-  <tabstop>stop_button</tabstop>
   <tabstop>pause_button</tabstop>
+  <tabstop>stop_button</tabstop>
+  <tabstop>run_from_button</tabstop>
   <tabstop>edit_button</tabstop>
   <tabstop>jog_increments_button</tabstop>
   <tabstop>jog_x_plus_button</tabstop>
@@ -3984,13 +4042,9 @@ Show</string>
   <tabstop>cut_feed_rate</tabstop>
   <tabstop>cut_amps</tabstop>
   <tabstop>cut_volts</tabstop>
-  <tabstop>thc_enable</tabstop>
-  <tabstop>use_auto_volts</tabstop>
   <tabstop>thc_threshold</tabstop>
   <tabstop>pid_p_gain</tabstop>
-  <tabstop>cornerlock_enable</tabstop>
   <tabstop>cornerlock_threshold</tabstop>
-  <tabstop>kerfcross_enable</tabstop>
   <tabstop>kerfcross_threshold</tabstop>
   <tabstop>safe_height</tabstop>
   <tabstop>float_switch_travel</tabstop>
@@ -4009,13 +4063,18 @@ Show</string>
   <tabstop>pid_d_gain</tabstop>
   <tabstop>save</tabstop>
   <tabstop>reload</tabstop>
-  <tabstop>error_text</tabstop>
-  <tabstop>work_coordinates_button</tabstop>
   <tabstop>viewz</tabstop>
   <tabstop>viewz2</tabstop>
   <tabstop>viewp</tabstop>
   <tabstop>clear</tabstop>
-  <tabstop>pushButton_4</tabstop>
+  <tabstop>height_override</tabstop>
+  <tabstop>torch_pulse_time</tabstop>
+  <tabstop>paused_motion_speed</tabstop>
+  <tabstop>thc_enable</tabstop>
+  <tabstop>error_text</tabstop>
+  <tabstop>use_auto_volts</tabstop>
+  <tabstop>cornerlock_enable</tabstop>
+  <tabstop>kerfcross_enable</tabstop>
  </tabstops>
  <resources/>
  <connections>
@@ -4026,8 +4085,8 @@ Show</string>
    <slot>spin_value_changed()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>35</x>
-     <y>244</y>
+     <x>37</x>
+     <y>226</y>
     </hint>
     <hint type="destinationlabel">
      <x>182</x>
@@ -4042,8 +4101,8 @@ Show</string>
    <slot>spin_value_changed()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>60</x>
-     <y>270</y>
+     <x>62</x>
+     <y>252</y>
     </hint>
     <hint type="destinationlabel">
      <x>176</x>
@@ -4058,8 +4117,8 @@ Show</string>
    <slot>material_changed()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>69</x>
-     <y>91</y>
+     <x>71</x>
+     <y>73</y>
     </hint>
     <hint type="destinationlabel">
      <x>237</x>
@@ -4074,8 +4133,8 @@ Show</string>
    <slot>spin_value_changed()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>19</x>
-     <y>283</y>
+     <x>21</x>
+     <y>278</y>
     </hint>
     <hint type="destinationlabel">
      <x>231</x>
@@ -4090,8 +4149,8 @@ Show</string>
    <slot>spin_value_changed()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>27</x>
-     <y>313</y>
+     <x>29</x>
+     <y>304</y>
     </hint>
     <hint type="destinationlabel">
      <x>212</x>
@@ -4106,8 +4165,8 @@ Show</string>
    <slot>spin_value_changed()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>46</x>
-     <y>204</y>
+     <x>48</x>
+     <y>200</y>
     </hint>
     <hint type="destinationlabel">
      <x>206</x>
@@ -4122,8 +4181,8 @@ Show</string>
    <slot>spin_value_changed()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>23</x>
-     <y>181</y>
+     <x>25</x>
+     <y>174</y>
     </hint>
     <hint type="destinationlabel">
      <x>207</x>
@@ -4138,8 +4197,8 @@ Show</string>
    <slot>spin_value_changed()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>64</x>
-     <y>166</y>
+     <x>66</x>
+     <y>148</y>
     </hint>
     <hint type="destinationlabel">
      <x>267</x>
@@ -4154,8 +4213,8 @@ Show</string>
    <slot>spin_value_changed()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>13</x>
-     <y>127</y>
+     <x>15</x>
+     <y>122</y>
     </hint>
     <hint type="destinationlabel">
      <x>197</x>
@@ -4170,8 +4229,8 @@ Show</string>
    <slot>spin_value_changed()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>44</x>
-     <y>408</y>
+     <x>46</x>
+     <y>406</y>
     </hint>
     <hint type="destinationlabel">
      <x>227</x>
@@ -4186,8 +4245,8 @@ Show</string>
    <slot>spin_value_changed()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>28</x>
-     <y>438</y>
+     <x>30</x>
+     <y>432</y>
     </hint>
     <hint type="destinationlabel">
      <x>307</x>
@@ -4202,8 +4261,8 @@ Show</string>
    <slot>checkbox_changed(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>67</x>
-     <y>362</y>
+     <x>69</x>
+     <y>354</y>
     </hint>
     <hint type="destinationlabel">
      <x>277</x>
@@ -4218,8 +4277,8 @@ Show</string>
    <slot>checkbox_changed(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>66</x>
-     <y>386</y>
+     <x>68</x>
+     <y>380</y>
     </hint>
     <hint type="destinationlabel">
      <x>203</x>
@@ -4234,8 +4293,8 @@ Show</string>
    <slot>checkbox_changed(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>63</x>
-     <y>542</y>
+     <x>65</x>
+     <y>535</y>
     </hint>
     <hint type="destinationlabel">
      <x>203</x>
@@ -4250,8 +4309,8 @@ Show</string>
    <slot>spin_value_changed()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>26</x>
-     <y>566</y>
+     <x>28</x>
+     <y>561</y>
     </hint>
     <hint type="destinationlabel">
      <x>190</x>
@@ -4266,8 +4325,8 @@ Show</string>
    <slot>checkbox_changed(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>68</x>
-     <y>642</y>
+     <x>70</x>
+     <y>638</y>
     </hint>
     <hint type="destinationlabel">
      <x>199</x>
@@ -4282,8 +4341,8 @@ Show</string>
    <slot>spin_value_changed()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>42</x>
-     <y>669</y>
+     <x>44</x>
+     <y>664</y>
     </hint>
     <hint type="destinationlabel">
      <x>202</x>
@@ -4298,8 +4357,8 @@ Show</string>
    <slot>spin_value_changed()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>30</x>
-     <y>159</y>
+     <x>32</x>
+     <y>151</y>
     </hint>
     <hint type="destinationlabel">
      <x>260</x>
@@ -4314,8 +4373,8 @@ Show</string>
    <slot>spin_value_changed()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>11</x>
-     <y>133</y>
+     <x>13</x>
+     <y>125</y>
     </hint>
     <hint type="destinationlabel">
      <x>284</x>
@@ -4330,8 +4389,8 @@ Show</string>
    <slot>spin_value_changed()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>47</x>
-     <y>109</y>
+     <x>49</x>
+     <y>99</y>
     </hint>
     <hint type="destinationlabel">
      <x>250</x>
@@ -4346,8 +4405,8 @@ Show</string>
    <slot>spin_value_changed()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>59</x>
-     <y>82</y>
+     <x>61</x>
+     <y>73</y>
     </hint>
     <hint type="destinationlabel">
      <x>208</x>
@@ -4362,8 +4421,8 @@ Show</string>
    <slot>spin_value_changed()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>41</x>
-     <y>209</y>
+     <x>43</x>
+     <y>200</y>
     </hint>
     <hint type="destinationlabel">
      <x>205</x>
@@ -4378,8 +4437,8 @@ Show</string>
    <slot>spin_value_changed()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>28</x>
-     <y>233</y>
+     <x>30</x>
+     <y>226</y>
     </hint>
     <hint type="destinationlabel">
      <x>386</x>
@@ -4394,8 +4453,8 @@ Show</string>
    <slot>spin_value_changed()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>28</x>
-     <y>255</y>
+     <x>30</x>
+     <y>252</y>
     </hint>
     <hint type="destinationlabel">
      <x>371</x>
@@ -4410,8 +4469,8 @@ Show</string>
    <slot>spin_value_changed()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>30</x>
-     <y>284</y>
+     <x>32</x>
+     <y>278</y>
     </hint>
     <hint type="destinationlabel">
      <x>377</x>
@@ -4426,8 +4485,8 @@ Show</string>
    <slot>spin_value_changed()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>30</x>
-     <y>309</y>
+     <x>32</x>
+     <y>304</y>
     </hint>
     <hint type="destinationlabel">
      <x>358</x>
@@ -4442,8 +4501,8 @@ Show</string>
    <slot>spin_value_changed()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>25</x>
-     <y>335</y>
+     <x>27</x>
+     <y>330</y>
     </hint>
     <hint type="destinationlabel">
      <x>388</x>
@@ -4458,8 +4517,8 @@ Show</string>
    <slot>spin_value_changed()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>13</x>
-     <y>361</y>
+     <x>15</x>
+     <y>356</y>
     </hint>
     <hint type="destinationlabel">
      <x>371</x>
@@ -4474,8 +4533,8 @@ Show</string>
    <slot>spin_value_changed()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>35</x>
-     <y>384</y>
+     <x>37</x>
+     <y>382</y>
     </hint>
     <hint type="destinationlabel">
      <x>220</x>
@@ -4490,8 +4549,8 @@ Show</string>
    <slot>spin_value_changed()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>28</x>
-     <y>463</y>
+     <x>30</x>
+     <y>457</y>
     </hint>
     <hint type="destinationlabel">
      <x>201</x>
@@ -4506,8 +4565,8 @@ Show</string>
    <slot>spin_value_changed()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>28</x>
-     <y>492</y>
+     <x>30</x>
+     <y>483</y>
     </hint>
     <hint type="destinationlabel">
      <x>221</x>
@@ -4522,8 +4581,8 @@ Show</string>
    <slot>spin_value_changed()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>35</x>
-     <y>511</y>
+     <x>37</x>
+     <y>509</y>
     </hint>
     <hint type="destinationlabel">
      <x>252</x>
@@ -4539,7 +4598,7 @@ Show</string>
    <hints>
     <hint type="sourcelabel">
      <x>351</x>
-     <y>569</y>
+     <y>545</y>
     </hint>
     <hint type="destinationlabel">
      <x>346</x>
@@ -4555,7 +4614,7 @@ Show</string>
    <hints>
     <hint type="sourcelabel">
      <x>194</x>
-     <y>623</y>
+     <y>599</y>
     </hint>
     <hint type="destinationlabel">
      <x>189</x>
@@ -4571,7 +4630,7 @@ Show</string>
    <hints>
     <hint type="sourcelabel">
      <x>211</x>
-     <y>623</y>
+     <y>599</y>
     </hint>
     <hint type="destinationlabel">
      <x>211</x>
@@ -4619,7 +4678,7 @@ Show</string>
    <hints>
     <hint type="sourcelabel">
      <x>478</x>
-     <y>668</y>
+     <y>644</y>
     </hint>
     <hint type="destinationlabel">
      <x>363</x>
@@ -4698,8 +4757,8 @@ Show</string>
    <slot>edit_clicked()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>621</x>
-     <y>43</y>
+     <x>673</x>
+     <y>19</y>
     </hint>
     <hint type="destinationlabel">
      <x>570</x>
@@ -4715,7 +4774,7 @@ Show</string>
    <hints>
     <hint type="sourcelabel">
      <x>294</x>
-     <y>625</y>
+     <y>601</y>
     </hint>
     <hint type="destinationlabel">
      <x>292</x>
@@ -4731,7 +4790,7 @@ Show</string>
    <hints>
     <hint type="sourcelabel">
      <x>431</x>
-     <y>678</y>
+     <y>654</y>
     </hint>
     <hint type="destinationlabel">
      <x>433</x>
@@ -4762,12 +4821,12 @@ Show</string>
    <slot>save_clicked()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>45</x>
-     <y>590</y>
+     <x>47</x>
+     <y>583</y>
     </hint>
     <hint type="destinationlabel">
      <x>35</x>
-     <y>744</y>
+     <y>739</y>
     </hint>
    </hints>
   </connection>
@@ -4778,12 +4837,12 @@ Show</string>
    <slot>reload_clicked()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>136</x>
-     <y>584</y>
+     <x>138</x>
+     <y>583</y>
     </hint>
     <hint type="destinationlabel">
      <x>132</x>
-     <y>745</y>
+     <y>739</y>
     </hint>
    </hints>
   </connection>

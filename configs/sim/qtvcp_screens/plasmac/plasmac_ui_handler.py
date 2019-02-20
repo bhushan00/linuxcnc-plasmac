@@ -63,6 +63,7 @@ class HandlerClass:
         hal.set_p('plasmac.thc-feed-rate','%f' % (int(self.thcFeedRate)))
         self.w.max_feed_rate.setText(str(int(self.thcFeedRate)))
         self.w.plasmac_settings_tabs.setTabEnabled(1, not int(self.ini.find('PLASMAC', 'CONFIG_DISABLE')))
+        self.w.plasmac_settings_tabs.setCurrentIndex(0)
         self.materialsUpdate = False
         self.oldMode = 0
         self.configure_widgets()
@@ -70,12 +71,13 @@ class HandlerClass:
         self.w.probe_feed_rate.setMaximum(self.w.setup_feed_rate.value())
         self.check_materials_file()
         self.get_materials()
-        self.w.ho_label.setText('%d' % self.w.height_override.value())
-        self.w.tp_label.setText('%0.1f Sec' % (float(self.w.torch_pulse_time.value()) * 0.1))
+        self.w.ho_label.setText('%d V' % self.w.height_override.value())
+        self.w.tp_label.setText('%0.1f Sec' % (int(self.w.torch_pulse_time.value()) * 0.1))
         self.w.pm_label.setText('%s%%' % self.w.paused_motion_speed.value())
         STATUS.connect('error', self.error__)
         STATUS.connect('all-homed', self.is_homed)
         STATUS.connect('not-all-homed', self.is_not_homed)
+        self.w.setStyleSheet(open('plasmac.qss').read())
         #self.w.mdi_history.MDILine.setStyleSheet("""QLineEdit { background-color: green; color: white }""")
 
         gobject.timeout_add(100, self.periodic)
@@ -93,12 +95,16 @@ class HandlerClass:
         # We do want ESC, F1 and F2 to call keybinding functions though
         if code not in(QtCore.Qt.Key_Escape,QtCore.Qt.Key_F1 ,QtCore.Qt.Key_F2,
                     QtCore.Qt.Key_F3,QtCore.Qt.Key_F5,QtCore.Qt.Key_F5):
-            if isinstance(receiver, OFFVIEW_WIDGET)\
-            or isinstance(receiver, MDI_WIDGET)\
-            or isinstance(receiver, QtWidgets.QDoubleSpinBox)\
-            or isinstance(receiver, GCODE_EDITOR)\
-            or isinstance(receiver, GCODE_DISPLAY)\
-            or isinstance(receiver, QtWidgets.QListView):
+            if isinstance(receiver, OFFVIEW_WIDGET) or\
+               isinstance(receiver, MDI_WIDGET) or\
+               isinstance(receiver, QtWidgets.QDoubleSpinBox) or\
+               isinstance(receiver, GCODE_EDITOR) or\
+               isinstance(receiver, GCODE_DISPLAY) or\
+               isinstance(receiver, QtWidgets.QDoubleSpinBox) or\
+               isinstance(receiver, QtWidgets.QCheckBox) or\
+               isinstance(receiver, QtWidgets.QListView) or\
+               isinstance(receiver, QtWidgets.QSlider) or\
+               isinstance(receiver, QtWidgets.QScrollBar):
                 if is_pressed:
                     receiver.keyPressEvent(event)
                     event.accept()
@@ -203,32 +209,32 @@ class HandlerClass:
             self.cmnd.mdi('G53 G0 ' + axis + home)
 
     def height_override_changed(self, height):
-        self.w.ho_label.setText('%d' % height)
-        hal.set_p('plasmac.height-override','%f' %(height))
+        self.w.ho_label.setText('%0.1f V' % (int(height) * 0.1))
+        hal.set_p('plasmac.height-override','%f' % (int(height) * 0.1))
 
     def torch_pulse_time_changed(self, time):
-        self.w.tp_label.setText('%0.1f Sec' % (float(time) * 0.1))
+        self.w.tp_label.setText('%0.1f Sec' % (int(time) * 0.1))
 
     def paused_motion_speed_changed(self, speed):
-        self.w.pm_label.setText('%s%%' % speed)
+        self.w.pm_label.setText('%d%%' % (int(speed)))
 
     def forward_pressed(self):
         speed = self.w.paused_motion_speed.value() * 0.01
-        hal.set_p('plasmac.paused-motion-speed','%f' %(speed))
+        hal.set_p('plasmac.paused-motion-speed','%f' % (speed))
 
     def forward_released(self):
         hal.set_p('plasmac.paused-motion-speed','0')
 
     def reverse_pressed(self):
         speed = self.w.paused_motion_speed.value() * -0.01
-        hal.set_p('plasmac.paused-motion-speed','%f' %(speed))
+        hal.set_p('plasmac.paused-motion-speed','%f' % (speed))
 
     def reverse_released(self):
         hal.set_p('plasmac.paused-motion-speed','0')
 
     def torch_pulse_start_pressed(self):
         time = self.w.torch_pulse_time.value() * 0.1
-        hal.set_p('plasmac.torch-pulse-time','%f' %(time))
+        hal.set_p('plasmac.torch-pulse-time','%f' % (time))
         hal.set_p('plasmac.torch-pulse-start','1')
 
     def torch_pulse_start_released(self):
@@ -702,10 +708,11 @@ class HandlerClass:
             units = 'Metric     '
         else:
             units = 'Inch       '
-        self.w.status.setText(units + \
+        self.w.statusBar.showMessage(units + \
                               STATUS['old']['g-code'].replace(' ',',')[0:-1] + \
                               '     ' + \
-                              STATUS['old']['m-code'].replace(' ',',')[3:-1])
+                              STATUS['old']['m-code'].replace(' ',',')[3:-1] \
+                              , 0)
         if hal.get_value('halui.machine.is-on') and hal.get_value('halui.program.is-idle'):
             self.w.edit_button.setEnabled(True)
             self.w.torch_pulse_start.setEnabled(True)
