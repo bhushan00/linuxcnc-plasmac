@@ -47,3 +47,17 @@ QDoubleSpinBox::up-arrow {
     height: 3px;
 }
 */
+MDILine {
+    color: red;
+    background-color: green
+}
+
+QListView {
+    color: white;
+    background-color: green;
+    alternate-background-color: blue;
+}
+
+
+
+
