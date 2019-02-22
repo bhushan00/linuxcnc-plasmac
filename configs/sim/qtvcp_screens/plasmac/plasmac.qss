@@ -47,6 +47,7 @@ QDoubleSpinBox::up-arrow {
     height: 3px;
 }
 */
+/*
 MDILine {
     color: red;
     background-color: green
@@ -57,7 +58,7 @@ QListView {
     background-color: green;
     alternate-background-color: blue;
 }
-
+*/
 
 
 
