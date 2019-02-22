@@ -3881,8 +3881,8 @@ Show</string>
    <zorder>dro_frame</zorder>
    <zorder>button_layout</zorder>
    <zorder>preview</zorder>
-   <zorder>gcoder</zorder>
    <zorder>plasmac_settings_tabs</zorder>
+   <zorder>gcoder</zorder>
   </widget>
   <widget class="QStatusBar" name="statusBar">
    <property name="styleSheet">
