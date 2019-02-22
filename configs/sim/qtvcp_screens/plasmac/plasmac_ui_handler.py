@@ -6,11 +6,13 @@ from PyQt5 import QtCore, QtWidgets
 from qtvcp.widgets.origin_offsetview import OriginOffsetView as OFFVIEW_WIDGET
 from qtvcp.widgets.dialog_widget import CamViewDialog as CAMVIEW
 from qtvcp.widgets.dialog_widget import MacroTabDialog as LATHEMACRO
+from qtvcp.widgets.dialog_widget import FileDialog as FILEDIALOG
 from qtvcp.widgets.mdi_line import MDILine as MDI_WIDGET
 from qtvcp.widgets.gcode_editor import GcodeEditor as GCODE_EDITOR
 from qtvcp.widgets.gcode_editor import GcodeDisplay as GCODE_DISPLAY
 from qtvcp.lib.keybindings import Keylookup
-from qtvcp.core import Status, Action
+from qtvcp.core import Status, Action, Info
+from qtvcp.qt_action import FilterProgram
 
 # Set up logging
 from qtvcp import logger
@@ -29,6 +31,7 @@ import gobject
 KEYBIND = Keylookup()
 STATUS = Status()
 ACTION = Action()
+INFO = Info()
 
 ###################################
 # **** HANDLER CLASS SECTION **** #
@@ -78,17 +81,14 @@ class HandlerClass:
         STATUS.connect('all-homed', self.is_homed)
         STATUS.connect('not-all-homed', self.is_not_homed)
         self.w.setStyleSheet(open('plasmac.qss').read())
-        #self.w.mdi_history.MDILine.setStyleSheet("""QLineEdit { background-color: green; color: white }""")
-
         gobject.timeout_add(100, self.periodic)
 
     def class_patch__(self):
         GCODE_EDITOR.exitCall = self.editor_exit
         GCODE_EDITOR.openCall = self.editor_open
-        #GCODE_EDITOR.setModified(False)
-        #print dir(GCODE_EDITOR)
-        #print GCODE_EDITOR.children()
-        
+        GCODE_EDITOR.saveCall = self.editor_save
+        FILEDIALOG.loadCall = self.load_dialog
+
     def processed_key_event__(self,receiver,event,is_pressed,key,code,shift,cntrl):
         # when typing in MDI, we don't want keybinding to call functions
         # so we catch and process the events directly.
@@ -121,7 +121,7 @@ class HandlerClass:
                 print 'Error in, or no function for: %s in handler file for-%s'%(KEYBIND.convert(event),key)
                 if e:
                     print 'Exception:', e
-                #print 'from %s'% receiver
+                print 'from %s'% receiver
             return False
 
     ########################
@@ -157,7 +157,8 @@ class HandlerClass:
     def edit_clicked(self, mode):
         if hal.get_value('halui.program.is-idle'):
             self.w.edit_button.setEnabled(False)
-            self.w.gcoder.setGeometry(522,78,500,664)
+#            self.w.gcoder.setGeometry(560,54,500,664)
+            self.w.gcoder.setGeometry(2,2,556,716)
             self.w.gcoder.editMode()
             self.w.gcoder.topMenu.setFrameShape(QtWidgets.QFrame.StyledPanel)
             self.w.gcoder.bottomMenu.setFrameShape(QtWidgets.QFrame.StyledPanel)
@@ -274,17 +275,58 @@ class HandlerClass:
             if result:
                 self.w.gcoder.editor.reload_last(self)
                 self.w.edit_button.setEnabled(True)
-                self.w.gcoder.setGeometry(522,434,300,308)
+                self.w.gcoder.setGeometry(560,410,300,308)
                 self.w.gcoder.readOnlyMode()
         else:
             self.w.edit_button.setEnabled(True)
-            self.w.gcoder.setGeometry(522,434,300,308)
+            self.w.gcoder.setGeometry(560,410,300,308)
             self.w.gcoder.readOnlyMode()
 
     def editor_open(self):
-        print 'opening from here'
-        STATUS.emit('load-file-request')
-        self.w.gcoder.editor.setModified(False)
+        self.get_file()
+
+    def load_dialog(self, w):
+        self.get_file()
+
+    def get_file(self):
+        try:
+            fName = self.openName
+        except:
+            fName = ''
+        self.openName = str(QtWidgets.QFileDialog.getOpenFileName(self.w, 'Open File', fName, \
+                   filter = 'Gcode Files(*.ngc *.nc);; Python Files(*.py);; All Files (*.*)')[0])
+        if self.openName:
+            self.load_file(self.openName)
+
+    def load_file(self, fName):
+        name, ext = fName.rsplit('.')
+        flt = INFO.get_filter_program(fName)
+        if flt:
+            ACTION.open_filter_program(fName, flt)
+            if ext == 'ngc' or ext == 'nc':
+                STATUS.old['file'] = ''
+                self.cmnd.program_open(fName)
+        else:
+            STATUS.old['file'] = ''
+            self.cmnd.program_open(fName)
+        STATUS.emit('update-machine-log', 'Loaded: ' + fName, 'TIME')
+
+    def editor_save(self):
+        if self.w.gcoder.editor.text() == '': return
+        try:
+            fName = self.openName
+        except:
+            fName = ''
+        saveName = str(QtWidgets.QFileDialog.getSaveFileName(self.w, 'Save File', fName, \
+                   filter = 'Gcode Files(*.ngc *.nc);; Python Files(*.py);; All Files (*.*)')[0])
+        if saveName:
+            name, ext = saveName.rsplit('.')
+            file = open(name + '.' + ext.lower(),'w')
+            file.write(self.w.gcoder.editor.text())
+            file.close()
+            self.w.gcoder.editor.setModified(False)
+            if ext.lower() == 'ngc' or ext.lower() == 'nc':
+                self.load_file(saveName)
 
     # keyboard jogging from key binding calls
     # double the rate if fast is true 
