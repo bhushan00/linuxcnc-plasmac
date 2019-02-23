@@ -157,8 +157,8 @@ class HandlerClass:
     def edit_clicked(self, mode):
         if hal.get_value('halui.program.is-idle'):
             self.w.edit_button.setEnabled(False)
-#            self.w.gcoder.setGeometry(560,54,500,664)
             self.w.gcoder.setGeometry(2,2,556,716)
+            self.w.preview.setGeometry(560,2,500,716)
             self.w.gcoder.editMode()
             self.w.gcoder.topMenu.setFrameShape(QtWidgets.QFrame.StyledPanel)
             self.w.gcoder.bottomMenu.setFrameShape(QtWidgets.QFrame.StyledPanel)
@@ -276,10 +276,12 @@ class HandlerClass:
                 self.w.gcoder.editor.reload_last(self)
                 self.w.edit_button.setEnabled(True)
                 self.w.gcoder.setGeometry(560,410,300,308)
+                self.w.preview.setGeometry(560,54,500,352)
                 self.w.gcoder.readOnlyMode()
         else:
             self.w.edit_button.setEnabled(True)
             self.w.gcoder.setGeometry(560,410,300,308)
+            self.w.preview.setGeometry(560,54,500,352)
             self.w.gcoder.readOnlyMode()
 
     def editor_open(self):
@@ -771,18 +773,6 @@ class HandlerClass:
             self.w.torch_pulse_start.setEnabled(False)
             self.w.reverse.setEnabled(False)
             self.w.forward.setEnabled(False)
-        #if STATUS.is_all_homed():
-            #self.w.x_label.setStyleSheet('color: green')
-            #self.w.y_label.setStyleSheet('color: green')
-            #self.w.z_label.setStyleSheet('color: green')
-            #self.w.mdi_history.setEnabled(1)
-            #self.w.mdi_history.MDILine.setStyleSheet("""QLineEdit { background-color: rgb(250,250,250) }""")
-        #else:
-            #self.w.x_label.setStyleSheet('color: red')
-            #self.w.y_label.setStyleSheet('color: red')
-            #self.w.z_label.setStyleSheet('color: red')
-            #self.w.mdi_history.setEnabled(0)
-            #self.w.mdi_history.MDILine.setStyleSheet("""QLineEdit { background-color: rgb(220,220,220) }""")
         self.w.plasmac_settings_tabs.setTabEnabled(1, not hal.get_value('plasmac_ui.config_disable'))
         mode = hal.get_value('plasmac.mode')
         if mode != self.oldMode: self.set_mode(mode)
