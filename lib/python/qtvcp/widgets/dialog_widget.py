@@ -333,8 +333,7 @@ class FileDialog(QFileDialog, _HalWidgetBase):
             self._geometry_string = self.PREFS_.getpref('FileDialog-geometry', geo, str, 'DIALOG_OPTIONS')
         else:
             self._geometry_string = 'default'
-#        STATUS.connect('load-file-request', lambda w: self.load_dialog())
-        STATUS.connect('load-file-request', self.loadCall)
+        STATUS.connect('load-file-request', lambda w: self.load_dialog())
         STATUS.connect('dialog-request', self._external_request)
         if self.PREFS_:
             self.play_sound = self.PREFS_.getpref('fileDialog_play_sound', True, bool, 'DIALOG_OPTIONS')
@@ -352,18 +351,8 @@ class FileDialog(QFileDialog, _HalWidgetBase):
             else:
                 self.load_dialog()
 
-    def calculate_placement(self):
-        geometry_parsing(self,'FileDialog-geometry')
-
-    # callback functions built for easy class patching ##########
-    # want to refrain from renaming these functions as it will break
-    # any class patch user's use
-    # we split them like this so a user can intercept the callback
-    # but still call the original functionality
-
-    def loadCall(self, w):
-        self.load_dialog()
     def load_dialog(self, return_path=False):
+
         STATUS.emit('focus-overlay-changed', True, 'Open Gcode', self._color)
         if self.play_sound:
             STATUS.emit('play-alert', self.sound_type)
@@ -381,6 +370,9 @@ class FileDialog(QFileDialog, _HalWidgetBase):
             ACTION.OPEN_PROGRAM(fname)
             STATUS.emit('update-machine-log', 'Loaded: ' + fname, 'TIME')
         return fname
+
+    def calculate_placement(self):
+        geometry_parsing(self,'FileDialog-geometry')
 
     #**********************
     # Designer properties
