@@ -77,11 +77,11 @@ class HandlerClass:
         self.w.ho_label.setText('%d V' % self.w.height_override.value())
         self.w.tp_label.setText('%0.1f Sec' % (int(self.w.torch_pulse_time.value()) * 0.1))
         self.w.pm_label.setText('%s%%' % self.w.paused_motion_speed.value())
+        self.w.setStyleSheet(open('plasmac.qss').read())
+        STATUS.connect('periodic', self.periodic)
         STATUS.connect('error', self.error__)
         STATUS.connect('all-homed', self.is_homed)
         STATUS.connect('not-all-homed', self.is_not_homed)
-        self.w.setStyleSheet(open('plasmac.qss').read())
-        gobject.timeout_add(100, self.periodic)
 
     def class_patch__(self):
         GCODE_EDITOR.exitCall = self.editor_exit
@@ -696,7 +696,7 @@ class HandlerClass:
     # PERIODIC CALLED EVERY 100mS #
     ###############################
 
-    def periodic(self):
+    def periodic(self, w):
         if STATUS['old']['metric'] == True:
             units = 'Metric     '
         else:
