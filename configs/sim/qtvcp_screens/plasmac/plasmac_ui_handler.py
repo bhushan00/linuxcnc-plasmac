@@ -156,7 +156,8 @@ class HandlerClass:
         if hal.get_value('halui.program.is-idle'):
             self.w.gcoder.layout().setSpacing(0)
             self.w.gcoder.setGeometry(2,2,556,716)
-            self.w.preview.setGeometry(560,2,500,716)
+            self.w.preview.setGeometry(560,2,500,612)
+            self.w.error_text.setGeometry(560,618,500,100)
             self.w.gcoder.editMode()
             self.w.gcoder.topMenu.setFrameShape(QtWidgets.QFrame.StyledPanel)
             self.w.gcoder.bottomMenu.setFrameShape(QtWidgets.QFrame.StyledPanel)
@@ -274,10 +275,12 @@ class HandlerClass:
                 self.w.gcoder.editor.reload_last(self)
                 self.w.gcoder.setGeometry(560,410,300,308)
                 self.w.preview.setGeometry(560,54,500,352)
+                self.w.error_text.setGeometry(864,618,192,100)
                 self.w.gcoder.readOnlyMode()
         else:
             self.w.gcoder.setGeometry(560,410,300,308)
             self.w.preview.setGeometry(560,54,500,352)
+            self.w.error_text.setGeometry(864,618,192,100)
             self.w.gcoder.readOnlyMode()
 
     # keyboard jogging from key binding calls
