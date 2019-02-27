@@ -85,9 +85,6 @@ class HandlerClass:
 
     def class_patch__(self):
         GCODE_EDITOR.exitCall = self.editor_exit
-        GCODE_EDITOR.openCall = self.editor_open
-        GCODE_EDITOR.saveCall = self.editor_save
-        FILEDIALOG.loadCall = self.load_dialog
 
     def processed_key_event__(self,receiver,event,is_pressed,key,code,shift,cntrl):
         # when typing in MDI, we don't want keybinding to call functions
@@ -156,7 +153,6 @@ class HandlerClass:
 
     def edit_clicked(self, mode):
         if hal.get_value('halui.program.is-idle'):
-            self.w.edit_button.setEnabled(False)
             self.w.gcoder.setGeometry(2,2,556,716)
             self.w.preview.setGeometry(560,2,500,716)
             self.w.gcoder.editMode()
@@ -274,61 +270,13 @@ class HandlerClass:
             result = self.w.gcoder.killCheck()
             if result:
                 self.w.gcoder.editor.reload_last(self)
-                self.w.edit_button.setEnabled(True)
                 self.w.gcoder.setGeometry(560,410,300,308)
                 self.w.preview.setGeometry(560,54,500,352)
                 self.w.gcoder.readOnlyMode()
         else:
-            self.w.edit_button.setEnabled(True)
             self.w.gcoder.setGeometry(560,410,300,308)
             self.w.preview.setGeometry(560,54,500,352)
             self.w.gcoder.readOnlyMode()
-
-    def editor_open(self):
-        self.get_file()
-
-    def load_dialog(self, w):
-        self.get_file()
-
-    def get_file(self):
-        try:
-            fName = self.openName
-        except:
-            fName = ''
-        self.openName = str(QtWidgets.QFileDialog.getOpenFileName(self.w, 'Open File', fName, \
-                   filter = 'Gcode Files(*.ngc *.nc);; Python Files(*.py);; All Files (*.*)')[0])
-        if self.openName:
-            self.load_file(self.openName)
-
-    def load_file(self, fName):
-        name, ext = fName.rsplit('.')
-        flt = INFO.get_filter_program(fName)
-        if flt:
-            ACTION.open_filter_program(fName, flt)
-            if ext == 'ngc' or ext == 'nc':
-                STATUS.old['file'] = ''
-                self.cmnd.program_open(fName)
-        else:
-            STATUS.old['file'] = ''
-            self.cmnd.program_open(fName)
-        STATUS.emit('update-machine-log', 'Loaded: ' + fName, 'TIME')
-
-    def editor_save(self):
-        if self.w.gcoder.editor.text() == '': return
-        try:
-            fName = self.openName
-        except:
-            fName = ''
-        saveName = str(QtWidgets.QFileDialog.getSaveFileName(self.w, 'Save File', fName, \
-                   filter = 'Gcode Files(*.ngc *.nc);; Python Files(*.py);; All Files (*.*)')[0])
-        if saveName:
-            name, ext = saveName.rsplit('.')
-            file = open(name + '.' + ext.lower(),'w')
-            file.write(self.w.gcoder.editor.text())
-            file.close()
-            self.w.gcoder.editor.setModified(False)
-            if ext.lower() == 'ngc' or ext.lower() == 'nc':
-                self.load_file(saveName)
 
     # keyboard jogging from key binding calls
     # double the rate if fast is true 
