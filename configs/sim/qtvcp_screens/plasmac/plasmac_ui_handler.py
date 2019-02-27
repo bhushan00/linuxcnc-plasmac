@@ -69,6 +69,7 @@ class HandlerClass:
         self.w.plasmac_settings_tabs.setCurrentIndex(0)
         self.materialsUpdate = False
         self.oldMode = 0
+        self.mname = self.ini.find('EMC','MACHINE')
         self.configure_widgets()
         self.load_settings()
         self.w.probe_feed_rate.setMaximum(self.w.setup_feed_rate.value())
@@ -697,6 +698,8 @@ class HandlerClass:
     ###############################
 
     def periodic(self, w):
+        fname = STATUS.stat.file.split('/')[-1]
+        self.w.setWindowTitle('PLASMAP   ' + self.mname + '   ' + fname)
         if STATUS['old']['metric'] == True:
             units = 'Metric     '
         else:
