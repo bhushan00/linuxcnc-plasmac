@@ -153,6 +153,7 @@ class HandlerClass:
 
     def edit_clicked(self, mode):
         if hal.get_value('halui.program.is-idle'):
+            self.w.gcoder.layout().setSpacing(0)
             self.w.gcoder.setGeometry(2,2,556,716)
             self.w.preview.setGeometry(560,2,500,716)
             self.w.gcoder.editMode()
