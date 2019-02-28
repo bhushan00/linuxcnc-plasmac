@@ -138,14 +138,14 @@ class HandlerClass:
         self.w.x_label.setStyleSheet('color: green')
         self.w.y_label.setStyleSheet('color: green')
         self.w.z_label.setStyleSheet('color: green')
-        self.w.mdi_history.setEnabled(1)
+#        self.w.mdi_history.setEnabled(1)
         self.w.mdi_history.MDILine.setStyleSheet("""QLineEdit { background-color: rgb(250,250,250) }""")
 
     def is_not_homed(self, w, joints):
         self.w.x_label.setStyleSheet('color: red')
         self.w.y_label.setStyleSheet('color: red')
         self.w.z_label.setStyleSheet('color: red')
-        self.w.mdi_history.setEnabled(0)
+#        self.w.mdi_history.setEnabled(0)
         self.w.mdi_history.MDILine.setStyleSheet("""QLineEdit { background-color: rgb(220,220,220) }""")
 
     #######################
