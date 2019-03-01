@@ -68,7 +68,7 @@
       <x>2</x>
       <y>2</y>
       <width>216</width>
-      <height>717</height>
+      <height>716</height>
      </rect>
     </property>
     <property name="sizePolicy">
@@ -2000,7 +2000,7 @@
     <widget class="ActionButton" name="open_button">
      <property name="geometry">
       <rect>
-       <x>184</x>
+       <x>208</x>
        <y>0</y>
        <width>48</width>
        <height>48</height>
@@ -2031,7 +2031,7 @@
     <widget class="ActionButton" name="run_button">
      <property name="geometry">
       <rect>
-       <x>236</x>
+       <x>260</x>
        <y>0</y>
        <width>48</width>
        <height>48</height>
@@ -2062,7 +2062,7 @@
     <widget class="ActionButton" name="pause_button">
      <property name="geometry">
       <rect>
-       <x>288</x>
+       <x>312</x>
        <y>0</y>
        <width>48</width>
        <height>48</height>
@@ -2146,7 +2146,7 @@
     <widget class="ActionButton" name="stop_button">
      <property name="geometry">
       <rect>
-       <x>340</x>
+       <x>364</x>
        <y>0</y>
        <width>48</width>
        <height>48</height>
@@ -2201,7 +2201,7 @@
     <widget class="QPushButton" name="edit_button">
      <property name="geometry">
       <rect>
-       <x>444</x>
+       <x>468</x>
        <y>0</y>
        <width>48</width>
        <height>48</height>
@@ -2214,7 +2214,7 @@
     <widget class="ActionButton" name="run_from_button">
      <property name="geometry">
       <rect>
-       <x>392</x>
+       <x>416</x>
        <y>0</y>
        <width>48</width>
        <height>48</height>
@@ -2262,10 +2262,10 @@ Line</string>
     </property>
     <property name="geometry">
      <rect>
-      <x>864</x>
-      <y>410</y>
-      <width>196</width>
-      <height>204</height>
+      <x>832</x>
+      <y>418</y>
+      <width>192</width>
+      <height>196</height>
      </rect>
     </property>
     <property name="minimumSize">
@@ -2345,9 +2345,9 @@ Line</string>
     <property name="geometry">
      <rect>
       <x>220</x>
-      <y>514</y>
-      <width>336</width>
-      <height>152</height>
+      <y>470</y>
+      <width>308</width>
+      <height>248</height>
      </rect>
     </property>
     <property name="frameShape">
@@ -2362,9 +2362,9 @@ Line</string>
      </property>
      <property name="geometry">
       <rect>
-       <x>52</x>
-       <y>4</y>
-       <width>232</width>
+       <x>58</x>
+       <y>202</y>
+       <width>192</width>
        <height>16</height>
       </rect>
      </property>
@@ -2381,9 +2381,9 @@ Line</string>
     <widget class="QLabel" name="tp_label_1">
      <property name="geometry">
       <rect>
-       <x>52</x>
-       <y>56</y>
-       <width>232</width>
+       <x>58</x>
+       <y>98</y>
+       <width>192</width>
        <height>16</height>
       </rect>
      </property>
@@ -2397,14 +2397,14 @@ Line</string>
     <widget class="QLabel" name="pm_label_1">
      <property name="geometry">
       <rect>
-       <x>52</x>
-       <y>108</y>
-       <width>232</width>
+       <x>58</x>
+       <y>150</y>
+       <width>192</width>
        <height>16</height>
       </rect>
      </property>
      <property name="text">
-      <string>Paused Motion</string>
+      <string>Paused Speed</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignCenter</set>
@@ -2413,8 +2413,8 @@ Line</string>
     <widget class="PushButton" name="forward">
      <property name="geometry">
       <rect>
-       <x>288</x>
-       <y>104</y>
+       <x>260</x>
+       <y>150</y>
        <width>48</width>
        <height>48</height>
       </rect>
@@ -2427,7 +2427,7 @@ Line</string>
      <property name="geometry">
       <rect>
        <x>0</x>
-       <y>104</y>
+       <y>150</y>
        <width>48</width>
        <height>48</height>
       </rect>
@@ -2440,7 +2440,7 @@ Line</string>
      <property name="geometry">
       <rect>
        <x>0</x>
-       <y>52</y>
+       <y>98</y>
        <width>48</width>
        <height>48</height>
       </rect>
@@ -2453,8 +2453,8 @@ Line</string>
      <property name="geometry">
       <rect>
        <x>58</x>
-       <y>24</y>
-       <width>220</width>
+       <y>222</y>
+       <width>192</width>
        <height>24</height>
       </rect>
      </property>
@@ -2496,8 +2496,8 @@ Line</string>
      <property name="geometry">
       <rect>
        <x>58</x>
-       <y>76</y>
-       <width>220</width>
+       <y>118</y>
+       <width>192</width>
        <height>24</height>
       </rect>
      </property>
@@ -2533,8 +2533,8 @@ Line</string>
      <property name="geometry">
       <rect>
        <x>58</x>
-       <y>128</y>
-       <width>220</width>
+       <y>170</y>
+       <width>192</width>
        <height>24</height>
       </rect>
      </property>
@@ -2569,8 +2569,8 @@ Line</string>
     <widget class="QLabel" name="ho_label">
      <property name="geometry">
       <rect>
-       <x>234</x>
-       <y>4</y>
+       <x>206</x>
+       <y>202</y>
        <width>50</width>
        <height>16</height>
       </rect>
@@ -2585,8 +2585,8 @@ Line</string>
     <widget class="QLabel" name="tp_label">
      <property name="geometry">
       <rect>
-       <x>234</x>
-       <y>56</y>
+       <x>206</x>
+       <y>98</y>
        <width>50</width>
        <height>16</height>
       </rect>
@@ -2601,8 +2601,8 @@ Line</string>
     <widget class="QLabel" name="pm_label">
      <property name="geometry">
       <rect>
-       <x>234</x>
-       <y>108</y>
+       <x>206</x>
+       <y>150</y>
        <width>50</width>
        <height>16</height>
       </rect>
@@ -2614,6 +2614,182 @@ Line</string>
       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
      </property>
     </widget>
+    <widget class="LCDNumber" name="arc_voltage">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>48</width>
+       <height>30</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>DejaVu Sans</family>
+       <pointsize>10</pointsize>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">color: rgb(252, 233, 79);</string>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::NoFrame</enum>
+     </property>
+     <property name="digitCount">
+      <number>3</number>
+     </property>
+     <property name="segmentStyle">
+      <enum>QLCDNumber::Flat</enum>
+     </property>
+     <property name="value" stdset="0">
+      <double>300.000000000000000</double>
+     </property>
+     <property name="intValue" stdset="0">
+      <number>300</number>
+     </property>
+    </widget>
+    <widget class="QLabel" name="aVLabel">
+     <property name="geometry">
+      <rect>
+       <x>52</x>
+       <y>4</y>
+       <width>82</width>
+       <height>24</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Arc Voltage</string>
+     </property>
+    </widget>
+    <widget class="LED" name="arc_ok_led">
+     <property name="geometry">
+      <rect>
+       <x>27</x>
+       <y>36</y>
+       <width>24</width>
+       <height>24</height>
+      </rect>
+     </property>
+     <property name="color">
+      <color>
+       <red>115</red>
+       <green>210</green>
+       <blue>22</blue>
+      </color>
+     </property>
+    </widget>
+    <widget class="QLabel" name="Label">
+     <property name="geometry">
+      <rect>
+       <x>52</x>
+       <y>34</y>
+       <width>82</width>
+       <height>24</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Arc OK</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="Label_2">
+     <property name="geometry">
+      <rect>
+       <x>52</x>
+       <y>64</y>
+       <width>82</width>
+       <height>24</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Torch On</string>
+     </property>
+    </widget>
+    <widget class="LED" name="torch_on_led">
+     <property name="geometry">
+      <rect>
+       <x>27</x>
+       <y>66</y>
+       <width>24</width>
+       <height>24</height>
+      </rect>
+     </property>
+     <property name="color">
+      <color>
+       <red>245</red>
+       <green>121</green>
+       <blue>0</blue>
+      </color>
+     </property>
+    </widget>
+    <widget class="QLabel" name="Label_5">
+     <property name="geometry">
+      <rect>
+       <x>202</x>
+       <y>64</y>
+       <width>82</width>
+       <height>24</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Safe Limited</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="Label_4">
+     <property name="geometry">
+      <rect>
+       <x>202</x>
+       <y>34</y>
+       <width>82</width>
+       <height>24</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Breakaway</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="Label_3">
+     <property name="geometry">
+      <rect>
+       <x>202</x>
+       <y>4</y>
+       <width>82</width>
+       <height>24</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Float Switch</string>
+     </property>
+    </widget>
+    <widget class="LED" name="safe_height_limited_led">
+     <property name="geometry">
+      <rect>
+       <x>177</x>
+       <y>66</y>
+       <width>24</width>
+       <height>24</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="LED" name="breakaway_switch_led">
+     <property name="geometry">
+      <rect>
+       <x>177</x>
+       <y>36</y>
+       <width>24</width>
+       <height>24</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="LED" name="float_switch_led">
+     <property name="geometry">
+      <rect>
+       <x>177</x>
+       <y>6</y>
+       <width>24</width>
+       <height>24</height>
+      </rect>
+     </property>
+    </widget>
     <zorder>tp_label_1</zorder>
     <zorder>pm_label_1</zorder>
     <zorder>forward</zorder>
@@ -2622,10 +2798,22 @@ Line</string>
     <zorder>height_override</zorder>
     <zorder>torch_pulse_time</zorder>
     <zorder>paused_motion_speed</zorder>
+    <zorder>ho_label_1</zorder>
     <zorder>ho_label</zorder>
     <zorder>tp_label</zorder>
     <zorder>pm_label</zorder>
-    <zorder>ho_label_1</zorder>
+    <zorder>arc_voltage</zorder>
+    <zorder>aVLabel</zorder>
+    <zorder>arc_ok_led</zorder>
+    <zorder>Label</zorder>
+    <zorder>Label_2</zorder>
+    <zorder>torch_on_led</zorder>
+    <zorder>Label_5</zorder>
+    <zorder>Label_4</zorder>
+    <zorder>Label_3</zorder>
+    <zorder>safe_height_limited_led</zorder>
+    <zorder>breakaway_switch_led</zorder>
+    <zorder>float_switch_led</zorder>
    </widget>
    <widget class="QFrame" name="dro_frame">
     <property name="enabled">
@@ -2635,8 +2823,8 @@ Line</string>
      <rect>
       <x>220</x>
       <y>54</y>
-      <width>336</width>
-      <height>352</height>
+      <width>308</width>
+      <height>360</height>
      </rect>
     </property>
     <property name="minimumSize">
@@ -2717,9 +2905,9 @@ Home</string>
     <widget class="DROLabel" name="dro_x">
      <property name="geometry">
       <rect>
-       <x>184</x>
+       <x>176</x>
        <y>52</y>
-       <width>152</width>
+       <width>132</width>
        <height>48</height>
       </rect>
      </property>
@@ -2732,7 +2920,7 @@ Home</string>
      <property name="font">
       <font>
        <family>Liberation Sans Narrow</family>
-       <pointsize>20</pointsize>
+       <pointsize>18</pointsize>
       </font>
      </property>
      <property name="styleSheet">
@@ -2760,9 +2948,9 @@ Home</string>
     <widget class="DROLabel" name="dro_y">
      <property name="geometry">
       <rect>
-       <x>184</x>
+       <x>176</x>
        <y>104</y>
-       <width>152</width>
+       <width>132</width>
        <height>48</height>
       </rect>
      </property>
@@ -2775,7 +2963,7 @@ Home</string>
      <property name="font">
       <font>
        <family>Liberation Sans Narrow</family>
-       <pointsize>20</pointsize>
+       <pointsize>18</pointsize>
       </font>
      </property>
      <property name="styleSheet">
@@ -2786,6 +2974,9 @@ Home</string>
      </property>
      <property name="frameShadow">
       <enum>QFrame::Sunken</enum>
+     </property>
+     <property name="text">
+      <string>10000.000</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -2800,9 +2991,9 @@ Home</string>
     <widget class="DROLabel" name="dro_z">
      <property name="geometry">
       <rect>
-       <x>184</x>
+       <x>176</x>
        <y>156</y>
-       <width>152</width>
+       <width>132</width>
        <height>48</height>
       </rect>
      </property>
@@ -2815,7 +3006,7 @@ Home</string>
      <property name="font">
       <font>
        <family>Liberation Sans Narrow</family>
-       <pointsize>20</pointsize>
+       <pointsize>18</pointsize>
       </font>
      </property>
      <property name="styleSheet">
@@ -2827,6 +3018,9 @@ Home</string>
      <property name="frameShadow">
       <enum>QFrame::Sunken</enum>
      </property>
+     <property name="text">
+      <string>10000.000</string>
+     </property>
      <property name="alignment">
       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
      </property>
@@ -2837,63 +3031,20 @@ Home</string>
       <number>1</number>
      </property>
     </widget>
-    <widget class="StatusSlider" name="feed_override_slider">
-     <property name="geometry">
-      <rect>
-       <x>2</x>
-       <y>232</y>
-       <width>132</width>
-       <height>24</height>
-      </rect>
-     </property>
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="minimum">
-      <number>1</number>
-     </property>
-     <property name="maximum">
-      <number>120</number>
-     </property>
-     <property name="sliderPosition">
-      <number>100</number>
-     </property>
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-     <property name="invertedAppearance">
-      <bool>false</bool>
-     </property>
-     <property name="invertedControls">
-      <bool>false</bool>
-     </property>
-     <property name="tickPosition">
-      <enum>QSlider::NoTicks</enum>
-     </property>
-     <property name="tickInterval">
-      <number>10</number>
-     </property>
-     <property name="rapid_rate" stdset="0">
-      <bool>false</bool>
-     </property>
-     <property name="feed_rate" stdset="0">
-      <bool>true</bool>
-     </property>
-    </widget>
     <widget class="StatusLabel" name="feed_override_status">
      <property name="geometry">
       <rect>
-       <x>136</x>
-       <y>232</y>
+       <x>206</x>
+       <y>208</y>
        <width>48</width>
-       <height>24</height>
+       <height>16</height>
       </rect>
      </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
      <property name="textTemplate" stdset="0">
-      <string>%.0f%%</string>
+      <string>%.0f %%</string>
      </property>
      <property name="feed_override_status" stdset="0">
       <bool>true</bool>
@@ -2908,14 +3059,17 @@ Home</string>
     <widget class="StatusLabel" name="rapid_override_status">
      <property name="geometry">
       <rect>
-       <x>136</x>
-       <y>280</y>
+       <x>206</x>
+       <y>260</y>
        <width>48</width>
-       <height>24</height>
+       <height>16</height>
       </rect>
      </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
      <property name="textTemplate" stdset="0">
-      <string>%.0f%%</string>
+      <string>%.0f %%</string>
      </property>
      <property name="feed_override_status" stdset="0">
       <bool>false</bool>
@@ -2927,98 +3081,39 @@ Home</string>
     <widget class="StatusLabel" name="jog_rate_status">
      <property name="geometry">
       <rect>
-       <x>136</x>
-       <y>328</y>
-       <width>48</width>
-       <height>24</height>
+       <x>200</x>
+       <y>312</y>
+       <width>96</width>
+       <height>16</height>
       </rect>
+     </property>
+     <property name="text">
+      <string>200 mm/min</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
      </property>
      <property name="textTemplate" stdset="0">
-      <string>%.0f</string>
+      <string>%.0f mm/min</string>
+     </property>
+     <property name="alt_textTemplate" stdset="0">
+      <string>%.0f inch/min</string>
      </property>
      <property name="jograte_status" stdset="0">
-      <bool>true</bool>
-     </property>
-    </widget>
-    <widget class="StatusSlider" name="rapid_override_slider">
-     <property name="geometry">
-      <rect>
-       <x>2</x>
-       <y>280</y>
-       <width>132</width>
-       <height>24</height>
-      </rect>
-     </property>
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="maximum">
-      <number>120</number>
-     </property>
-     <property name="sliderPosition">
-      <number>100</number>
-     </property>
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-     <property name="tickPosition">
-      <enum>QSlider::NoTicks</enum>
-     </property>
-     <property name="tickInterval">
-      <number>10</number>
-     </property>
-    </widget>
-    <widget class="StatusSlider" name="jog_rate_slider">
-     <property name="geometry">
-      <rect>
-       <x>2</x>
-       <y>328</y>
-       <width>132</width>
-       <height>24</height>
-      </rect>
-     </property>
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="maximum">
-      <number>999</number>
-     </property>
-     <property name="sliderPosition">
-      <number>500</number>
-     </property>
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-     <property name="tickPosition">
-      <enum>QSlider::NoTicks</enum>
-     </property>
-     <property name="tickInterval">
-      <number>100</number>
-     </property>
-     <property name="rapid_rate" stdset="0">
-      <bool>false</bool>
-     </property>
-     <property name="jograte_rate" stdset="0">
       <bool>true</bool>
      </property>
     </widget>
     <widget class="QLabel" name="jRLabel">
      <property name="geometry">
       <rect>
-       <x>2</x>
-       <y>316</y>
-       <width>132</width>
+       <x>58</x>
+       <y>312</y>
+       <width>192</width>
        <height>16</height>
       </rect>
      </property>
      <property name="text">
-      <string>JogRate</string>
+      <string>Jog Rate</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignCenter</set>
@@ -3027,9 +3122,9 @@ Home</string>
     <widget class="QLabel" name="rOLabel">
      <property name="geometry">
       <rect>
-       <x>2</x>
-       <y>268</y>
-       <width>132</width>
+       <x>58</x>
+       <y>260</y>
+       <width>192</width>
        <height>16</height>
       </rect>
      </property>
@@ -3043,9 +3138,9 @@ Home</string>
     <widget class="QLabel" name="fOLabel">
      <property name="geometry">
       <rect>
-       <x>2</x>
-       <y>220</y>
-       <width>132</width>
+       <x>58</x>
+       <y>208</y>
+       <width>192</width>
        <height>16</height>
       </rect>
      </property>
@@ -3179,7 +3274,7 @@ Off</string>
     <widget class="SystemToolButton" name="work_coordinates_button">
      <property name="geometry">
       <rect>
-       <x>286</x>
+       <x>260</x>
        <y>0</y>
        <width>48</width>
        <height>48</height>
@@ -3346,7 +3441,7 @@ Z+</string>
     <widget class="QLabel" name="x_label">
      <property name="geometry">
       <rect>
-       <x>156</x>
+       <x>152</x>
        <y>52</y>
        <width>24</width>
        <height>48</height>
@@ -3371,7 +3466,7 @@ Z+</string>
     <widget class="QLabel" name="y_label">
      <property name="geometry">
       <rect>
-       <x>156</x>
+       <x>152</x>
        <y>104</y>
        <width>24</width>
        <height>48</height>
@@ -3396,7 +3491,7 @@ Z+</string>
     <widget class="QLabel" name="z_label">
      <property name="geometry">
       <rect>
-       <x>156</x>
+       <x>152</x>
        <y>156</y>
        <width>24</width>
        <height>48</height>
@@ -3434,199 +3529,130 @@ Z+</string>
       <set>Qt::AlignHCenter|Qt::AlignTop</set>
      </property>
     </widget>
-    <widget class="LCDNumber" name="arc_voltage">
+    <widget class="QScrollBar" name="feed_override">
      <property name="geometry">
       <rect>
-       <x>208</x>
-       <y>208</y>
-       <width>40</width>
+       <x>58</x>
+       <y>228</y>
+       <width>192</width>
        <height>24</height>
       </rect>
      </property>
-     <property name="font">
-      <font>
-       <family>DejaVu Sans</family>
-       <pointsize>10</pointsize>
-      </font>
+     <property name="focusPolicy">
+      <enum>Qt::StrongFocus</enum>
      </property>
      <property name="styleSheet">
-      <string notr="true">color: rgb(206, 92, 0);</string>
+      <string notr="true"/>
      </property>
-     <property name="frameShape">
-      <enum>QFrame::NoFrame</enum>
+     <property name="minimum">
+      <number>1</number>
      </property>
-     <property name="digitCount">
-      <number>3</number>
+     <property name="maximum">
+      <number>100</number>
      </property>
-     <property name="segmentStyle">
-      <enum>QLCDNumber::Flat</enum>
+     <property name="value">
+      <number>1</number>
      </property>
-     <property name="value" stdset="0">
-      <double>300.000000000000000</double>
+     <property name="sliderPosition">
+      <number>1</number>
      </property>
-     <property name="intValue" stdset="0">
-      <number>300</number>
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
      </property>
-    </widget>
-    <widget class="QLabel" name="aVLabel">
-     <property name="geometry">
-      <rect>
-       <x>254</x>
-       <y>208</y>
-       <width>82</width>
-       <height>24</height>
-      </rect>
+     <property name="invertedAppearance">
+      <bool>false</bool>
      </property>
-     <property name="text">
-      <string>Arc Voltage</string>
+     <property name="invertedControls">
+      <bool>false</bool>
      </property>
     </widget>
-    <widget class="LED" name="arc_ok_led">
+    <widget class="QScrollBar" name="rapid_override">
      <property name="geometry">
       <rect>
-       <x>228</x>
-       <y>233</y>
-       <width>24</width>
-       <height>24</height>
-      </rect>
-     </property>
-     <property name="color">
-      <color>
-       <red>115</red>
-       <green>210</green>
-       <blue>22</blue>
-      </color>
-     </property>
-    </widget>
-    <widget class="QLabel" name="Label">
-     <property name="geometry">
-      <rect>
-       <x>254</x>
-       <y>232</y>
-       <width>82</width>
-       <height>24</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Arc OK</string>
-     </property>
-    </widget>
-    <widget class="QLabel" name="Label_2">
-     <property name="geometry">
-      <rect>
-       <x>254</x>
-       <y>256</y>
-       <width>82</width>
-       <height>24</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Torch On</string>
-     </property>
-    </widget>
-    <widget class="QLabel" name="Label_3">
-     <property name="geometry">
-      <rect>
-       <x>254</x>
+       <x>58</x>
        <y>280</y>
-       <width>82</width>
+       <width>192</width>
        <height>24</height>
       </rect>
      </property>
-     <property name="text">
-      <string>Float Switch</string>
+     <property name="focusPolicy">
+      <enum>Qt::StrongFocus</enum>
+     </property>
+     <property name="styleSheet">
+      <string notr="true"/>
+     </property>
+     <property name="minimum">
+      <number>1</number>
+     </property>
+     <property name="maximum">
+      <number>100</number>
+     </property>
+     <property name="value">
+      <number>1</number>
+     </property>
+     <property name="sliderPosition">
+      <number>1</number>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="invertedAppearance">
+      <bool>false</bool>
+     </property>
+     <property name="invertedControls">
+      <bool>false</bool>
      </property>
     </widget>
-    <widget class="QLabel" name="Label_4">
+    <widget class="QScrollBar" name="jog_rate">
      <property name="geometry">
       <rect>
-       <x>254</x>
-       <y>304</y>
-       <width>82</width>
+       <x>58</x>
+       <y>332</y>
+       <width>192</width>
        <height>24</height>
       </rect>
      </property>
-     <property name="text">
-      <string>Breakaway</string>
+     <property name="focusPolicy">
+      <enum>Qt::StrongFocus</enum>
+     </property>
+     <property name="styleSheet">
+      <string notr="true"/>
+     </property>
+     <property name="minimum">
+      <number>1</number>
+     </property>
+     <property name="maximum">
+      <number>100</number>
+     </property>
+     <property name="value">
+      <number>1</number>
+     </property>
+     <property name="sliderPosition">
+      <number>1</number>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="invertedAppearance">
+      <bool>false</bool>
+     </property>
+     <property name="invertedControls">
+      <bool>false</bool>
      </property>
     </widget>
-    <widget class="QLabel" name="Label_5">
-     <property name="geometry">
-      <rect>
-       <x>254</x>
-       <y>328</y>
-       <width>82</width>
-       <height>24</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Safe Limited</string>
-     </property>
-    </widget>
-    <widget class="LED" name="torch_on_led">
-     <property name="geometry">
-      <rect>
-       <x>228</x>
-       <y>257</y>
-       <width>24</width>
-       <height>24</height>
-      </rect>
-     </property>
-     <property name="color">
-      <color>
-       <red>245</red>
-       <green>121</green>
-       <blue>0</blue>
-      </color>
-     </property>
-    </widget>
-    <widget class="LED" name="float_switch_led">
-     <property name="geometry">
-      <rect>
-       <x>228</x>
-       <y>281</y>
-       <width>24</width>
-       <height>24</height>
-      </rect>
-     </property>
-    </widget>
-    <widget class="LED" name="breakaway_switch_led">
-     <property name="geometry">
-      <rect>
-       <x>228</x>
-       <y>305</y>
-       <width>24</width>
-       <height>24</height>
-      </rect>
-     </property>
-    </widget>
-    <widget class="LED" name="safe_height_limited_led">
-     <property name="geometry">
-      <rect>
-       <x>228</x>
-       <y>329</y>
-       <width>24</width>
-       <height>24</height>
-      </rect>
-     </property>
-    </widget>
+    <zorder>rOLabel</zorder>
+    <zorder>jRLabel</zorder>
+    <zorder>fOLabel</zorder>
+    <zorder>feed_override</zorder>
     <zorder>home_all</zorder>
     <zorder>dro_x</zorder>
     <zorder>dro_y</zorder>
     <zorder>dro_z</zorder>
-    <zorder>feed_override_slider</zorder>
     <zorder>feed_override_status</zorder>
-    <zorder>rapid_override_status</zorder>
-    <zorder>jog_rate_status</zorder>
-    <zorder>rapid_override_slider</zorder>
-    <zorder>jog_rate_slider</zorder>
-    <zorder>jRLabel</zorder>
-    <zorder>rOLabel</zorder>
     <zorder>zero_z_button</zorder>
     <zorder>zero_y_button</zorder>
     <zorder>zero_x_button</zorder>
     <zorder>work_coordinates_button</zorder>
-    <zorder>fOLabel</zorder>
     <zorder>jog_x_plus_button</zorder>
     <zorder>jog_x_minus_button</zorder>
     <zorder>jog_y_minus_button</zorder>
@@ -3638,26 +3664,18 @@ Z+</string>
     <zorder>y_label</zorder>
     <zorder>z_label</zorder>
     <zorder>label_11</zorder>
-    <zorder>arc_voltage</zorder>
-    <zorder>aVLabel</zorder>
-    <zorder>arc_ok_led</zorder>
-    <zorder>Label</zorder>
-    <zorder>Label_2</zorder>
-    <zorder>Label_3</zorder>
-    <zorder>Label_4</zorder>
-    <zorder>Label_5</zorder>
-    <zorder>torch_on_led</zorder>
-    <zorder>float_switch_led</zorder>
-    <zorder>breakaway_switch_led</zorder>
-    <zorder>safe_height_limited_led</zorder>
+    <zorder>rapid_override</zorder>
+    <zorder>jog_rate</zorder>
+    <zorder>jog_rate_status</zorder>
+    <zorder>rapid_override_status</zorder>
    </widget>
    <widget class="StateEnableGridLayout" name="button_layout">
     <property name="geometry">
      <rect>
       <x>220</x>
-      <y>410</y>
-      <width>336</width>
-      <height>100</height>
+      <y>418</y>
+      <width>308</width>
+      <height>48</height>
      </rect>
     </property>
     <property name="is_homed_status" stdset="0">
@@ -3666,14 +3684,16 @@ Z+</string>
     <widget class="PushButton" name="x_to_home">
      <property name="geometry">
       <rect>
-       <x>0</x>
+       <x>156</x>
        <y>0</y>
-       <width>109</width>
+       <width>48</width>
        <height>48</height>
       </rect>
      </property>
      <property name="text">
-      <string>X to Home</string>
+      <string>X
+to
+Home</string>
      </property>
      <property name="python_command_option" stdset="0">
       <bool>false</bool>
@@ -3682,137 +3702,55 @@ Z+</string>
     <widget class="PushButton" name="y_to_home">
      <property name="geometry">
       <rect>
-       <x>113</x>
+       <x>208</x>
        <y>0</y>
-       <width>110</width>
+       <width>48</width>
        <height>48</height>
       </rect>
      </property>
      <property name="text">
-      <string>Y to Home</string>
+      <string>Y
+to
+Home</string>
      </property>
     </widget>
     <widget class="PushButton" name="z_to_home">
      <property name="geometry">
       <rect>
-       <x>226</x>
+       <x>260</x>
        <y>0</y>
-       <width>109</width>
+       <width>48</width>
        <height>48</height>
       </rect>
      </property>
      <property name="text">
-      <string>Z to Home</string>
+      <string>Z
+to
+Home</string>
      </property>
     </widget>
     <widget class="PushButton" name="dry_run">
      <property name="geometry">
       <rect>
        <x>0</x>
-       <y>52</y>
-       <width>109</width>
-       <height>48</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Dry Run</string>
-     </property>
-    </widget>
-   </widget>
-   <widget class="QFrame" name="button_bottom_frame">
-    <property name="geometry">
-     <rect>
-      <x>220</x>
-      <y>670</y>
-      <width>336</width>
-      <height>48</height>
-     </rect>
-    </property>
-    <property name="frameShape">
-     <enum>QFrame::StyledPanel</enum>
-    </property>
-    <property name="frameShadow">
-     <enum>QFrame::Raised</enum>
-    </property>
-    <widget class="ActionButton" name="status_show_button">
-     <property name="geometry">
-      <rect>
-       <x>255</x>
        <y>0</y>
-       <width>81</width>
+       <width>48</width>
        <height>48</height>
       </rect>
      </property>
      <property name="text">
-      <string>Show
-Status</string>
-     </property>
-     <property name="launch_status_action" stdset="0">
-      <bool>true</bool>
-     </property>
-     <property name="launch_halshow_action" stdset="0">
-      <bool>false</bool>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="hal_scope_button">
-     <property name="geometry">
-      <rect>
-       <x>170</x>
-       <y>0</y>
-       <width>81</width>
-       <height>48</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>HAL
-Scope</string>
-     </property>
-    </widget>
-    <widget class="ActionButton" name="hal_meter_button">
-     <property name="geometry">
-      <rect>
-       <x>85</x>
-       <y>0</y>
-       <width>81</width>
-       <height>48</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>HAL
-Meter</string>
-     </property>
-     <property name="launch_halmeter_action" stdset="0">
-      <bool>true</bool>
-     </property>
-     <property name="launch_halshow_action" stdset="0">
-      <bool>false</bool>
-     </property>
-    </widget>
-    <widget class="ActionButton" name="hal_show_button">
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>0</y>
-       <width>81</width>
-       <height>48</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>HAL
-Show</string>
-     </property>
-     <property name="launch_halshow_action" stdset="0">
-      <bool>true</bool>
+      <string>Dry
+Run</string>
      </property>
     </widget>
    </widget>
    <widget class="GCodeGraphics" name="preview">
     <property name="geometry">
      <rect>
-      <x>560</x>
+      <x>532</x>
       <y>54</y>
-      <width>500</width>
-      <height>352</height>
+      <width>492</width>
+      <height>360</height>
      </rect>
     </property>
     <property name="_view" stdset="0">
@@ -3829,9 +3767,9 @@ Show</string>
    <widget class="QPlainTextEdit" name="error_text">
     <property name="geometry">
      <rect>
-      <x>864</x>
+      <x>832</x>
       <y>618</y>
-      <width>196</width>
+      <width>192</width>
       <height>100</height>
      </rect>
     </property>
@@ -3851,10 +3789,10 @@ Show</string>
    <widget class="GcodeEditor" name="gcoder">
     <property name="geometry">
      <rect>
-      <x>560</x>
-      <y>410</y>
-      <width>300</width>
-      <height>308</height>
+      <x>532</x>
+      <y>418</y>
+      <width>296</width>
+      <height>300</height>
      </rect>
     </property>
     <property name="sizePolicy">
@@ -3875,7 +3813,6 @@ Show</string>
    </widget>
    <zorder>error_text</zorder>
    <zorder>mdi_history</zorder>
-   <zorder>button_bottom_frame</zorder>
    <zorder>control_frame</zorder>
    <zorder>screen_options</zorder>
    <zorder>config_disable</zorder>
@@ -3917,11 +3854,6 @@ Show</string>
    <extends>QWidget</extends>
    <header>qtvcp.widgets.gcode_graphics</header>
    <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>StatusSlider</class>
-   <extends>QSlider</extends>
-   <header>qtvcp.widgets.status_slider</header>
   </customwidget>
   <customwidget>
    <class>AxisToolButton</class>
@@ -4021,19 +3953,12 @@ Show</string>
   <tabstop>jog_z_minus_button</tabstop>
   <tabstop>jog_z_plus_button</tabstop>
   <tabstop>zero_z_button</tabstop>
-  <tabstop>feed_override_slider</tabstop>
-  <tabstop>rapid_override_slider</tabstop>
-  <tabstop>jog_rate_slider</tabstop>
   <tabstop>x_to_home</tabstop>
   <tabstop>y_to_home</tabstop>
   <tabstop>z_to_home</tabstop>
   <tabstop>dry_run</tabstop>
   <tabstop>torch_pulse_start</tabstop>
   <tabstop>reverse</tabstop>
-  <tabstop>hal_show_button</tabstop>
-  <tabstop>hal_meter_button</tabstop>
-  <tabstop>hal_scope_button</tabstop>
-  <tabstop>status_show_button</tabstop>
   <tabstop>forward</tabstop>
   <tabstop>plasmac_settings_tabs</tabstop>
   <tabstop>materials</tabstop>
@@ -4264,7 +4189,7 @@ Show</string>
    <slot>checkbox_changed(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>69</x>
+     <x>96</x>
      <y>354</y>
     </hint>
     <hint type="destinationlabel">
@@ -4280,7 +4205,7 @@ Show</string>
    <slot>checkbox_changed(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>68</x>
+     <x>96</x>
      <y>380</y>
     </hint>
     <hint type="destinationlabel">
@@ -4296,7 +4221,7 @@ Show</string>
    <slot>checkbox_changed(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>65</x>
+     <x>96</x>
      <y>535</y>
     </hint>
     <hint type="destinationlabel">
@@ -4328,7 +4253,7 @@ Show</string>
    <slot>checkbox_changed(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>70</x>
+     <x>96</x>
      <y>638</y>
     </hint>
     <hint type="destinationlabel">
@@ -4601,7 +4526,7 @@ Show</string>
    <hints>
     <hint type="sourcelabel">
      <x>351</x>
-     <y>545</y>
+     <y>705</y>
     </hint>
     <hint type="destinationlabel">
      <x>346</x>
@@ -4616,8 +4541,8 @@ Show</string>
    <slot>torch_pulse_start_pressed()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>194</x>
-     <y>599</y>
+     <x>220</x>
+     <y>607</y>
     </hint>
     <hint type="destinationlabel">
      <x>189</x>
@@ -4632,8 +4557,8 @@ Show</string>
    <slot>torch_pulse_start_released()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>211</x>
-     <y>599</y>
+     <x>220</x>
+     <y>607</y>
     </hint>
     <hint type="destinationlabel">
      <x>211</x>
@@ -4648,8 +4573,8 @@ Show</string>
    <slot>reverse_pressed()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>196</x>
-     <y>658</y>
+     <x>220</x>
+     <y>666</y>
     </hint>
     <hint type="destinationlabel">
      <x>184</x>
@@ -4664,8 +4589,8 @@ Show</string>
    <slot>reverse_released()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>209</x>
-     <y>654</y>
+     <x>220</x>
+     <y>662</y>
     </hint>
     <hint type="destinationlabel">
      <x>226</x>
@@ -4680,8 +4605,8 @@ Show</string>
    <slot>forward_pressed()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>478</x>
-     <y>644</y>
+     <x>480</x>
+     <y>652</y>
     </hint>
     <hint type="destinationlabel">
      <x>363</x>
@@ -4712,8 +4637,8 @@ Show</string>
    <slot>x_to_home_clicked()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>248</x>
-     <y>451</y>
+     <x>404</x>
+     <y>459</y>
     </hint>
     <hint type="destinationlabel">
      <x>605</x>
@@ -4728,8 +4653,8 @@ Show</string>
    <slot>y_to_home_clicked()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>387</x>
-     <y>452</y>
+     <x>475</x>
+     <y>460</y>
     </hint>
     <hint type="destinationlabel">
      <x>604</x>
@@ -4744,8 +4669,8 @@ Show</string>
    <slot>z_to_home_clicked()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>473</x>
-     <y>441</y>
+     <x>507</x>
+     <y>449</y>
     </hint>
     <hint type="destinationlabel">
      <x>610</x>
@@ -4760,7 +4685,7 @@ Show</string>
    <slot>edit_clicked()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>673</x>
+     <x>697</x>
      <y>19</y>
     </hint>
     <hint type="destinationlabel">
@@ -4802,22 +4727,6 @@ Show</string>
    </hints>
   </connection>
   <connection>
-   <sender>hal_scope_button</sender>
-   <signal>clicked()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>hal_scope_clicked()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>372</x>
-     <y>710</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>574</x>
-     <y>710</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
    <sender>save</sender>
    <signal>clicked()</signal>
    <receiver>MainWindow</receiver>
@@ -4846,6 +4755,54 @@ Show</string>
     <hint type="destinationlabel">
      <x>132</x>
      <y>739</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>jog_rate</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>jog_rate_changed()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>289</x>
+     <y>408</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>530</x>
+     <y>395</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>feed_override</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>feed_override_changed()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>462</x>
+     <y>294</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>531</x>
+     <y>296</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>rapid_override</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>rapid_override_changed()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>448</x>
+     <y>351</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>530</x>
+     <y>341</y>
     </hint>
    </hints>
   </connection>
@@ -4887,5 +4844,8 @@ Show</string>
   <slot>hal_scope_clicked()</slot>
   <slot>save_clicked()</slot>
   <slot>reload_clicked()</slot>
+  <slot>jog_rate_changed()</slot>
+  <slot>rapid_override_changed()</slot>
+  <slot>feed_override_changed()</slot>
  </slots>
 </ui>

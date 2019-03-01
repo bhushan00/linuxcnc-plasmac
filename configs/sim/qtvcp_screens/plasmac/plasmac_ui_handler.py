@@ -79,6 +79,9 @@ class HandlerClass:
         self.w.tp_label.setText('%0.1f Sec' % (int(self.w.torch_pulse_time.value()) * 0.1))
         self.w.pm_label.setText('%s%%' % self.w.paused_motion_speed.value())
         self.w.setStyleSheet(open('plasmac.qss').read())
+        self.w.feed_override.setMaximum(INFO.MAX_FEED_OVERRIDE)
+        self.w.rapid_override.setMaximum(100)
+        self.w.jog_rate.setMaximum(INFO.MAX_TRAJ_VELOCITY)
         STATUS.connect('periodic', self.periodic)
         STATUS.connect('error', self.error__)
         STATUS.connect('all-homed', self.is_homed)
@@ -190,15 +193,12 @@ class HandlerClass:
             self.w.cut_volts.setValue(self.materialsList[index][8])
 
     def x_to_home_clicked(self):
-        print 'x to home'
         self.goto_home('X')
 
     def y_to_home_clicked(self):
-        print 'y to home'
         self.goto_home('Y')
 
     def z_to_home_clicked(self):
-        print 'z to home'
         self.goto_home('Z')
 
     def goto_home(self,axis):
@@ -207,6 +207,15 @@ class HandlerClass:
             if not hal.get_value('halui.mode.is-mdi'):
                 self.cmnd.mode(linuxcnc.MODE_MDI)
             self.cmnd.mdi('G53 G0 ' + axis + home)
+
+    def feed_override_changed(self, rate):
+        ACTION.SET_FEED_RATE(rate)
+
+    def rapid_override_changed(self, rate):
+        ACTION.SET_RAPID_RATE(rate)
+
+    def jog_rate_changed(self, rate):
+        STATUS.set_jograte(float(rate))
 
     def height_override_changed(self, height):
         self.w.ho_label.setText('%0.1f V' % (int(height) * 0.1))
@@ -537,17 +546,20 @@ class HandlerClass:
         units = hal.get_value('halui.machine.units-per-mm')
         maxPidP = self.thcFeedRate / units * 0.1
         if mode == 0:
-            #self.w.arc_voltage.show()
-            #self.w.aVLabel.setText('Arc Voltage')
-            #self.w.height_frame.show()     # HEIGHT OVERRIDE
+            self.w.arc_ok_high.show()
+            self.w.aOHLabel.show()
+            self.w.arc_ok_low.show()
+            self.w.aOLLabel.show()
             if self.oldMode == 1:
-                self.w.arc_ok_high.show()
-                self.w.aOHLabel.show()
-                self.w.arc_ok_low.show()
-                self.w.aOHLabel.show()
                 self.w.arc_frame.resize(self.w.arc_frame.geometry().width(), self.w.arc_frame.geometry().height() + 52)
                 self.w.offsets_frame.move(self.w.offsets_frame.geometry().left(), self.w.offsets_frame.geometry().top() + 52)
+                self.w.settings_frame.move(self.w.settings_frame.geometry().left(), self.w.settings_frame.geometry().top() + 52)
             else:
+                self.w.arc_voltage.show()
+                self.w.aVLabel.setText('Arc Voltage')
+                self.w.height_override.show()
+                self.w.ho_label.show()
+                self.w.ho_label_1.show()
                 self.w.cut_volts.show()
                 self.w.cVLabel.show()
                 self.w.cut_frame.resize(self.w.cut_frame.geometry().width(), self.w.cut_frame.geometry().height() + 26)
@@ -570,10 +582,6 @@ class HandlerClass:
                 self.w.aVSLabel.show()
                 self.w.arc_voltage_offset.show()
                 self.w.aVOLabel.show()
-                self.w.arc_ok_high.show()
-                self.w.aOHLabel.show()
-                self.w.arc_ok_low.show()
-                self.w.aOLLabel.show()
                 self.w.arc_frame.resize(self.w.arc_frame.geometry().width(), self.w.arc_frame.geometry().height() + 104)
                 self.w.offsets_frame.move(self.w.offsets_frame.geometry().left(), self.w.offsets_frame.geometry().top() + 104)
                 self.w.pid_i_gain.show()
@@ -581,11 +589,7 @@ class HandlerClass:
                 self.w.pid_d_gain.show()
                 self.w.pDLabel.show()
                 self.w.offsets_frame.resize(self.w.offsets_frame.geometry().width(), self.w.offsets_frame.geometry().height() + 52)
-                self.w.run_tab.resize(self.w.run_tab.geometry().width(), self.w.run_tab.geometry().height() + 181)
-                self.w.config_tab.resize(self.w.config_tab.geometry().width(), self.w.config_tab.geometry().height() + 181)
-                self.w.plasmac_settings_tabs.resize(self.w.plasmac_settings_tabs.geometry().width(), self.w.plasmac_settings_tabs.geometry().height() + 181)
-
-
+                self.w.settings_frame.move(self.w.settings_frame.geometry().left(), self.w.settings_frame.geometry().top() + 156)
         elif mode == 1:
             if self.oldMode == 0:
                 self.w.arc_ok_high.close()
@@ -594,7 +598,13 @@ class HandlerClass:
                 self.w.aOHLabel.close()
                 self.w.arc_frame.resize(self.w.arc_frame.geometry().width(), self.w.arc_frame.geometry().height() - 52)
                 self.w.offsets_frame.move(self.w.offsets_frame.geometry().left(), self.w.offsets_frame.geometry().top() - 52)
+                self.w.settings_frame.move(self.w.settings_frame.geometry().left(), self.w.settings_frame.geometry().top() - 52)
             else:
+                self.w.arc_voltage.show()
+                self.w.aVLabel.setText('Arc Voltage')
+                self.w.height_override.show()
+                self.w.ho_label.show()
+                self.w.ho_label_1.show()
                 self.w.cut_volts.show()
                 self.w.cVLabel.show()
                 self.w.cut_frame.resize(self.w.cut_frame.geometry().width(), self.w.cut_frame.geometry().height() + 26)
@@ -624,76 +634,54 @@ class HandlerClass:
                 self.w.pid_d_gain.show()
                 self.w.pDLabel.show()
                 self.w.offsets_frame.resize(self.w.offsets_frame.geometry().width(), self.w.offsets_frame.geometry().height() + 52)
+                self.w.settings_frame.move(self.w.settings_frame.geometry().left(), self.w.settings_frame.geometry().top() + 104)
         elif mode == 2:
+            self.w.arc_voltage.close()
+            self.w.aVLabel.setText('')
+            self.w.height_override.close()
+            self.w.ho_label.close()
+            self.w.ho_label_1.close()
+            self.w.cut_volts.close()
+            self.w.cVLabel.close()
+            self.w.cut_frame.resize(self.w.cut_frame.geometry().width(), self.w.cut_frame.geometry().height() - 26)
+            self.w.thc_frame.move(self.w.thc_frame.geometry().left(), self.w.thc_frame.geometry().top() - 26)
+            self.w.use_auto_volts.close()
+            self.w.pid_p_gain.setRange(1, 100)
+            self.w.pPLabel.setText('Speed (%)')
+            self.w.thc_threshold.close()
+            self.w.tTLabel.close()
+            self.w.pid_p_gain.move(self.w.pid_p_gain.geometry().left(), self.w.pid_p_gain.geometry().top() - 52)
+            self.w.pPLabel.move(self.w.pPLabel.geometry().left(), self.w.pPLabel.geometry().top() - 52)
+            self.w.up_led.move(self.w.up_led.geometry().left(), self.w.up_led.geometry().top() - 52)
+            self.w.lULabel.move(self.w.lULabel.geometry().left(), self.w.lULabel.geometry().top() - 52)
+            self.w.down_led.move(self.w.down_led.geometry().left(), self.w.down_led.geometry().top() - 52)
+            self.w.lDLabel.move(self.w.lULabel.geometry().left(), self.w.lDLabel.geometry().top() - 52)
+            self.w.thc_frame.resize(self.w.thc_frame.geometry().width(), self.w.thc_frame.geometry().height() - 52)
+            self.w.corner_frame.move(self.w.corner_frame.geometry().left(), self.w.corner_frame.geometry().top() - 78)
+            self.w.kerf_frame.close()
+            self.w.arc_voltage_scale.close()
+            self.w.aVSLabel.close()
+            self.w.arc_voltage_offset.close()
+            self.w.aVOLabel.close()
+            self.w.pid_i_gain.close()
+            self.w.pILabel.close()
+            self.w.pid_d_gain.close()
+            self.w.pDLabel.close()
+            self.w.offsets_frame.resize(self.w.offsets_frame.geometry().width(), self.w.offsets_frame.geometry().height() - 52)
             if self.oldMode == 0:
-                self.w.cut_volts.close()
-                self.w.cVLabel.close()
-                self.w.cut_frame.resize(self.w.cut_frame.geometry().width(), self.w.cut_frame.geometry().height() - 26)
-                self.w.thc_frame.move(self.w.thc_frame.geometry().left(), self.w.thc_frame.geometry().top() - 26)
-                self.w.use_auto_volts.close()
-                self.w.pid_p_gain.setRange(1, 100)
-                self.w.pPLabel.setText('Speed (%)')
-                self.w.thc_threshold.close()
-                self.w.tTLabel.close()
-                self.w.pid_p_gain.move(self.w.pid_p_gain.geometry().left(), self.w.pid_p_gain.geometry().top() - 52)
-                self.w.pPLabel.move(self.w.pPLabel.geometry().left(), self.w.pPLabel.geometry().top() - 52)
-                self.w.up_led.move(self.w.up_led.geometry().left(), self.w.up_led.geometry().top() - 52)
-                self.w.lULabel.move(self.w.lULabel.geometry().left(), self.w.lULabel.geometry().top() - 52)
-                self.w.down_led.move(self.w.down_led.geometry().left(), self.w.down_led.geometry().top() - 52)
-                self.w.lDLabel.move(self.w.lULabel.geometry().left(), self.w.lDLabel.geometry().top() - 52)
-                self.w.thc_frame.resize(self.w.thc_frame.geometry().width(), self.w.thc_frame.geometry().height() - 52)
-                self.w.corner_frame.move(self.w.corner_frame.geometry().left(), self.w.corner_frame.geometry().top() - 78)
-                self.w.kerf_frame.close()
-                self.w.arc_voltage_scale.close()
-                self.w.aVSLabel.close()
-                self.w.arc_voltage_offset.close()
-                self.w.aVOLabel.close()
                 self.w.arc_ok_high.close()
                 self.w.aOHLabel.close()
                 self.w.arc_ok_low.close()
                 self.w.aOLLabel.close()
                 self.w.arc_frame.resize(self.w.arc_frame.geometry().width(), self.w.arc_frame.geometry().height() - 104)
                 self.w.offsets_frame.move(self.w.offsets_frame.geometry().left(), self.w.offsets_frame.geometry().top() - 104)
-                self.w.pid_i_gain.close()
-                self.w.pILabel.close()
-                self.w.pid_d_gain.close()
-                self.w.pDLabel.close()
-                self.w.offsets_frame.resize(self.w.offsets_frame.geometry().width(), self.w.offsets_frame.geometry().height() - 52)
-                self.w.run_tab.resize(self.w.run_tab.geometry().width(), self.w.run_tab.geometry().height() - 181)
-                self.w.config_tab.resize(self.w.config_tab.geometry().width(), self.w.config_tab.geometry().height() - 181)
-                self.w.plasmac_settings_tabs.resize(self.w.plasmac_settings_tabs.geometry().width(), self.w.plasmac_settings_tabs.geometry().height() - 181)
+                self.w.settings_frame.move(self.w.settings_frame.geometry().left(), self.w.settings_frame.geometry().top() - 156)
             else:
-                self.w.cut_volts.close()
-                self.w.cVLabel.close()
-                self.w.cut_frame.resize(self.w.cut_frame.geometry().width(), self.w.cut_frame.geometry().height() - 26)
-                self.w.thc_frame.move(self.w.thc_frame.geometry().left(), self.w.thc_frame.geometry().top() - 26)
-                self.w.use_auto_volts.close()
-                self.w.pid_p_gain.setRange(1, 100)
-                self.w.pPLabel.setText('Speed (%)')
-                self.w.thc_threshold.close()
-                self.w.tTLabel.close()
-                self.w.pid_p_gain.move(self.w.pid_p_gain.geometry().left(), self.w.pid_p_gain.geometry().top() - 52)
-                self.w.pPLabel.move(self.w.pPLabel.geometry().left(), self.w.pPLabel.geometry().top() - 52)
-                self.w.up_led.move(self.w.up_led.geometry().left(), self.w.up_led.geometry().top() - 52)
-                self.w.lULabel.move(self.w.lULabel.geometry().left(), self.w.lULabel.geometry().top() - 52)
-                self.w.down_led.move(self.w.down_led.geometry().left(), self.w.down_led.geometry().top() - 52)
-                self.w.lDLabel.move(self.w.lULabel.geometry().left(), self.w.lDLabel.geometry().top() - 52)
-                self.w.thc_frame.resize(self.w.thc_frame.geometry().width(), self.w.thc_frame.geometry().height() - 52)
-                self.w.corner_frame.move(self.w.corner_frame.geometry().left(), self.w.corner_frame.geometry().top() - 78)
-                self.w.kerf_frame.close()
-                self.w.arc_voltage_scale.close()
-                self.w.aVSLabel.close()
-                self.w.arc_voltage_offset.close()
-                self.w.aVOLabel.close()
                 self.w.arc_frame.resize(self.w.arc_frame.geometry().width(), self.w.arc_frame.geometry().height() - 52)
                 self.w.offsets_frame.move(self.w.offsets_frame.geometry().left(), self.w.offsets_frame.geometry().top() - 52)
-                self.w.pid_i_gain.close()
-                self.w.pILabel.close()
-                self.w.pid_d_gain.close()
-                self.w.pDLabel.close()
-                self.w.offsets_frame.resize(self.w.offsets_frame.geometry().width(), self.w.offsets_frame.geometry().height() - 52)
+                self.w.settings_frame.move(self.w.settings_frame.geometry().left(), self.w.settings_frame.geometry().top() - 104)
         else:
-            pass
+            print mode, 'is an invalid plasmac mode...'
         self.oldMode = mode
 
     ###############################
@@ -701,9 +689,20 @@ class HandlerClass:
     ###############################
 
     def periodic(self, w):
+        if self.ini.find('PLASMAC', 'DEBUG') == '1':
+            self.w.mdi_history.setEnabled(True)
+            self.w.mdi_history.MDILine.setEnabled(True)
+
+        self.w.feed_override.setValue(STATUS.stat.feedrate * 100)
+        self.w.rapid_override.setValue(STATUS.stat.rapidrate * 100)
+        self.w.jog_rate.setValue(STATUS.get_jograte())
+        if STATUS.is_metric_mode():
+            self.w.jog_rate_status._set_text(STATUS.get_jograte())
+        else:
+            self.w.jog_rate_status._set_alt_text(STATUS.get_jograte())
         fname = STATUS.stat.file.split('/')[-1]
         self.w.setWindowTitle('PLASMAP   ' + self.mname + '   ' + fname)
-        if STATUS['old']['metric'] == True:
+        if STATUS.is_metric_mode():
             units = 'Metric     '
         else:
             units = 'Inch       '
