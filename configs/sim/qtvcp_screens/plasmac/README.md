@@ -17,6 +17,7 @@ plasmac_gcode.py|removes z axis moves from the opened gcode file.
 plasmac_ui.ui|a QtVCP GUI connecting to the plasmac component.
 plasmac_ui.hal|hal connections for the GUI.
 plasmac_ui_handler.py|python code for the GUI.
+plasmac_qtvcp_preferences|configuration preference fot the GUI.
 
 The .ini files are notated for extra the requirements for these configurations.  
 The minimum .ini file requirements for the plasmac component are:  
