@@ -5,7 +5,7 @@ shutdown_check = False
 sound_player_on = False
 overlay_play_sound = False
 overlay_sound_type = RING
-mainwindow_geometry = 272 131 1062 740
+mainwindow_geometry = 377 102 1024 740
 
 [MCH_MSG_OPTIONS]
 mchnMsg_play_sound = True
@@ -30,7 +30,7 @@ notify_start_detail = This is a test screen for QtVCP
 notify_start_timeout = 10
 
 [DIALOG_OPTIONS]
-EntryDialog-geometry = 6 51 640 480
+EntryDialog-geometry = 554 422 206 92
 toolDialog_play_sound = True
 toolDialog_sound_type = RING
 FileDialog-geometry = 318 199 731 424

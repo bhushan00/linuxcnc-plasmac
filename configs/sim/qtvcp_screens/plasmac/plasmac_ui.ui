@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1062</width>
+    <width>1024</width>
     <height>740</height>
    </rect>
   </property>
@@ -18,13 +18,13 @@
   </property>
   <property name="minimumSize">
    <size>
-    <width>1062</width>
+    <width>1024</width>
     <height>740</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
-    <width>1062</width>
+    <width>1024</width>
     <height>740</height>
    </size>
   </property>
@@ -87,7 +87,7 @@
      <enum>QTabWidget::Rounded</enum>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>0</number>
     </property>
     <widget class="QWidget" name="run_tab">
      <property name="sizePolicy">
@@ -532,7 +532,7 @@
          <double>300.000000000000000</double>
         </property>
         <property name="singleStep">
-         <double>0.100000000000000</double>
+         <double>1.000000000000000</double>
         </property>
         <property name="value">
          <double>0.000000000000000</double>
@@ -1773,7 +1773,7 @@
      <rect>
       <x>220</x>
       <y>2</y>
-      <width>840</width>
+      <width>802</width>
       <height>48</height>
      </rect>
     </property>
@@ -1792,7 +1792,7 @@
     <widget class="ActionButton" name="viewz">
      <property name="geometry">
       <rect>
-       <x>636</x>
+       <x>650</x>
        <y>0</y>
        <width>48</width>
        <height>48</height>
@@ -1817,7 +1817,7 @@
     <widget class="ActionButton" name="viewz2">
      <property name="geometry">
       <rect>
-       <x>688</x>
+       <x>702</x>
        <y>0</y>
        <width>48</width>
        <height>48</height>
@@ -1842,7 +1842,7 @@
     <widget class="ActionButton" name="viewp">
      <property name="geometry">
       <rect>
-       <x>740</x>
+       <x>754</x>
        <y>0</y>
        <width>48</width>
        <height>48</height>
@@ -1867,7 +1867,7 @@
     <widget class="ActionButton" name="clear">
      <property name="geometry">
       <rect>
-       <x>792</x>
+       <x>598</x>
        <y>0</y>
        <width>48</width>
        <height>48</height>
@@ -1880,7 +1880,9 @@
       </sizepolicy>
      </property>
      <property name="text">
-      <string>Clear</string>
+      <string>
+Clear
+F10</string>
      </property>
      <property name="view_change_action" stdset="0">
       <bool>true</bool>
@@ -1905,7 +1907,9 @@
       </sizepolicy>
      </property>
      <property name="text">
-      <string>Estop</string>
+      <string>
+Estop
+F1</string>
      </property>
      <property name="indicator_option" stdset="0">
       <bool>true</bool>
@@ -1956,7 +1960,9 @@
       </sizepolicy>
      </property>
      <property name="text">
-      <string>Power</string>
+      <string>
+Power
+F2</string>
      </property>
      <property name="indicator_option" stdset="0">
       <bool>true</bool>
@@ -2013,7 +2019,9 @@
       </sizepolicy>
      </property>
      <property name="text">
-      <string>Open</string>
+      <string>
+Open
+F4</string>
      </property>
      <property name="estop_action" stdset="0">
       <bool>false</bool>
@@ -2044,7 +2052,9 @@
       </sizepolicy>
      </property>
      <property name="text">
-      <string>Run</string>
+      <string>
+Run
+F5</string>
      </property>
      <property name="estop_action" stdset="0">
       <bool>false</bool>
@@ -2081,7 +2091,9 @@
       </font>
      </property>
      <property name="text">
-      <string>Pause</string>
+      <string>
+Pause
+F6</string>
      </property>
      <property name="checkable">
       <bool>false</bool>
@@ -2116,10 +2128,14 @@
       <double>0.300000000000000</double>
      </property>
      <property name="true_state_string" stdset="0">
-      <string>Resum</string>
+      <string>
+Resum
+F6</string>
      </property>
      <property name="false_state_string" stdset="0">
-      <string>Pause</string>
+      <string>
+Pause
+F6</string>
      </property>
      <property name="true_python_cmd_string" stdset="0">
       <string>print&quot;true command&quot;</string>
@@ -2164,7 +2180,9 @@
       </font>
      </property>
      <property name="text">
-      <string>Stop</string>
+      <string>
+Stop
+F7</string>
      </property>
      <property name="estop_action" stdset="0">
       <bool>false</bool>
@@ -2185,7 +2203,7 @@
       <number>-1</number>
      </property>
     </widget>
-    <widget class="QPushButton" name="pushButton_4">
+    <widget class="QPushButton" name="exit_button">
      <property name="geometry">
       <rect>
        <x>0</x>
@@ -2195,7 +2213,9 @@
       </rect>
      </property>
      <property name="text">
-      <string>Exit</string>
+      <string>
+Exit
+Esc</string>
      </property>
     </widget>
     <widget class="QPushButton" name="edit_button">
@@ -2208,13 +2228,15 @@
       </rect>
      </property>
      <property name="text">
-      <string>Edit</string>
+      <string>
+Edit
+F9</string>
      </property>
     </widget>
-    <widget class="ActionButton" name="run_from_button">
+    <widget class="ActionButton" name="home_all">
      <property name="geometry">
       <rect>
-       <x>416</x>
+       <x>156</x>
        <y>0</y>
        <width>48</width>
        <height>48</height>
@@ -2226,33 +2248,68 @@
        <verstretch>0</verstretch>
       </sizepolicy>
      </property>
-     <property name="font">
-      <font>
-       <kerning>true</kerning>
-      </font>
-     </property>
      <property name="text">
-      <string>Run
-From
-Line</string>
+      <string>All
+Home
+F3</string>
+     </property>
+     <property name="indicator_option" stdset="0">
+      <bool>true</bool>
+     </property>
+     <property name="indicator_HAL_pin_option" stdset="0">
+      <bool>false</bool>
+     </property>
+     <property name="checked_state_text_option" stdset="0">
+      <bool>false</bool>
+     </property>
+     <property name="on_color" stdset="0">
+      <color>
+       <red>115</red>
+       <green>210</green>
+       <blue>22</blue>
+      </color>
+     </property>
+     <property name="off_color" stdset="0">
+      <color>
+       <red>255</red>
+       <green>0</green>
+       <blue>0</blue>
+      </color>
+     </property>
+     <property name="indicator_size" stdset="0">
+      <double>0.300000000000000</double>
+     </property>
+     <property name="true_state_string" stdset="0">
+      <string>All
+Home</string>
+     </property>
+     <property name="false_state_string" stdset="0">
+      <string>All
+Home</string>
      </property>
      <property name="estop_action" stdset="0">
       <bool>false</bool>
      </property>
-     <property name="abort_action" stdset="0">
-      <bool>true</bool>
-     </property>
-     <property name="pause_action" stdset="0">
-      <bool>false</bool>
-     </property>
      <property name="home_action" stdset="0">
-      <bool>false</bool>
-     </property>
-     <property name="feed_over_action" stdset="0">
-      <bool>false</bool>
+      <bool>true</bool>
      </property>
      <property name="joint_number" stdset="0">
       <number>-1</number>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="run_from_button">
+     <property name="geometry">
+      <rect>
+       <x>416</x>
+       <y>0</y>
+       <width>48</width>
+       <height>48</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Run
+From
+F8</string>
      </property>
     </widget>
    </widget>
@@ -2262,11 +2319,17 @@ Line</string>
     </property>
     <property name="geometry">
      <rect>
-      <x>832</x>
+      <x>836</x>
       <y>418</y>
-      <width>192</width>
+      <width>186</width>
       <height>196</height>
      </rect>
+    </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
     </property>
     <property name="minimumSize">
      <size>
@@ -2276,7 +2339,7 @@ Line</string>
     </property>
     <property name="maximumSize">
      <size>
-      <width>196</width>
+      <width>186</width>
       <height>16777215</height>
      </size>
     </property>
@@ -2318,27 +2381,17 @@ Line</string>
     <property name="focusOverlay_option" stdset="0">
      <bool>true</bool>
     </property>
-    <property name="calculatorDialog_option" stdset="0">
+    <property name="entryDialog_option" stdset="0">
      <bool>true</bool>
     </property>
-   </widget>
-   <widget class="FileDialog" name="open_file_dialog">
-    <property name="geometry">
-     <rect>
-      <x>0</x>
-      <y>0</y>
-      <width>100</width>
-      <height>100</height>
-     </rect>
+    <property name="fileDialog_option" stdset="0">
+     <bool>true</bool>
     </property>
-    <property name="maximumSize">
-     <size>
-      <width>16777215</width>
-      <height>16777215</height>
-     </size>
+    <property name="originOffsetDialog_option" stdset="0">
+     <bool>true</bool>
     </property>
-    <property name="state">
-     <bool>false</bool>
+    <property name="calculatorDialog_option" stdset="0">
+     <bool>true</bool>
     </property>
    </widget>
    <widget class="QFrame" name="control_frame">
@@ -2839,69 +2892,6 @@ Line</string>
     <property name="frameShadow">
      <enum>QFrame::Raised</enum>
     </property>
-    <widget class="ActionButton" name="home_all">
-     <property name="geometry">
-      <rect>
-       <x>104</x>
-       <y>0</y>
-       <width>48</width>
-       <height>48</height>
-      </rect>
-     </property>
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="text">
-      <string>All
-Home</string>
-     </property>
-     <property name="indicator_option" stdset="0">
-      <bool>true</bool>
-     </property>
-     <property name="indicator_HAL_pin_option" stdset="0">
-      <bool>false</bool>
-     </property>
-     <property name="checked_state_text_option" stdset="0">
-      <bool>true</bool>
-     </property>
-     <property name="on_color" stdset="0">
-      <color>
-       <red>115</red>
-       <green>210</green>
-       <blue>22</blue>
-      </color>
-     </property>
-     <property name="off_color" stdset="0">
-      <color>
-       <red>255</red>
-       <green>0</green>
-       <blue>0</blue>
-      </color>
-     </property>
-     <property name="indicator_size" stdset="0">
-      <double>0.300000000000000</double>
-     </property>
-     <property name="true_state_string" stdset="0">
-      <string>All
-Home</string>
-     </property>
-     <property name="false_state_string" stdset="0">
-      <string>All
-Home</string>
-     </property>
-     <property name="estop_action" stdset="0">
-      <bool>false</bool>
-     </property>
-     <property name="home_action" stdset="0">
-      <bool>true</bool>
-     </property>
-     <property name="joint_number" stdset="0">
-      <number>-1</number>
-     </property>
-    </widget>
     <widget class="DROLabel" name="dro_x">
      <property name="geometry">
       <rect>
@@ -3274,7 +3264,7 @@ Off</string>
     <widget class="SystemToolButton" name="work_coordinates_button">
      <property name="geometry">
       <rect>
-       <x>260</x>
+       <x>104</x>
        <y>0</y>
        <width>48</width>
        <height>48</height>
@@ -3644,7 +3634,6 @@ Z+</string>
     <zorder>jRLabel</zorder>
     <zorder>fOLabel</zorder>
     <zorder>feed_override</zorder>
-    <zorder>home_all</zorder>
     <zorder>dro_x</zorder>
     <zorder>dro_y</zorder>
     <zorder>dro_z</zorder>
@@ -3749,7 +3738,7 @@ Run</string>
      <rect>
       <x>532</x>
       <y>54</y>
-      <width>492</width>
+      <width>490</width>
       <height>360</height>
      </rect>
     </property>
@@ -3767,11 +3756,23 @@ Run</string>
    <widget class="QPlainTextEdit" name="error_text">
     <property name="geometry">
      <rect>
-      <x>832</x>
+      <x>836</x>
       <y>618</y>
-      <width>192</width>
+      <width>186</width>
       <height>100</height>
      </rect>
+    </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>16777215</width>
+      <height>16777215</height>
+     </size>
     </property>
     <property name="verticalScrollBarPolicy">
      <enum>Qt::ScrollBarAlwaysOn</enum>
@@ -3791,7 +3792,7 @@ Run</string>
      <rect>
       <x>532</x>
       <y>418</y>
-      <width>296</width>
+      <width>300</width>
       <height>300</height>
      </rect>
     </property>
@@ -3811,18 +3812,17 @@ Run</string>
      <bool>false</bool>
     </property>
    </widget>
-   <zorder>error_text</zorder>
    <zorder>mdi_history</zorder>
    <zorder>control_frame</zorder>
    <zorder>screen_options</zorder>
    <zorder>config_disable</zorder>
    <zorder>button_top_frame</zorder>
-   <zorder>open_file_dialog</zorder>
    <zorder>dro_frame</zorder>
    <zorder>button_layout</zorder>
    <zorder>preview</zorder>
    <zorder>plasmac_settings_tabs</zorder>
    <zorder>gcoder</zorder>
+   <zorder>error_text</zorder>
   </widget>
   <widget class="QStatusBar" name="statusBar">
    <property name="styleSheet">
@@ -3864,11 +3864,6 @@ Run</string>
    <class>LED</class>
    <extends>QWidget</extends>
    <header>qtvcp.widgets.led_widget</header>
-  </customwidget>
-  <customwidget>
-   <class>FileDialog</class>
-   <extends>QDialog</extends>
-   <header>qtvcp.widgets.dialog_widget</header>
   </customwidget>
   <customwidget>
    <class>StateEnableGridLayout</class>
@@ -3932,7 +3927,7 @@ Run</string>
   </customwidget>
  </customwidgets>
  <tabstops>
-  <tabstop>pushButton_4</tabstop>
+  <tabstop>exit_button</tabstop>
   <tabstop>estop_button</tabstop>
   <tabstop>power_button</tabstop>
   <tabstop>home_all</tabstop>
@@ -3941,7 +3936,6 @@ Run</string>
   <tabstop>run_button</tabstop>
   <tabstop>pause_button</tabstop>
   <tabstop>stop_button</tabstop>
-  <tabstop>run_from_button</tabstop>
   <tabstop>edit_button</tabstop>
   <tabstop>jog_increments_button</tabstop>
   <tabstop>jog_x_plus_button</tabstop>
@@ -4526,7 +4520,7 @@ Run</string>
    <hints>
     <hint type="sourcelabel">
      <x>351</x>
-     <y>705</y>
+     <y>722</y>
     </hint>
     <hint type="destinationlabel">
      <x>346</x>
@@ -4702,7 +4696,7 @@ Run</string>
    <hints>
     <hint type="sourcelabel">
      <x>294</x>
-     <y>601</y>
+     <y>618</y>
     </hint>
     <hint type="destinationlabel">
      <x>292</x>
@@ -4718,7 +4712,7 @@ Run</string>
    <hints>
     <hint type="sourcelabel">
      <x>431</x>
-     <y>654</y>
+     <y>671</y>
     </hint>
     <hint type="destinationlabel">
      <x>433</x>
@@ -4782,7 +4776,7 @@ Run</string>
    <hints>
     <hint type="sourcelabel">
      <x>462</x>
-     <y>294</y>
+     <y>311</y>
     </hint>
     <hint type="destinationlabel">
      <x>531</x>
@@ -4803,6 +4797,22 @@ Run</string>
     <hint type="destinationlabel">
      <x>530</x>
      <y>341</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>run_from_button</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>run_from_line_clicked()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>656</x>
+     <y>33</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>660</x>
+     <y>68</y>
     </hint>
    </hints>
   </connection>
@@ -4847,5 +4857,6 @@ Run</string>
   <slot>jog_rate_changed()</slot>
   <slot>rapid_override_changed()</slot>
   <slot>feed_override_changed()</slot>
+  <slot>run_from_line_clicked()</slot>
  </slots>
 </ui>

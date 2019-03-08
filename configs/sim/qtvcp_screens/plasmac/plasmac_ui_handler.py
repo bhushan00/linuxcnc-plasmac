@@ -2,27 +2,34 @@
 # **** IMPORT SECTION **** #
 ############################
 
-from PyQt5 import QtCore, QtWidgets
+import sys
+import os
+import linuxcnc
+import hal
+import gobject
+
+from PyQt5 import QtCore, QtWidgets, QtGui
+
 from qtvcp.widgets.origin_offsetview import OriginOffsetView as OFFVIEW_WIDGET
 from qtvcp.widgets.dialog_widget import CamViewDialog as CAMVIEW
 from qtvcp.widgets.dialog_widget import MacroTabDialog as LATHEMACRO
-from qtvcp.widgets.dialog_widget import FileDialog as FILEDIALOG
+from qtvcp.widgets.dialog_widget import FileDialog as FILE_DIALOG
 from qtvcp.widgets.mdi_line import MDILine as MDI_WIDGET
-from qtvcp.widgets.gcode_editor import GcodeEditor as GCODE_EDITOR
-from qtvcp.widgets.gcode_editor import GcodeDisplay as GCODE_DISPLAY
+from qtvcp.widgets.mdi_history import MDIHistory as MDI_HISTORY
+from qtvcp.widgets.gcode_editor import GcodeEditor as GCODE
 from qtvcp.lib.keybindings import Keylookup
 from qtvcp.core import Status, Action, Info
 from qtvcp.qt_action import FilterProgram
-
-# Set up logging
 from qtvcp import logger
-log = logger.getLogger(__name__)
 
-import linuxcnc
-import sys
-import os
-import hal
-import gobject
+
+##########################
+# *** Set up logging *** #
+##########################
+
+LOG = logger.getLogger(__name__)
+LOG.setLevel(logger.INFO) # One of DEBUG, INFO, WARNING, ERROR, CRITICAL
+
 
 ###########################################
 # **** instantiate libraries section **** #
@@ -32,6 +39,32 @@ KEYBIND = Keylookup()
 STATUS = Status()
 ACTION = Action()
 INFO = Info()
+
+
+
+#######################################
+# **** TEMP STUFF WHILE BUILDING **** #
+#######################################
+
+taskState = {
+    1: 'ESTOP',
+    2: 'ESTOP_RESET',
+    3: 'OFF',
+    4: 'ON'
+}
+
+interpState = {
+    1: 'IDLE',
+    2: 'READING',
+    3: 'PAUSED',
+    4: 'WAITING'
+}
+
+def showState():
+    print '\nINTERP = %s' %(interpState[STATUS.stat.interp_state])
+    print '  TASK = %s' %(taskState[STATUS.stat.task_state])
+
+
 
 ###################################
 # **** HANDLER CLASS SECTION **** #
@@ -63,7 +96,7 @@ class HandlerClass:
     def initialized__(self):
         self.thcFeedRate = (float(self.ini.find('AXIS_Z', 'MAX_VELOCITY')) * \
                             float(self.ini.find('AXIS_Z', 'OFFSET_AV_RATIO'))) * 60
-        hal.set_p('plasmac.thc-feed-rate','%f' % (int(self.thcFeedRate)))
+        hal.set_p('plasmac.thc-feed-rate','%f' %(int(self.thcFeedRate)))
         self.w.max_feed_rate.setText(str(int(self.thcFeedRate)))
         self.w.plasmac_settings_tabs.setTabEnabled(1, not int(self.ini.find('PLASMAC', 'CONFIG_DISABLE')))
         self.w.plasmac_settings_tabs.setCurrentIndex(0)
@@ -75,9 +108,9 @@ class HandlerClass:
         self.w.probe_feed_rate.setMaximum(self.w.setup_feed_rate.value())
         self.check_materials_file()
         self.get_materials()
-        self.w.ho_label.setText('%d V' % self.w.height_override.value())
-        self.w.tp_label.setText('%0.1f Sec' % (int(self.w.torch_pulse_time.value()) * 0.1))
-        self.w.pm_label.setText('%s%%' % self.w.paused_motion_speed.value())
+        self.w.ho_label.setText('%d V' %(self.w.height_override.value()))
+        self.w.tp_label.setText('%0.1f Sec' %((int(self.w.torch_pulse_time.value()) * 0.1)))
+        self.w.pm_label.setText('%s%%' %(self.w.paused_motion_speed.value()))
         self.w.setStyleSheet(open('plasmac.qss').read())
         self.w.feed_override.setMaximum(INFO.MAX_FEED_OVERRIDE)
         self.w.rapid_override.setMaximum(100)
@@ -86,44 +119,109 @@ class HandlerClass:
         STATUS.connect('error', self.error__)
         STATUS.connect('all-homed', self.is_homed)
         STATUS.connect('not-all-homed', self.is_not_homed)
+        STATUS.connect('gcode-line-selected', lambda w, line: self.update_selected_line(line))
+        STATUS.connect('general', self.dialog_return)
+        self.fKeys = ('blank','blank','blank',
+                      QtCore.Qt.Key_F3,QtCore.Qt.Key_F4,
+                      QtCore.Qt.Key_F5,QtCore.Qt.Key_F6,
+                      QtCore.Qt.Key_F7,QtCore.Qt.Key_F8,
+                      QtCore.Qt.Key_F9,QtCore.Qt.Key_F10,
+                      QtCore.Qt.Key_F11,QtCore.Qt.Key_F12)
+        self.keyFunctions = {3:self.on_F3,4:self.on_F4,
+                             5:self.on_F5,6:self.on_F6,
+                             7:self.on_F7,8:self.on_F8,
+                             9:self.on_F9,10:self.on_F10,
+                             12:self.on_F12}
 
     def class_patch__(self):
-        GCODE_EDITOR.exitCall = self.editor_exit
+        GCODE.exitCall = self.editor_exit
 
     def processed_key_event__(self,receiver,event,is_pressed,key,code,shift,cntrl):
-        # when typing in MDI, we don't want keybinding to call functions
+        # when typing in widgets, we don't want keybinding to call functions
         # so we catch and process the events directly.
         # We do want ESC, F1 and F2 to call keybinding functions though
-        if code not in(QtCore.Qt.Key_Escape,QtCore.Qt.Key_F1 ,QtCore.Qt.Key_F2,
-                    QtCore.Qt.Key_F3,QtCore.Qt.Key_F5,QtCore.Qt.Key_F5):
-            if isinstance(receiver, OFFVIEW_WIDGET) or\
-               isinstance(receiver, MDI_WIDGET) or\
-               isinstance(receiver, QtWidgets.QDoubleSpinBox) or\
-               isinstance(receiver, GCODE_EDITOR) or\
-               isinstance(receiver, GCODE_DISPLAY) or\
-               isinstance(receiver, QtWidgets.QDoubleSpinBox) or\
-               isinstance(receiver, QtWidgets.QCheckBox) or\
-               isinstance(receiver, QtWidgets.QListView) or\
-               isinstance(receiver, QtWidgets.QSlider) or\
-               isinstance(receiver, QtWidgets.QScrollBar):
-                if is_pressed:
+        if code not in(QtCore.Qt.Key_Escape,QtCore.Qt.Key_F1 ,QtCore.Qt.Key_F2):
+            if code in self.fKeys:
+                self.do_key(self.fKeys.index(code),is_pressed)
+                return False
+            # search for the top widget of whatever widget received the event
+            # then check if it's one we want the keypress events to go to
+            flag = False
+            receiver2 = receiver
+            while receiver2 is not None and not flag:
+                if isinstance(receiver2, QtWidgets.QDialog):
+                    flag = True
+                    break
+                if isinstance(receiver2, MDI_WIDGET):
+                    flag = True
+                    break
+                if isinstance(receiver2, GCODE):
+                    flag = True #False
+                    break
+                if isinstance(receiver2, MDI_HISTORY):
+                    flag = True
+                    break
+                if receiver2.objectName() == 'plasmac_settings_tabs':
+                    flag = True
+                    break
+                receiver2 = receiver2.parent()
+                print 'receiver2', receiver2.objectName(), receiver2
+            if flag:
+                print 'FLAGGED', receiver2
+                if isinstance(receiver2, GCODE):
+                    print 'is gcode'
+                    if self.w.gcoder.topMenu.isVisible():
+                        print 'edit mode'
+                        if is_pressed:
+                            receiver.keyPressEvent(event)
+                            event.accept()
+                        return True
+                elif is_pressed:
+                    print 'pressed, not gcode'
                     receiver.keyPressEvent(event)
                     event.accept()
-                return True
-            if isinstance(receiver,QtWidgets.QDialog):
-                print 'dialog'
-                return True
+                    return True
+                else:
+                    print 'released, not gcode'
+                    event.accept()
+                    return True
+            else:
+                print 'NOT FLAGGED', receiver2
+        # ok if we got here then try keybindings
         try:
-            KEYBIND.call(self,event,is_pressed,shift,cntrl)
-            return True
+            return KEYBIND.call(self,event,is_pressed,shift,cntrl)
+        except NameError as e:
+            LOG.debug('Exception in KEYBINDING: {}'.format (e))
+            print 'NameError for %s' %(key)
         except Exception as e:
-            #log.debug('Exception loading Macros:', exc_info=e)
-            if not isinstance(receiver, QtWidgets.QLineEdit) and not isinstance(receiver, QtWidgets.QListView):
-                print 'Error in, or no function for: %s in handler file for-%s'%(KEYBIND.convert(event),key)
-                if e:
-                    print 'Exception:', e
-                print 'from %s'% receiver
+            LOG.debug('Exception in KEYBINDING:', exc_info=e)
+            print 'Error in, or no function for: %s in handler file for-%s'%(KEYBIND.convert(event),key)
             return False
+
+
+
+
+    def dialog_send(self):
+        message = _('The machine is already homed')
+        more = _('Do you wish to unhome?')
+        mess = {'NAME':'MESSAGE',
+                'ID':'__REHOME__',
+                'ICON':'QUESTION',
+                'TYPE':'False',
+                'MESSAGE':message,
+                'MORE': more,
+                'TITLE':'HOMING REQUEST'}
+        STATUS.emit('dialog-request', mess)
+#                log.error('Filter Program Error:{}'.format (stderr))
+
+    def dialog_return(self,w,message):
+        rtn = message.get('RETURN')
+        code = bool(message.get('ID') == '__REHOME__')
+        name = bool(message.get('NAME') == 'MESSAGE')
+        if rtn and code and name:
+            print ('Entry return value from {} = {} which is a {}').format(code, rtn, type(rtn))
+            if rtn:
+                ACTION.SET_MACHINE_UNHOMED(-1)
 
     ########################
     # callbacks from STATUS #
@@ -141,15 +239,16 @@ class HandlerClass:
         self.w.x_label.setStyleSheet('color: green')
         self.w.y_label.setStyleSheet('color: green')
         self.w.z_label.setStyleSheet('color: green')
-#        self.w.mdi_history.setEnabled(1)
         self.w.mdi_history.MDILine.setStyleSheet("""QLineEdit { background-color: rgb(250,250,250) }""")
 
     def is_not_homed(self, w, joints):
         self.w.x_label.setStyleSheet('color: red')
         self.w.y_label.setStyleSheet('color: red')
         self.w.z_label.setStyleSheet('color: red')
-#        self.w.mdi_history.setEnabled(0)
         self.w.mdi_history.MDILine.setStyleSheet("""QLineEdit { background-color: rgb(220,220,220) }""")
+
+    def update_selected_line(self, line):
+        self.selected_line = line + 1
 
     #######################
     # callbacks from form #
@@ -158,9 +257,9 @@ class HandlerClass:
     def edit_clicked(self, mode):
         if hal.get_value('halui.program.is-idle'):
             self.w.gcoder.layout().setSpacing(0)
-            self.w.gcoder.setGeometry(2,2,556,716)
-            self.w.preview.setGeometry(560,2,500,612)
-            self.w.error_text.setGeometry(560,618,500,100)
+            self.w.gcoder.setGeometry(2,2,528,716)
+            self.w.preview.setGeometry(532,2,490,612)
+            self.w.error_text.setGeometry(532,618,490,100)
             self.w.gcoder.editMode()
             self.w.gcoder.topMenu.setFrameShape(QtWidgets.QFrame.StyledPanel)
             self.w.gcoder.bottomMenu.setFrameShape(QtWidgets.QFrame.StyledPanel)
@@ -218,32 +317,32 @@ class HandlerClass:
         STATUS.set_jograte(float(rate))
 
     def height_override_changed(self, height):
-        self.w.ho_label.setText('%0.1f V' % (int(height) * 0.1))
-        hal.set_p('plasmac.height-override','%f' % (int(height) * 0.1))
+        self.w.ho_label.setText('%0.1f V' %(int(height) * 0.1))
+        hal.set_p('plasmac.height-override','%f' %(int(height) * 0.1))
 
     def torch_pulse_time_changed(self, time):
-        self.w.tp_label.setText('%0.1f Sec' % (int(time) * 0.1))
+        self.w.tp_label.setText('%0.1f Sec' %(int(time) * 0.1))
 
     def paused_motion_speed_changed(self, speed):
-        self.w.pm_label.setText('%d%%' % (int(speed)))
+        self.w.pm_label.setText('%d%%' %(int(speed)))
 
     def forward_pressed(self):
         speed = self.w.paused_motion_speed.value() * 0.01
-        hal.set_p('plasmac.paused-motion-speed','%f' % (speed))
+        hal.set_p('plasmac.paused-motion-speed','%f' %(speed))
 
     def forward_released(self):
         hal.set_p('plasmac.paused-motion-speed','0')
 
     def reverse_pressed(self):
         speed = self.w.paused_motion_speed.value() * -0.01
-        hal.set_p('plasmac.paused-motion-speed','%f' % (speed))
+        hal.set_p('plasmac.paused-motion-speed','%f' %(speed))
 
     def reverse_released(self):
         hal.set_p('plasmac.paused-motion-speed','0')
 
     def torch_pulse_start_pressed(self):
         time = self.w.torch_pulse_time.value() * 0.1
-        hal.set_p('plasmac.torch-pulse-time','%f' % (time))
+        hal.set_p('plasmac.torch-pulse-time','%f' %(time))
         hal.set_p('plasmac.torch-pulse-start','1')
 
     def torch_pulse_start_released(self):
@@ -273,6 +372,12 @@ class HandlerClass:
         self.get_materials()
         self.materialsUpdate = False
 
+    def run_from_line_clicked(self):
+        if STATUS.stat.task_state == linuxcnc.STATE_ON and\
+           STATUS.stat.interp_state == linuxcnc.INTERP_IDLE and\
+           self.selected_line:
+            ACTION.RUN(self.selected_line)
+
     #####################
     # general functions #
     #####################
@@ -282,14 +387,14 @@ class HandlerClass:
             result = self.w.gcoder.killCheck()
             if result:
                 self.w.gcoder.editor.reload_last(self)
-                self.w.gcoder.setGeometry(560,410,300,308)
-                self.w.preview.setGeometry(560,54,500,352)
-                self.w.error_text.setGeometry(864,618,192,100)
+                self.w.gcoder.setGeometry(532,418,300,300)
+                self.w.preview.setGeometry(532,54,490,360)
+                self.w.error_text.setGeometry(836,618,186,100)
                 self.w.gcoder.readOnlyMode()
         else:
-            self.w.gcoder.setGeometry(560,410,300,308)
-            self.w.preview.setGeometry(560,54,500,352)
-            self.w.error_text.setGeometry(864,618,192,100)
+            self.w.gcoder.setGeometry(532,418,300,300)
+            self.w.preview.setGeometry(532,54,490,360)
+            self.w.error_text.setGeometry(836,618,186,100)
             self.w.gcoder.readOnlyMode()
 
     # keyboard jogging from key binding calls
@@ -736,52 +841,117 @@ class HandlerClass:
     # KEY BINDING CALLS #
     #####################
 
-    # Machine control
     def on_keycall_ESTOP(self,event,state,shift,cntrl):
         if state:
             ACTION.SET_ESTOP_STATE(STATUS.estop_is_clear())
+
     def on_keycall_POWER(self,event,state,shift,cntrl):
         if state:
             ACTION.SET_MACHINE_STATE(not STATUS.machine_is_on())
-    def on_keycall_HOME(self,event,state,shift,cntrl):
-        if state:
-            if STATUS.is_all_homed():
-                ACTION.SET_MACHINE_UNHOMED(-1)
-            else:
-                ACTION.SET_MACHINE_HOMING(-1)
+
     def on_keycall_ABORT(self,event,state,shift,cntrl):
         if state:
-            if STATUS.stat.interp_state == linuxcnc.INTERP_IDLE:
-                self.w.close()
-            else:
+            if STATUS.stat.interp_state != linuxcnc.INTERP_IDLE:
                 self.cmnd.abort()
 
     # Linear Jogging
     def on_keycall_XPOS(self,event,state,shift,cntrl):
-        self.kb_jog(state, 0, 1, shift)
+        if state:
+            print 'xpos on'
+        else:
+            print 'xpos off'
+        #self.kb_jog(state, 0, 1, shift)
 
     def on_keycall_XNEG(self,event,state,shift,cntrl):
-        self.kb_jog(state, 0, -1, shift)
+        if state:
+            print 'xneg on'
+        else:
+            print 'xneg off'
+        #self.kb_jog(state, 0, -1, shift)
 
     def on_keycall_YPOS(self,event,state,shift,cntrl):
-        self.kb_jog(state, 1, 1, shift)
+        if state:
+            print 'ypos on'
+        else:
+            print 'ypos off'
+        #self.kb_jog(state, 1, 1, shift)
 
     def on_keycall_YNEG(self,event,state,shift,cntrl):
-        self.kb_jog(state, 1, -1, shift)
+        if state:
+            print 'yneg on'
+        else:
+            print 'yneg off'
+        #self.kb_jog(state, 1, -1, shift)
 
     def on_keycall_ZPOS(self,event,state,shift,cntrl):
-        self.kb_jog(state, 2, 1, shift)
+        if state:
+            print 'zpos on'
+        else:
+            print 'zpos off'
+        #self.kb_jog(state, 2, 1, shift)
 
     def on_keycall_ZNEG(self,event,state,shift,cntrl):
-        self.kb_jog(state, 2, -1, shift)
+        if state:
+            print 'zneg on'
+        else:
+            print 'zneg off'
+        #self.kb_jog(state, 2, -1, shift)
 
-    def on_keycall_APOS(self,event,state,shift,cntrl):
-        pass
-        #self.kb_jog(state, 3, 1, shift, False)
+    #######################
+    # LOCAL KEY FUNCTIONS #
+    #######################
 
-    def on_keycall_ANEG(self,event,state,shift,cntrl):
-        pass
-        #self.kb_jog(state, 3, -1, shift, linear=False)
+    def do_key(self,key,is_pressed):
+        if not is_pressed: return
+        self.keyFunctions[key]()
+
+    def on_F3(self): # home all
+        if STATUS.stat.task_state == linuxcnc.STATE_ON and\
+           STATUS.stat.interp_state == linuxcnc.INTERP_IDLE:
+            if not STATUS.is_all_homed():
+                ACTION.SET_MACHINE_HOMING(-1)
+            else:
+                self.dialog_send()
+
+    def on_F4(self): # open file
+        if STATUS.stat.task_state == linuxcnc.STATE_ON and\
+           STATUS.stat.interp_state == linuxcnc.INTERP_IDLE:
+            STATUS.emit('dialog-request',{'NAME':'LOAD'})
+
+    def on_F5(self): # run program
+        if STATUS.stat.task_state == linuxcnc.STATE_ON and\
+           STATUS.stat.interp_state == linuxcnc.INTERP_IDLE and\
+           STATUS.stat.file:
+            ACTION.RUN()
+
+    def on_F6(self): # pause/resume program
+        if STATUS.stat.task_state == linuxcnc.STATE_ON and\
+           STATUS.stat.interp_state != linuxcnc.INTERP_IDLE :
+            ACTION.PAUSE()
+
+    def on_F7(self): # abort program
+        if STATUS.stat.task_state == linuxcnc.STATE_ON and\
+           STATUS.stat.interp_state != linuxcnc.INTERP_IDLE :
+            ACTION.ABORT()
+
+    def on_F8(self): # run from line
+        if STATUS.stat.task_state == linuxcnc.STATE_ON and\
+           STATUS.stat.interp_state == linuxcnc.INTERP_IDLE and\
+           STATUS.stat.file:
+            self.run_from_line_clicked()
+
+    def on_F9(self): # edit gcode
+        if STATUS.stat.task_state == linuxcnc.STATE_ON and\
+           STATUS.stat.interp_state == linuxcnc.INTERP_IDLE:
+            self.edit_clicked(0)
+
+    def on_F10(self): # clear backplot
+        ACTION.SET_GRAPHICS_VIEW('clear')
+
+    def on_F12(self): # stylesheet editor
+        if STATUS.stat.task_state == linuxcnc.STATE_ON and\
+           STATUS.stat.interp_state == linuxcnc.INTERP_IDLE:
+            self.STYLEEDITOR.load_dialog()
 
     ###########################
     # **** closing event **** #
