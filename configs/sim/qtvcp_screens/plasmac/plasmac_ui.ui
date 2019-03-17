@@ -2233,7 +2233,7 @@ Edit
 F9</string>
      </property>
     </widget>
-    <widget class="ActionButton" name="home_all">
+    <widget class="ActionButton" name="home_button">
      <property name="geometry">
       <rect>
        <x>156</x>
@@ -2291,7 +2291,7 @@ Home</string>
       <bool>false</bool>
      </property>
      <property name="home_action" stdset="0">
-      <bool>true</bool>
+      <bool>false</bool>
      </property>
      <property name="joint_number" stdset="0">
       <number>-1</number>
@@ -2892,7 +2892,7 @@ F8</string>
     <property name="frameShadow">
      <enum>QFrame::Raised</enum>
     </property>
-    <widget class="DROLabel" name="dro_x">
+    <widget class="DROLabel" name="x_dro">
      <property name="geometry">
       <rect>
        <x>176</x>
@@ -2914,7 +2914,7 @@ F8</string>
       </font>
      </property>
      <property name="styleSheet">
-      <string notr="true"/>
+      <string notr="true">color: red;</string>
      </property>
      <property name="frameShape">
       <enum>QFrame::Panel</enum>
@@ -2935,7 +2935,7 @@ F8</string>
       <number>1</number>
      </property>
     </widget>
-    <widget class="DROLabel" name="dro_y">
+    <widget class="DROLabel" name="y_dro">
      <property name="geometry">
       <rect>
        <x>176</x>
@@ -2957,7 +2957,7 @@ F8</string>
       </font>
      </property>
      <property name="styleSheet">
-      <string notr="true"/>
+      <string notr="true">color: red;</string>
      </property>
      <property name="frameShape">
       <enum>QFrame::Panel</enum>
@@ -2978,7 +2978,7 @@ F8</string>
       <number>1</number>
      </property>
     </widget>
-    <widget class="DROLabel" name="dro_z">
+    <widget class="DROLabel" name="z_dro">
      <property name="geometry">
       <rect>
        <x>176</x>
@@ -3000,7 +3000,7 @@ F8</string>
       </font>
      </property>
      <property name="styleSheet">
-      <string notr="true"/>
+      <string notr="true">color: red;</string>
      </property>
      <property name="frameShape">
       <enum>QFrame::Panel</enum>
@@ -3290,8 +3290,7 @@ Off</string>
       </rect>
      </property>
      <property name="text">
-      <string>Jog
-X-</string>
+      <string>Jog-</string>
      </property>
      <property name="jog_joint_pos_action" stdset="0">
       <bool>false</bool>
@@ -3319,8 +3318,7 @@ X-</string>
       </sizepolicy>
      </property>
      <property name="text">
-      <string>Jog
-X+</string>
+      <string>Jog+</string>
      </property>
      <property name="jog_joint_pos_action" stdset="0">
       <bool>true</bool>
@@ -3342,8 +3340,7 @@ X+</string>
       </rect>
      </property>
      <property name="text">
-      <string>Jog
-Y-</string>
+      <string>Jog-</string>
      </property>
      <property name="jog_joint_neg_action" stdset="0">
       <bool>true</bool>
@@ -3368,8 +3365,7 @@ Y-</string>
       </sizepolicy>
      </property>
      <property name="text">
-      <string>Jog
-Y+</string>
+      <string>Jog+</string>
      </property>
      <property name="jog_joint_pos_action" stdset="0">
       <bool>true</bool>
@@ -3388,8 +3384,7 @@ Y+</string>
       </rect>
      </property>
      <property name="text">
-      <string>Jog
-Z-</string>
+      <string>Jog-</string>
      </property>
      <property name="jog_joint_neg_action" stdset="0">
       <bool>true</bool>
@@ -3408,8 +3403,7 @@ Z-</string>
       </rect>
      </property>
      <property name="text">
-      <string>Jog
-Z+</string>
+      <string>Jog+</string>
      </property>
      <property name="jog_joint_pos_action" stdset="0">
       <bool>true</bool>
@@ -3634,9 +3628,9 @@ Z+</string>
     <zorder>jRLabel</zorder>
     <zorder>fOLabel</zorder>
     <zorder>feed_override</zorder>
-    <zorder>dro_x</zorder>
-    <zorder>dro_y</zorder>
-    <zorder>dro_z</zorder>
+    <zorder>x_dro</zorder>
+    <zorder>y_dro</zorder>
+    <zorder>z_dro</zorder>
     <zorder>feed_override_status</zorder>
     <zorder>zero_z_button</zorder>
     <zorder>zero_y_button</zorder>
@@ -3930,7 +3924,7 @@ Run</string>
   <tabstop>exit_button</tabstop>
   <tabstop>estop_button</tabstop>
   <tabstop>power_button</tabstop>
-  <tabstop>home_all</tabstop>
+  <tabstop>home_button</tabstop>
   <tabstop>work_coordinates_button</tabstop>
   <tabstop>open_button</tabstop>
   <tabstop>run_button</tabstop>
@@ -4520,7 +4514,7 @@ Run</string>
    <hints>
     <hint type="sourcelabel">
      <x>351</x>
-     <y>722</y>
+     <y>705</y>
     </hint>
     <hint type="destinationlabel">
      <x>346</x>
@@ -4696,7 +4690,7 @@ Run</string>
    <hints>
     <hint type="sourcelabel">
      <x>294</x>
-     <y>618</y>
+     <y>601</y>
     </hint>
     <hint type="destinationlabel">
      <x>292</x>
@@ -4712,7 +4706,7 @@ Run</string>
    <hints>
     <hint type="sourcelabel">
      <x>431</x>
-     <y>671</y>
+     <y>654</y>
     </hint>
     <hint type="destinationlabel">
      <x>433</x>
@@ -4776,7 +4770,7 @@ Run</string>
    <hints>
     <hint type="sourcelabel">
      <x>462</x>
-     <y>311</y>
+     <y>294</y>
     </hint>
     <hint type="destinationlabel">
      <x>531</x>
@@ -4813,6 +4807,22 @@ Run</string>
     <hint type="destinationlabel">
      <x>660</x>
      <y>68</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>home_button</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>home_clicked()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>397</x>
+     <y>17</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>400</x>
+     <y>52</y>
     </hint>
    </hints>
   </connection>
@@ -4858,5 +4868,6 @@ Run</string>
   <slot>rapid_override_changed()</slot>
   <slot>feed_override_changed()</slot>
   <slot>run_from_line_clicked()</slot>
+  <slot>home_clicked()</slot>
  </slots>
 </ui>

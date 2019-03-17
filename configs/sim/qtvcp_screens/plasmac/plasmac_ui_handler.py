@@ -21,14 +21,15 @@ from qtvcp.lib.keybindings import Keylookup
 from qtvcp.core import Status, Action, Info
 from qtvcp.qt_action import FilterProgram
 from qtvcp import logger
+from qtvcp.widgets.stylesheeteditor import  StyleSheetEditor as SSE
 
 
 ##########################
 # *** Set up logging *** #
 ##########################
 
-LOG = logger.getLogger(__name__)
-LOG.setLevel(logger.INFO) # One of DEBUG, INFO, WARNING, ERROR, CRITICAL
+#LOG = logger.getLogger(__name__)
+#LOG.setLevel(logger.DEBUG) # One of DEBUG, INFO, WARNING, ERROR, CRITICAL
 
 
 ###########################################
@@ -86,6 +87,7 @@ class HandlerClass:
         self.error = linuxcnc.error_channel()
         self.PATHS = paths
         self.IMAGE_PATH = paths.IMAGEDIR
+        self.STYLEEDITOR = SSE(widgets,paths)
 
     ##########################################
     # Special Functions called from QTSCREEN
@@ -111,7 +113,7 @@ class HandlerClass:
         self.w.ho_label.setText('%d V' %(self.w.height_override.value()))
         self.w.tp_label.setText('%0.1f Sec' %((int(self.w.torch_pulse_time.value()) * 0.1)))
         self.w.pm_label.setText('%s%%' %(self.w.paused_motion_speed.value()))
-        self.w.setStyleSheet(open('plasmac.qss').read())
+        self.w.setStyleSheet(open('plasmac_ui.qss').read())
         self.w.feed_override.setMaximum(INFO.MAX_FEED_OVERRIDE)
         self.w.rapid_override.setMaximum(100)
         self.w.jog_rate.setMaximum(INFO.MAX_TRAJ_VELOCITY)
@@ -143,7 +145,7 @@ class HandlerClass:
         if code not in(QtCore.Qt.Key_Escape,QtCore.Qt.Key_F1 ,QtCore.Qt.Key_F2):
             if code in self.fKeys:
                 self.do_key(self.fKeys.index(code),is_pressed)
-                return False
+                return True
             # search for the top widget of whatever widget received the event
             # then check if it's one we want the keypress events to go to
             flag = False
@@ -236,15 +238,17 @@ class HandlerClass:
         self.w.error_text.appendPlainText(eType +': ' + error)
 
     def is_homed(self, w):
-        self.w.x_label.setStyleSheet('color: green')
-        self.w.y_label.setStyleSheet('color: green')
-        self.w.z_label.setStyleSheet('color: green')
+        self.w.x_dro.setStyleSheet('color: green')
+        self.w.y_dro.setStyleSheet('color: green')
+        self.w.z_dro.setStyleSheet('color: green')
+        self.w.home_button.indicator_update(1)
         self.w.mdi_history.MDILine.setStyleSheet("""QLineEdit { background-color: rgb(250,250,250) }""")
 
     def is_not_homed(self, w, joints):
-        self.w.x_label.setStyleSheet('color: red')
-        self.w.y_label.setStyleSheet('color: red')
-        self.w.z_label.setStyleSheet('color: red')
+        self.w.x_dro.setStyleSheet('color: red')
+        self.w.y_dro.setStyleSheet('color: red')
+        self.w.z_dro.setStyleSheet('color: red')
+        self.w.home_button.indicator_update(0)
         self.w.mdi_history.MDILine.setStyleSheet("""QLineEdit { background-color: rgb(220,220,220) }""")
 
     def update_selected_line(self, line):
@@ -253,6 +257,9 @@ class HandlerClass:
     #######################
     # callbacks from form #
     #######################
+
+    def home_clicked(self, mode):
+        self.on_F3()
 
     def edit_clicked(self, mode):
         if hal.get_value('halui.program.is-idle'):
@@ -907,7 +914,8 @@ class HandlerClass:
 
     def on_F3(self): # home all
         if STATUS.stat.task_state == linuxcnc.STATE_ON and\
-           STATUS.stat.interp_state == linuxcnc.INTERP_IDLE:
+           STATUS.stat.interp_state == linuxcnc.INTERP_IDLE and\
+           not self.w.gcoder.topMenu.isVisible():
             if not STATUS.is_all_homed():
                 ACTION.SET_MACHINE_HOMING(-1)
             else:
@@ -915,18 +923,21 @@ class HandlerClass:
 
     def on_F4(self): # open file
         if STATUS.stat.task_state == linuxcnc.STATE_ON and\
-           STATUS.stat.interp_state == linuxcnc.INTERP_IDLE:
+           STATUS.stat.interp_state == linuxcnc.INTERP_IDLE and\
+           not self.w.gcoder.topMenu.isVisible():
             STATUS.emit('dialog-request',{'NAME':'LOAD'})
 
     def on_F5(self): # run program
         if STATUS.stat.task_state == linuxcnc.STATE_ON and\
            STATUS.stat.interp_state == linuxcnc.INTERP_IDLE and\
-           STATUS.stat.file:
+           STATUS.stat.file and\
+           not self.w.gcoder.topMenu.isVisible():
             ACTION.RUN()
 
     def on_F6(self): # pause/resume program
         if STATUS.stat.task_state == linuxcnc.STATE_ON and\
-           STATUS.stat.interp_state != linuxcnc.INTERP_IDLE :
+           STATUS.stat.interp_state != linuxcnc.INTERP_IDLE and\
+           not self.w.gcoder.topMenu.isVisible():
             ACTION.PAUSE()
 
     def on_F7(self): # abort program
@@ -937,7 +948,8 @@ class HandlerClass:
     def on_F8(self): # run from line
         if STATUS.stat.task_state == linuxcnc.STATE_ON and\
            STATUS.stat.interp_state == linuxcnc.INTERP_IDLE and\
-           STATUS.stat.file:
+           STATUS.stat.file and\
+           not self.w.gcoder.topMenu.isVisible():
             self.run_from_line_clicked()
 
     def on_F9(self): # edit gcode
