@@ -87,7 +87,7 @@ class HandlerClass:
         self.error = linuxcnc.error_channel()
         self.PATHS = paths
         self.IMAGE_PATH = paths.IMAGEDIR
-        self.STYLEEDITOR = SSE(widgets,paths)
+#        self.STYLEEDITOR = SSE(widgets,paths)
 
     ##########################################
     # Special Functions called from QTSCREEN
