@@ -5,7 +5,7 @@ shutdown_check = False
 sound_player_on = False
 overlay_play_sound = False
 overlay_sound_type = RING
-mainwindow_geometry = 258 75 1024 740
+mainwindow_geometry = 298 107 1024 740
 
 [MCH_MSG_OPTIONS]
 mchnMsg_play_sound = True
@@ -50,7 +50,7 @@ CalculatorDialog_sound_type = RING
 LcncDialog-geometry = 0 0 640 480
 
 [BOOK_KEEPING]
-last_file_path = /home/phill/Downloads
+last_file_path = /home/phill/linuxcnc/nc_files/plasmac
 
 [SCREEN_CONTROL_LAST_SETTING]
 statusadjustmentbar_4-hi-value = 75

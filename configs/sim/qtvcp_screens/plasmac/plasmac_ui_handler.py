@@ -42,7 +42,6 @@ ACTION = Action()
 INFO = Info()
 
 
-
 #######################################
 # **** TEMP STUFF WHILE BUILDING **** #
 #######################################
@@ -87,7 +86,7 @@ class HandlerClass:
         self.error = linuxcnc.error_channel()
         self.PATHS = paths
         self.IMAGE_PATH = paths.IMAGEDIR
-#        self.STYLEEDITOR = SSE(widgets,paths)
+        self.STYLEEDITOR = SSE(widgets,paths)
 
     ##########################################
     # Special Functions called from QTSCREEN
@@ -134,6 +133,18 @@ class HandlerClass:
                              7:self.on_F7,8:self.on_F8,
                              9:self.on_F9,10:self.on_F10,
                              12:self.on_F12}
+        for child in self.w.mdi_history.children():
+            if isinstance(child, QtWidgets.QListView):
+                child.setObjectName('mdi_list')
+        print '\nARC VOLTAGE'
+        for child in self.w.arc_voltage.children():
+            print 'child', child, child.objectName
+            for grandchild in child.children():
+                print 'grandchild', grandchild, grandchild.objectName()
+        print '\nGCODER'
+        for child in self.w.gcoder.children():
+            print child, child.objectName
+
 
     def class_patch__(self):
         GCODE.exitCall = self.editor_exit
@@ -238,16 +249,16 @@ class HandlerClass:
         self.w.error_text.appendPlainText(eType +': ' + error)
 
     def is_homed(self, w):
-        self.w.x_dro.setStyleSheet('color: green')
-        self.w.y_dro.setStyleSheet('color: green')
-        self.w.z_dro.setStyleSheet('color: green')
+        self.w.x_dro.setStyleSheet('color: #00B000')
+        self.w.y_dro.setStyleSheet('color: #00B000')
+        self.w.z_dro.setStyleSheet('color: #00B000')
         self.w.home_button.indicator_update(1)
         self.w.mdi_history.MDILine.setStyleSheet("""QLineEdit { background-color: rgb(250,250,250) }""")
 
     def is_not_homed(self, w, joints):
-        self.w.x_dro.setStyleSheet('color: red')
-        self.w.y_dro.setStyleSheet('color: red')
-        self.w.z_dro.setStyleSheet('color: red')
+        self.w.x_dro.setStyleSheet('color: #B00000')
+        self.w.y_dro.setStyleSheet('color: #B00000')
+        self.w.z_dro.setStyleSheet('color: #B00000')
         self.w.home_button.indicator_update(0)
         self.w.mdi_history.MDILine.setStyleSheet("""QLineEdit { background-color: rgb(220,220,220) }""")
 
@@ -825,17 +836,20 @@ class HandlerClass:
                               , 0)
         if hal.get_value('halui.machine.is-on') and hal.get_value('halui.program.is-idle'):
             self.w.edit_button.setEnabled(True)
+            self.w.run_from_button.setEnabled(True)
             self.w.torch_pulse_start.setEnabled(True)
             self.w.reverse.setEnabled(False)
             self.w.forward.setEnabled(False)
         elif hal.get_value('halui.machine.is-on') and \
             (hal.get_value('halui.program.is-paused') or self.w.reverse.isDown() or self.w.forward.isDown()):
             self.w.edit_button.setEnabled(False)
+            self.w.run_from_button.setEnabled(False)
             self.w.torch_pulse_start.setEnabled(False)
             self.w.reverse.setEnabled(True)
             self.w.forward.setEnabled(True)
         else:
             self.w.edit_button.setEnabled(False)
+            self.w.run_from_button.setEnabled(False)
             self.w.torch_pulse_start.setEnabled(False)
             self.w.reverse.setEnabled(False)
             self.w.forward.setEnabled(False)
@@ -961,8 +975,7 @@ class HandlerClass:
         ACTION.SET_GRAPHICS_VIEW('clear')
 
     def on_F12(self): # stylesheet editor
-        if STATUS.stat.task_state == linuxcnc.STATE_ON and\
-           STATUS.stat.interp_state == linuxcnc.INTERP_IDLE:
+        if STATUS.stat.interp_state == linuxcnc.INTERP_IDLE:
             self.STYLEEDITOR.load_dialog()
 
     ###########################

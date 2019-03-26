@@ -2683,7 +2683,7 @@ F8</string>
       </font>
      </property>
      <property name="styleSheet">
-      <string notr="true">color: rgb(252, 233, 79);</string>
+      <string notr="true"/>
      </property>
      <property name="frameShape">
       <enum>QFrame::NoFrame</enum>

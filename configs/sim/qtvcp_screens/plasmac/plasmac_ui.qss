@@ -1,65 +1,204 @@
-QWidget {
-    background-color: rgb(180, 180, 180)
-}
+QWidget{
+    background-color:#808080;
+    }
 
-QPushButton::disabled {
-    color: rgb(220, 220, 220)
-}
+DROLabel{
+    background-color:#505050;
+    }
 
-QScrollBar {
-    background-color: rgb(130, 130, 130)
-}
+#arc_voltage{
+    color:#F0E000
+    }
 
-QScrollBar::down-button {
-    width: 24px;
+#feed_override_status,
+#rapid_override_status,
+#jog_rate_status,
+#tp_label,
+#pm_label,
+#ho_label{
+    color:#00D000;
+    }
+
+
+QPushButton,AxisToolButton,SystemToolButton,JogIncrements{
+    border-width:0px;
+    border-radius:4px;
+    background-color:qlineargradient(x1:0,y1:1,x2:0,y2:0,stop:0#303030,stop:0.15#B0B0B0,stop:0.85#B0B0B0,stop:1#303030);
+    }
+QPushButton::disabled,AxisToolButton::disabled,SystemToolButton::disabled,JogIncrements::disabled{
+    color:grey;
+    }
+QPushButton::pressed,
+AxisToolButton::pressed,
+SystemToolButton::pressed,
+JogIncrements::pressed{
+    background-color:qlineargradient(x1:0,y1:1,x2:0,y2:0,stop:0#303030,stop:0.25#B0B0B0,stop:0.75#B0B0B0,stop:1#303030);
+    }
+
+QScrollBar:horizontal{
+    border:0px solid #303030;
+    background-color:#606060;
+    margin:0px 24px 0px 24px;
+    max-height:24px;
+    }
+QScrollBar::handle:horizontal{
+    border:1px solid#303030;
+    background-color:qlineargradient(x1:0,y1:1,x2:0,y2:0,stop:0#303030,stop:0.15#B0B0B0,stop:0.85#B0B0B0,stop:1#303030);
+    min-width:24px;
+    }
+QScrollBar::add-line:horizontal{
+    border:0px solid#303030;
+    background-color:qlineargradient(x1:0,y1:1,x2:0,y2:0,stop:0#303030,stop:0.15#B0B0B0,stop:0.85#B0B0B0,stop:1#303030);
+    width:24px;
+    subcontrol-position:right;
+    subcontrol-origin:margin;
+    }
+QScrollBar::sub-line:horizontal{
+    border:0px solid#303030;
+    background-color:qlineargradient(x1:0,y1:1,x2:0,y2:0,stop:0#303030,stop:0.15#B0B0B0,stop:0.85#B0B0B0,stop:1#303030);
+    width:24px;
+    subcontrol-position:left;
+    subcontrol-origin:margin;
+    }
+QScrollBar:vertical{
+    border:0px solid#303030;
+    background-color:#606060;
+    margin:24px 0px 24px 0px;
+    max-width:24px;
+    }
+QScrollBar::handle:vertical{
+    border:1px solid#303030;
+    background-color:qlineargradient(x1:0,y1:1,x2:0,y2:0,stop:0#303030,stop:0.15#B0B0B0,stop:0.85#B0B0B0,stop:1#303030);
+    min-height:24px;
+    }
+QScrollBar::add-line:vertical{
+    border:0px solid#303030;
+    background-color:qlineargradient(x1:0,y1:1,x2:0,y2:0,stop:0#303030,stop:0.15#B0B0B0,stop:0.85#B0B0B0,stop:1#303030);
     height:24px;
-    subcontrol-origin: border;
-    subcontrol-position: top right
-}
-
-QDoubleSpinBox {
-/*    padding-right: 23px; /* make room for the arrows */
-    background-color: rgb(220, 220, 220);
-    border: 2px solid rgb(125, 125, 125);
-    border-radius: 5px
-}
-
-QDoubleSpinBox::up-button {
-    width: 24px;
-    height: 24px;
-    subcontrol-origin: border;
-    subcontrol-position: top left;
-/*    border-right: 1px solid rgb(0, 0, 0)*/
-}
-
-QDoubleSpinBox::down-button {
-    width: 24px;
+    subcontrol-position:bottom;
+    subcontrol-origin:margin;
+    }
+QScrollBar::sub-line:vertical{
+    border:0px solid#303030;
+    background-color:qlineargradient(x1:0,y1:1,x2:0,y2:0,stop:0#303030,stop:0.15#B0B0B0,stop:0.85#B0B0B0,stop:1#303030);
     height:24px;
-    subcontrol-origin: border;
-    subcontrol-position: top right;
-/*    border-left: 1px solid rgb(0, 0, 0)*/
-}
-/*
-QDoubleSpinBox::up-arrow {
-    image: url(:/images/up_arrow.png);
-    text: +;
-    width: 3px;
-    height: 3px;
-}
-*/
+    subcontrol-position:top;
+    subcontrol-origin:margin;
+    }
+QScrollBar::left-arrow:horizontal:pressed,
+QScrollBar::right-arrow:horizontal:pressed,
+QScrollBar::up-arrow:vertical:pressed,
+QScrollBar::down-arrow:vertical:pressed{
+    background-color:qlineargradient(x1:0,y1:1,x2:0,y2:0,stop:0#303030,stop:0.25#B0B0B0,stop:0.75#B0B0B0,stop:1#303030);
+    }
 
-/*
-MDILine {
-    color: red;
-    background-color: green
-}
+#feed_override:horizontal,
+#rapid_override:horizontal,
+#jog_rate:horizontal,
+#torch_pulse_time:horizontal,
+#paused_motion_speed:horizontal,
+#height_override:horizontal{
+    border:0px solid #303030;
+    background-color:#505050;
+    margin:0px 24px 0px 24px;
+    max-height:24px;
+    }
+#feed_override::handle:horizontal,
+#rapid_override::handle:horizontal,
+#jog_rate::handle:horizontal,
+#torch_pulse_time::handle:horizontal,
+#paused_motion_speed::handle:horizontal,
+#height_override::handle:horizontal{
+    border:1px solid#303030;
+    background-color:qlineargradient(x1:0,y1:1,x2:0,y2:0,stop:0#303030,stop:0.15#B0B0B0,stop:0.85#B0B0B0,stop:1#303030);
+    min-width:24px;
+    }
+#feed_override::add-line:horizontal,
+#rapid_override::add-line:horizontal,
+#jog_rate::add-line:horizontal,
+#torch_pulse_time::add-line:horizontal,
+#paused_motion_speed::add-line:horizontal,
+#height_override::add-line:horizontal{
+    border:0px solid#303030;
+    border-image:url(./images/arrow_up.png);
+    background-color:qlineargradient(x1:0,y1:1,x2:0,y2:0,stop:0#303030,stop:0.15#B0B0B0,stop:0.85#B0B0B0,stop:1#303030);
+    width:24px;
+    subcontrol-position:right;
+    subcontrol-origin:margin;
+    }
+#feed_override::sub-line:horizontal,
+#rapid_override::sub-line:horizontal,
+#jog_rate::sub-line:horizontal,
+#torch_pulse_time::sub-line:horizontal,
+#paused_motion_speed::sub-line:horizontal,
+#height_override::sub-line:horizontal{
+    border:0px solid#303030;
+    border-image:url(./images/arrow_down.png);
+    background-color:qlineargradient(x1:0,y1:1,x2:0,y2:0,stop:0#303030,stop:0.15#B0B0B0,stop:0.85#B0B0B0,stop:1#303030);
+    width:24px;
+    subcontrol-position:left;
+    subcontrol-origin:margin;
+    }
+#feed_override::left-arrow:horizontal:pressed,
+#rapid_override::left-arrow:horizontal:pressed,
+#jog_rate::left-arrow:horizontal:pressed,
+#torch_pulse_time::left-arrow:horizontal:pressed,
+#paused_motion_speed::left-arrow:horizontal:pressed,
+#height_override::left-arrow:horizontal:pressed{
+    border-image:url(./images/arrow_down_off.png);
+    background-color:qlineargradient(x1:0,y1:1,x2:0,y2:0,stop:0#303030,stop:0.25#B0B0B0,stop:0.75#B0B0B0,stop:1#303030);
+    }
+#feed_override::right-arrow:horizontal:pressed,
+#rapid_override::right-arrow:horizontal:pressed,
+#jog_rate::right-arrow:horizontal:pressed,
+#torch_pulse_time::right-arrow:horizontal:pressed,
+#paused_motion_speed::right-arrow:horizontal:pressed,
+#height_override::right-arrow:horizontal:pressed{
+    border-image:url(./images/arrow_up_off.png);
+    background-color:qlineargradient(x1:0,y1:1,x2:0,y2:0,stop:0#303030,stop:0.25#B0B0B0,stop:0.75#B0B0B0,stop:1#303030);
+    }
 
-QListView {
-    color: orange;
-    background-color: green;
-    alternate-background-color: blue;
-}
-*/
+QDoubleSpinBox{
+    border:0px solid#303030;
+    background-color:#505050;
+    color:#00B000;
+    }
+QDoubleSpinBox::down-button{
+    width:24px;
+    height:24px;
+    border-image:url(./images/arrow_down.png);
+    background-color:qlineargradient(x1:0,y1:1,x2:0,y2:0,stop:0#303030,stop:0.15#B0B0B0,stop:0.85#B0B0B0,stop:1#303030);
+    subcontrol-origin:border;
+    subcontrol-position:top left;
+    }
+QDoubleSpinBox::up-button{
+    width:24px;
+    height:24px;
+    border-image:url(./images/arrow_up.png);
+    background-color:qlineargradient(x1:0,y1:1,x2:0,y2:0,stop:0#303030,stop:0.15#B0B0B0,stop:0.85#B0B0B0,stop:1#303030);
+    subcontrol-origin:border;
+    subcontrol-position:top right;
+    }
+QDoubleSpinBox::down-button:pressed{
+    border-image:url(./images/arrow_down_off.png);
+    background-color:qlineargradient(x1:0,y1:1,x2:0,y2:0,stop:0#303030,stop:0.25#B0B0B0,stop:0.75#B0B0B0,stop:1#303030);
+    }
+QDoubleSpinBox::up-button:pressed{
+    border-image:url(./images/arrow_up_off.png);
+    background-color:qlineargradient(x1:0,y1:1,x2:0,y2:0,stop:0#303030,stop:0.25#B0B0B0,stop:0.75#B0B0B0,stop:1#303030);
+    }
 
+MDILine{
+    color:#000000;
+    background-color:#C0C0C0;
+    }
 
+#mdi_list{
+    color:#000000;
+    background-color:#C0C0C0;
+    alternate-background-color:#909090;
+    }
 
+#error_text{
+    background-color:#C0C0C0;
+    }
