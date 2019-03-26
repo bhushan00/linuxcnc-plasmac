@@ -6,6 +6,8 @@ A plasma cutting table control component for use with the linuxcnc master branch
 
 .I VERSIONS:
 .br
+V0.20 - 2019/03/26 - fix skip IHS
+.br
 V0.19 - 2019/03/26 - error message for torch start failure
 .br
 V0.18 - 2019/01/20 - rework torch pulse
@@ -281,6 +283,8 @@ variable float  arc_voltage;                /* calculated arc voltage */
 variable float  axis_x_finish;              /* axis x position at end of cut */
 variable float  axis_y_finish;              /* axis y position at end of cut */
 variable int    count;                      /* for counting */
+variable float  cut_height_first;           /* cut height at start of cut */
+variable float  cut_height_last;            /* cut height at end of cut */
 variable float  cut_offset;                 /* offset from last cut end to this cut start */
 variable float  cut_started;                /* cut has started */
 variable float  cut_target;                 /* cut height target offset */
@@ -518,6 +522,10 @@ FUNCTION(_) {
                     axis_y_finish = 0;
                 }
                 if(cut_offset && cut_offset < skip_ihs_distance){
+                    cut_target = cut_target + cut_height_last - cut_height_first;
+                    pierce_target = pierce_target + cut_height_last - cut_height_first;
+                    puddle_jump_target = puddle_jump_target + cut_height_last - cut_height_first;
+                    cut_height_first = cut_height_last;
                     state = PIERCE_HEIGHT;
                 }else{
                     state = TOUCHOFF;
@@ -544,8 +552,7 @@ FUNCTION(_) {
             if(!touchdown){
                 if(!float_switch){
                     if(axis_z_position - (probe_velocity * offset_scale) <= axis_z_min_limit){
-                        rtapi_print_msg(RTAPI_MSG_ERR,"bottom limit reached\n"
-                                                      "while probing down\n"
+                        rtapi_print_msg(RTAPI_MSG_ERR,"bottom limit reached while probing down\n"
                                                       "program is paused...\n");
                         stop_type = PAUSE;
                         program_pause = TRUE;
@@ -567,7 +574,7 @@ FUNCTION(_) {
                         offset_counts = zero_target;
                     }
                     if(fabs(offset_current - (zero_target * offset_scale)) < tolerance){
-                        cut_target = offset_datum = offset_counts + (cut_height / offset_scale);
+                        cut_target = cut_height_first = offset_datum = offset_counts + (cut_height / offset_scale);
                         pierce_target = offset_counts + (pierce_height / offset_scale);
                         puddle_jump_target = offset_counts + (pierce_height * (puddle_jump_percent / 100) / offset_scale);
                         safe_min = (pierce_height + (1 * units_per_mm)) / offset_scale;
@@ -576,15 +583,13 @@ FUNCTION(_) {
                         offset_max = offset_counts + (axis_z_max_limit - axis_z_position - (1 * units_per_mm)) / offset_scale;
                         if(offset_counts  + safe_min >= offset_max){
                             safe_target = offset_max;
-                            rtapi_print_msg(RTAPI_MSG_ERR, "material too high for\n"
-                                                           "safe traverse\n"
+                            rtapi_print_msg(RTAPI_MSG_ERR, "material too high for safe traverse\n"
                                                            "program is stopped...\n");
                             stop_type = STOP;
                             program_stop = TRUE;
                             state = FINISH;
                         }else if(offset_counts + safe_preferred >= offset_max && !safe_height_is_limited){
-                            rtapi_print_msg(RTAPI_MSG_ERR, "safe traverse height\n"
-                                                           "has been reduced...\n");
+                            rtapi_print_msg(RTAPI_MSG_ERR, "safe traverse height has been reduced...\n");
                             safe_target = offset_max;
                             safe_height_is_limited = TRUE;
                             state = PIERCE_HEIGHT;
@@ -780,9 +785,7 @@ FUNCTION(_) {
                             cornerlock_is_locked = FALSE;
                         }
                         /* lock thc if voltage change > kerfcross threshold volts */
-                        if(kerfcross_enable == TRUE &&
-                           last_arc_voltage > 0 &&
-                           arc_voltage > last_arc_voltage + kerfcross_threshold){
+                        if(kerfcross_enable == TRUE && last_arc_voltage > 0 && arc_voltage > last_arc_voltage + kerfcross_threshold){
                             kerfcross_is_locked = TRUE;
                         }else{
                             kerfcross_is_locked = FALSE;
@@ -809,18 +812,16 @@ FUNCTION(_) {
                                 pid_output = -thc_velocity;
                             }
                             if(offset_counts + pid_output <= offset_min){
-                                rtapi_print_msg(RTAPI_MSG_ERR,"bottom limit reached \n"
-                                                              "while THC moving down\n"
-                                                              "program is stopped......\n");
+                                rtapi_print_msg(RTAPI_MSG_ERR,"bottom limit reached while THC moving down\n"
+                                                              "program is stopped...\n");
                                 torch_on = FALSE;
                                 stop_type = STOP;
                                 program_stop = TRUE;
                                 state = FINISH;
                                 pid_output = 0;
                             }else if(offset_counts + pid_output >= offset_max){
-                                rtapi_print_msg(RTAPI_MSG_ERR,"top limit reached    \n"
-                                                              "while THC moving up  \n"
-                                                              "program is stopped......\n");
+                                rtapi_print_msg(RTAPI_MSG_ERR,"top limit reached while THC moving up \n"
+                                                              "program is stopped...\n");
                                 torch_on = FALSE;
                                 stop_type = STOP;
                                 program_stop = TRUE;
@@ -868,9 +869,8 @@ FUNCTION(_) {
                         }
                         if(move_down && !cornerlock_is_locked){
                             if(offset_counts - thc_velocity <= offset_min){
-                                rtapi_print_msg(RTAPI_MSG_ERR,"bottom limit reached \n"
-                                                              "while THC moving down\n"
-                                                              "program is stopped......\n");
+                                rtapi_print_msg(RTAPI_MSG_ERR,"bottom limit reached while THC moving down\n"
+                                                              "program is stopped...\n");
                                 torch_on = FALSE;
                                 stop_type = STOP;
                                 program_stop = TRUE;
@@ -881,9 +881,8 @@ FUNCTION(_) {
                             }
                         }else if(move_up && !cornerlock_is_locked){
                             if(offset_counts + thc_velocity + safe_min >= offset_max){
-                                rtapi_print_msg(RTAPI_MSG_ERR,"top limit reached    \n"
-                                                              "while THC moving up  \n"
-                                                              "program is stopped......\n");
+                                rtapi_print_msg(RTAPI_MSG_ERR,"top limit reached while THC moving up\n"
+                                                              "program is stopped...\n");
                                 torch_on = FALSE;
                                 stop_type = STOP;
                                 program_stop = TRUE;
@@ -906,12 +905,12 @@ FUNCTION(_) {
                         safe_target = offset_max;
                         if(!safe_height_is_limited){
                             safe_height_is_limited = TRUE;
-                            rtapi_print_msg(RTAPI_MSG_ERR, "safe traverse height\n"
-                                                           "has been reduced...\n");
+                            rtapi_print_msg(RTAPI_MSG_ERR, "safe traverse height has been reduced...\n");
                         }
                     }
                 }
             }
+            cut_height_last = offset_counts;
             break;
         case GOTO_SAFE_HEIGHT:
             /* move to safe height */
