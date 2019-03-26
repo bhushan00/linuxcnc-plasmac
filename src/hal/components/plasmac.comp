@@ -6,6 +6,8 @@ A plasma cutting table control component for use with the linuxcnc master branch
 
 .I VERSIONS:
 .br
+V0.19 - 2019/03/26 - error message for torch start failure
+.br
 V0.18 - 2019/01/20 - rework torch pulse
 .br
 V0.17 - 2019/01/19 - rework paused motion
@@ -283,6 +285,7 @@ variable float  cut_offset;                 /* offset from last cut end to this 
 variable float  cut_started;                /* cut has started */
 variable float  cut_target;                 /* cut height target offset */
 variable bool   dry_run;                    /* dry run in progress */
+variable bool   error_message;              /* 1 if error message has been sent */
 variable float  height_ovr_counts;          /* number of counts to change height via override */
 variable float  height_ovr_old;             /* old height override value */
 variable bool   initialized;                /* initialization flag */
@@ -628,7 +631,12 @@ FUNCTION(_) {
             if(arc_starts > arc_max_starts - 1){
                 program_pause = TRUE;
                 restart_timer = 0;
+                if (!error_message){
+                    rtapi_print_msg(RTAPI_MSG_ERR,"no arc detected after %d start attempts\nprogram paused...", arc_max_starts);
+                    error_message = 1;
+                }
             }else{
+                error_message = 0;
                 restart_timer -= thread_period;
                 if(restart_timer <= 0){
                     restart_timer = 0;
