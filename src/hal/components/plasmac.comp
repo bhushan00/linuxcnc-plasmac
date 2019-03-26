@@ -6,6 +6,8 @@ A plasma cutting table control component for use with the linuxcnc master branch
 
 .I VERSIONS:
 .br
+V0.21 - 2019/03/26 - add ohmic probing
+.br
 V0.20 - 2019/03/26 - fix skip IHS
 .br
 V0.19 - 2019/03/26 - error message for torch start failure
@@ -230,6 +232,8 @@ pin in  s32     mode                        "operating mode";
 pin in  bit     move_down                   "external thc down switch [mode 2])";
 pin in  bit     move_up                     "external thc up switch [mode 2]";
 pin in  float   offset_current              "current z axis offset";
+pin in  bit     ohmic_probe                 "ohmic probe input";
+pin in  bit     ohmic_test                  "test for shorted torch";
 pin in  float   paused_motion_speed         "multiplier for speed of motion when paused, from -1 to 1";
 pin in  float   pid_d_gain                  "derivative gain input [mode 0 & mode 1]";
 pin in  float   pid_i_gain                  "integral gain input [mode 0 & mode 1]";
@@ -269,6 +273,7 @@ pin out bit     led_up                      "thc move up indicator";
 pin out s32     offset_counts               "number of counts to offset, connect to axis.z.eoffset-counts";
 pin out bit     offset_enable               "enable offsets, connect to axis.z.eoffset-enable";
 pin out float   offset_scale                "offset scale, connect to axis.z.eoffset-scale";
+pin out bit     ohmic_enable                "on only while probing";
 pin out bit     program_pause               "pause the current program, connect to halui.program.pause";
 pin out bit     program_resume              "resume the currently paused program, connect to halui.program.resume";
 pin out bit     program_run                 "run the currently loaded program, connect to halui.program.run";
@@ -353,6 +358,7 @@ typedef enum{IDLE,
              FINISH,
              TORCHPULSE,
              PAUSED_MOTION,
+             OHMIC_TEST,
              DEBUG} state_t;
 
 typedef enum{NONE,
@@ -537,10 +543,15 @@ FUNCTION(_) {
                 if(!program_is_paused){
                     stop_type = NONE;
                 }
-            /* if torch pulse required */
+            /* if torch pulse requested */
             }else if(torch_pulse_start){
                 feed_hold = TRUE;
                 state = TORCHPULSE;
+            /* if ohmic probe test requested */
+            }else if(ohmic_test){
+                feed_hold = TRUE;
+                ohmic_enable = TRUE;
+                state = OHMIC_TEST;
             /* if no active cut */
             }else if(!cut_started){
                 feed_hold = FALSE;
@@ -549,8 +560,9 @@ FUNCTION(_) {
         case TOUCHOFF:
             /* probe down to top of stock, then probe up slow to set zero when the float switch activates */
             feed_hold = TRUE;
+            ohmic_enable = TRUE;
             if(!touchdown){
-                if(!float_switch){
+                if(!float_switch && !ohmic_probe){
                     if(axis_z_position - (probe_velocity * offset_scale) <= axis_z_min_limit){
                         rtapi_print_msg(RTAPI_MSG_ERR,"bottom limit reached while probing down\n"
                                                       "program is paused...\n");
@@ -565,7 +577,7 @@ FUNCTION(_) {
                     zero_target = offset_counts + (float_switch_travel / offset_scale);
                 }
             }else{
-                if(float_switch){
+                if(float_switch && !ohmic_probe){
                     offset_counts += 1;
                 }else{
                     if(offset_counts - setup_velocity > zero_target){
@@ -592,11 +604,13 @@ FUNCTION(_) {
                             rtapi_print_msg(RTAPI_MSG_ERR, "safe traverse height has been reduced...\n");
                             safe_target = offset_max;
                             safe_height_is_limited = TRUE;
+                            ohmic_enable = FALSE;
                             state = PIERCE_HEIGHT;
                         }else{
                             if(!safe_target){
                                 safe_target = offset_counts + safe_preferred;
                             }
+                            ohmic_enable = FALSE;
                             state = PIERCE_HEIGHT;
                         }
                     }
@@ -934,6 +948,7 @@ FUNCTION(_) {
             kerfcross_is_locked = FALSE;
             led_down = FALSE;
             led_up = FALSE;
+            ohmic_enable = FALSE;
             if(stop_type == STOP){
                 program_run = FALSE;
                 paused_motion = FALSE;
@@ -974,7 +989,6 @@ FUNCTION(_) {
                     }
                 }
             }
-
             break;
         case PAUSED_MOTION:
             /* a bit kludgy but we need a timer here for a minimum run
@@ -1000,8 +1014,16 @@ FUNCTION(_) {
                 }
             }
             break;
+        case OHMIC_TEST:
+            /* testing for a shorted torch */
+            if (!ohmic_test){
+                ohmic_enable = FALSE;
+                state = IDLE;
+            }
+            break;
         case DEBUG:
             /* holding state for debugging */
+            rtapi_print_msg(RTAPI_MSG_ERR, "I have no idea how we got here...\n");
             break;
     }
 }

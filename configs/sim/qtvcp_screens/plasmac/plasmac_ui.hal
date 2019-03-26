@@ -1,5 +1,6 @@
 
 # connect existing signals
+net p_comp:ohmic-probe-out                                          =>  plasmac_ui.ohmic_probe_led
 net p_comp:breakaway-switch-out                                     =>  plasmac_ui.breakaway_switch_led
 net p_comp:float-switch-out                                         =>  plasmac_ui.float_switch_led
 net p_comp:torch-on                                                 =>  plasmac_ui.torch_on_led
@@ -13,6 +14,4 @@ net p_gui:cornerlock-is-locked      plasmac.cornerlock-is-locked    =>  plasmac_
 net p_gui:kerfcross-is-locked       plasmac.kerfcross-is-locked     =>  plasmac_ui.kerfcross_locked_led
 net p_gui:led-down                  plasmac.led-down                =>  plasmac_ui.down_led
 net p_gui:led-up                    plasmac.led-up                  =>  plasmac_ui.up_led
-net p_gui:safe-height-is-limited    plasmac.safe-height-is-limited  =>  plasmac_ui.safe_height_limited_led
-
 net p_gui:dry-run                   plasmac_ui.dry_run              =>  plasmac.dry-run-start

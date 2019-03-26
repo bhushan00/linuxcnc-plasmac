@@ -1,10 +1,10 @@
 
-#***** DEBOUNCE FOR THE FLOAT SWITCH ***********************************
-loadrt  debounce                cfg=2
+#***** DEBOUNCE FOR THE OHMIC PROBE, FLOAT SWITCH AND Breakaway Switch *********
+loadrt  debounce                cfg=3
 setp    debounce.0.delay        1
 addf    debounce.0              servo-thread
 
-#***** PLASMAC COMPONENT ***********************************************
+#***** PLASMAC COMPONENT *******************************************************
 loadrt  plasmac
 addf    plasmac     servo-thread
 
@@ -17,6 +17,7 @@ net p_comp:current-velocity     motion.current-vel              =>  plasmac.curr
 net p_comp:feed-override        halui.feed-override.value       =>  plasmac.feed-override
 net p_comp:float-switch-out     debounce.0.0.out                =>  plasmac.float-switch
 net p_comp:offset-current       axis.z.eoffset                  =>  plasmac.offset-current
+net p_comp:ohmic-probe-out      debounce.0.2.out                =>  plasmac.ohmic-probe
 net p_comp:program.is-idle      halui.program.is-idle           =>  plasmac.program-is-idle
 net p_comp:program.is-paused    halui.program.is-paused         =>  plasmac.program-is-paused
 net p_comp:program.is-running   halui.program.is-running        =>  plasmac.program-is-running
@@ -35,7 +36,7 @@ net p_comp:program-run          plasmac.program-run             =>  halui.progra
 net p_comp:program-stop         plasmac.program-stop            =>  halui.program.stop
 net p_comp:torch-on             plasmac.torch-on
 
-#***** SET THE FOLLOWING TO SUIT YOUR CONFIGURATION ********************
+#***** SET THE FOLLOWING TO SUIT YOUR CONFIGURATION ****************************
 
 # FOR MODE 0
 #net p_comp:arc-voltage-in      ***YOUR PLASMA ARC VOLTAGE***   =>  plasmac.arc-voltage-in

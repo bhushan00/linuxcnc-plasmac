@@ -122,6 +122,8 @@ class HandlerClass:
         STATUS.connect('not-all-homed', self.is_not_homed)
         STATUS.connect('gcode-line-selected', lambda w, line: self.update_selected_line(line))
         STATUS.connect('general', self.dialog_return)
+        STATUS.connect('state-on', self.machine_on)
+        STATUS.connect('state-off', self.machine_off)
         self.fKeys = ('blank','blank','blank',
                       QtCore.Qt.Key_F3,QtCore.Qt.Key_F4,
                       QtCore.Qt.Key_F5,QtCore.Qt.Key_F6,
@@ -136,14 +138,14 @@ class HandlerClass:
         for child in self.w.mdi_history.children():
             if isinstance(child, QtWidgets.QListView):
                 child.setObjectName('mdi_list')
-        print '\nARC VOLTAGE'
-        for child in self.w.arc_voltage.children():
-            print 'child', child, child.objectName
-            for grandchild in child.children():
-                print 'grandchild', grandchild, grandchild.objectName()
-        print '\nGCODER'
-        for child in self.w.gcoder.children():
-            print child, child.objectName
+#        print '\nARC VOLTAGE'
+#        for child in self.w.arc_voltage.children():
+#            print 'child', child, child.objectName
+#            for grandchild in child.children():
+#                print 'grandchild', grandchild, grandchild.objectName()
+#        print '\nGCODER'
+#        for child in self.w.gcoder.children():
+#            print child, child.objectName
 
 
     def class_patch__(self):
@@ -211,9 +213,6 @@ class HandlerClass:
             print 'Error in, or no function for: %s in handler file for-%s'%(KEYBIND.convert(event),key)
             return False
 
-
-
-
     def dialog_send(self):
         message = _('The machine is already homed')
         more = _('Do you wish to unhome?')
@@ -226,15 +225,6 @@ class HandlerClass:
                 'TITLE':'HOMING REQUEST'}
         STATUS.emit('dialog-request', mess)
 #                log.error('Filter Program Error:{}'.format (stderr))
-
-    def dialog_return(self,w,message):
-        rtn = message.get('RETURN')
-        code = bool(message.get('ID') == '__REHOME__')
-        name = bool(message.get('NAME') == 'MESSAGE')
-        if rtn and code and name:
-            print ('Entry return value from {} = {} which is a {}').format(code, rtn, type(rtn))
-            if rtn:
-                ACTION.SET_MACHINE_UNHOMED(-1)
 
     ########################
     # callbacks from STATUS #
@@ -264,6 +254,21 @@ class HandlerClass:
 
     def update_selected_line(self, line):
         self.selected_line = line + 1
+
+    def dialog_return(self,w,message):
+        rtn = message.get('RETURN')
+        code = bool(message.get('ID') == '__REHOME__')
+        name = bool(message.get('NAME') == 'MESSAGE')
+        if rtn and code and name:
+            print ('Entry return value from {} = {} which is a {}').format(code, rtn, type(rtn))
+            if rtn:
+                ACTION.SET_MACHINE_UNHOMED(-1)
+
+    def machine_on(self, w):
+        self.w.ohmic_test.setEnabled(True)
+
+    def machine_off(self, w):
+        self.w.ohmic_test.setEnabled(False)
 
     #######################
     # callbacks from form #
@@ -366,6 +371,9 @@ class HandlerClass:
     def torch_pulse_start_released(self):
         hal.set_p('plasmac.torch-pulse-start','0')
         hal.set_p('plasmac.torch-pulse-time','0')
+
+    def ohmic_probe_pressed(self):
+        pass
 
     def hal_scope_clicked(self):
         os.system('halscope')
@@ -835,6 +843,7 @@ class HandlerClass:
                               STATUS['old']['m-code'].replace(' ',',')[3:-1] \
                               , 0)
         if hal.get_value('halui.machine.is-on') and hal.get_value('halui.program.is-idle'):
+            self.w.home_button.setEnabled(True)
             self.w.edit_button.setEnabled(True)
             self.w.run_from_button.setEnabled(True)
             self.w.torch_pulse_start.setEnabled(True)
@@ -842,12 +851,14 @@ class HandlerClass:
             self.w.forward.setEnabled(False)
         elif hal.get_value('halui.machine.is-on') and \
             (hal.get_value('halui.program.is-paused') or self.w.reverse.isDown() or self.w.forward.isDown()):
+            self.w.home_button.setEnabled(False)
             self.w.edit_button.setEnabled(False)
             self.w.run_from_button.setEnabled(False)
             self.w.torch_pulse_start.setEnabled(False)
             self.w.reverse.setEnabled(True)
             self.w.forward.setEnabled(True)
         else:
+            self.w.home_button.setEnabled(False)
             self.w.edit_button.setEnabled(False)
             self.w.run_from_button.setEnabled(False)
             self.w.torch_pulse_start.setEnabled(False)

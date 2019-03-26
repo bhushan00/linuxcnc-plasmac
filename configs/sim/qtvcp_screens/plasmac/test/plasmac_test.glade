@@ -11,7 +11,7 @@
   </object>
   <object class="GtkAdjustment" id="voltsAdj">
     <property name="upper">10</property>
-    <property name="value">3.5</property>
+    <property name="value">3</property>
     <property name="step_increment">0.01</property>
     <property name="page_increment">1</property>
   </object>
@@ -76,6 +76,19 @@
                     <property name="can_focus">False</property>
                     <property name="homogeneous">True</property>
                     <child>
+                      <object class="HAL_Button" id="ohmicProbe">
+                        <property name="label" translatable="yes">OHMIC</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="receives_default">True</property>
+                      </object>
+                      <packing>
+                        <property name="expand">True</property>
+                        <property name="fill">True</property>
+                        <property name="position">0</property>
+                      </packing>
+                    </child>
+                    <child>
                       <object class="HAL_Button" id="floatSwitch">
                         <property name="label" translatable="yes">  FLOAT</property>
                         <property name="visible">True</property>
@@ -85,7 +98,7 @@
                       <packing>
                         <property name="expand">True</property>
                         <property name="fill">True</property>
-                        <property name="position">0</property>
+                        <property name="position">1</property>
                       </packing>
                     </child>
                     <child>
@@ -98,7 +111,7 @@
                       <packing>
                         <property name="expand">True</property>
                         <property name="fill">True</property>
-                        <property name="position">1</property>
+                        <property name="position">2</property>
                       </packing>
                     </child>
                   </object>

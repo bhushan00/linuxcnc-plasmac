@@ -2233,7 +2233,22 @@ Edit
 F9</string>
      </property>
     </widget>
-    <widget class="ActionButton" name="home_button">
+    <widget class="QPushButton" name="run_from_button">
+     <property name="geometry">
+      <rect>
+       <x>416</x>
+       <y>0</y>
+       <width>48</width>
+       <height>48</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Run
+From
+F8</string>
+     </property>
+    </widget>
+    <widget class="PushButton" name="home_button">
      <property name="geometry">
       <rect>
        <x>156</x>
@@ -2242,12 +2257,6 @@ F9</string>
        <height>48</height>
       </rect>
      </property>
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
      <property name="text">
       <string>All
 Home
@@ -2255,12 +2264,6 @@ F3</string>
      </property>
      <property name="indicator_option" stdset="0">
       <bool>true</bool>
-     </property>
-     <property name="indicator_HAL_pin_option" stdset="0">
-      <bool>false</bool>
-     </property>
-     <property name="checked_state_text_option" stdset="0">
-      <bool>false</bool>
      </property>
      <property name="on_color" stdset="0">
       <color>
@@ -2275,41 +2278,6 @@ F3</string>
        <green>0</green>
        <blue>0</blue>
       </color>
-     </property>
-     <property name="indicator_size" stdset="0">
-      <double>0.300000000000000</double>
-     </property>
-     <property name="true_state_string" stdset="0">
-      <string>All
-Home</string>
-     </property>
-     <property name="false_state_string" stdset="0">
-      <string>All
-Home</string>
-     </property>
-     <property name="estop_action" stdset="0">
-      <bool>false</bool>
-     </property>
-     <property name="home_action" stdset="0">
-      <bool>false</bool>
-     </property>
-     <property name="joint_number" stdset="0">
-      <number>-1</number>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="run_from_button">
-     <property name="geometry">
-      <rect>
-       <x>416</x>
-       <y>0</y>
-       <width>48</width>
-       <height>48</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Run
-From
-F8</string>
      </property>
     </widget>
    </widget>
@@ -2778,20 +2746,20 @@ F8</string>
      <property name="geometry">
       <rect>
        <x>202</x>
-       <y>64</y>
+       <y>4</y>
        <width>82</width>
        <height>24</height>
       </rect>
      </property>
      <property name="text">
-      <string>Safe Limited</string>
+      <string>Ohmic Probe</string>
      </property>
     </widget>
     <widget class="QLabel" name="Label_4">
      <property name="geometry">
       <rect>
        <x>202</x>
-       <y>34</y>
+       <y>64</y>
        <width>82</width>
        <height>24</height>
       </rect>
@@ -2804,7 +2772,7 @@ F8</string>
      <property name="geometry">
       <rect>
        <x>202</x>
-       <y>4</y>
+       <y>34</y>
        <width>82</width>
        <height>24</height>
       </rect>
@@ -2813,11 +2781,11 @@ F8</string>
       <string>Float Switch</string>
      </property>
     </widget>
-    <widget class="LED" name="safe_height_limited_led">
+    <widget class="LED" name="ohmic_probe_led">
      <property name="geometry">
       <rect>
        <x>177</x>
-       <y>66</y>
+       <y>6</y>
        <width>24</width>
        <height>24</height>
       </rect>
@@ -2827,7 +2795,7 @@ F8</string>
      <property name="geometry">
       <rect>
        <x>177</x>
-       <y>36</y>
+       <y>66</y>
        <width>24</width>
        <height>24</height>
       </rect>
@@ -2837,7 +2805,7 @@ F8</string>
      <property name="geometry">
       <rect>
        <x>177</x>
-       <y>6</y>
+       <y>36</y>
        <width>24</width>
        <height>24</height>
       </rect>
@@ -2864,7 +2832,7 @@ F8</string>
     <zorder>Label_5</zorder>
     <zorder>Label_4</zorder>
     <zorder>Label_3</zorder>
-    <zorder>safe_height_limited_led</zorder>
+    <zorder>ohmic_probe_led</zorder>
     <zorder>breakaway_switch_led</zorder>
     <zorder>float_switch_led</zorder>
    </widget>
@@ -3655,9 +3623,9 @@ Off</string>
    <widget class="StateEnableGridLayout" name="button_layout">
     <property name="geometry">
      <rect>
-      <x>220</x>
+      <x>272</x>
       <y>418</y>
-      <width>308</width>
+      <width>256</width>
       <height>48</height>
      </rect>
     </property>
@@ -3806,6 +3774,20 @@ Run</string>
      <bool>false</bool>
     </property>
    </widget>
+   <widget class="PushButton" name="ohmic_test">
+    <property name="geometry">
+     <rect>
+      <x>220</x>
+      <y>418</y>
+      <width>48</width>
+      <height>48</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Ohmic
+Test</string>
+    </property>
+   </widget>
    <zorder>mdi_history</zorder>
    <zorder>control_frame</zorder>
    <zorder>screen_options</zorder>
@@ -3817,6 +3799,7 @@ Run</string>
    <zorder>plasmac_settings_tabs</zorder>
    <zorder>gcoder</zorder>
    <zorder>error_text</zorder>
+   <zorder>ohmic_test</zorder>
   </widget>
   <widget class="QStatusBar" name="statusBar">
    <property name="styleSheet">
@@ -3924,7 +3907,6 @@ Run</string>
   <tabstop>exit_button</tabstop>
   <tabstop>estop_button</tabstop>
   <tabstop>power_button</tabstop>
-  <tabstop>home_button</tabstop>
   <tabstop>work_coordinates_button</tabstop>
   <tabstop>open_button</tabstop>
   <tabstop>run_button</tabstop>
@@ -4811,17 +4793,33 @@ Run</string>
    </hints>
   </connection>
   <connection>
+   <sender>dry_run</sender>
+   <signal>pressed()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>ohmic_probe_pressed()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>257</x>
+     <y>445</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>429</x>
+     <y>414</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
    <sender>home_button</sender>
    <signal>clicked()</signal>
    <receiver>MainWindow</receiver>
    <slot>home_clicked()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>397</x>
-     <y>17</y>
+     <x>401</x>
+     <y>21</y>
     </hint>
     <hint type="destinationlabel">
-     <x>400</x>
+     <x>482</x>
      <y>52</y>
     </hint>
    </hints>
@@ -4869,5 +4867,6 @@ Run</string>
   <slot>feed_override_changed()</slot>
   <slot>run_from_line_clicked()</slot>
   <slot>home_clicked()</slot>
+  <slot>ohmic_probe_pressed()</slot>
  </slots>
 </ui>
