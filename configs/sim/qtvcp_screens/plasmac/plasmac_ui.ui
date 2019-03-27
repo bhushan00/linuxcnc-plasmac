@@ -2693,9 +2693,9 @@ F3</string>
      </property>
      <property name="color">
       <color>
-       <red>115</red>
-       <green>210</green>
-       <blue>22</blue>
+       <red>0</red>
+       <green>255</green>
+       <blue>0</blue>
       </color>
      </property>
     </widget>
@@ -2736,8 +2736,8 @@ F3</string>
      </property>
      <property name="color">
       <color>
-       <red>245</red>
-       <green>121</green>
+       <red>255</red>
+       <green>100</green>
        <blue>0</blue>
       </color>
      </property>
@@ -2790,6 +2790,13 @@ F3</string>
        <height>24</height>
       </rect>
      </property>
+     <property name="color">
+      <color>
+       <red>240</red>
+       <green>240</green>
+       <blue>0</blue>
+      </color>
+     </property>
     </widget>
     <widget class="LED" name="breakaway_switch_led">
      <property name="geometry">
@@ -2800,6 +2807,13 @@ F3</string>
        <height>24</height>
       </rect>
      </property>
+     <property name="color">
+      <color>
+       <red>255</red>
+       <green>0</green>
+       <blue>0</blue>
+      </color>
+     </property>
     </widget>
     <widget class="LED" name="float_switch_led">
      <property name="geometry">
@@ -2809,6 +2823,13 @@ F3</string>
        <width>24</width>
        <height>24</height>
       </rect>
+     </property>
+     <property name="color">
+      <color>
+       <red>240</red>
+       <green>240</green>
+       <blue>0</blue>
+      </color>
      </property>
     </widget>
     <zorder>tp_label_1</zorder>

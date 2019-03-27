@@ -307,58 +307,64 @@ w('labelframe',fmonitor,'-text','','-relief','flat')
 arcfont = fname + ' ' + str(int(fsize) + 2) + ' bold'
 w('label',fmonitor + '.arc-voltage','-anchor','e','-width',swidth,'-fg','blue','-font',arcfont)
 w('label',fmonitor + '.aVlab','-text','Arc Voltage')
-w('canvas',fmonitor + '.led-float','-width',cwidth,'-height',cheight)
-w(fmonitor + '.led-float','create','oval',ledx,ledy,ledwidth,ledheight,'-fill','red','-disabledfill','grey')
-w('label',fmonitor + '.lFlab','-text','Float Switch')
-w('canvas',fmonitor + '.led-torch','-width',cwidth,'-height',cheight)
-w(fmonitor + '.led-torch','create','oval',ledx,ledy,ledwidth,ledheight,'-fill','orange','-disabledfill','grey')
-w('label',fmonitor + '.lTlab','-text','Torch On')
-w('canvas',fmonitor + '.led-breakaway','-width',cwidth,'-height',cheight)
-w(fmonitor + '.led-breakaway','create','oval',ledx,ledy,ledwidth,ledheight,'-fill','red','-disabledfill','grey')
-w('label',fmonitor + '.lBlab','-text','Breakaway')
 w('canvas',fmonitor + '.led-arc-ok','-width',cwidth,'-height',cheight)
 w(fmonitor + '.led-arc-ok','create','oval',ledx,ledy,ledwidth,ledheight,'-fill','lightgreen','-disabledfill','grey')
 w('label',fmonitor + '.lAOlab','-text','Ark OK')
-w('canvas',fmonitor + '.led-safe-height','-width',cwidth,'-height',cheight)
-w(fmonitor + '.led-safe-height','create','oval',ledx,ledy,ledwidth,ledheight,'-fill','red','-disabledfill','grey')
-w('label',fmonitor + '.lSHlab','-text','Safe Limited')
+w('canvas',fmonitor + '.led-torch','-width',cwidth,'-height',cheight)
+w(fmonitor + '.led-torch','create','oval',ledx,ledy,ledwidth,ledheight,'-fill','orange','-disabledfill','grey')
+w('label',fmonitor + '.lTlab','-text','Torch On')
+w('canvas',fmonitor + '.led-ohmic','-width',cwidth,'-height',cheight)
+w(fmonitor + '.led-ohmic','create','oval',ledx,ledy,ledwidth,ledheight,'-fill','yellow','-disabledfill','grey')
+w('label',fmonitor + '.lOlab','-text','Ohmic Probe')
+w('canvas',fmonitor + '.led-float','-width',cwidth,'-height',cheight)
+w(fmonitor + '.led-float','create','oval',ledx,ledy,ledwidth,ledheight,'-fill','yellow','-disabledfill','grey')
+w('label',fmonitor + '.lFlab','-text','Float Switch')
+w('canvas',fmonitor + '.led-breakaway','-width',cwidth,'-height',cheight)
+w(fmonitor + '.led-breakaway','create','oval',ledx,ledy,ledwidth,ledheight,'-fill','red','-disabledfill','grey')
+w('label',fmonitor + '.lBlab','-text','Breakaway')
 w('grid',fmonitor + '.arc-voltage','-row','0','-column','0','-sticky','e')
 w('grid',fmonitor + '.aVlab','-row','0','-column','1',)
-w('grid',fmonitor + '.led-torch','-row','1','-column','0','-sticky','e')
-w('grid',fmonitor + '.lTlab','-row','1','-column','1')
-w('grid',fmonitor + '.led-float','-row','2','-column','0','-sticky','e')
-w('grid',fmonitor + '.lFlab','-row','2','-column','1')
-w('grid',fmonitor + '.led-breakaway','-row','3','-column','0','-sticky','e')
-w('grid',fmonitor + '.lBlab','-row','3','-column','1')
-w('grid',fmonitor + '.led-arc-ok','-row','4','-column','0','-sticky','e')
-w('grid',fmonitor + '.lAOlab','-row','4','-column','1')
-w('grid',fmonitor + '.led-safe-height','-row','5','-column','0','-sticky','e')
-w('grid',fmonitor + '.lSHlab','-row','5','-column','1')
+w('grid',fmonitor + '.led-arc-ok','-row','1','-column','0','-sticky','e')
+w('grid',fmonitor + '.lAOlab','-row','1','-column','1')
+w('grid',fmonitor + '.led-torch','-row','2','-column','0','-sticky','e')
+w('grid',fmonitor + '.lTlab','-row','2','-column','1')
+w('grid',fmonitor + '.led-ohmic','-row','3','-column','0','-sticky','e')
+w('grid',fmonitor + '.lOlab','-row','3','-column','1')
+w('grid',fmonitor + '.led-float','-row','4','-column','0','-sticky','e')
+w('grid',fmonitor + '.lFlab','-row','4','-column','1')
+w('grid',fmonitor + '.led-breakaway','-row','5','-column','0','-sticky','e')
+w('grid',fmonitor + '.lBlab','-row','5','-column','1')
 w('grid','rowconfigure',fmonitor,'0 1 2 3 4 5','-pad','4')
 w('DynamicHelp::add',fmonitor + '.arc-voltage','-text','Current arc voltage')
+w('DynamicHelp::add',fmonitor + '.led-arc-ok','-text','Arc OK status indicator')
 w('DynamicHelp::add',fmonitor + '.led-torch','-text','Torch status indicator')
+w('DynamicHelp::add',fmonitor + '.led-ohmic','-text','Ohmic probe status indicator')
 w('DynamicHelp::add',fmonitor + '.led-float','-text','Float switch status indicator')
 w('DynamicHelp::add',fmonitor + '.led-breakaway','-text','Breakaway switch status indicator')
-w('DynamicHelp::add',fmonitor + '.led-arc-ok','-text','Arc OK status indicator')
-w('DynamicHelp::add',fmonitor + '.led-safe-height','-text','Safe height reduced status indicator')
 
 # buttons frame
 w('labelframe',fbuttons,'-relief','flat')
-w('button',fbuttons + '.xtohome','-text','X to Home','-command','x_to_home','-width',bwidth)
-w('button',fbuttons + '.ytohome','-text','Y to Home','-command','y_to_home','-width',bwidth)
-w('button',fbuttons + '.ztohome','-text','Z to Home','-command','z_to_home','-width',bwidth)
-w('button',fbuttons + '.dryRun','-text','Dry Run','-width',bwidth)
+w('button',fbuttons + '.xtohome','-text','X\nto Home','-command','x_to_home','-width',bwidth/2,'-height','2')
+w('button',fbuttons + '.ytohome','-text','Y\nto Home','-command','y_to_home','-width',bwidth/2,'-height','2')
+w('button',fbuttons + '.ztohome','-text','Z\nto Home','-command','z_to_home','-width',bwidth/2,'-height','2')
+w('button',fbuttons + '.dryRun','-text','Dry\nRun','-width',bwidth/2,'-height','2')
+w('button',fbuttons + '.ohmicTest','-text','Ohmic\nTest','-width',bwidth/2,'-height','2')
 w('bind',fbuttons + '.dryRun','<Button-1>','dry_run 1')
 w('bind',fbuttons + '.dryRun','<ButtonRelease-1>','dry_run 0')
+w('bind',fbuttons + '.ohmicTest','<Button-1>','ohmic_test 1')
+w('bind',fbuttons + '.ohmicTest','<ButtonRelease-1>','ohmic_test 0')
 w('grid',fbuttons + '.xtohome','-row','0','-column','0')
-w('grid',fbuttons + '.ytohome','-row','1','-column','0')
-w('grid',fbuttons + '.ztohome','-row','2','-column','0')
-w('grid',fbuttons + '.dryRun','-row','3','-column','0')
+w('grid',fbuttons + '.ytohome','-row','0','-column','1')
+w('grid',fbuttons + '.ztohome','-row','1','-column','0')
+w('grid',fbuttons + '.dryRun','-row','2','-column','0')
+w('grid',fbuttons + '.ohmicTest','-row','2','-column','1')
 w('grid','columnconfigure',fbuttons,0,'-weight','1')
+
 w('DynamicHelp::add',fbuttons + '.xtohome','-text','Send the X axis to the home position')
 w('DynamicHelp::add',fbuttons + '.ytohome','-text','Send the Y axis to the home position')
 w('DynamicHelp::add',fbuttons + '.ztohome','-text','Send the Z axis to the home position')
 w('DynamicHelp::add',fbuttons + '.dryRun','-text','Start a dry run\nFollows all gcode without torch')
+w('DynamicHelp::add',fbuttons + '.ohmicTest','-text','Test if torch shorted to workpiece')
 
 # populate bottom frame
 w('frame',fcommon + '.spaceframe','-relief','sunken')
@@ -698,6 +704,9 @@ def z_to_home():
 def dry_run(value):
     hal.set_p('plasmac.dry-run-start',value)
 
+def ohmic_test(value):
+    hal.set_p('plasmac.ohmic-test',value)
+
 def torch_pulse(value):
     hal.set_p('plasmac.torch-pulse-start',value)
 
@@ -746,6 +755,7 @@ TclCommands.x_to_home = x_to_home
 TclCommands.y_to_home = y_to_home
 TclCommands.z_to_home = z_to_home
 TclCommands.dry_run = dry_run
+TclCommands.ohmic_test = ohmic_test
 TclCommands.torch_pulse = torch_pulse
 TclCommands.paused_motion = paused_motion
 TclCommands.joint_mode_switch = joint_mode_switch
@@ -809,6 +819,10 @@ def user_live_update():
         w(ftorch + '.torch-button','configure','-state','normal')
     else:
         w(ftorch + '.torch-button','configure','-state','disabled')
+    if hal.get_value('halui.machine.is-on') and not hal.get_value('plasmac.arc-ok-out'):
+        w(fbuttons + '.ohmicTest','configure','-state','normal')
+    else:
+        w(fbuttons + '.ohmicTest','configure','-state','disabled')
     if hal.get_value('halui.program.is-paused') or hal.get_value('plasmac.paused-motion-speed'):
         w(fpausedmotion + '.reverse','configure','-state','normal')
         w(fpausedmotion + '.forward','configure','-state','normal')
@@ -829,9 +843,9 @@ def user_hal_pins():
     comp.newpin('led-kerfcross', hal.HAL_BIT, hal.HAL_IN)
     comp.newpin('led-arc-ok', hal.HAL_BIT, hal.HAL_IN)
     comp.newpin('led-torch', hal.HAL_BIT, hal.HAL_IN)
+    comp.newpin('led-ohmic', hal.HAL_BIT, hal.HAL_IN)
     comp.newpin('led-float', hal.HAL_BIT, hal.HAL_IN)
     comp.newpin('led-breakaway', hal.HAL_BIT, hal.HAL_IN)
-    comp.newpin('led-safe-height', hal.HAL_BIT, hal.HAL_IN)
     comp.newpin('config-disable', hal.HAL_BIT, hal.HAL_IN)
     comp.ready()
     hal_data = [[0,'plasmac:arc-voltage-out','plasmac.arc-voltage-out','axisui.arc-voltage'],\
@@ -842,7 +856,6 @@ def user_hal_pins():
                 [5,'plasmac:cornerlock-is-locked','plasmac.cornerlock-is-locked','axisui.led-cornerlock'],\
                 [6,'plasmac:kerfcross-is-locked','plasmac.kerfcross-is-locked','axisui.led-kerfcross'],\
                 [7,'plasmac:arc-ok-out','plasmac.arc-ok-out','axisui.led-arc-ok'],\
-                [8,'plasmac:safe-height-is-limited','plasmac.safe-height-is-limited','axisui.led-safe-height'],\
                 ]
     for line in hal_data:
         if line[0] < 3:
@@ -851,6 +864,7 @@ def user_hal_pins():
             hal.new_sig(line[1],hal.HAL_BIT)
         hal.connect(line[2],line[1])
         hal.connect(line[3],line[1])
+    hal.connect('axisui.led-ohmic','plasmac:ohmic-probe-out')
     hal.connect('axisui.led-float','plasmac:float-switch-out')
     hal.connect('axisui.led-breakaway','plasmac:breakaway-switch-out')
     hal.connect('axisui.led-torch','plasmac:torch-on')
@@ -1104,7 +1118,7 @@ wLabels =\
     fmonitor + '.lAOlab',\
     fmonitor + '.lFlab',\
     fmonitor + '.lBlab',\
-    fmonitor + '.lSHlab',\
+    fmonitor + '.lOlab',\
     fcutparms + '.pHlab',\
     fcutparms + '.pDlab',\
     fcutparms + '.pJHlab',\
@@ -1200,9 +1214,9 @@ wLeds =\
     fkerflock + '.led-kerfcross',\
     fmonitor + '.led-arc-ok',\
     fmonitor + '.led-torch',\
+    fmonitor + '.led-ohmic',\
     fmonitor + '.led-float',\
     fmonitor + '.led-breakaway',\
-    fmonitor + '.led-safe-height',\
     ]
 configure_widgets()
 load_settings()

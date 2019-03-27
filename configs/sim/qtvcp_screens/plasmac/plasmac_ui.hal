@@ -1,17 +1,18 @@
 
 # connect existing signals
-net p_comp:ohmic-probe-out                                          =>  plasmac_ui.ohmic_probe_led
-net p_comp:breakaway-switch-out                                     =>  plasmac_ui.breakaway_switch_led
-net p_comp:float-switch-out                                         =>  plasmac_ui.float_switch_led
-net p_comp:torch-on                                                 =>  plasmac_ui.torch_on_led
+net plasmac:ohmic-probe-out                                         =>  plasmac_ui.ohmic_probe_led
+net plasmac:breakaway-switch-out                                    =>  plasmac_ui.breakaway_switch_led
+net plasmac:float-switch-out                                        =>  plasmac_ui.float_switch_led
+net plasmac:torch-on                                                =>  plasmac_ui.torch_on_led
 
 # create new signals
-net p_comp:axis-max-limit           ini.z.max_limit                 =>  plasmac.axis-z-max-limit
-net p_comp:axis-min-limit           ini.z.min_limit                 =>  plasmac.axis-z-min-limit
-net p_gui:arc-ok                    plasmac.arc-ok-out              =>  plasmac_ui.arc_ok_led
-net p_gui:arc-voltage               plasmac.arc-voltage-out         =>  plasmac_ui.arc_voltage
-net p_gui:cornerlock-is-locked      plasmac.cornerlock-is-locked    =>  plasmac_ui.cornerlock_locked_led
-net p_gui:kerfcross-is-locked       plasmac.kerfcross-is-locked     =>  plasmac_ui.kerfcross_locked_led
-net p_gui:led-down                  plasmac.led-down                =>  plasmac_ui.down_led
-net p_gui:led-up                    plasmac.led-up                  =>  plasmac_ui.up_led
-net p_gui:dry-run                   plasmac_ui.dry_run              =>  plasmac.dry-run-start
+net plasmac:axis-max-limit          ini.z.max_limit                 =>  plasmac.axis-z-max-limit
+net plasmac:axis-min-limit          ini.z.min_limit                 =>  plasmac.axis-z-min-limit
+net plasmac:arc-ok                  plasmac.arc-ok-out              =>  plasmac_ui.arc_ok_led
+net plasmac:arc-voltage             plasmac.arc-voltage-out         =>  plasmac_ui.arc_voltage
+net plasmac:cornerlock-is-locked    plasmac.cornerlock-is-locked    =>  plasmac_ui.cornerlock_locked_led
+net plasmac:dry-run                 plasmac_ui.dry_run              =>  plasmac.dry-run-start
+net plasmac:kerfcross-is-locked     plasmac.kerfcross-is-locked     =>  plasmac_ui.kerfcross_locked_led
+net plasmac:led-down                plasmac.led-down                =>  plasmac_ui.down_led
+net plasmac:led-up                  plasmac.led-up                  =>  plasmac_ui.up_led
+net plasmac:ohmic-test              plasmac_ui.ohmic_test           =>  plasmac.ohmic-test

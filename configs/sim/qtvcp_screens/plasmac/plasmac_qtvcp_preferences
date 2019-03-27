@@ -5,7 +5,7 @@ shutdown_check = False
 sound_player_on = False
 overlay_play_sound = False
 overlay_sound_type = RING
-mainwindow_geometry = 369 133 1024 740
+mainwindow_geometry = 484 57 1024 740
 
 [MCH_MSG_OPTIONS]
 mchnMsg_play_sound = True

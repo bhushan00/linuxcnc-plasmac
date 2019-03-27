@@ -1,4 +1,4 @@
 # outputs
-net p_control:torch-pulse-start     plasmac_control.torchPulseStart     =>  plasmac.torch-pulse-start
-net p_control:torch-pulse-time      plasmac_control.torchPulseTime-f    =>  plasmac.torch-pulse-time
+net plasmac:torch-pulse-start   plasmac_control.torchPulseStart     =>  plasmac.torch-pulse-start
+net plasmac:torch-pulse-time    plasmac_control.torchPulseTime-f    =>  plasmac.torch-pulse-time
 

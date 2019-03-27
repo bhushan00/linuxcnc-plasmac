@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
-  <!-- interface-requires gladevcp 0.0 -->
   <!-- interface-requires gtk+ 2.12 -->
+  <!-- interface-requires gladevcp 0.0 -->
   <!-- interface-naming-policy project-wide -->
   <object class="GtkAdjustment" id="arcVoltageAdj">
     <property name="lower">99.900000000000006</property>
@@ -76,6 +76,19 @@
                     <property name="can_focus">False</property>
                     <property name="homogeneous">True</property>
                     <child>
+                      <object class="HAL_Button" id="ohmicProbe">
+                        <property name="label" translatable="yes">OHMIC</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="receives_default">True</property>
+                      </object>
+                      <packing>
+                        <property name="expand">True</property>
+                        <property name="fill">True</property>
+                        <property name="position">0</property>
+                      </packing>
+                    </child>
+                    <child>
                       <object class="HAL_Button" id="floatSwitch">
                         <property name="label" translatable="yes">  FLOAT</property>
                         <property name="visible">True</property>
@@ -85,7 +98,7 @@
                       <packing>
                         <property name="expand">True</property>
                         <property name="fill">True</property>
-                        <property name="position">0</property>
+                        <property name="position">1</property>
                       </packing>
                     </child>
                     <child>
@@ -98,7 +111,7 @@
                       <packing>
                         <property name="expand">True</property>
                         <property name="fill">True</property>
-                        <property name="position">1</property>
+                        <property name="position">2</property>
                       </packing>
                     </child>
                   </object>

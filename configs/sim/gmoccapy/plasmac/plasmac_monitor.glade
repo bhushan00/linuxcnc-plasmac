@@ -59,6 +59,8 @@
                       <packing>
                         <property name="left_attach">5</property>
                         <property name="right_attach">6</property>
+                        <property name="top_attach">1</property>
+                        <property name="bottom_attach">2</property>
                         <property name="x_options">GTK_FILL</property>
                         <property name="x_padding">2</property>
                       </packing>
@@ -78,6 +80,8 @@
                       <packing>
                         <property name="left_attach">4</property>
                         <property name="right_attach">5</property>
+                        <property name="top_attach">1</property>
+                        <property name="bottom_attach">2</property>
                         <property name="x_options">GTK_FILL</property>
                       </packing>
                     </child>
@@ -243,19 +247,17 @@
                         <property name="has_tooltip">True</property>
                         <property name="tooltip_text" translatable="yes">the safe height has been limited below the preferred safe height</property>
                         <property name="xalign">0</property>
-                        <property name="label" translatable="yes">Safe Limited</property>
+                        <property name="label" translatable="yes">Ohmic Probe</property>
                       </object>
                       <packing>
                         <property name="left_attach">5</property>
                         <property name="right_attach">6</property>
-                        <property name="top_attach">2</property>
-                        <property name="bottom_attach">3</property>
                         <property name="x_options">GTK_FILL</property>
                         <property name="x_padding">2</property>
                       </packing>
                     </child>
                     <child>
-                      <object class="HAL_LED" id="safeHeightIsLimited">
+                      <object class="HAL_LED" id="ohmicProbe">
                         <property name="width_request">40</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
@@ -265,13 +267,11 @@
                         <property name="led_blink_rate">0</property>
                         <property name="led_size">8</property>
                         <property name="off_color">grey</property>
-                        <property name="on_color">red</property>
+                        <property name="on_color">yellow</property>
                       </object>
                       <packing>
                         <property name="left_attach">4</property>
                         <property name="right_attach">5</property>
-                        <property name="top_attach">2</property>
-                        <property name="bottom_attach">3</property>
                         <property name="x_options">GTK_FILL</property>
                       </packing>
                     </child>
@@ -291,8 +291,8 @@
                       <packing>
                         <property name="left_attach">4</property>
                         <property name="right_attach">5</property>
-                        <property name="top_attach">1</property>
-                        <property name="bottom_attach">2</property>
+                        <property name="top_attach">2</property>
+                        <property name="bottom_attach">3</property>
                         <property name="x_options">GTK_FILL</property>
                       </packing>
                     </child>
@@ -310,8 +310,8 @@
                       <packing>
                         <property name="left_attach">5</property>
                         <property name="right_attach">6</property>
-                        <property name="top_attach">1</property>
-                        <property name="bottom_attach">2</property>
+                        <property name="top_attach">2</property>
+                        <property name="bottom_attach">3</property>
                         <property name="x_options">GTK_FILL</property>
                         <property name="x_padding">2</property>
                       </packing>
