@@ -572,9 +572,12 @@ FUNCTION(_) {
                     }else{
                         offset_counts -= probe_velocity;
                     }
-                }else{
+                }else if(float_switch){
                     touchdown = TRUE;
                     zero_target = offset_counts + (float_switch_travel / offset_scale);
+                }else if(ohmic_probe){
+                    touchdown = TRUE;
+                    zero_target = offset_counts;
                 }
             }else{
                 if(float_switch && !ohmic_probe){
