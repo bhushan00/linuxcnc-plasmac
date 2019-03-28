@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
-  <!-- interface-requires gtk+ 2.12 -->
   <!-- interface-requires gladevcp 0.0 -->
+  <!-- interface-requires gtk+ 2.12 -->
   <!-- interface-naming-policy project-wide -->
   <object class="GtkAdjustment" id="arcVoltageAdj">
     <property name="lower">99.900000000000006</property>
@@ -81,6 +81,7 @@
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">True</property>
+                        <signal name="button-press-event" handler="on_ohmicProbe_button_press_event" swapped="no"/>
                       </object>
                       <packing>
                         <property name="expand">True</property>
@@ -94,6 +95,7 @@
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">True</property>
+                        <signal name="button-press-event" handler="on_floatSwitch_button_press_event" swapped="no"/>
                       </object>
                       <packing>
                         <property name="expand">True</property>
@@ -107,6 +109,7 @@
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">True</property>
+                        <signal name="button-press-event" handler="on_breakawaySwitch_button_press_event" swapped="no"/>
                       </object>
                       <packing>
                         <property name="expand">True</property>

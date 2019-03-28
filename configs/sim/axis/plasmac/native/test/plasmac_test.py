@@ -22,7 +22,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 import os
 import subprocess as sp
 import gtk
-import gtk.gdk
+from gtk import gdk
 import linuxcnc
 import hal
 import gladevcp.makepins
@@ -32,6 +32,33 @@ class linuxCNC(object):
         self.iniFile = linuxcnc.ini(os.environ['INI_FILE_NAME'])
 
 class plasmacTest:
+    def on_ohmicProbe_button_press_event(self,widget,event):
+        if event.type == gdk._2BUTTON_PRESS:
+            if hal.pin_has_writer('debounce.0.2.in'):
+                sp.Popen(['halcmd unlinkp plasmactest.ohmicProbe'], shell=True)
+                sp.Popen(['halcmd setp debounce.0.2.in 1'], shell=True)
+            else:
+                sp.Popen(['halcmd setp debounce.0.2.in 0'], shell=True)
+                sp.Popen(['halcmd net p_test:ohmic-probe plasmactest.ohmicProbe'], shell=True)
+
+    def on_floatSwitch_button_press_event(self,widget,event):
+        if event.type == gdk._2BUTTON_PRESS:
+            if hal.pin_has_writer('debounce.0.0.in'):
+                sp.Popen(['halcmd unlinkp plasmactest.floatSwitch'], shell=True)
+                sp.Popen(['halcmd setp debounce.0.0.in 1'], shell=True)
+            else:
+                sp.Popen(['halcmd setp debounce.0.0.in 0'], shell=True)
+                sp.Popen(['halcmd net p_test:float-switch plasmactest.floatSwitch'], shell=True)
+
+    def on_breakawaySwitch_button_press_event(self,widget,event):
+        if event.type == gdk._2BUTTON_PRESS:
+            if hal.pin_has_writer('debounce.0.1.in'):
+                sp.Popen(['halcmd unlinkp plasmactest.breakawaySwitch'], shell=True)
+                sp.Popen(['halcmd setp debounce.0.1.in 1'], shell=True)
+            else:
+                sp.Popen(['halcmd setp debounce.0.1.in 0'], shell=True)
+                sp.Popen(['halcmd net p_test:breakaway-switch plasmactest.breakawaySwitch'], shell=True)
+
     def on_kerfOn_clicked(self, widget):
         self.B.get_object('arcVoltageAdj').set_value(self.B.get_object('arcVoltageAdj').get_value() + self.B.get_object('voltsAdj').get_value())
 
@@ -94,7 +121,7 @@ class plasmacTest:
         sp.Popen(['halcmd net p_test:move-up plasmactest.moveUp plasmac.move-up'], shell=True)
         sp.Popen(['halshow plasmac.halshow'], shell=True)
         self.W.connect('delete_event', self.ignore)
-        self.W.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_MENU)
+        self.W.set_type_hint(gdk.WINDOW_TYPE_HINT_MENU)
         self.W.set_keep_above(True)
         self.W.show_all()
         mode = self.lcnc.iniFile.find('PLASMAC', 'MODE') or '0'
