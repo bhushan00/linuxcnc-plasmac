@@ -71,6 +71,7 @@
   <object class="GtkAdjustment" id="skipIhsDistanceAdj"/>
   <object class="GtkAdjustment" id="thcMinVelocityAdj"/>
   <object class="GtkAdjustment" id="thcThresholdAdj"/>
+  <object class="GtkAdjustment" id="torchOffDelayAdj"/>
   <object class="GtkWindow" id="window1">
     <property name="can_focus">False</property>
     <child>
@@ -556,8 +557,8 @@ set to 0 to disable</property>
                                     <property name="can_focus">False</property>
                                   </object>
                                   <packing>
-                                    <property name="expand">False</property>
-                                    <property name="fill">False</property>
+                                    <property name="expand">True</property>
+                                    <property name="fill">True</property>
                                     <property name="position">0</property>
                                   </packing>
                                 </child>
@@ -575,8 +576,8 @@ turn off to use cut volts from parameters</property>
                                     <property name="draw_indicator">True</property>
                                   </object>
                                   <packing>
-                                    <property name="expand">False</property>
-                                    <property name="fill">False</property>
+                                    <property name="expand">True</property>
+                                    <property name="fill">True</property>
                                     <property name="position">1</property>
                                   </packing>
                                 </child>
@@ -593,8 +594,8 @@ turn off to use cut volts from parameters</property>
                                     <property name="label" translatable="yes">Use Auto Volts</property>
                                   </object>
                                   <packing>
-                                    <property name="expand">False</property>
-                                    <property name="fill">False</property>
+                                    <property name="expand">True</property>
+                                    <property name="fill">True</property>
                                     <property name="position">2</property>
                                   </packing>
                                 </child>
@@ -2098,5 +2099,4 @@ Note: this also saves current cut parameters as the default</property>
       </object>
     </child>
   </object>
-  <object class="GtkAdjustment" id="torchOffDelayAdj"/>
 </interface>
