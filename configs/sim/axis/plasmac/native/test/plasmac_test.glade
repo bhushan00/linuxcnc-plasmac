@@ -125,7 +125,7 @@
               <object class="GtkLabel" id="label5">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="label" translatable="yes">Switches</property>
+                <property name="label" translatable="yes">Switches (double click to toggle)</property>
                 <property name="use_markup">True</property>
               </object>
             </child>
