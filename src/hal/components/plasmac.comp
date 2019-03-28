@@ -454,6 +454,7 @@ FUNCTION(_) {
             stop_type = PAUSE;
             rtapi_print_msg(RTAPI_MSG_ERR,"breakaway switch activated\n"
                                           "program is paused...\n");
+            motion_disabled = TRUE;
             state = GOTO_SAFE_HEIGHT;
         }else if(state > TOUCHOFF && float_switch){
             torch_on = FALSE;
@@ -461,6 +462,7 @@ FUNCTION(_) {
             stop_type = PAUSE;
             rtapi_print_msg(RTAPI_MSG_ERR,"float switch activated\n"
                                           "program is paused...\n");
+            motion_disabled = TRUE;
             state = GOTO_SAFE_HEIGHT;
         }else if(state > ARC_OK && !arc_ok_out && !dry_run){ ;
             torch_on = FALSE;
