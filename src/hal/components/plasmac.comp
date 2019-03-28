@@ -6,6 +6,8 @@ A plasma cutting table control component for use with the linuxcnc master branch
 
 .I VERSIONS:
 .br
+V0.22 - 2019/03/28 - probing error handling
+.br
 V0.21 - 2019/03/26 - add ohmic probing
 .br
 V0.20 - 2019/03/26 - fix skip IHS
@@ -299,6 +301,7 @@ variable float  height_ovr_counts;          /* number of counts to change height
 variable float  height_ovr_old;             /* old height override value */
 variable bool   initialized;                /* initialization flag */
 variable float  last_arc_voltage;           /* last sensed arc voltage */
+variable bool   motion_disabled;            /* motion disabled */
 variable float  offset_datum;               /* datum for safe height calcs */
 variable float  offset_min;                 /* minimum allowed offset */
 variable float  offset_max;                 /* maximum allowed offset */
@@ -449,14 +452,14 @@ FUNCTION(_) {
             torch_on = FALSE;
             program_pause = TRUE;
             stop_type = PAUSE;
-            rtapi_print_msg(RTAPI_MSG_ERR,"breakaway activated\n"
+            rtapi_print_msg(RTAPI_MSG_ERR,"breakaway switch activated\n"
                                           "program is paused...\n");
             state = GOTO_SAFE_HEIGHT;
         }else if(state > TOUCHOFF && float_switch){
             torch_on = FALSE;
             program_pause = TRUE;
             stop_type = PAUSE;
-            rtapi_print_msg(RTAPI_MSG_ERR,"floatswitch activated\n"
+            rtapi_print_msg(RTAPI_MSG_ERR,"float switch activated\n"
                                           "program is paused...\n");
             state = GOTO_SAFE_HEIGHT;
         }else if(state > ARC_OK && !arc_ok_out && !dry_run){ ;
@@ -503,64 +506,86 @@ FUNCTION(_) {
 /* state machine */
     switch(state){
         case IDLE:
-            /* if the torch has come adrift */
-            if(float_switch || breakaway){
-                feed_hold = FALSE;
-            /* if we get a paused motion request and we are paused */
-            }else if(paused_motion_speed && stop_type == PAUSE){
-                state = PAUSED_MOTION;
-            /* if we get a dry run request and we are stopped or waiting for a restart */
-            }else if(dry_run_start && !dry_run && (stop_type == NONE || stop_type == WAIT)){
-                dry_run = TRUE;
-                program_run = TRUE;
-            /* if we get a start request and we are stopped or waiting for a restart */
-            }else if(spindle_on && (stop_type == NONE || stop_type == WAIT)){
+            /* if float switch activated */
+            if(float_switch && !motion_disabled){
+                motion_disabled = TRUE;
                 feed_hold = TRUE;
-                stop_type = NONE;
-                touchdown = FALSE;
-                cut_started = TRUE;
-                if(!safe_height_is_limited){
-                    safe_target = 0;
-                }
-                if(axis_x_finish || axis_y_finish){
-                    cut_offset = sqrt(pow(axis_x_finish - axis_x_position, 2) + pow(axis_y_finish - axis_y_position, 2));
-                    axis_x_finish = 0;
-                    axis_y_finish = 0;
-                }
-                if(cut_offset && cut_offset < skip_ihs_distance){
-                    cut_target = cut_target + cut_height_last - cut_height_first;
-                    pierce_target = pierce_target + cut_height_last - cut_height_first;
-                    puddle_jump_target = puddle_jump_target + cut_height_last - cut_height_first;
-                    cut_height_first = cut_height_last;
-                    state = PIERCE_HEIGHT;
-                }else{
-                    state = TOUCHOFF;
-                }
-                cut_offset = 0;
-            /* if we get a resume request and we are paused */
-            }else if(!program_is_idle && stop_type == PAUSE){
+                rtapi_print_msg(RTAPI_MSG_ERR,"float switch activated while idle\n"
+                                              "motion is disabled...\n");
+            /* if breakaway switch activated */
+            }else if(breakaway && !motion_disabled){
+                motion_disabled = TRUE;
                 feed_hold = TRUE;
-                if(!program_is_paused){
+                rtapi_print_msg(RTAPI_MSG_ERR,"breakaway switch activated while idle\n"
+                                              "motion is disabled...\n");
+            /* if we are disabled and the switches are clear */
+            }else if(motion_disabled && !float_switch && !breakaway){
+                motion_disabled = FALSE;
+            }else if(!motion_disabled){
+                /* if we get a paused motion request and we are paused */
+                if(paused_motion_speed && stop_type == PAUSE){
+                    state = PAUSED_MOTION;
+                /* if we get a dry run request and we are stopped or waiting for a restart */
+                }else if(dry_run_start && !dry_run && (stop_type == NONE || stop_type == WAIT)){
+                    dry_run = TRUE;
+                    program_run = TRUE;
+                /* if we get a start request and we are stopped or waiting for a restart */
+                }else if(spindle_on && (stop_type == NONE || stop_type == WAIT)){
+                    feed_hold = TRUE;
                     stop_type = NONE;
+                    touchdown = FALSE;
+                    cut_started = TRUE;
+                    if(!safe_height_is_limited){
+                        safe_target = 0;
+                    }
+                    if(axis_x_finish || axis_y_finish){
+                        cut_offset = sqrt(pow(axis_x_finish - axis_x_position, 2) + pow(axis_y_finish - axis_y_position, 2));
+                        axis_x_finish = 0;
+                        axis_y_finish = 0;
+                    }
+                    if(cut_offset && cut_offset < skip_ihs_distance){
+                        cut_target = cut_target + cut_height_last - cut_height_first;
+                        pierce_target = pierce_target + cut_height_last - cut_height_first;
+                        puddle_jump_target = puddle_jump_target + cut_height_last - cut_height_first;
+                        cut_height_first = cut_height_last;
+                        state = PIERCE_HEIGHT;
+                    }else{
+                        ohmic_enable = TRUE;
+                        if(ohmic_probe && !program_is_paused){
+                            stop_type = PAUSE;
+                            program_pause = TRUE;
+                            ohmic_enable = FALSE;
+                            rtapi_print_msg(RTAPI_MSG_ERR,"ohmic probe detected before probing\n"
+                                                          "program is paused...\n");
+                        }else{
+                            state = TOUCHOFF;
+                        }
+                    }
+                    cut_offset = 0;
+                /* if we get a resume request and we are paused */
+                }else if(!program_is_idle && stop_type == PAUSE && !ohmic_probe && !float_switch && !breakaway){
+                    feed_hold = TRUE;
+                    if(!program_is_paused){
+                        stop_type = NONE;
+                    }
+                /* if torch pulse requested */
+                }else if(torch_pulse_start){
+                    feed_hold = TRUE;
+                    state = TORCHPULSE;
+                /* if ohmic probe test requested */
+                }else if(ohmic_test){
+                    feed_hold = TRUE;
+                    ohmic_enable = TRUE;
+                    state = OHMIC_TEST;
+                /* if no active cut */
+                }else if(!cut_started){
+                    feed_hold = FALSE;
                 }
-            /* if torch pulse requested */
-            }else if(torch_pulse_start){
-                feed_hold = TRUE;
-                state = TORCHPULSE;
-            /* if ohmic probe test requested */
-            }else if(ohmic_test){
-                feed_hold = TRUE;
-                ohmic_enable = TRUE;
-                state = OHMIC_TEST;
-            /* if no active cut */
-            }else if(!cut_started){
-                feed_hold = FALSE;
             }
             break;
         case TOUCHOFF:
             /* probe down to top of stock, then probe up slow to set zero when the float switch activates */
             feed_hold = TRUE;
-            ohmic_enable = TRUE;
             if(!touchdown){
                 if(!float_switch && !ohmic_probe){
                     if(axis_z_position - (probe_velocity * offset_scale) <= axis_z_min_limit){
