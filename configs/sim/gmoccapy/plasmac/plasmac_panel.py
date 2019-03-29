@@ -368,8 +368,6 @@ class HandlerClass:
                                         convertFile = True
                                     else:
                                         key += item
-                                print key, 'was', keyTmp
-                            
                                 if key in self.configDict:
                                     self.configDict[key] = value
                                     tmpDict[key] = value
@@ -384,7 +382,7 @@ class HandlerClass:
                         print '***', item, 'missing from', self.configFile
                 elif isinstance(self.builder.get_object(item), gladevcp.hal_widgets.HAL_CheckButton):
                     if item in tmpDict:
-                        self.builder.get_object(item).set_active(self.configDict.get(item))
+                        self.builder.get_object(item).set_active(int(self.configDict.get(item)))
                     else:
                         self.builder.get_object(item).set_active(False)
                         print '***', item, 'missing from', self.configFile
