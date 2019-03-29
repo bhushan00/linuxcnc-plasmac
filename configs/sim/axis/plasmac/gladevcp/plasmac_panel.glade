@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
-  <requires lib="gtk+" version="2.18"/>
   <!-- interface-requires gladevcp 0.0 -->
+  <requires lib="gtk+" version="2.18"/>
   <!-- interface-naming-policy project-wide -->
-  <object class="GtkAdjustment" id="arcFailDelayAdj"/>
-  <object class="GtkAdjustment" id="arcMaxStartsAdj"/>
-  <object class="GtkAdjustment" id="arcOkHighAdj"/>
-  <object class="GtkAdjustment" id="arcOkLowAdj"/>
-  <object class="GtkAdjustment" id="arcRestartDelayAdj"/>
-  <object class="GtkAdjustment" id="arcVoltageOffsetAdj"/>
-  <object class="GtkAdjustment" id="arcVoltageScaleAdj"/>
-  <object class="GtkAdjustment" id="cornerlockThresholdAdj"/>
-  <object class="GtkAdjustment" id="cutAmpsAdj"/>
-  <object class="GtkAdjustment" id="cutFeedRateAdj"/>
-  <object class="GtkAdjustment" id="cutHeightAdj"/>
-  <object class="GtkAdjustment" id="cutVoltsAdj"/>
-  <object class="GtkAdjustment" id="floatSwitchTravelAdj"/>
-  <object class="GtkAdjustment" id="heightOverrideAdj">
+  <object class="GtkAdjustment" id="arc-fail-delay-adj"/>
+  <object class="GtkAdjustment" id="arc-max-starts-adj"/>
+  <object class="GtkAdjustment" id="arc-ok-high-adj"/>
+  <object class="GtkAdjustment" id="arc-ok-low-adj"/>
+  <object class="GtkAdjustment" id="arc-restart-delay-adj"/>
+  <object class="GtkAdjustment" id="arc-voltage-offset-adj"/>
+  <object class="GtkAdjustment" id="arc-voltage-scale-adj"/>
+  <object class="GtkAdjustment" id="cornerlock-threshold-adj"/>
+  <object class="GtkAdjustment" id="cut-amps-adj"/>
+  <object class="GtkAdjustment" id="cut-feed-rate-adj"/>
+  <object class="GtkAdjustment" id="cut-height-adj"/>
+  <object class="GtkAdjustment" id="cut-volts-adj"/>
+  <object class="GtkAdjustment" id="float-switch-travel-adj"/>
+  <object class="GtkAdjustment" id="height-override-adj">
     <property name="lower">-10</property>
     <property name="upper">10</property>
     <property name="step_increment">0.10000000000000001</property>
   </object>
-  <object class="GtkAdjustment" id="kerfCrossThresholdAdj"/>
+  <object class="GtkAdjustment" id="kerfcross-threshold-adj"/>
   <object class="GtkListStore" id="materials">
     <columns>
       <!-- column-name Name -->
@@ -57,27 +57,27 @@
       </row>
     </data>
   </object>
-  <object class="GtkAdjustment" id="offsetChangeAdj"/>
-  <object class="GtkAdjustment" id="pausedMotionSpeedAdj">
+  <object class="GtkAdjustment" id="offset-change-adj"/>
+  <object class="GtkAdjustment" id="paused-motion-speed-adj">
     <property name="lower">0.01</property>
     <property name="upper">1</property>
     <property name="step_increment">0.01</property>
   </object>
-  <object class="GtkAdjustment" id="pidDGainAdj"/>
-  <object class="GtkAdjustment" id="pidIGainAdj"/>
-  <object class="GtkAdjustment" id="pidPGainAdj"/>
-  <object class="GtkAdjustment" id="pierceDelayAdj"/>
-  <object class="GtkAdjustment" id="pierceHeightAdj"/>
-  <object class="GtkAdjustment" id="probeFeedRateAdj"/>
-  <object class="GtkAdjustment" id="puddleJumpDelayAdj"/>
-  <object class="GtkAdjustment" id="puddleJumpHeightAdj"/>
-  <object class="GtkAdjustment" id="safeHeightAdj"/>
-  <object class="GtkAdjustment" id="setupFeedRateAdj"/>
-  <object class="GtkAdjustment" id="skipIhsDistanceAdj"/>
-  <object class="GtkAdjustment" id="thcMinVelocityAdj"/>
-  <object class="GtkAdjustment" id="thcThresholdAdj"/>
-  <object class="GtkAdjustment" id="torchOffDelayAdj"/>
-  <object class="GtkAdjustment" id="torchPulseTimeAdj"/>
+  <object class="GtkAdjustment" id="pid-d-gain-adj"/>
+  <object class="GtkAdjustment" id="pid-i-gain-adj"/>
+  <object class="GtkAdjustment" id="pid-p-gain-adj"/>
+  <object class="GtkAdjustment" id="pierce-delay-adj"/>
+  <object class="GtkAdjustment" id="pierce-height-adj"/>
+  <object class="GtkAdjustment" id="probe-feed-rate-adj"/>
+  <object class="GtkAdjustment" id="puddle-jump-delay-adj"/>
+  <object class="GtkAdjustment" id="puddle-jump-height-adj"/>
+  <object class="GtkAdjustment" id="safe-height-adj"/>
+  <object class="GtkAdjustment" id="setup-feed-rate-adj"/>
+  <object class="GtkAdjustment" id="skip-ihs-distance-adj"/>
+  <object class="GtkAdjustment" id="thc-min-velocity-adj"/>
+  <object class="GtkAdjustment" id="thc-threshold-adj"/>
+  <object class="GtkAdjustment" id="torch-off-delay-adj"/>
+  <object class="GtkAdjustment" id="torch-pulse-time-adj"/>
   <object class="GtkWindow" id="window1">
     <property name="can_focus">False</property>
     <child>
@@ -116,7 +116,7 @@
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <child>
-                                  <object class="HAL_Label" id="arcVoltage">
+                                  <object class="HAL_Label" id="arc-voltage">
                                     <property name="width_request">75</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">False</property>
@@ -139,7 +139,7 @@
                                   </packing>
                                 </child>
                                 <child>
-                                  <object class="GtkLabel" id="arcVoltageLabel">
+                                  <object class="GtkLabel" id="arc-voltage-label">
                                     <property name="width_request">130</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">False</property>
@@ -181,7 +181,7 @@
                                   </packing>
                                 </child>
                                 <child>
-                                  <object class="HAL_LED" id="torchOn">
+                                  <object class="HAL_LED" id="torch-on">
                                     <property name="visible">True</property>
                                     <property name="can_focus">False</property>
                                     <property name="has_tooltip">True</property>
@@ -240,7 +240,7 @@
                                   </packing>
                                 </child>
                                 <child>
-                                  <object class="HAL_LED" id="arcOk">
+                                  <object class="HAL_LED" id="arc-ok">
                                     <property name="visible">True</property>
                                     <property name="can_focus">False</property>
                                     <property name="has_tooltip">True</property>
@@ -311,7 +311,7 @@
                                   </packing>
                                 </child>
                                 <child>
-                                  <object class="HAL_LED" id="ohmicProbe">
+                                  <object class="HAL_LED" id="ohmic-probe">
                                     <property name="visible">True</property>
                                     <property name="can_focus">False</property>
                                     <property name="has_tooltip">True</property>
@@ -369,7 +369,7 @@
                                   </packing>
                                 </child>
                                 <child>
-                                  <object class="HAL_LED" id="floatSwitch">
+                                  <object class="HAL_LED" id="float-switch">
                                     <property name="visible">True</property>
                                     <property name="can_focus">False</property>
                                     <property name="has_tooltip">True</property>
@@ -428,7 +428,7 @@
                                   </packing>
                                 </child>
                                 <child>
-                                  <object class="HAL_LED" id="breakawaySwitch">
+                                  <object class="HAL_LED" id="breakaway-switch">
                                     <property name="visible">True</property>
                                     <property name="can_focus">False</property>
                                     <property name="has_tooltip">True</property>
@@ -565,7 +565,7 @@ select Reload from the Configure tab</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <child>
-                                  <object class="HAL_SpinButton" id="pierceHeight">
+                                  <object class="HAL_SpinButton" id="pierce-height">
                                     <property name="width_request">75</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
@@ -578,7 +578,7 @@ select Reload from the Configure tab</property>
                                     <property name="secondary_icon_activatable">False</property>
                                     <property name="primary_icon_sensitive">True</property>
                                     <property name="secondary_icon_sensitive">True</property>
-                                    <property name="adjustment">pierceHeightAdj</property>
+                                    <property name="adjustment">pierce-height-adj</property>
                                     <property name="wrap">True</property>
                                   </object>
                                   <packing>
@@ -616,7 +616,7 @@ select Reload from the Configure tab</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <child>
-                                  <object class="HAL_SpinButton" id="pierceDelay">
+                                  <object class="HAL_SpinButton" id="pierce-delay">
                                     <property name="width_request">75</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
@@ -629,7 +629,7 @@ select Reload from the Configure tab</property>
                                     <property name="secondary_icon_activatable">False</property>
                                     <property name="primary_icon_sensitive">True</property>
                                     <property name="secondary_icon_sensitive">True</property>
-                                    <property name="adjustment">pierceDelayAdj</property>
+                                    <property name="adjustment">pierce-delay-adj</property>
                                     <property name="wrap">True</property>
                                   </object>
                                   <packing>
@@ -667,7 +667,7 @@ select Reload from the Configure tab</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <child>
-                                  <object class="HAL_SpinButton" id="puddleJumpDelay">
+                                  <object class="HAL_SpinButton" id="puddle-jump-delay">
                                     <property name="width_request">75</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
@@ -681,7 +681,7 @@ set to 0 to disable</property>
                                     <property name="secondary_icon_activatable">False</property>
                                     <property name="primary_icon_sensitive">True</property>
                                     <property name="secondary_icon_sensitive">True</property>
-                                    <property name="adjustment">puddleJumpDelayAdj</property>
+                                    <property name="adjustment">puddle-jump-delay-adj</property>
                                     <property name="wrap">True</property>
                                   </object>
                                   <packing>
@@ -720,7 +720,7 @@ set to 0 to disable</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <child>
-                                  <object class="HAL_SpinButton" id="puddleJumpHeight">
+                                  <object class="HAL_SpinButton" id="puddle-jump-height">
                                     <property name="width_request">75</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
@@ -734,7 +734,7 @@ set to 0 to disable</property>
                                     <property name="secondary_icon_activatable">False</property>
                                     <property name="primary_icon_sensitive">True</property>
                                     <property name="secondary_icon_sensitive">True</property>
-                                    <property name="adjustment">puddleJumpHeightAdj</property>
+                                    <property name="adjustment">puddle-jump-height-adj</property>
                                     <property name="wrap">True</property>
                                   </object>
                                   <packing>
@@ -785,7 +785,7 @@ set to 0 to disable</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <child>
-                                  <object class="HAL_SpinButton" id="cutHeight">
+                                  <object class="HAL_SpinButton" id="cut-height">
                                     <property name="width_request">75</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
@@ -798,7 +798,7 @@ set to 0 to disable</property>
                                     <property name="secondary_icon_activatable">False</property>
                                     <property name="primary_icon_sensitive">True</property>
                                     <property name="secondary_icon_sensitive">True</property>
-                                    <property name="adjustment">cutHeightAdj</property>
+                                    <property name="adjustment">cut-height-adj</property>
                                     <property name="wrap">True</property>
                                   </object>
                                   <packing>
@@ -836,7 +836,7 @@ set to 0 to disable</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <child>
-                                  <object class="HAL_SpinButton" id="cutFeedRate">
+                                  <object class="HAL_SpinButton" id="cut-feed-rate">
                                     <property name="width_request">75</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
@@ -850,7 +850,7 @@ setting this to 0 will use feed rate from program</property>
                                     <property name="secondary_icon_activatable">False</property>
                                     <property name="primary_icon_sensitive">True</property>
                                     <property name="secondary_icon_sensitive">True</property>
-                                    <property name="adjustment">cutFeedRateAdj</property>
+                                    <property name="adjustment">cut-feed-rate-adj</property>
                                     <property name="wrap">True</property>
                                   </object>
                                   <packing>
@@ -889,7 +889,7 @@ setting this to 0 will use feed rate from program</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <child>
-                                  <object class="HAL_SpinButton" id="cutAmps">
+                                  <object class="HAL_SpinButton" id="cut-amps">
                                     <property name="width_request">75</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
@@ -904,7 +904,7 @@ indicator only, not used.</property>
                                     <property name="secondary_icon_activatable">False</property>
                                     <property name="primary_icon_sensitive">True</property>
                                     <property name="secondary_icon_sensitive">True</property>
-                                    <property name="adjustment">cutAmpsAdj</property>
+                                    <property name="adjustment">cut-amps-adj</property>
                                     <property name="wrap">True</property>
                                   </object>
                                   <packing>
@@ -939,11 +939,11 @@ indicator only, not used.</property>
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkHBox" id="voltsBox">
+                              <object class="GtkHBox" id="volts-box">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <child>
-                                  <object class="HAL_SpinButton" id="cutVolts">
+                                  <object class="HAL_SpinButton" id="cut-volts">
                                     <property name="width_request">75</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
@@ -958,7 +958,7 @@ only used if not using auto volts</property>
                                     <property name="secondary_icon_activatable">False</property>
                                     <property name="primary_icon_sensitive">True</property>
                                     <property name="secondary_icon_sensitive">True</property>
-                                    <property name="adjustment">cutVoltsAdj</property>
+                                    <property name="adjustment">cut-volts-adj</property>
                                     <property name="wrap">True</property>
                                   </object>
                                   <packing>
@@ -968,7 +968,7 @@ only used if not using auto volts</property>
                                   </packing>
                                 </child>
                                 <child>
-                                  <object class="GtkLabel" id="cutVoltsLabel">
+                                  <object class="GtkLabel" id="cut-volts-label">
                                     <property name="width_request">130</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">False</property>
@@ -1055,7 +1055,7 @@ only used if not using auto volts</property>
                                   </packing>
                                 </child>
                                 <child>
-                                  <object class="HAL_CheckButton" id="thcEnable">
+                                  <object class="HAL_CheckButton" id="thc-enable">
                                     <property name="width_request">20</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
@@ -1096,11 +1096,11 @@ only used if not using auto volts</property>
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkHBox" id="thresholdBox">
+                              <object class="GtkHBox" id="threshold-box">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <child>
-                                  <object class="HAL_SpinButton" id="thcThreshold">
+                                  <object class="HAL_SpinButton" id="thc-threshold">
                                     <property name="width_request">75</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
@@ -1114,7 +1114,7 @@ only used if not using auto volts</property>
                                     <property name="secondary_icon_activatable">False</property>
                                     <property name="primary_icon_sensitive">True</property>
                                     <property name="secondary_icon_sensitive">True</property>
-                                    <property name="adjustment">thcThresholdAdj</property>
+                                    <property name="adjustment">thc-threshold-adj</property>
                                     <property name="wrap">True</property>
                                   </object>
                                   <packing>
@@ -1124,7 +1124,7 @@ only used if not using auto volts</property>
                                   </packing>
                                 </child>
                                 <child>
-                                  <object class="GtkLabel" id="thcThresholdLabel">
+                                  <object class="GtkLabel" id="thc-threshold-label">
                                     <property name="width_request">130</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">False</property>
@@ -1152,7 +1152,7 @@ only used if not using auto volts</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <child>
-                                  <object class="HAL_SpinButton" id="pidPGain">
+                                  <object class="HAL_SpinButton" id="pid-p-gain">
                                     <property name="width_request">75</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
@@ -1166,7 +1166,7 @@ for mode 3 this is the percentage of max velocity used for THC</property>
                                     <property name="secondary_icon_activatable">False</property>
                                     <property name="primary_icon_sensitive">True</property>
                                     <property name="secondary_icon_sensitive">True</property>
-                                    <property name="adjustment">pidPGainAdj</property>
+                                    <property name="adjustment">pid-p-gain-adj</property>
                                     <property name="wrap">True</property>
                                   </object>
                                   <packing>
@@ -1176,7 +1176,7 @@ for mode 3 this is the percentage of max velocity used for THC</property>
                                   </packing>
                                 </child>
                                 <child>
-                                  <object class="GtkLabel" id="pidPLabel">
+                                  <object class="GtkLabel" id="pid-p-label">
                                     <property name="width_request">130</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">False</property>
@@ -1214,7 +1214,7 @@ for mode 3 this is the percentage of max velocity used for THC</property>
                             <property name="can_focus">False</property>
                             <property name="homogeneous">True</property>
                             <child>
-                              <object class="GtkHBox" id="autoBox">
+                              <object class="GtkHBox" id="auto-box">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <child>
@@ -1230,7 +1230,7 @@ for mode 3 this is the percentage of max velocity used for THC</property>
                                   </packing>
                                 </child>
                                 <child>
-                                  <object class="HAL_CheckButton" id="useAutoVolts">
+                                  <object class="HAL_CheckButton" id="use-auto-volts">
                                     <property name="width_request">20</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
@@ -1249,7 +1249,7 @@ turn off to use cut volts from parameters</property>
                                   </packing>
                                 </child>
                                 <child>
-                                  <object class="GtkLabel" id="useAutoVoltsLabel">
+                                  <object class="GtkLabel" id="use-auto-volts-label">
                                     <property name="width_request">130</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">False</property>
@@ -1290,7 +1290,7 @@ turn off to use cut volts from parameters</property>
                                   </packing>
                                 </child>
                                 <child>
-                                  <object class="HAL_LED" id="ledUp">
+                                  <object class="HAL_LED" id="led-up">
                                     <property name="visible">True</property>
                                     <property name="can_focus">False</property>
                                     <property name="has_tooltip">True</property>
@@ -1348,7 +1348,7 @@ turn off to use cut volts from parameters</property>
                                   </packing>
                                 </child>
                                 <child>
-                                  <object class="HAL_LED" id="ledDown">
+                                  <object class="HAL_LED" id="led-down">
                                     <property name="visible">True</property>
                                     <property name="can_focus">False</property>
                                     <property name="has_tooltip">True</property>
@@ -1416,7 +1416,7 @@ turn off to use cut volts from parameters</property>
               </packing>
             </child>
             <child>
-              <object class="GtkFrame" id="heightFrame">
+              <object class="GtkFrame" id="height-frame">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="label_xalign">0</property>
@@ -1426,12 +1426,12 @@ turn off to use cut volts from parameters</property>
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <child>
-                      <object class="HAL_HScale" id="heightOverride">
+                      <object class="HAL_HScale" id="height-override">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="has_tooltip">True</property>
                         <property name="tooltip_text" translatable="yes">adjusts target volts to change torch height</property>
-                        <property name="adjustment">heightOverrideAdj</property>
+                        <property name="adjustment">height-override-adj</property>
                         <property name="round_digits">1</property>
                       </object>
                     </child>
@@ -1500,7 +1500,7 @@ turn off to use cut volts from parameters</property>
                                           </packing>
                                         </child>
                                         <child>
-                                          <object class="HAL_CheckButton" id="cornerlockEnable">
+                                          <object class="HAL_CheckButton" id="cornerlock-enable">
                                             <property name="width_request">20</property>
                                             <property name="visible">True</property>
                                             <property name="can_focus">True</property>
@@ -1545,7 +1545,7 @@ turn off to use cut volts from parameters</property>
                                         <property name="visible">True</property>
                                         <property name="can_focus">False</property>
                                         <child>
-                                          <object class="HAL_SpinButton" id="cornerlockThreshold">
+                                          <object class="HAL_SpinButton" id="cornerlock-threshold">
                                             <property name="width_request">75</property>
                                             <property name="visible">True</property>
                                             <property name="can_focus">True</property>
@@ -1559,7 +1559,7 @@ turn off to use cut volts from parameters</property>
                                             <property name="secondary_icon_activatable">False</property>
                                             <property name="primary_icon_sensitive">True</property>
                                             <property name="secondary_icon_sensitive">True</property>
-                                            <property name="adjustment">cornerlockThresholdAdj</property>
+                                            <property name="adjustment">cornerlock-threshold-adj</property>
                                             <property name="wrap">True</property>
                                           </object>
                                           <packing>
@@ -1609,7 +1609,7 @@ turn off to use cut volts from parameters</property>
                                           </packing>
                                         </child>
                                         <child>
-                                          <object class="HAL_LED" id="cornerlockIsLocked">
+                                          <object class="HAL_LED" id="cornerlock-is-locked">
                                             <property name="visible">True</property>
                                             <property name="can_focus">False</property>
                                             <property name="has_tooltip">True</property>
@@ -1671,7 +1671,7 @@ turn off to use cut volts from parameters</property>
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkFrame" id="kerfFrame">
+                          <object class="GtkFrame" id="kerf-frame">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <property name="label_xalign">0</property>
@@ -1682,7 +1682,7 @@ turn off to use cut volts from parameters</property>
                                 <property name="can_focus">False</property>
                                 <property name="xalign">1</property>
                                 <child>
-                                  <object class="GtkVBox" id="kerfBox">
+                                  <object class="GtkVBox" id="kerf-box">
                                     <property name="visible">True</property>
                                     <property name="can_focus">False</property>
                                     <property name="homogeneous">True</property>
@@ -1703,7 +1703,7 @@ turn off to use cut volts from parameters</property>
                                           </packing>
                                         </child>
                                         <child>
-                                          <object class="HAL_CheckButton" id="kerfCrossEnable">
+                                          <object class="HAL_CheckButton" id="kerfcross-enable">
                                             <property name="width_request">20</property>
                                             <property name="visible">True</property>
                                             <property name="can_focus">True</property>
@@ -1748,7 +1748,7 @@ turn off to use cut volts from parameters</property>
                                         <property name="visible">True</property>
                                         <property name="can_focus">False</property>
                                         <child>
-                                          <object class="HAL_SpinButton" id="kerfCrossThreshold">
+                                          <object class="HAL_SpinButton" id="kerfcross-threshold">
                                             <property name="width_request">75</property>
                                             <property name="visible">True</property>
                                             <property name="can_focus">True</property>
@@ -1762,7 +1762,7 @@ turn off to use cut volts from parameters</property>
                                             <property name="secondary_icon_activatable">False</property>
                                             <property name="primary_icon_sensitive">True</property>
                                             <property name="secondary_icon_sensitive">True</property>
-                                            <property name="adjustment">kerfCrossThresholdAdj</property>
+                                            <property name="adjustment">kerfcross-threshold-adj</property>
                                             <property name="wrap">True</property>
                                           </object>
                                           <packing>
@@ -1812,7 +1812,7 @@ turn off to use cut volts from parameters</property>
                                           </packing>
                                         </child>
                                         <child>
-                                          <object class="HAL_LED" id="kerfCrossIsLocked">
+                                          <object class="HAL_LED" id="kerfcross-is-locked">
                                             <property name="visible">True</property>
                                             <property name="can_focus">False</property>
                                             <property name="has_tooltip">True</property>
@@ -1858,7 +1858,7 @@ turn off to use cut volts from parameters</property>
                               </object>
                             </child>
                             <child type="label">
-                              <object class="GtkLabel" id="kerfLabel">
+                              <object class="GtkLabel" id="kerf-label">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="has_tooltip">True</property>
@@ -1913,7 +1913,7 @@ turn off to use cut volts from parameters</property>
                             <property name="can_focus">False</property>
                             <property name="homogeneous">True</property>
                             <child>
-                              <object class="HAL_Button" id="xToHome">
+                              <object class="HAL_Button" id="x-to-home">
                                 <property name="label" translatable="yes">X to Home</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
@@ -1929,7 +1929,7 @@ turn off to use cut volts from parameters</property>
                               </packing>
                             </child>
                             <child>
-                              <object class="HAL_Button" id="yToHome">
+                              <object class="HAL_Button" id="y-to-home">
                                 <property name="label" translatable="yes">Y to Home</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
@@ -1945,7 +1945,7 @@ turn off to use cut volts from parameters</property>
                               </packing>
                             </child>
                             <child>
-                              <object class="HAL_Button" id="zToHome">
+                              <object class="HAL_Button" id="z-to-home">
                                 <property name="label" translatable="yes">Z to Home</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
@@ -1973,7 +1973,7 @@ turn off to use cut volts from parameters</property>
                             <property name="can_focus">False</property>
                             <property name="homogeneous">True</property>
                             <child>
-                              <object class="HAL_Button" id="dryRunStart">
+                              <object class="HAL_Button" id="dry-run-start">
                                 <property name="label" translatable="yes">Dry Run</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
@@ -1990,7 +1990,7 @@ turn torch on or use THC</property>
                               </packing>
                             </child>
                             <child>
-                              <object class="HAL_Button" id="ohmicTest">
+                              <object class="HAL_Button" id="ohmic-test">
                                 <property name="label" translatable="yes">Ohmic Test</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
@@ -2045,7 +2045,7 @@ turn torch on or use THC</property>
               </packing>
             </child>
             <child>
-              <object class="GtkFrame" id="pausedMotionFrame">
+              <object class="GtkFrame" id="paused-motion-frame">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="label_xalign">0</property>
@@ -2074,7 +2074,7 @@ turn torch on or use THC</property>
                           </packing>
                         </child>
                         <child>
-                          <object class="HAL_HScale" id="pausedMotionSpeed">
+                          <object class="HAL_HScale" id="paused-motion-speed">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="has_tooltip">True</property>
@@ -2082,7 +2082,7 @@ turn torch on or use THC</property>
 -.1 to -1 causes reverse motion up until start of cut
 .1 to 1 causes forward motion
 NOTE: if forward motion goes past the end of the cut then reverse motion cannot get back to this cut</property>
-                            <property name="adjustment">pausedMotionSpeedAdj</property>
+                            <property name="adjustment">paused-motion-speed-adj</property>
                             <property name="round_digits">1</property>
                             <property name="digits">2</property>
                           </object>
@@ -2129,7 +2129,7 @@ NOTE: if forward motion goes past the end of the cut then reverse motion cannot 
               </packing>
             </child>
             <child>
-              <object class="GtkFrame" id="pausedMotionFrame1">
+              <object class="GtkFrame" id="torch-pulse-trame">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="label_xalign">0</property>
@@ -2143,7 +2143,7 @@ NOTE: if forward motion goes past the end of the cut then reverse motion cannot 
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <child>
-                          <object class="HAL_Button" id="torchPulseStart">
+                          <object class="HAL_Button" id="torch-pulse-start">
                             <property name="label" translatable="yes">Torch On</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
@@ -2159,12 +2159,12 @@ NOTE: if forward motion goes past the end of the cut then reverse motion cannot 
                           </packing>
                         </child>
                         <child>
-                          <object class="HAL_HScale" id="torchPulseTime">
+                          <object class="HAL_HScale" id="torch-pulse-time">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="has_tooltip">True</property>
                             <property name="tooltip_text" translatable="yes">time of torch pulse (Seconds)</property>
-                            <property name="adjustment">torchPulseTimeAdj</property>
+                            <property name="adjustment">torch-pulse-time-adj</property>
                             <property name="round_digits">1</property>
                           </object>
                           <packing>
@@ -2242,7 +2242,7 @@ NOTE: if forward motion goes past the end of the cut then reverse motion cannot 
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <child>
-                                  <object class="HAL_SpinButton" id="safeHeight">
+                                  <object class="HAL_SpinButton" id="safe-height">
                                     <property name="width_request">75</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
@@ -2256,7 +2256,7 @@ this may be reduced due to THC movement</property>
                                     <property name="secondary_icon_activatable">False</property>
                                     <property name="primary_icon_sensitive">True</property>
                                     <property name="secondary_icon_sensitive">True</property>
-                                    <property name="adjustment">safeHeightAdj</property>
+                                    <property name="adjustment">safe-height-adj</property>
                                     <property name="wrap">True</property>
                                   </object>
                                   <packing>
@@ -2295,7 +2295,7 @@ this may be reduced due to THC movement</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <child>
-                                  <object class="HAL_SpinButton" id="floatSwitchTravel">
+                                  <object class="HAL_SpinButton" id="float-switch-travel">
                                     <property name="width_request">75</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
@@ -2307,7 +2307,7 @@ this may be reduced due to THC movement</property>
                                     <property name="secondary_icon_activatable">False</property>
                                     <property name="primary_icon_sensitive">True</property>
                                     <property name="secondary_icon_sensitive">True</property>
-                                    <property name="adjustment">floatSwitchTravelAdj</property>
+                                    <property name="adjustment">float-switch-travel-adj</property>
                                     <property name="wrap">True</property>
                                   </object>
                                   <packing>
@@ -2357,7 +2357,7 @@ this may be reduced due to THC movement</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <child>
-                                  <object class="HAL_SpinButton" id="probeFeedRate">
+                                  <object class="HAL_SpinButton" id="probe-feed-rate">
                                     <property name="width_request">75</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
@@ -2369,7 +2369,7 @@ this may be reduced due to THC movement</property>
                                     <property name="secondary_icon_activatable">False</property>
                                     <property name="primary_icon_sensitive">True</property>
                                     <property name="secondary_icon_sensitive">True</property>
-                                    <property name="adjustment">probeFeedRateAdj</property>
+                                    <property name="adjustment">probe-feed-rate-adj</property>
                                     <property name="wrap">True</property>
                                   </object>
                                   <packing>
@@ -2407,7 +2407,7 @@ this may be reduced due to THC movement</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <child>
-                                  <object class="HAL_SpinButton" id="skipIhsDistance">
+                                  <object class="HAL_SpinButton" id="skip-ihs-distance">
                                     <property name="width_request">75</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
@@ -2421,7 +2421,7 @@ from end of previous cut</property>
                                     <property name="secondary_icon_activatable">False</property>
                                     <property name="primary_icon_sensitive">True</property>
                                     <property name="secondary_icon_sensitive">True</property>
-                                    <property name="adjustment">skipIhsDistanceAdj</property>
+                                    <property name="adjustment">skip-ihs-distance-adj</property>
                                     <property name="wrap">True</property>
                                   </object>
                                   <packing>
@@ -2508,7 +2508,7 @@ from end of previous cut</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <child>
-                                  <object class="HAL_SpinButton" id="arcFailDelay">
+                                  <object class="HAL_SpinButton" id="arc-fail-delay">
                                     <property name="width_request">75</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
@@ -2520,7 +2520,7 @@ from end of previous cut</property>
                                     <property name="secondary_icon_activatable">False</property>
                                     <property name="primary_icon_sensitive">True</property>
                                     <property name="secondary_icon_sensitive">True</property>
-                                    <property name="adjustment">arcFailDelayAdj</property>
+                                    <property name="adjustment">arc-fail-delay-adj</property>
                                     <property name="wrap">True</property>
                                   </object>
                                   <packing>
@@ -2558,7 +2558,7 @@ from end of previous cut</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <child>
-                                  <object class="HAL_SpinButton" id="arcMaxStarts">
+                                  <object class="HAL_SpinButton" id="arc-max-starts">
                                     <property name="width_request">75</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
@@ -2570,7 +2570,7 @@ from end of previous cut</property>
                                     <property name="secondary_icon_activatable">False</property>
                                     <property name="primary_icon_sensitive">True</property>
                                     <property name="secondary_icon_sensitive">True</property>
-                                    <property name="adjustment">arcMaxStartsAdj</property>
+                                    <property name="adjustment">arc-max-starts-adj</property>
                                     <property name="wrap">True</property>
                                   </object>
                                   <packing>
@@ -2608,7 +2608,7 @@ from end of previous cut</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <child>
-                                  <object class="HAL_SpinButton" id="arcRestartDelay">
+                                  <object class="HAL_SpinButton" id="arc-restart-delay">
                                     <property name="width_request">75</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
@@ -2620,7 +2620,7 @@ from end of previous cut</property>
                                     <property name="secondary_icon_activatable">False</property>
                                     <property name="primary_icon_sensitive">True</property>
                                     <property name="secondary_icon_sensitive">True</property>
-                                    <property name="adjustment">arcRestartDelayAdj</property>
+                                    <property name="adjustment">arc-restart-delay-adj</property>
                                     <property name="wrap">True</property>
                                   </object>
                                   <packing>
@@ -2658,7 +2658,7 @@ from end of previous cut</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <child>
-                                  <object class="HAL_SpinButton" id="torchOffDelay">
+                                  <object class="HAL_SpinButton" id="torch-off-delay">
                                     <property name="width_request">75</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
@@ -2670,7 +2670,7 @@ from end of previous cut</property>
                                     <property name="secondary_icon_activatable">False</property>
                                     <property name="primary_icon_sensitive">True</property>
                                     <property name="secondary_icon_sensitive">True</property>
-                                    <property name="adjustment">torchOffDelayAdj</property>
+                                    <property name="adjustment">torch-off-delay-adj</property>
                                     <property name="wrap">True</property>
                                   </object>
                                   <packing>
@@ -2716,11 +2716,11 @@ from end of previous cut</property>
                             <property name="can_focus">False</property>
                             <property name="homogeneous">True</property>
                             <child>
-                              <object class="GtkHBox" id="voltageScaleBox">
+                              <object class="GtkHBox" id="voltage-scale-box">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <child>
-                                  <object class="HAL_SpinButton" id="arcVoltageScale">
+                                  <object class="HAL_SpinButton" id="arc-voltage-scale">
                                     <property name="width_request">75</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
@@ -2732,7 +2732,7 @@ from end of previous cut</property>
                                     <property name="secondary_icon_activatable">False</property>
                                     <property name="primary_icon_sensitive">True</property>
                                     <property name="secondary_icon_sensitive">True</property>
-                                    <property name="adjustment">arcVoltageScaleAdj</property>
+                                    <property name="adjustment">arc-voltage-scale-adj</property>
                                     <property name="wrap">True</property>
                                   </object>
                                   <packing>
@@ -2742,7 +2742,7 @@ from end of previous cut</property>
                                   </packing>
                                 </child>
                                 <child>
-                                  <object class="GtkLabel" id="arcVoltageScaleLabel">
+                                  <object class="GtkLabel" id="arc-voltage-scale-label">
                                     <property name="width_request">130</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">False</property>
@@ -2766,11 +2766,11 @@ from end of previous cut</property>
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkHBox" id="voltageOffsetBox">
+                              <object class="GtkHBox" id="voltage-offset-box">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <child>
-                                  <object class="HAL_SpinButton" id="arcVoltageOffset">
+                                  <object class="HAL_SpinButton" id="arc-voltage-offset">
                                     <property name="width_request">75</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
@@ -2782,7 +2782,7 @@ from end of previous cut</property>
                                     <property name="secondary_icon_activatable">False</property>
                                     <property name="primary_icon_sensitive">True</property>
                                     <property name="secondary_icon_sensitive">True</property>
-                                    <property name="adjustment">arcVoltageOffsetAdj</property>
+                                    <property name="adjustment">arc-voltage-offset-adj</property>
                                     <property name="wrap">True</property>
                                   </object>
                                   <packing>
@@ -2792,7 +2792,7 @@ from end of previous cut</property>
                                   </packing>
                                 </child>
                                 <child>
-                                  <object class="GtkLabel" id="arcVoltageOffsetLabel">
+                                  <object class="GtkLabel" id="arc-voltage-offset-label">
                                     <property name="width_request">130</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">False</property>
@@ -2816,11 +2816,11 @@ from end of previous cut</property>
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkHBox" id="arcOkHighBox">
+                              <object class="GtkHBox" id="arc-ok-high-box">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <child>
-                                  <object class="HAL_SpinButton" id="arcOkHigh">
+                                  <object class="HAL_SpinButton" id="arc-ok-high">
                                     <property name="width_request">75</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
@@ -2832,7 +2832,7 @@ from end of previous cut</property>
                                     <property name="secondary_icon_activatable">False</property>
                                     <property name="primary_icon_sensitive">True</property>
                                     <property name="secondary_icon_sensitive">True</property>
-                                    <property name="adjustment">arcOkHighAdj</property>
+                                    <property name="adjustment">arc-ok-high-adj</property>
                                     <property name="wrap">True</property>
                                   </object>
                                   <packing>
@@ -2842,7 +2842,7 @@ from end of previous cut</property>
                                   </packing>
                                 </child>
                                 <child>
-                                  <object class="GtkLabel" id="arcOkHighLabel">
+                                  <object class="GtkLabel" id="arc-ok-high-label">
                                     <property name="width_request">130</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">False</property>
@@ -2866,11 +2866,11 @@ from end of previous cut</property>
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkHBox" id="arcOkLowBox">
+                              <object class="GtkHBox" id="arc-ok-low-box">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <child>
-                                  <object class="HAL_SpinButton" id="arcOkLow">
+                                  <object class="HAL_SpinButton" id="arc-ok-low">
                                     <property name="width_request">75</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
@@ -2882,7 +2882,7 @@ from end of previous cut</property>
                                     <property name="secondary_icon_activatable">False</property>
                                     <property name="primary_icon_sensitive">True</property>
                                     <property name="secondary_icon_sensitive">True</property>
-                                    <property name="adjustment">arcOkLowAdj</property>
+                                    <property name="adjustment">arc-ok-low-adj</property>
                                     <property name="wrap">True</property>
                                   </object>
                                   <packing>
@@ -2892,7 +2892,7 @@ from end of previous cut</property>
                                   </packing>
                                 </child>
                                 <child>
-                                  <object class="GtkLabel" id="arcOkLowLabel">
+                                  <object class="GtkLabel" id="arc-ok-low-label">
                                     <property name="width_request">130</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">False</property>
@@ -2969,7 +2969,7 @@ from end of previous cut</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <child>
-                                  <object class="GtkLabel" id="maxOffsetVelocityIn">
+                                  <object class="GtkLabel" id="max-offset-velocity-in">
                                     <property name="width_request">52</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">False</property>
@@ -3025,7 +3025,7 @@ from end of previous cut</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <child>
-                                  <object class="HAL_SpinButton" id="setupFeedRate">
+                                  <object class="HAL_SpinButton" id="setup-feed-rate">
                                     <property name="width_request">75</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
@@ -3042,7 +3042,7 @@ this also sets the maximum probe feed rate</property>
                                     <property name="secondary_icon_activatable">False</property>
                                     <property name="primary_icon_sensitive">True</property>
                                     <property name="secondary_icon_sensitive">True</property>
-                                    <property name="adjustment">setupFeedRateAdj</property>
+                                    <property name="adjustment">setup-feed-rate-adj</property>
                                     <property name="wrap">True</property>
                                     <signal name="value-changed" handler="on_setupFeedRate_value_changed" swapped="no"/>
                                   </object>
@@ -3094,11 +3094,11 @@ this also sets the maximum probe feed rate</property>
                             <property name="can_focus">False</property>
                             <property name="homogeneous">True</property>
                             <child>
-                              <object class="GtkHBox" id="pidIBox">
+                              <object class="GtkHBox" id="pid-i-box">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <child>
-                                  <object class="HAL_SpinButton" id="pidIGain">
+                                  <object class="HAL_SpinButton" id="pid-i-gain">
                                     <property name="width_request">75</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
@@ -3110,7 +3110,7 @@ this also sets the maximum probe feed rate</property>
                                     <property name="secondary_icon_activatable">False</property>
                                     <property name="primary_icon_sensitive">True</property>
                                     <property name="secondary_icon_sensitive">True</property>
-                                    <property name="adjustment">pidIGainAdj</property>
+                                    <property name="adjustment">pid-i-gain-adj</property>
                                     <property name="wrap">True</property>
                                   </object>
                                   <packing>
@@ -3120,7 +3120,7 @@ this also sets the maximum probe feed rate</property>
                                   </packing>
                                 </child>
                                 <child>
-                                  <object class="GtkLabel" id="pidILabel">
+                                  <object class="GtkLabel" id="pid-i-label">
                                     <property name="width_request">130</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">False</property>
@@ -3144,11 +3144,11 @@ this also sets the maximum probe feed rate</property>
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkHBox" id="pidDBox">
+                              <object class="GtkHBox" id="pid-d-box">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <child>
-                                  <object class="HAL_SpinButton" id="pidDGain">
+                                  <object class="HAL_SpinButton" id="pid-d-gain">
                                     <property name="width_request">75</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
@@ -3160,7 +3160,7 @@ this also sets the maximum probe feed rate</property>
                                     <property name="secondary_icon_activatable">False</property>
                                     <property name="primary_icon_sensitive">True</property>
                                     <property name="secondary_icon_sensitive">True</property>
-                                    <property name="adjustment">pidDGainAdj</property>
+                                    <property name="adjustment">pid-d-gain-adj</property>
                                     <property name="wrap">True</property>
                                   </object>
                                   <packing>
@@ -3170,7 +3170,7 @@ this also sets the maximum probe feed rate</property>
                                   </packing>
                                 </child>
                                 <child>
-                                  <object class="GtkLabel" id="pidDLabel">
+                                  <object class="GtkLabel" id="pid-d-label">
                                     <property name="width_request">130</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">False</property>

@@ -108,14 +108,14 @@ class HandlerClass:
 
     def get_materials(self):
         name = 'Default'
-        p_height = self.builder.get_object('pierceHeight').get_value()
-        p_delay = self.builder.get_object('pierceDelay').get_value()
-        pj_height = self.builder.get_object('puddleJumpHeight').get_value()
-        pj_delay = self.builder.get_object('puddleJumpDelay').get_value()
-        c_height = self.builder.get_object('cutHeight').get_value()
-        c_speed = self.builder.get_object('cutFeedRate').get_value()
-        c_amps = self.builder.get_object('cutAmps').get_value()
-        c_volts = self.builder.get_object('cutVolts').get_value()
+        p_height = self.builder.get_object('pierce-height').get_value()
+        p_delay = self.builder.get_object('pierce-delay').get_value()
+        pj_height = self.builder.get_object('puddle-jump-height').get_value()
+        pj_delay = self.builder.get_object('puddle-jump-delay').get_value()
+        c_height = self.builder.get_object('cut-height').get_value()
+        c_speed = self.builder.get_object('cut-feed-rate').get_value()
+        c_amps = self.builder.get_object('cut-amps').get_value()
+        c_volts = self.builder.get_object('cut-volts').get_value()
         self.builder.get_object('material').set_active(0)
         try:
             with open(self.materialsFile, 'r') as f_in:
@@ -153,14 +153,14 @@ class HandlerClass:
 
     def on_save_clicked(self,widget,data=None):
         self.save_settings()
-        self.materialsList[0][1] = self.builder.get_object('pierceHeight').get_value()
-        self.materialsList[0][2] = self.builder.get_object('pierceDelay').get_value()
-        self.materialsList[0][3] = self.builder.get_object('puddleJumpHeight').get_value()
-        self.materialsList[0][4] = self.builder.get_object('puddleJumpDelay').get_value()
-        self.materialsList[0][5] = self.builder.get_object('cutHeight').get_value()
-        self.materialsList[0][6] = self.builder.get_object('cutFeedRate').get_value()
-        self.materialsList[0][7] = self.builder.get_object('cutAmps').get_value()
-        self.materialsList[0][8] = self.builder.get_object('cutVolts').get_value()
+        self.materialsList[0][1] = self.builder.get_object('pierce-height').get_value()
+        self.materialsList[0][2] = self.builder.get_object('pierce-delay').get_value()
+        self.materialsList[0][3] = self.builder.get_object('puddle-jump-height').get_value()
+        self.materialsList[0][4] = self.builder.get_object('puddle-jump-delay').get_value()
+        self.materialsList[0][5] = self.builder.get_object('cut-height').get_value()
+        self.materialsList[0][6] = self.builder.get_object('cut-feed-rate').get_value()
+        self.materialsList[0][7] = self.builder.get_object('cut-amps').get_value()
+        self.materialsList[0][8] = self.builder.get_object('cut-volts').get_value()
         self.builder.get_object('material').set_active(0)
 
     def on_reload_clicked(self,widget,data=None):
@@ -175,14 +175,14 @@ class HandlerClass:
     def on_material_changed(self,widget,data=None):
         if not self.materialsUpdate:
             material = self.builder.get_object('material').get_active()
-            self.builder.get_object('pierceHeight').set_value(self.materialsList[material][1])
-            self.builder.get_object('pierceDelay').set_value(self.materialsList[material][2])
-            self.builder.get_object('puddleJumpHeight').set_value(self.materialsList[material][3])
-            self.builder.get_object('puddleJumpDelay').set_value(self.materialsList[material][4])
-            self.builder.get_object('cutHeight').set_value(self.materialsList[material][5])
-            self.builder.get_object('cutFeedRate').set_value(self.materialsList[material][6])
-            self.builder.get_object('cutAmps').set_value(self.materialsList[material][7])
-            self.builder.get_object('cutVolts').set_value(self.materialsList[material][8])
+            self.builder.get_object('pierce-height').set_value(self.materialsList[material][1])
+            self.builder.get_object('pierce-delay').set_value(self.materialsList[material][2])
+            self.builder.get_object('puddle-jump-height').set_value(self.materialsList[material][3])
+            self.builder.get_object('puddle-jump-delay').set_value(self.materialsList[material][4])
+            self.builder.get_object('cut-height').set_value(self.materialsList[material][5])
+            self.builder.get_object('cut-feed-rate').set_value(self.materialsList[material][6])
+            self.builder.get_object('cut-amps').set_value(self.materialsList[material][7])
+            self.builder.get_object('cut-volts').set_value(self.materialsList[material][8])
 
     def wait_for_completion(self):
         while self.lcnc.comd.wait_complete() == -1:
@@ -211,7 +211,7 @@ class HandlerClass:
                 self.wait_for_completion()
 
     def on_forward_pressed(self, widget):
-        speed = self.builder.get_object('pausedMotionSpeed').get_value()
+        speed = self.builder.get_object('paused-motion-speed').get_value()
         hal.set_p('plasmac.paused-motion-speed','%f' %(speed))
 
     def on_forward_released(self, widget):
@@ -219,7 +219,7 @@ class HandlerClass:
         hal.set_p('plasmac.paused-motion-speed','%f' %(speed))
 
     def on_reverse_pressed(self, widget):
-        speed = self.builder.get_object('pausedMotionSpeed').get_value() * -1
+        speed = self.builder.get_object('paused-motion-speed').get_value() * -1
         hal.set_p('plasmac.paused-motion-speed','%f' %(speed))
 
     def on_reverse_released(self, widget):
@@ -227,90 +227,90 @@ class HandlerClass:
         hal.set_p('plasmac.paused-motion-speed','%f' %(speed))
 
     def on_setupFeedRate_value_changed(self, widget):
-        self.builder.get_object('probeFeedRateAdj').configure(self.builder.get_object('probeFeedRate').get_value(),0,self.builder.get_object('setupFeedRate').get_value(),1,0,0)
+        self.builder.get_object('probe-feed-rate-adj').configure(self.builder.get_object('probe-feed-rate').get_value(),0,self.builder.get_object('setup-feed-rate').get_value(),1,0,0)
         
     def configure_widgets(self):
         # set_digits = number of digits after decimal
         # configure  = (value, lower limit, upper limit, step size, 0, 0)
-        self.builder.get_object('arcFailDelay').set_digits(1)
-        self.builder.get_object('arcFailDelayAdj').configure(1,0.1,60,0.1,0,0)
-        self.builder.get_object('arcOkLow').set_digits(1)
-        self.builder.get_object('arcOkLowAdj').configure(0,0,200,0.5,0,0)
-        self.builder.get_object('arcOkHigh').set_digits(1)
-        self.builder.get_object('arcOkHighAdj').configure(0,0,200,0.5,0,0)
-        self.builder.get_object('arcMaxStarts').set_digits(0)
-        self.builder.get_object('arcMaxStartsAdj').configure(3,1,9,1,0,0)
-        self.builder.get_object('arcRestartDelay').set_digits(0)
-        self.builder.get_object('arcRestartDelayAdj').configure(1,1,60,1,0,0)
-        self.builder.get_object('arcVoltageOffset').set_digits(1)
-        self.builder.get_object('arcVoltageOffsetAdj').configure(0,-100,100,0.1,0,0)
-        self.builder.get_object('arcVoltageScale').set_digits(2)
-        self.builder.get_object('arcVoltageScaleAdj').configure(1,0.01,99,0.01,0,0)
-        self.builder.get_object('cornerlockEnable').set_active(1)
-        self.builder.get_object('cornerlockThreshold').set_digits(0)
-        self.builder.get_object('cornerlockThresholdAdj').configure(90,1,99,1,0,0)
-        self.builder.get_object('cutAmps').set_digits(0)
-        self.builder.get_object('cutAmpsAdj').configure(45,0,999,1,0,0)
-        self.builder.get_object('cutVolts').set_digits(1)
-        self.builder.get_object('cutVoltsAdj').configure(122,50,300,0.1,0,0)
-        self.builder.get_object('kerfCrossEnable').set_active(1)
-        self.builder.get_object('kerfCrossThreshold').set_digits(1)
-        self.builder.get_object('kerfCrossThresholdAdj').configure(3,1,10,0.1,0,0)
-        self.builder.get_object('maxOffsetVelocityIn').set_label(str(int(self.thcFeedRate)))
-        self.builder.get_object('pidPGain').set_digits(0)
-        self.builder.get_object('pidPGainAdj').configure(25,0,1000,1,0,0)
-        self.builder.get_object('pidIGain').set_digits(0)
-        self.builder.get_object('pidIGainAdj').configure(0,0,1000,1,0,0)
-        self.builder.get_object('pidDGain').set_digits(0)
-        self.builder.get_object('pidDGainAdj').configure(0,0,1000,1,0,0)
-        self.builder.get_object('pierceDelay').set_digits(1)
-        self.builder.get_object('pierceDelayAdj').configure(0.5,0,10,0.1,0,0)
-        self.builder.get_object('puddleJumpHeight').set_digits(0)
-        self.builder.get_object('puddleJumpHeightAdj').configure(0,0,200,1,0,0)
-        self.builder.get_object('puddleJumpDelay').set_digits(2)
-        self.builder.get_object('puddleJumpDelayAdj').configure(0,0,9,0.01,0,0)
-        self.builder.get_object('thcEnable').set_active(1)
-        self.builder.get_object('thcThreshold').set_digits(2)
-        self.builder.get_object('thcThresholdAdj').configure(1,0.05,9,0.01,0,0)
-        self.builder.get_object('torchOffDelay').set_digits(1)
-        self.builder.get_object('torchOffDelayAdj').configure(0,0,9,0.1,0,0)
-        self.builder.get_object('torchPulseTime').set_digits(1)
-        self.builder.get_object('torchPulseTimeAdj').configure(.5,.1,5,0.1,0,0)
-        self.builder.get_object('useAutoVolts').set_active(1)
+        self.builder.get_object('arc-fail-delay').set_digits(1)
+        self.builder.get_object('arc-fail-delay-adj').configure(1,0.1,60,0.1,0,0)
+        self.builder.get_object('arc-ok-low').set_digits(1)
+        self.builder.get_object('arc-ok-low-adj').configure(0,0,200,0.5,0,0)
+        self.builder.get_object('arc-ok-high').set_digits(1)
+        self.builder.get_object('arc-ok-high-adj').configure(0,0,200,0.5,0,0)
+        self.builder.get_object('arc-max-starts').set_digits(0)
+        self.builder.get_object('arc-max-starts-adj').configure(3,1,9,1,0,0)
+        self.builder.get_object('arc-restart-delay').set_digits(0)
+        self.builder.get_object('arc-restart-delay-adj').configure(1,1,60,1,0,0)
+        self.builder.get_object('arc-voltage-offset').set_digits(1)
+        self.builder.get_object('arc-voltage-offset-adj').configure(0,-100,100,0.1,0,0)
+        self.builder.get_object('arc-voltage-scale').set_digits(2)
+        self.builder.get_object('arc-voltage-scale-adj').configure(1,0.01,99,0.01,0,0)
+        self.builder.get_object('cornerlock-enable').set_active(1)
+        self.builder.get_object('cornerlock-threshold').set_digits(0)
+        self.builder.get_object('cornerlock-threshold-adj').configure(90,1,99,1,0,0)
+        self.builder.get_object('cut-amps').set_digits(0)
+        self.builder.get_object('cut-amps-adj').configure(45,0,999,1,0,0)
+        self.builder.get_object('cut-volts').set_digits(1)
+        self.builder.get_object('cut-volts-adj').configure(122,50,300,0.1,0,0)
+        self.builder.get_object('kerfcross-enable').set_active(1)
+        self.builder.get_object('kerfcross-threshold').set_digits(1)
+        self.builder.get_object('kerfcross-threshold-adj').configure(3,1,10,0.1,0,0)
+        self.builder.get_object('max-offset-velocity-in').set_label(str(int(self.thcFeedRate)))
+        self.builder.get_object('pid-p-gain').set_digits(0)
+        self.builder.get_object('pid-p-gain-adj').configure(25,0,1000,1,0,0)
+        self.builder.get_object('pid-i-gain').set_digits(0)
+        self.builder.get_object('pid-i-gain-adj').configure(0,0,1000,1,0,0)
+        self.builder.get_object('pid-d-gain').set_digits(0)
+        self.builder.get_object('pid-d-gain-adj').configure(0,0,1000,1,0,0)
+        self.builder.get_object('pierce-delay').set_digits(1)
+        self.builder.get_object('pierce-delay-adj').configure(0.5,0,10,0.1,0,0)
+        self.builder.get_object('puddle-jump-height').set_digits(0)
+        self.builder.get_object('puddle-jump-height-adj').configure(0,0,200,1,0,0)
+        self.builder.get_object('puddle-jump-delay').set_digits(2)
+        self.builder.get_object('puddle-jump-delay-adj').configure(0,0,9,0.01,0,0)
+        self.builder.get_object('thc-enable').set_active(1)
+        self.builder.get_object('thc-threshold').set_digits(2)
+        self.builder.get_object('thc-threshold-adj').configure(1,0.05,9,0.01,0,0)
+        self.builder.get_object('torch-off-delay').set_digits(1)
+        self.builder.get_object('torch-off-delay-adj').configure(0,0,9,0.1,0,0)
+        self.builder.get_object('torch-pulse-time').set_digits(1)
+        self.builder.get_object('torch-pulse-time-adj').configure(.5,.1,5,0.1,0,0)
+        self.builder.get_object('use-auto-volts').set_active(1)
         if self.lcnc.linuxcncIniFile.find('TRAJ', 'LINEAR_UNITS').lower() == 'mm':
-            self.builder.get_object('cutFeedRate').set_digits(0)
-            self.builder.get_object('cutFeedRateAdj').configure(4000,50,9999,1,0,0)
-            self.builder.get_object('cutHeight').set_digits(1)
-            self.builder.get_object('cutHeightAdj').configure(1,0,25.4,0.1,0,0)
-            self.builder.get_object('floatSwitchTravel').set_digits(2)
-            self.builder.get_object('floatSwitchTravelAdj').configure(1.5,0,9,0.01,0,0)
-            self.builder.get_object('pierceHeight').set_digits(1)
-            self.builder.get_object('pierceHeightAdj').configure(4,0,25.4,0.1,0,0)
-            self.builder.get_object('probeFeedRate').set_digits(0)
-            self.builder.get_object('probeFeedRateAdj').configure(1000,1,self.thcFeedRate,1,0,0)
-            self.builder.get_object('safeHeight').set_digits(0)
-            self.builder.get_object('safeHeightAdj').configure(20,1,99,1,0,0)
-            self.builder.get_object('setupFeedRate').set_digits(0)
-            self.builder.get_object('setupFeedRateAdj').configure(int(self.thcFeedRate * 0.8),1,self.thcFeedRate,1,0,0)
-            self.builder.get_object('skipIhsDistance').set_digits(0)
-            self.builder.get_object('skipIhsDistanceAdj').configure(0,0,999,1,0,0)
+            self.builder.get_object('cut-feed-rate').set_digits(0)
+            self.builder.get_object('cut-feed-rate-adj').configure(4000,50,9999,1,0,0)
+            self.builder.get_object('cut-height').set_digits(1)
+            self.builder.get_object('cut-height-adj').configure(1,0,25.4,0.1,0,0)
+            self.builder.get_object('float-switch-travel').set_digits(2)
+            self.builder.get_object('float-switch-travel-adj').configure(1.5,0,9,0.01,0,0)
+            self.builder.get_object('pierce-height').set_digits(1)
+            self.builder.get_object('pierce-height-adj').configure(4,0,25.4,0.1,0,0)
+            self.builder.get_object('probe-feed-rate').set_digits(0)
+            self.builder.get_object('probe-feed-rate-adj').configure(1000,1,self.thcFeedRate,1,0,0)
+            self.builder.get_object('safe-height').set_digits(0)
+            self.builder.get_object('safe-height-adj').configure(20,1,99,1,0,0)
+            self.builder.get_object('setup-feed-rate').set_digits(0)
+            self.builder.get_object('setup-feed-rate-adj').configure(int(self.thcFeedRate * 0.8),1,self.thcFeedRate,1,0,0)
+            self.builder.get_object('skip-ihs-distance').set_digits(0)
+            self.builder.get_object('skip-ihs-distance-adj').configure(0,0,999,1,0,0)
         elif self.lcnc.linuxcncIniFile.find('TRAJ', 'LINEAR_UNITS').lower() == 'inch':
-            self.builder.get_object('cutFeedRate').set_digits(1)
-            self.builder.get_object('cutFeedRateAdj').configure(160,2,400,0.1,0,0)
-            self.builder.get_object('cutHeight').set_digits(2)
-            self.builder.get_object('cutHeightAdj').configure(0.04,0,1,0.01,0,0)
-            self.builder.get_object('floatSwitchTravel').set_digits(3)
-            self.builder.get_object('floatSwitchTravelAdj').configure(0.06,0,1,0.001,0,0)
-            self.builder.get_object('pierceHeight').set_digits(2)
-            self.builder.get_object('pierceHeightAdj').configure(0.16,0,1,0.01,0,0)
-            self.builder.get_object('probeFeedRate').set_digits(1)
-            self.builder.get_object('probeFeedRateAdj').configure(40,.1,self.thcFeedRate,.1,0,0)
-            self.builder.get_object('safeHeight').set_digits(2)
-            self.builder.get_object('safeHeightAdj').configure(0.75,0.04,4,0.01,0,0)
-            self.builder.get_object('setupFeedRate').set_digits(1)
-            self.builder.get_object('setupFeedRateAdj').configure(int(self.thcFeedRate * 0.8),.1,self.thcFeedRate,.1,0,0)
-            self.builder.get_object('skipIhsDistance').set_digits(1)
-            self.builder.get_object('skipIhsDistanceAdj').configure(0,0,99,.1,0,0)
+            self.builder.get_object('cut-feed-rate').set_digits(1)
+            self.builder.get_object('cut-feed-rate-adj').configure(160,2,400,0.1,0,0)
+            self.builder.get_object('cut-height').set_digits(2)
+            self.builder.get_object('cut-height-adj').configure(0.04,0,1,0.01,0,0)
+            self.builder.get_object('float-switch-travel').set_digits(3)
+            self.builder.get_object('float-switch-travel-adj').configure(0.06,0,1,0.001,0,0)
+            self.builder.get_object('pierce-height').set_digits(2)
+            self.builder.get_object('pierce-height-adj').configure(0.16,0,1,0.01,0,0)
+            self.builder.get_object('probe-feed-rate').set_digits(1)
+            self.builder.get_object('probe-feed-rate-adj').configure(40,.1,self.thcFeedRate,.1,0,0)
+            self.builder.get_object('safe-height').set_digits(2)
+            self.builder.get_object('safe-height-adj').configure(0.75,0.04,4,0.01,0,0)
+            self.builder.get_object('setup-feed-rate').set_digits(1)
+            self.builder.get_object('setup-feed-rate-adj').configure(int(self.thcFeedRate * 0.8),.1,self.thcFeedRate,.1,0,0)
+            self.builder.get_object('skip-ihs-distance').set_digits(1)
+            self.builder.get_object('skip-ihs-distance-adj').configure(0,0,99,.1,0,0)
         else:
             print '*** incorrect [TRAJ]LINEAR_UNITS in ini file'
 
@@ -322,77 +322,77 @@ class HandlerClass:
         maxPidP = self.thcFeedRate / units * 0.1
         if mode != self.oldMode:
             if mode == 0:
-                self.builder.get_object('arcOkHigh').show()
-                self.builder.get_object('arcOkHighLabel').set_text('OK High Volts')
-                self.builder.get_object('arcOkLow').show()
-                self.builder.get_object('arcOkLowLabel').set_text('OK Low Volts')
-                self.builder.get_object('arcVoltage').show()
-                self.builder.get_object('arcVoltageLabel').set_text('Arc Voltage')
-                self.builder.get_object('arcVoltageScale').show()
-                self.builder.get_object('arcVoltageScaleLabel').set_text('Voltage Scale')
-                self.builder.get_object('arcVoltageOffset').show()
-                self.builder.get_object('arcVoltageOffsetLabel').set_text('Voltage Offset')
-                self.builder.get_object('autoBox').show()
-                self.builder.get_object('heightFrame').show()
-                self.builder.get_object('kerfBox').show()
-                self.builder.get_object('kerfLabel').show()
-                self.builder.get_object('kerfFrame').set_shadow_type(gtk.SHADOW_OUT)
-                self.builder.get_object('pidPGainAdj').configure(self.builder.get_object('pidPGainAdj').get_value(),1,maxPidP,1,0,0)
-                self.builder.get_object('pidPLabel').set_text('Speed (PID P)')
-                self.builder.get_object('pidIGain').show()
-                self.builder.get_object('pidILabel').set_text('PID I GAIN')
-                self.builder.get_object('pidDGain').show()
-                self.builder.get_object('pidDLabel').set_text('PID D GAIN')
-                self.builder.get_object('thresholdBox').show()
-                self.builder.get_object('voltsBox').show()
+                self.builder.get_object('arc-ok-high').show()
+                self.builder.get_object('arc-ok-high-label').set_text('OK High Volts')
+                self.builder.get_object('arc-ok-low').show()
+                self.builder.get_object('arc-ok-low-label').set_text('OK Low Volts')
+                self.builder.get_object('arc-voltage').show()
+                self.builder.get_object('arc-voltage-label').set_text('Arc Voltage')
+                self.builder.get_object('arc-voltage-scale').show()
+                self.builder.get_object('arc-voltage-scale-label').set_text('Voltage Scale')
+                self.builder.get_object('arc-voltage-offset').show()
+                self.builder.get_object('arc-voltage-offset-label').set_text('Voltage Offset')
+                self.builder.get_object('auto-box').show()
+                self.builder.get_object('height-frame').show()
+                self.builder.get_object('kerf-box').show()
+                self.builder.get_object('kerf-label').show()
+                self.builder.get_object('kerf-frame').set_shadow_type(gtk.SHADOW_OUT)
+                self.builder.get_object('pid-p-gain-adj').configure(self.builder.get_object('pid-p-gain-adj').get_value(),1,maxPidP,1,0,0)
+                self.builder.get_object('pid-p-label').set_text('Speed (PID P)')
+                self.builder.get_object('pid-i-gain').show()
+                self.builder.get_object('pid-i-label').set_text('PID I GAIN')
+                self.builder.get_object('pid-d-gain').show()
+                self.builder.get_object('pid-d-label').set_text('PID D GAIN')
+                self.builder.get_object('threshold-box').show()
+                self.builder.get_object('volts-box').show()
             elif mode == 1:
-                self.builder.get_object('arcOkHigh').hide()
-                self.builder.get_object('arcOkHighLabel').set_text('')
-                self.builder.get_object('arcOkLow').hide()
-                self.builder.get_object('arcOkLowLabel').set_text('')
-                self.builder.get_object('arcVoltage').show()
-                self.builder.get_object('arcVoltageLabel').set_text('Arc Voltage')
-                self.builder.get_object('arcVoltageScale').show()
-                self.builder.get_object('arcVoltageScaleLabel').set_text('Voltage Scale')
-                self.builder.get_object('arcVoltageOffset').show()
-                self.builder.get_object('arcVoltageOffsetLabel').set_text('Voltage Offset')
-                self.builder.get_object('autoBox').show()
-                self.builder.get_object('heightFrame').show()
-                self.builder.get_object('kerfBox').show()
-                self.builder.get_object('kerfLabel').show()
-                self.builder.get_object('kerfFrame').set_shadow_type(gtk.SHADOW_OUT)
-                self.builder.get_object('pidPGainAdj').configure(self.builder.get_object('pidPGainAdj').get_value(),1,maxPidP,1,0,0)
-                self.builder.get_object('pidPLabel').set_text('Speed (PID P)')
-                self.builder.get_object('pidIGain').show()
-                self.builder.get_object('pidILabel').set_text('PID I GAIN')
-                self.builder.get_object('pidDGain').show()
-                self.builder.get_object('pidDLabel').set_text('PID D GAIN')
-                self.builder.get_object('thresholdBox').show()
-                self.builder.get_object('voltsBox').show()
+                self.builder.get_object('arc-ok-high').hide()
+                self.builder.get_object('arc-ok-high-label').set_text('')
+                self.builder.get_object('arc-ok-low').hide()
+                self.builder.get_object('arc-ok-low-label').set_text('')
+                self.builder.get_object('arc-voltage').show()
+                self.builder.get_object('arc-voltage-label').set_text('Arc Voltage')
+                self.builder.get_object('arc-voltage-scale').show()
+                self.builder.get_object('arc-voltage-scale-label').set_text('Voltage Scale')
+                self.builder.get_object('arc-voltage-offset').show()
+                self.builder.get_object('arc-voltage-offset-label').set_text('Voltage Offset')
+                self.builder.get_object('auto-box').show()
+                self.builder.get_object('height-frame').show()
+                self.builder.get_object('kerf-box').show()
+                self.builder.get_object('kerf-label').show()
+                self.builder.get_object('kerf-frame').set_shadow_type(gtk.SHADOW_OUT)
+                self.builder.get_object('pid-p-gain-adj').configure(self.builder.get_object('pid-p-gain-adj').get_value(),1,maxPidP,1,0,0)
+                self.builder.get_object('pid-p-label').set_text('Speed (PID P)')
+                self.builder.get_object('pid-i-gain').show()
+                self.builder.get_object('pid-i-label').set_text('PID I GAIN')
+                self.builder.get_object('pid-d-gain').show()
+                self.builder.get_object('pid-d-label').set_text('PID D GAIN')
+                self.builder.get_object('threshold-box').show()
+                self.builder.get_object('volts-box').show()
             elif mode == 2:
-                self.builder.get_object('arcOkHigh').hide()
-                self.builder.get_object('arcOkHighLabel').set_text('')
-                self.builder.get_object('arcOkLow').hide()
-                self.builder.get_object('arcOkLowLabel').set_text('')
-                self.builder.get_object('arcVoltage').hide()
-                self.builder.get_object('arcVoltageLabel').set_text('')
-                self.builder.get_object('arcVoltageScale').hide()
-                self.builder.get_object('arcVoltageScaleLabel').set_text('')
-                self.builder.get_object('arcVoltageOffset').hide()
-                self.builder.get_object('arcVoltageOffsetLabel').set_text('')
-                self.builder.get_object('autoBox').hide()
-                self.builder.get_object('heightFrame').hide()
-                self.builder.get_object('kerfBox').hide()
-                self.builder.get_object('kerfLabel').hide()
-                self.builder.get_object('kerfFrame').set_shadow_type(gtk.SHADOW_NONE)
-                self.builder.get_object('pidPGainAdj').configure(self.builder.get_object('pidPGainAdj').get_value(),1,100,1,0,0)
-                self.builder.get_object('pidPLabel').set_text('Speed (%)')
-                self.builder.get_object('pidIGain').hide()
-                self.builder.get_object('pidILabel').set_text('')
-                self.builder.get_object('pidDGain').hide()
-                self.builder.get_object('pidDLabel').set_text('')
-                self.builder.get_object('thresholdBox').hide()
-                self.builder.get_object('voltsBox').hide()
+                self.builder.get_object('arc-ok-high').hide()
+                self.builder.get_object('arc-ok-high-label').set_text('')
+                self.builder.get_object('arc-ok-low').hide()
+                self.builder.get_object('arc-ok-low-label').set_text('')
+                self.builder.get_object('arc-voltage').hide()
+                self.builder.get_object('arc-voltage-label').set_text('')
+                self.builder.get_object('arc-voltage-scale').hide()
+                self.builder.get_object('arc-voltage-scale-label').set_text('')
+                self.builder.get_object('arc-voltage-offset').hide()
+                self.builder.get_object('arc-voltage-offset-label').set_text('')
+                self.builder.get_object('auto-box').hide()
+                self.builder.get_object('height-frame').hide()
+                self.builder.get_object('kerf-box').hide()
+                self.builder.get_object('kerf-label').hide()
+                self.builder.get_object('kerf-frame').set_shadow_type(gtk.SHADOW_NONE)
+                self.builder.get_object('pid-p-gain-adj').configure(self.builder.get_object('pid-p-gain-adj').get_value(),1,100,1,0,0)
+                self.builder.get_object('pid-p-label').set_text('Speed (%)')
+                self.builder.get_object('pid-i-gain').hide()
+                self.builder.get_object('pid-i-label').set_text('')
+                self.builder.get_object('pid-d-gain').hide()
+                self.builder.get_object('pid-d-label').set_text('')
+                self.builder.get_object('threshold-box').hide()
+                self.builder.get_object('volts-box').hide()
             else:
                 pass
             self.oldMode = mode
@@ -401,7 +401,7 @@ class HandlerClass:
 
     def load_settings(self):
         for item in widget_defaults(select_widgets(self.builder.get_objects(), hal_only=False,output_only = True)):
-            if item != 'heightOverride':
+            if item != 'height-override':
                 self.configDict[item] = '0'
         convertFile = False
         if os.path.exists(self.configFile):
@@ -413,9 +413,19 @@ class HandlerClass:
                             if 'version' in line or 'signature' in line:
                                 convertFile = True
                             else:
-                                (key, value) = line.strip().replace(" ", "").split('=')
+                                (keyTmp, value) = line.strip().replace(" ", "").split('=')
                                 if value == 'True':value = True
                                 if value == 'False':value = False
+                                key = ''
+                                for item in keyTmp:
+                                    if item.isupper():
+                                        if item == 'C':
+                                            key += 'c'
+                                        else:
+                                            key += '-%s' % (item.lower())
+                                            convertFile = True
+                                    else:
+                                        key += item
                                 if key in self.configDict:
                                     self.configDict[key] = value
                                     tmpDict[key] = value
@@ -430,11 +440,11 @@ class HandlerClass:
                         print '***', item, 'missing from', self.configFile
                 elif isinstance(self.builder.get_object(item), gladevcp.hal_widgets.HAL_CheckButton):
                     if item in tmpDict:
-                        self.builder.get_object(item).set_active(self.configDict.get(item))
+                        self.builder.get_object(item).set_active(int(self.configDict.get(item)))
                     else:
                         self.builder.get_object(item).set_active(False)
                         print '***', item, 'missing from', self.configFile
-                elif item == 'torchPulseTime' or item == 'pausedMotionSpeed':
+                elif item == 'torch-pulse-time' or item == 'paused-motion-speed':
                     if item in tmpDict:
                         self.builder.get_object(item).set_value(float(self.configDict.get(item)))
                     else:
@@ -458,7 +468,7 @@ class HandlerClass:
                     elif isinstance(self.builder.get_object(key), gladevcp.hal_widgets.HAL_CheckButton):
                         value = self.builder.get_object(key).get_active()
                         f_out.write(key + '=' + str(value) + '\n')
-                    elif key == 'torchPulseTime' or key == 'pausedMotionSpeed':
+                    elif key == 'torch-pulse-time' or key == 'paused-motion-speed':
                         value = self.builder.get_object(key).get_value()
                         f_out.write(key + '=' + str(value) + '\n')
         except:
@@ -483,7 +493,7 @@ class HandlerClass:
         self.oldMode = 9
         self.materialsUpdate = False
         self.configure_widgets()
-        self.builder.get_object('probeFeedRateAdj').set_upper(self.builder.get_object('setupFeedRate').get_value())
+        self.builder.get_object('probe-feed-rate-adj').set_upper(self.builder.get_object('setup-feed-rate').get_value())
         self.load_settings()
         self.check_materials_file()
         self.get_materials()

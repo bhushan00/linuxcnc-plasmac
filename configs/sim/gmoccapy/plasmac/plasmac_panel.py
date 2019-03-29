@@ -364,8 +364,11 @@ class HandlerClass:
                                 key = ''
                                 for item in keyTmp:
                                     if item.isupper():
-                                        key += '-%s' % (item.lower())
-                                        convertFile = True
+                                        if item == 'C':
+                                            key += 'c'
+                                        else:
+                                            key += '-%s' % (item.lower())
+                                            convertFile = True
                                     else:
                                         key += item
                                 if key in self.configDict:
