@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <!-- interface-requires gladevcp 0.0 -->
-  <requires lib="gtk+" version="2.18"/>
+  <requires lib="gtk+" version="2.16"/>
   <!-- interface-naming-policy project-wide -->
-  <object class="GtkListStore" id="feedOverrides">
+  <object class="GtkListStore" id="feed-overrides">
     <columns>
       <!-- column-name name -->
       <column type="gchararray"/>
@@ -11,21 +11,13 @@
       <column type="gfloat"/>
     </columns>
   </object>
-  <object class="GtkListStore" id="heightOverrides">
+  <object class="GtkListStore" id="height-overrides">
     <columns>
       <!-- column-name value -->
       <column type="gchararray"/>
     </columns>
   </object>
-  <object class="GtkListStore" id="pausedMotionSpeeds">
-    <columns>
-      <!-- column-name name -->
-      <column type="gchararray"/>
-      <!-- column-name value -->
-      <column type="gfloat"/>
-    </columns>
-  </object>
-  <object class="GtkListStore" id="rapidOverrides">
+  <object class="GtkListStore" id="paused-motion-speeds">
     <columns>
       <!-- column-name name -->
       <column type="gchararray"/>
@@ -33,7 +25,7 @@
       <column type="gfloat"/>
     </columns>
   </object>
-  <object class="GtkListStore" id="testTimes">
+  <object class="GtkListStore" id="rapid-overrides">
     <columns>
       <!-- column-name name -->
       <column type="gchararray"/>
@@ -41,7 +33,15 @@
       <column type="gfloat"/>
     </columns>
   </object>
-  <object class="GtkListStore" id="torchPulseTimes">
+  <object class="GtkListStore" id="test-times">
+    <columns>
+      <!-- column-name name -->
+      <column type="gchararray"/>
+      <!-- column-name value -->
+      <column type="gfloat"/>
+    </columns>
+  </object>
+  <object class="GtkListStore" id="torch-pulse-times">
     <columns>
       <!-- column-name name -->
       <column type="gchararray"/>
@@ -59,7 +59,7 @@
         <property name="n_columns">4</property>
         <property name="homogeneous">True</property>
         <child>
-          <object class="GtkFrame" id="pausedMotionFrame">
+          <object class="GtkFrame" id="pausedmotion-frame">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="label_xalign">0.5</property>
@@ -91,11 +91,11 @@
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkComboBox" id="pausedMotionSpeed">
+                      <object class="GtkComboBox" id="paused-motion-speed">
                         <property name="height_request">36</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="model">pausedMotionSpeeds</property>
+                        <property name="model">paused-motion-speeds</property>
                         <child>
                           <object class="GtkCellRendererText" id="cellrenderertext4"/>
                           <attributes>
@@ -151,7 +151,7 @@
           </packing>
         </child>
         <child>
-          <object class="GtkFrame" id="torchPulseFrame">
+          <object class="GtkFrame" id="torchpulseframe">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="label_xalign">0.5</property>
@@ -165,7 +165,7 @@
                     <property name="can_focus">False</property>
                     <property name="n_columns">2</property>
                     <child>
-                      <object class="HAL_Button" id="torchPulseStart">
+                      <object class="HAL_Button" id="torch-pulse-start">
                         <property name="label" translatable="yes">Pulse</property>
                         <property name="height_request">36</property>
                         <property name="visible">True</property>
@@ -181,11 +181,11 @@
                       </packing>
                     </child>
                     <child>
-                      <object class="HAL_ComboBox" id="torchPulseTime">
+                      <object class="HAL_ComboBox" id="torch-pulse-time">
                         <property name="height_request">36</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="model">torchPulseTimes</property>
+                        <property name="model">torch-pulse-times</property>
                         <property name="column">1</property>
                         <child>
                           <object class="GtkCellRendererText" id="cellrenderertext5"/>
@@ -224,7 +224,7 @@
           </packing>
         </child>
         <child>
-          <object class="GtkFrame" id="feedFrame">
+          <object class="GtkFrame" id="feedframe">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="label_xalign">0.5</property>
@@ -241,11 +241,11 @@
                     <property name="n_columns">2</property>
                     <property name="homogeneous">True</property>
                     <child>
-                      <object class="GtkComboBox" id="feedOverride">
+                      <object class="GtkComboBox" id="feed-override">
                         <property name="height_request">36</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="model">feedOverrides</property>
+                        <property name="model">feed-overrides</property>
                         <signal name="changed" handler="on_feedOverride_changed" swapped="no"/>
                         <child>
                           <object class="GtkCellRendererText" id="cellrenderertext2"/>
@@ -260,7 +260,7 @@
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkButton" id="feedDefault">
+                      <object class="GtkButton" id="feed-default">
                         <property name="label" translatable="yes">100%</property>
                         <property name="height_request">36</property>
                         <property name="visible">True</property>
@@ -296,7 +296,7 @@
           </packing>
         </child>
         <child>
-          <object class="GtkFrame" id="rapidFrame">
+          <object class="GtkFrame" id="rapidframe">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="label_xalign">0.5</property>
@@ -311,11 +311,11 @@
                     <property name="n_columns">2</property>
                     <property name="homogeneous">True</property>
                     <child>
-                      <object class="GtkComboBox" id="rapidOverride">
+                      <object class="GtkComboBox" id="rapid-override">
                         <property name="height_request">36</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="model">rapidOverrides</property>
+                        <property name="model">rapid-overrides</property>
                         <signal name="changed" handler="on_rapidOverride_changed" swapped="no"/>
                         <child>
                           <object class="GtkCellRendererText" id="cellrenderertext3"/>
@@ -330,7 +330,7 @@
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkButton" id="rapidDefault">
+                      <object class="GtkButton" id="rapid-default">
                         <property name="label" translatable="yes">100%</property>
                         <property name="height_request">36</property>
                         <property name="visible">True</property>
@@ -368,7 +368,7 @@
           </packing>
         </child>
         <child>
-          <object class="GtkFrame" id="heightFrame">
+          <object class="GtkFrame" id="height-frame">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="label_xalign">0.5</property>
@@ -383,7 +383,7 @@
                     <property name="n_columns">4</property>
                     <property name="homogeneous">True</property>
                     <child>
-                      <object class="GtkButton" id="heightRaise">
+                      <object class="GtkButton" id="height-raise">
                         <property name="label" translatable="yes">Raise</property>
                         <property name="height_request">36</property>
                         <property name="visible">True</property>
@@ -397,7 +397,7 @@
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkLabel" id="heightOverride">
+                      <object class="GtkLabel" id="height-override">
                         <property name="height_request">36</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
@@ -411,7 +411,7 @@
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkButton" id="heightLower">
+                      <object class="GtkButton" id="height-lower">
                         <property name="label" translatable="yes">Lower</property>
                         <property name="height_request">36</property>
                         <property name="visible">True</property>
@@ -427,7 +427,7 @@
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkButton" id="heightReset">
+                      <object class="GtkButton" id="height-reset">
                         <property name="label" translatable="yes">Reset</property>
                         <property name="height_request">36</property>
                         <property name="visible">True</property>

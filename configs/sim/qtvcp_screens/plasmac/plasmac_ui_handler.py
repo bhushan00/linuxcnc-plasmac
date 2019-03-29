@@ -487,7 +487,7 @@ class HandlerClass:
                                'cornerlock_threshold','kerfcross_enable',\
                                'kerfcross_threshold','safe_height',\
                                'float_switch_travel','probe_feed_rate','skip_ihs_distance',\
-                               'arc_fail_delay','arc_max_starts','restart_delay',\
+                               'arc_fail_delay','arc_max_starts','arc_restart_delay',\
                                'torch_off_delay','arc_voltage_scale','arc_voltage_offset',\
                                'arc_ok_high','arc_ok_low','setup_feed_rate','pid_i_gain',\
                                'pid_d_gain','paused-motion-speed','torch-pulse-time',\

@@ -26,7 +26,7 @@
                     <property name="n_rows">3</property>
                     <property name="n_columns">6</property>
                     <child>
-                      <object class="HAL_Label" id="arcVoltage">
+                      <object class="HAL_Label" id="arc-voltage">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="tooltip_text" translatable="yes">current arc voltage</property>
@@ -66,7 +66,7 @@
                       </packing>
                     </child>
                     <child>
-                      <object class="HAL_LED" id="floatSwitch">
+                      <object class="HAL_LED" id="float-switch">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="has_tooltip">True</property>
@@ -120,7 +120,7 @@
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkLabel" id="arcVoltageLabel">
+                      <object class="GtkLabel" id="arc-voltage-label">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="has_tooltip">True</property>
@@ -177,7 +177,7 @@
                       </packing>
                     </child>
                     <child>
-                      <object class="HAL_LED" id="torchOn">
+                      <object class="HAL_LED" id="torch-on">
                         <property name="width_request">40</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
@@ -198,7 +198,7 @@
                       </packing>
                     </child>
                     <child>
-                      <object class="HAL_LED" id="arcOk">
+                      <object class="HAL_LED" id="arc-ok">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="has_tooltip">True</property>
@@ -257,7 +257,7 @@
                       </packing>
                     </child>
                     <child>
-                      <object class="HAL_LED" id="ohmicProbe">
+                      <object class="HAL_LED" id="ohmic-probe">
                         <property name="width_request">40</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
@@ -276,7 +276,7 @@
                       </packing>
                     </child>
                     <child>
-                      <object class="HAL_LED" id="breakawaySwitch">
+                      <object class="HAL_LED" id="breakaway-switch">
                         <property name="width_request">40</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>

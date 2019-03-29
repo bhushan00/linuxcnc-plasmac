@@ -45,23 +45,23 @@ class HandlerClass:
     def periodic(self):
         self.lcnc.stat.poll()
         if self.feed_override != self.lcnc.stat.feedrate:
-            self.builder.get_object('feedOverride').set_active(int(self.lcnc.stat.feedrate * 100))
+            self.builder.get_object('feed-override').set_active(int(self.lcnc.stat.feedrate * 100))
             self.feed_override = int(self.lcnc.stat.feedrate * 100)
         if self.rapid_override != self.lcnc.stat.rapidrate:
-            self.builder.get_object('rapidOverride').set_active(int(self.lcnc.stat.rapidrate * 100))
+            self.builder.get_object('rapid-override').set_active(int(self.lcnc.stat.rapidrate * 100))
             self.feed_override = int(self.lcnc.stat.rapidrate * 100)
         if hal.get_value('halui.program.is-idle') and hal.get_value('halui.machine.is-on'):
-            self.builder.get_object('torchPulseStart').set_sensitive(True)
+            self.builder.get_object('torch-pulse-start').set_sensitive(True)
         else:
-            self.builder.get_object('torchPulseStart').set_sensitive(False)
+            self.builder.get_object('torch-pulse-start').set_sensitive(False)
         mode = hal.get_value('plasmac.mode')
         if mode != self.oldMode:
             if mode == 0:
-                self.builder.get_object('heightFrame').show()
+                self.builder.get_object('height-frame').show()
             elif mode == 1:
-                self.builder.get_object('heightFrame').show()
+                self.builder.get_object('height-frame').show()
             elif mode == 2:
-                self.builder.get_object('heightFrame').hide()
+                self.builder.get_object('height-frame').hide()
             else:
                 pass
             self.oldMode = mode
@@ -92,28 +92,28 @@ class HandlerClass:
         self.lcnc.comd.rapidrate(speed)
 
     def on_feedDefault_pressed(self, widget):
-        self.builder.get_object('feedOverride').set_active(100)
+        self.builder.get_object('feed-override').set_active(100)
 
     def on_rapidDefault_pressed(self, widget):
-        self.builder.get_object('rapidOverride').set_active(100)
+        self.builder.get_object('rapid-override').set_active(100)
 
     def on_heightLower_pressed(self, widget):
         self.torch_height -= 0.1
-        self.builder.get_object('heightOverride').set_text('%0.1f V' % (self.torch_height))
+        self.builder.get_object('height-override').set_text('%0.1f V' % (self.torch_height))
         hal.set_p('plasmac.height-override','%f' %(self.torch_height))
 
     def on_heightRaise_pressed(self, widget):
         self.torch_height += 0.1
-        self.builder.get_object('heightOverride').set_text('%0.1f V' % (self.torch_height))
+        self.builder.get_object('height-override').set_text('%0.1f V' % (self.torch_height))
         hal.set_p('plasmac.height-override','%f' %(self.torch_height))
 
     def on_heightReset_pressed(self, widget):
         self.torch_height = 0
-        self.builder.get_object('heightOverride').set_text('%0.1f V' % (self.torch_height))
+        self.builder.get_object('height-override').set_text('%0.1f V' % (self.torch_height))
         hal.set_p('plasmac.height-override','%f' %(self.torch_height))
 
     def on_forward_pressed(self, widget):
-        tmp1, tmp2 = self.builder.get_object('pausedMotionSpeed').get_active_text().split()
+        tmp1, tmp2 = self.builder.get_object('paused-motion-speed').get_active_text().split()
         speed = float(tmp1) * 0.01
         hal.set_p('plasmac.paused-motion-speed','%f' %(speed))
 
@@ -122,7 +122,7 @@ class HandlerClass:
         hal.set_p('plasmac.paused-motion-speed','%f' %(speed))
 
     def on_reverse_pressed(self, widget):
-        tmp1, tmp2 = self.builder.get_object('pausedMotionSpeed').get_active_text().split()
+        tmp1, tmp2 = self.builder.get_object('paused-motion-speed').get_active_text().split()
         speed = float(tmp1) * -0.01
         hal.set_p('plasmac.paused-motion-speed','%f' %(speed))
 
@@ -131,7 +131,7 @@ class HandlerClass:
         hal.set_p('plasmac.paused-motion-speed','%f' %(speed))
 
     def configure_comboboxes(self, name, lo, hi, step, default):
-        if name == 'torchPulseTime':
+        if name == 'torch-pulse-time':
             end = 'Sec'
         else:
             end = '%'
@@ -156,14 +156,14 @@ class HandlerClass:
         self.feed_override = 0
         self.rapid_override = 0
         self.torch_height = 0
-        self.builder.get_object('heightOverride').set_text('%0.1f V' % (self.torch_height))
+        self.builder.get_object('height-override').set_text('%0.1f V' % (self.torch_height))
         hal.set_p('plasmac.height-override','%f' % (self.torch_height))
-        self.configure_comboboxes('feedOverride', 0, self.maxFeed, 1, '100')
+        self.configure_comboboxes('feed-override', 0, self.maxFeed, 1, '100')
         self.feed_override = 1
-        self.configure_comboboxes('rapidOverride', 0, self.maxRapid, 1, '100')
+        self.configure_comboboxes('rapid-override', 0, self.maxRapid, 1, '100')
         self.rapid_override = 1
-        self.configure_comboboxes('pausedMotionSpeed', 0, 100, 5, '50')
-        self.configure_comboboxes('torchPulseTime', 0, 10, 0.1, '1.0')
+        self.configure_comboboxes('paused-motion-speed', 0, 100, 5, '50')
+        self.configure_comboboxes('torch-pulse-time', 0, 10, 0.1, '1.0')
         gobject.timeout_add(100, self.periodic)
 
 

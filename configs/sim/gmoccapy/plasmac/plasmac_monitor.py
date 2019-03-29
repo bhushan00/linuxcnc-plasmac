@@ -39,14 +39,14 @@ class HandlerClass:
         if mode != self.oldMode:
             print 'MODE CHANGED TO',mode
             if mode == 0:
-                self.builder.get_object('arcVoltage').show()
-                self.builder.get_object('arcVoltageLabel').show()
+                self.builder.get_object('arc-voltage').show()
+                self.builder.get_object('arc-voltage-label').show()
             elif mode == 1:
-                self.builder.get_object('arcVoltage').show()
-                self.builder.get_object('arcVoltageLabel').show()
+                self.builder.get_object('arc-voltage').show()
+                self.builder.get_object('arc-voltage-label').show()
             elif mode == 2:
-                self.builder.get_object('arcVoltage').hide()
-                self.builder.get_object('arcVoltageLabel').hide()
+                self.builder.get_object('arc-voltage').hide()
+                self.builder.get_object('arc-voltage-label').hide()
             else:
                 pass
             self.oldMode = mode

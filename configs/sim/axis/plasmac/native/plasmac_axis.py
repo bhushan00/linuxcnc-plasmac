@@ -552,7 +552,7 @@ w('spinbox',farc + '.arc-fail-delay')
 w('label',farc + '.aFDlab','-text','Fail Timeout')
 w('spinbox',farc + '.arc-max-starts')
 w('label',farc + '.aMSlab','-text','Max. Starts')
-w('spinbox',farc + '.restart-delay')
+w('spinbox',farc + '.arc-restart-delay')
 w('label',farc + '.aRDlab','-text','Retry Delay')
 w('spinbox',farc + '.torch-off-delay')
 w('label',farc + '.tODlab','-text','Off Delay')
@@ -568,7 +568,7 @@ w('grid',farc + '.arc-fail-delay','-row','0','-column','0')
 w('grid',farc + '.aFDlab','-row','0','-column','1')
 w('grid',farc + '.arc-max-starts','-row','1','-column','0')
 w('grid',farc + '.aMSlab','-row','1','-column','1')
-w('grid',farc + '.restart-delay','-row','2','-column','0')
+w('grid',farc + '.arc-restart-delay','-row','2','-column','0')
 w('grid',farc + '.aRDlab','-row','2','-column','1')
 w('grid',farc + '.torch-off-delay','-row','3','-column','0')
 w('grid',farc + '.tODlab','-row','3','-column','1')
@@ -584,7 +584,7 @@ w('grid','rowconfigure',farc,'0 1 2 3 4 5 6 7','-pad','2')
 w('grid','columnconfigure',farc,'0 1 2 3','-weight','1')
 w('DynamicHelp::add',farc + '.arc-fail-delay','-text','Time to wait for arc ok signal\n(seconds)')
 w('DynamicHelp::add',farc + '.arc-max-starts','-text','Maximum number of attemps\nto sart the torch')
-w('DynamicHelp::add',farc + '.restart-delay','-text','Time to wait between arc start attempts')
+w('DynamicHelp::add',farc + '.arc-restart-delay','-text','Time to wait between arc start attempts')
 w('DynamicHelp::add',farc + '.torch-off-delay','-text','Torch off time delay\n(seconds)')
 w('DynamicHelp::add',farc + '.arc-voltage-scale','-text','Scale value to set correct voltage')
 w('DynamicHelp::add',farc + '.arc-voltage-offset','-text','Offset value to set correct')
@@ -890,7 +890,7 @@ def configure_widgets():
     w(farc + '.arc-ok-low','configure','-from','0','-to','200','-increment','0.5','-format','%0.1f') #0
     w(farc + '.arc-ok-high','configure','-from','50','-to','200','-increment','0.5','-format','%0.1f') #50
     w(farc + '.arc-max-starts','configure','-from','1','-to','9','-increment','1','-format','%0.0f') #3
-    w(farc + '.restart-delay','configure','-from','1','-to','60','-increment','1','-format','%0.0f') #1
+    w(farc + '.arc-restart-delay','configure','-from','1','-to','60','-increment','1','-format','%0.0f') #1
     w(farc + '.arc-voltage-offset','configure','-from','-100','-to','100','-increment','0.1','-format','%0.1f') #0
     w(farc + '.arc-voltage-scale','configure','-from','0.01','-to','99','-increment','0.01','-format','%0.2f') #1
     w(foffsets + '.maxspeed','configure','-text',str(int(thcFeedRate)))
@@ -1181,7 +1181,7 @@ wSpinboxes =\
     fmotion + '.skip-ihs-distance',\
     farc + '.arc-fail-delay',\
     farc + '.arc-max-starts',\
-    farc + '.restart-delay',\
+    farc + '.arc-restart-delay',\
     farc + '.torch-off-delay',\
     farc + '.arc-voltage-scale',\
     farc + '.arc-voltage-offset',\

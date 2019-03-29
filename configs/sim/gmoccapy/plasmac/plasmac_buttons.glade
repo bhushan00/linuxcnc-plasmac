@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
-  <requires lib="gtk+" version="2.18"/>
   <!-- interface-requires gladevcp 0.0 -->
+  <requires lib="gtk+" version="2.16"/>
   <!-- interface-naming-policy project-wide -->
   <object class="GtkWindow" id="window1">
     <property name="can_focus">False</property>
@@ -26,7 +26,7 @@
                     <property name="n_rows">5</property>
                     <property name="homogeneous">True</property>
                     <child>
-                      <object class="HAL_Button" id="xToHome">
+                      <object class="HAL_Button" id="x-to-home">
                         <property name="label" translatable="yes">X to Home</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
@@ -41,7 +41,7 @@
                       </packing>
                     </child>
                     <child>
-                      <object class="HAL_Button" id="yToHome">
+                      <object class="HAL_Button" id="y-to-home">
                         <property name="label" translatable="yes">Y to Home</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
@@ -58,7 +58,7 @@
                       </packing>
                     </child>
                     <child>
-                      <object class="HAL_Button" id="zToHome">
+                      <object class="HAL_Button" id="z-to-home">
                         <property name="label" translatable="yes">Z to Home</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
@@ -75,7 +75,7 @@
                       </packing>
                     </child>
                     <child>
-                      <object class="HAL_Button" id="dryRunStart">
+                      <object class="HAL_Button" id="dry-run-start">
                         <property name="label" translatable="yes">Dry Run</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
@@ -93,7 +93,7 @@ turn torch on or use THC</property>
                       </packing>
                     </child>
                     <child>
-                      <object class="HAL_Button" id="ohmicTest">
+                      <object class="HAL_Button" id="ohmic-test">
                         <property name="label" translatable="yes">Ohmic Test</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>

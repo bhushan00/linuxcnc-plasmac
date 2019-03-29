@@ -1,6 +1,1 @@
-# halshow watchlist created Sat Jan 12 14:25:36 AEDT 2019
-
-pin+plasmac.thc-enable
-pin+plasmac.use-auto-volts
-pin+plasmac.cornerlock-enable
-pin+plasmac.kerfcross-enable
+../../axis/plasmac/native/plasmac.halshow

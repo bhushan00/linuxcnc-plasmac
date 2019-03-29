@@ -1,4 +1,4 @@
 #outputs
-net plasmac:dry-run     plasmac_buttons.dryRunStart =>  plasmac.dry-run-start
-net plasmac:ohmic-test  plasmac_buttons.ohmicTest   =>  plasmac.ohmic-test
+net plasmac:dry-run     plasmac_buttons.dry-run-start =>  plasmac.dry-run-start
+net plasmac:ohmic-test  plasmac_buttons.ohmic-test   =>  plasmac.ohmic-test
 

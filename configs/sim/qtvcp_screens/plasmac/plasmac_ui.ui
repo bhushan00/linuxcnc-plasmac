@@ -87,7 +87,7 @@
      <enum>QTabWidget::Rounded</enum>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>1</number>
     </property>
     <widget class="QWidget" name="run_tab">
      <property name="sizePolicy">
@@ -1247,7 +1247,7 @@
          <double>0.000000000000000</double>
         </property>
        </widget>
-       <widget class="QDoubleSpinBox" name="restart_delay">
+       <widget class="QDoubleSpinBox" name="arc_restart_delay">
         <property name="geometry">
          <rect>
           <x>2</x>
@@ -3971,7 +3971,7 @@ Test</string>
   <tabstop>skip_ihs_distance</tabstop>
   <tabstop>arc_fail_delay</tabstop>
   <tabstop>arc_max_starts</tabstop>
-  <tabstop>restart_delay</tabstop>
+  <tabstop>arc_restart_delay</tabstop>
   <tabstop>torch_off_delay</tabstop>
   <tabstop>arc_voltage_scale</tabstop>
   <tabstop>arc_voltage_offset</tabstop>
@@ -4366,7 +4366,7 @@ Test</string>
    </hints>
   </connection>
   <connection>
-   <sender>restart_delay</sender>
+   <sender>arc_restart_delay</sender>
    <signal>valueChanged(double)</signal>
    <receiver>MainWindow</receiver>
    <slot>spin_value_changed()</slot>
