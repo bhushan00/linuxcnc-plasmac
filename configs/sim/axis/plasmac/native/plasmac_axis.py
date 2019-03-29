@@ -963,6 +963,8 @@ def load_settings():
                     w(widget,'set',configDict.get(item))
                     if item == 'arc-max-starts':
                         hal.set_p('plasmac.%s' % (item),'%d' % (float(configDict.get(item))))
+                    elif item == 'arc-restart-delay':
+                        hal.set_p('plasmac.restart-delay','%d' % (float(configDict.get(item))))
                     elif item != 'cut-amps' and item != 'paused-motion-speed':
                         hal.set_p('plasmac.%s' % (item),'%f' % (float(configDict.get(item))))
                 else:
