@@ -292,7 +292,8 @@ class HandlerClass:
         if name != 'plasmac.cut-amps':
             if name == 'plasmac.arc-max-starts':
                 hal.set_p(name,str(int(value)))
-                pass
+            elif name == 'plasmac.arc-restart-delay':
+                hal.set_p('plasmac.restart-delay',str(value))
             else:
                 hal.set_p(name,str(value))
 
@@ -569,11 +570,9 @@ class HandlerClass:
                         value = widget.checkState()
                         f_out.write(key + '=' + str(value) + '\n')
                     elif key == 'torch-pulse-time':
-                        print 'tpt'
                         value = widget.value() * 0.1
                         f_out.write(key + '=' + str(value) + '\n')
                     elif key == 'paused-motion-speed':
-                        print 'pms'
                         value = widget.value() * 0.01
                         f_out.write(key + '=' + str(value) + '\n')
         except:

@@ -1,6 +1,1 @@
-# halshow watchlist created Tue Jan 29 17:57:08 AEDT 2019
-
-pin+plasmac.torch-pulse-start
-pin+plasmac.torch-pulse-time
-pin+plasmac.paused-motion-speed
-pin+plasmac.height-override
+../../axis/plasmac/native/plasmac.halshow
