@@ -1,19 +1,53 @@
-#   This is a component of LinuxCNC
-#   Copyright 2011, 2012, 2013 Dewey Garrett <dgarrett@panix.com>,
-#   Michael Haberler <git@mah.priv.at>
-#
-#   This program is free software; you can redistribute it and/or modify
-#   it under the terms of the GNU General Public License as published by
-#   the Free Software Foundation; either version 2 of the License, or
-#   (at your option) any later version.
-#
-#   This program is distributed in the hope that it will be useful,
-#   but WITHOUT ANY WARRANTY; without even the implied warranty of
-#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#   GNU General Public License for more details.
-#
-#   You should have received a copy of the GNU General Public License
-#   along with this program; if not, write to the Free Software
-#   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
-#
-from plasmac_remap import *
+import emccanon
+from interpreter import *
+import subprocess as sp
+import hal
+throw_exceptions = 1
+
+# REMAP = M10 modalgroup=4 argspec=PQ python=M10
+def M10(self,**words):
+    if self.params['P'] == 0:
+        if self.params['Q'] == 0:
+            hal.set_p('plasmac_panel.thc-enable-ext','0')
+        else:
+            hal.set_p('plasmac_panel.thc-enable-ext','1')
+    elif self.params['P'] == 1:
+        hal.set_p('plasmac_panel.cut-height-ext',str(self.params['Q']))
+
+# REMAP = F prolog=setfeed_prolog  ngc=setfeed epilog=setfeed_epilog
+# exposed parameter: #<feed>
+def plasmac_feed_prolog(self,**words):
+    try:
+        c = self.blocks[self.remap_level]
+        if not c.f_flag:
+            self.set_errormsg("F requires a value")
+            return INTERP_ERROR
+        self.params["feed"] = c.f_number
+    except Exception,e:
+        self.set_errormsg("F/setfeed_prolog: %s)" % (e))
+        return INTERP_ERROR
+    return INTERP_OK
+
+def plasmac_feed_epilog(self,**words):
+    try:
+        if not self.value_returned:
+            r = self.blocks[self.remap_level].executing_remap
+            self.set_errormsg("the %s remap procedure %s did not return a value"
+                             % (r.name,r.remap_ngc if r.remap_ngc else r.remap_py))
+            return INTERP_ERROR
+        if self.blocks[self.remap_level].builtin_used:
+            self.params[31] = self.return_value
+            sp.Popen('halcmd setp plasmac.requested-velocity %f' % self.return_value, shell=True)
+            pass
+            #print "---------- F builtin recursion, nothing to do"
+        else:
+            self.feed_rate = self.params["feed"]
+            emccanon.enqueue_SET_FEED_RATE(self.feed_rate)
+            sp.Popen('halcmd setp plasmac.requested-velocity %f' % self.feed_rate, shell=True)
+        return INTERP_OK
+    except Exception,e:
+        self.set_errormsg("F/setfeed_epilog: %s)" % (e))
+        return INTERP_ERROR
+    return INTERP_OK
+
+

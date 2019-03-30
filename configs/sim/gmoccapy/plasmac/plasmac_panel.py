@@ -31,8 +31,6 @@ class linuxcncInterface(object):
 
     def __init__(self):
         self.linuxcncIniFile = linuxcnc.ini(os.environ['INI_FILE_NAME'])
-        self.stat = linuxcnc.stat();
-        self.comd = linuxcnc.command()
 
 class HandlerClass:
 
@@ -263,6 +261,18 @@ class HandlerClass:
         mode = hal.get_value('plasmac.mode')
         units = hal.get_value('halui.machine.units-per-mm')
         maxPidP = self.thcFeedRate / units * 0.1
+        if self.builder.get_object('thc-enable').get_active() != self .thcEnable:
+            hal.set_p('plasmac_panel.thc-enable-ext','%d' % (self.builder.get_object('thc-enable').get_active()))
+            self.thcEnable = self.builder.get_object('thc-enable').get_active()
+        elif hal.get_value('plasmac_panel.thc-enable-ext') != self .thcEnable:
+            self.builder.get_object('thc-enable').set_active(hal.get_value('plasmac_panel.thc-enable-ext'))
+            self.thcEnable = hal.get_value('plasmac_panel.thc-enable-ext')
+        if self.builder.get_object('cut-height').get_value() != self.cutHeight:
+            hal.set_p('plasmac_panel.cut-height-ext','%f' % (self.builder.get_object('cut-height').get_value()))
+            self.cutHeight = self.builder.get_object('cut-height').get_value()
+        elif hal.get_value('plasmac_panel.cut-height-ext') != self.cutHeight:
+            self.builder.get_object('cut-height').set_value(hal.get_value('plasmac_panel.cut-height-ext'))
+            self.cutHeight = hal.get_value('plasmac_panel.cut-height-ext')
         if mode != self.oldMode:
             if mode == 0:
                 self.builder.get_object('arc-ok-high').show()
@@ -401,6 +411,10 @@ class HandlerClass:
         else:
             self.save_settings()
             print '*** creating new plasmac configuration file,', self.configFile
+        hal.set_p('plasmac_panel.thc-enable-ext','%d' % (self.builder.get_object('thc-enable').get_active()))
+        self .thcEnable = self.builder.get_object('thc-enable').get_active()
+        hal.set_p('plasmac_panel.cut-height-ext','%f' % (self.builder.get_object('cut-height').get_value()))
+        self.cutHeight = self.builder.get_object('cut-height').get_value()
 
     def save_settings(self):
         try:
@@ -425,6 +439,8 @@ class HandlerClass:
         self.builder = builder
         self.lcnc = linuxcncInterface()
         hal_glib.GPin(halcomp.newpin('config-disable', hal.HAL_BIT, hal.HAL_IN))
+        hal_glib.GPin(halcomp.newpin('thc-enable-ext', hal.HAL_BIT, hal.HAL_IN))
+        hal_glib.GPin(halcomp.newpin('cut-height-ext', hal.HAL_FLOAT, hal.HAL_IN))
         configDisable = self.lcnc.linuxcncIniFile.find('PLASMAC', 'CONFIG_DISABLE') or '0'
         hal.set_p('plasmac_panel.config-disable',configDisable)
         self.thcFeedRate = (float(self.lcnc.linuxcncIniFile.find('AXIS_Z', 'MAX_VELOCITY')) * \
