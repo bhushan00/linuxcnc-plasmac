@@ -71,20 +71,8 @@ root_window.tk.call('pack','.pane.top.maxvel.l','-side','right')
 root_window.tk.call('pack','.pane.top.maxvel.l0','-side','left')
 
 # need a hal pin to disable config tab
-# and some pins for gcode setting of some paramaters
 h = hal.component('plasmac_panel')
 h.newpin('config-disable',hal.HAL_BIT,hal.HAL_IN)
-h.newpin('material-ext', hal.HAL_S32, hal.HAL_IN)
-h.newpin('thc-enable-ext', hal.HAL_BIT, hal.HAL_IN)
-h.newpin('use-auto-volts-ext', hal.HAL_BIT, hal.HAL_IN)
-h.newpin('pierce-height-ext', hal.HAL_FLOAT, hal.HAL_IN)
-h.newpin('pierce-delay-ext', hal.HAL_FLOAT, hal.HAL_IN)
-h.newpin('cut-height-ext', hal.HAL_FLOAT, hal.HAL_IN)
-h.newpin('cut-feed-rate-ext', hal.HAL_FLOAT, hal.HAL_IN)
-h.newpin('cut-amps-ext', hal.HAL_FLOAT, hal.HAL_IN)
-h.newpin('cut-volts-ext', hal.HAL_FLOAT, hal.HAL_IN)
-h.newpin('puddle-jump-height-ext', hal.HAL_FLOAT, hal.HAL_IN)
-h.newpin('puddle-jump-delay-ext', hal.HAL_FLOAT, hal.HAL_IN)
 h.ready()
 
 ########################################################################

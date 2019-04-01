@@ -770,17 +770,6 @@ commands = TclCommands(root_window)
 # original in axis.py line 3000
 def user_live_update():
     global firstrundone
-    global materialNum
-    global thcEnable
-    global useAutoVolts
-    global pierceHeight
-    global pierceDelay
-    global cutHeight
-    global cutFeedRate
-    global cutAmps
-    global cutVolts
-    global puddleJumpHeight
-    global puddleJumpDelay
     if not firstrundone:
         configDisable = inifile.find('PLASMAC', 'CONFIG_DISABLE') or '0'
         hal.set_p('axisui.config-disable',configDisable)
@@ -844,91 +833,8 @@ def user_live_update():
         w('.plasmac','itemconfigure','config','-state','disabled')
     else:
         w('.plasmac','itemconfigure','config','-state','normal')
-    if w(fmaterial + '.materials','getvalue') != materialNum:
-        hal.set_p('axisui.material-ext',str(w(fmaterial + '.materials','getvalue')))
-        materialNum = w(fmaterial + '.materials','getvalue')
-    elif hal.get_value('axisui.material-ext') != materialNum:
-        w(fmaterial + '.materials','setvalue','@' + str((hal.get_value('axisui.material-ext'))))
-        materialNum = hal.get_value('axisui.material-ext')
-    if int(w('set','thc-enable')) != thcEnable:
-        hal.set_p('axisui.thc-enable-ext',w('set','thc-enable'))
-        thcEnable = int(w('set','thc-enable'))
-    elif int(hal.get_value('axisui.thc-enable-ext')) != thcEnable:
-        if int(hal.get_value('axisui.thc-enable-ext')) == 1:
-            w(fthc + '.thc-enable','select')
-        else:
-            w(fthc + '.thc-enable','deselect')
-        thcEnable = int(hal.get_value('axisui.thc-enable-ext'))
-    if int(w('set','use-auto-volts')) != useAutoVolts:
-        hal.set_p('axisui.use-auto-volts-ext',w('set','use-auto-volts'))
-        useAutoVolts = int(w('set','use-auto-volts'))
-    elif int(hal.get_value('axisui.use-auto-volts-ext')) != useAutoVolts:
-        if int(hal.get_value('axisui.use-auto-volts-ext')) == 1:
-            w(fthc + '.use-auto-volts','select')
-        else:
-            w(fthc + '.use-auto-volts','deselect')
-        useAutoVolts = int(hal.get_value('axisui.use-auto-volts-ext'))
-    if round(float(w(fcutparms + '.pierce-height','get')) - pierceHeight, 4):
-        hal.set_p('axisui.pierce-height-ext',w(fcutparms + '.pierce-height','get'))
-        pierceHeight = float(w(fcutparms + '.pierce-height','get'))
-    elif round(hal.get_value('axisui.pierce-height-ext') - pierceHeight, 4):
-        w(fcutparms + '.pierce-height','set',hal.get_value('axisui.pierce-height-ext'))
-        pierceHeight = hal.get_value('axisui.pierce-height-ext')
-    if round(float(w(fcutparms + '.pierce-delay','get')) - pierceDelay, 4):
-        hal.set_p('axisui.pierce-delay-ext',w(fcutparms + '.pierce-delay','get'))
-        pierceDelay = float(w(fcutparms + '.pierce-delay','get'))
-    elif round(hal.get_value('axisui.pierce-delay-ext') - pierceDelay, 4):
-        w(fcutparms + '.pierce-delay','set',hal.get_value('axisui.pierce-delay-ext'))
-        pierceDelay = hal.get_value('axisui.pierce-delay-ext')
-    if round(float(w(fcutparms + '.cut-height','get')) - cutHeight, 4):
-        hal.set_p('axisui.cut-height-ext',w(fcutparms + '.cut-height','get'))
-        cutHeight = float(w(fcutparms + '.cut-height','get'))
-    elif round(hal.get_value('axisui.cut-height-ext') - cutHeight, 4):
-        w(fcutparms + '.cut-height','set',hal.get_value('axisui.cut-height-ext'))
-        cutHeight = hal.get_value('axisui.cut-height-ext')
-    if round(float(w(fcutparms + '.cut-feed-rate','get')) - cutFeedRate, 4):
-        hal.set_p('axisui.cut-feed-rate-ext',w(fcutparms + '.cut-feed-rate','get'))
-        cutFeedRate = float(w(fcutparms + '.cut-feed-rate','get'))
-    elif round(hal.get_value('axisui.cut-feed-rate-ext') - cutFeedRate, 4):
-        w(fcutparms + '.cut-feed-rate','set',hal.get_value('axisui.cut-feed-rate-ext'))
-        cutFeedRate = hal.get_value('axisui.cut-feed-rate-ext')
-    if round(float(w(fcutparms + '.cut-amps','get')) - cutAmps, 4):
-        hal.set_p('axisui.cut-amps-ext',w(fcutparms + '.cut-amps','get'))
-        cutAmps = float(w(fcutparms + '.cut-amps','get'))
-    elif round(hal.get_value('axisui.cut-amps-ext') - cutAmps, 4):
-        w(fcutparms + '.cut-amps','set',hal.get_value('axisui.cut-amps-ext'))
-        cutAmps = hal.get_value('axisui.cut-amps-ext')
-    if round(float(w(fcutparms + '.cut-volts','get')) - cutVolts, 4):
-        hal.set_p('axisui.cut-volts-ext',w(fcutparms + '.cut-volts','get'))
-        cutVolts = float(w(fcutparms + '.cut-volts','get'))
-    elif round(hal.get_value('axisui.cut-volts-ext') - cutVolts, 4):
-        w(fcutparms + '.cut-volts','set',hal.get_value('axisui.cut-volts-ext'))
-        cutVolts = hal.get_value('axisui.cut-volts-ext')
-    if round(float(w(fcutparms + '.puddle-jump-height','get')) - puddleJumpHeight, 4):
-        hal.set_p('axisui.puddle-jump-height-ext',w(fcutparms + '.puddle-jump-height','get'))
-        puddleJumpHeight = float(w(fcutparms + '.puddle-jump-height','get'))
-    elif round(hal.get_value('axisui.puddle-jump-height-ext') - puddleJumpHeight, 4):
-        w(fcutparms + '.puddle-jump-height','set',hal.get_value('axisui.puddle-jump-height-ext'))
-        puddleJumpHeight = hal.get_value('axisui.puddle-jump-height-ext')
-    if round(float(w(fcutparms + '.puddle-jump-delay','get')) - puddleJumpDelay, 4):
-        hal.set_p('axisui.puddle-jump-delay-ext',w(fcutparms + '.puddle-jump-delay','get'))
-        puddleJumpDelay = float(w(fcutparms + '.puddle-jump-delay','get'))
-    elif round(hal.get_value('axisui.puddle-jump-delay-ext') - puddleJumpDelay, 4):
-        w(fcutparms + '.puddle-jump-delay','set',hal.get_value('axisui.puddle-jump-delay-ext'))
-        puddleJumpDelay = hal.get_value('axisui.puddle-jump-delay-ext')
 
 def user_hal_pins():
-    global materialNum
-    global thcEnable
-    global useAutoVolts
-    global pierceHeight
-    global pierceDelay
-    global cutHeight
-    global cutFeedRate
-    global cutAmps
-    global cutVolts
-    global puddleJumpHeight
-    global puddleJumpDelay
     comp.newpin('arc-voltage', hal.HAL_FLOAT, hal.HAL_IN)
     comp.newpin('led-up', hal.HAL_BIT, hal.HAL_IN)
     comp.newpin('led-down', hal.HAL_BIT, hal.HAL_IN)
@@ -940,17 +846,6 @@ def user_hal_pins():
     comp.newpin('led-float', hal.HAL_BIT, hal.HAL_IN)
     comp.newpin('led-breakaway', hal.HAL_BIT, hal.HAL_IN)
     comp.newpin('config-disable', hal.HAL_BIT, hal.HAL_IN)
-    comp.newpin('material-ext', hal.HAL_S32, hal.HAL_IN)
-    comp.newpin('thc-enable-ext', hal.HAL_BIT, hal.HAL_IN)
-    comp.newpin('use-auto-volts-ext', hal.HAL_BIT, hal.HAL_IN)
-    comp.newpin('pierce-height-ext', hal.HAL_FLOAT, hal.HAL_IN)
-    comp.newpin('pierce-delay-ext', hal.HAL_FLOAT, hal.HAL_IN)
-    comp.newpin('cut-height-ext', hal.HAL_FLOAT, hal.HAL_IN)
-    comp.newpin('cut-feed-rate-ext', hal.HAL_FLOAT, hal.HAL_IN)
-    comp.newpin('cut-amps-ext', hal.HAL_FLOAT, hal.HAL_IN)
-    comp.newpin('cut-volts-ext', hal.HAL_FLOAT, hal.HAL_IN)
-    comp.newpin('puddle-jump-height-ext', hal.HAL_FLOAT, hal.HAL_IN)
-    comp.newpin('puddle-jump-delay-ext', hal.HAL_FLOAT, hal.HAL_IN)
     comp.ready()
     hal_data = [[0,'plasmac:arc-voltage-out','plasmac.arc-voltage-out','axisui.arc-voltage'],\
                 [1,'plasmac:axis-min-limit','ini.z.min_limit','plasmac.axis-z-min-limit'],\
@@ -972,28 +867,6 @@ def user_hal_pins():
     hal.connect('axisui.led-float','plasmac:float-switch-out')
     hal.connect('axisui.led-breakaway','plasmac:breakaway-switch-out')
     hal.connect('axisui.led-torch','plasmac:torch-on')
-    hal.set_p('axisui.material-ext',str(w(fmaterial + '.materials','getvalue')))
-    materialNum = w(fmaterial + '.materials','getvalue')
-    hal.set_p('axisui.thc-enable-ext',w('set','thc-enable'))
-    thcEnable = int(w('set','thc-enable'))
-    hal.set_p('axisui.use-auto-volts-ext',w('set','use-auto-volts'))
-    useAutoVolts = int(w('set','thc-enable'))
-    hal.set_p('axisui.pierce-height-ext',w(fcutparms + '.pierce-height','get'))
-    pierceHeight = float(w(fcutparms + '.pierce-height','get'))
-    hal.set_p('axisui.pierce-delay-ext',w(fcutparms + '.pierce-delay','get'))
-    pierceDelay = float(w(fcutparms + '.pierce-delay','get'))
-    hal.set_p('axisui.cut-height-ext',w(fcutparms + '.cut-height','get'))
-    cutHeight = float(w(fcutparms + '.cut-height','get'))
-    hal.set_p('axisui.cut-feed-rate-ext',w(fcutparms + '.cut-feed-rate','get'))
-    cutFeedRate = float(w(fcutparms + '.cut-feed-rate','get'))
-    hal.set_p('axisui.cut-amps-ext',w(fcutparms + '.cut-amps','get'))
-    cutAmps = float(w(fcutparms + '.cut-amps','get'))
-    hal.set_p('axisui.cut-volts-ext',w(fcutparms + '.cut-volts','get'))
-    cutVolts = float(w(fcutparms + '.cut-volts','get'))
-    hal.set_p('axisui.puddle-jump-height-ext',w(fcutparms + '.puddle-jump-height','get'))
-    puddleJumpHeight = float(w(fcutparms + '.puddle-jump-height','get'))
-    hal.set_p('axisui.puddle-jump-delay-ext',w(fcutparms + '.puddle-jump-delay','get'))
-    puddleJumpDelay = float(w(fcutparms + '.puddle-jump-delay','get'))
 
 def configure_widgets():
     w(ftorch + '.torch-pulse-time','configure','-from','0','-to','3','-resolution','0.1')
@@ -1239,17 +1112,6 @@ materialsList = []
 configDict = {}
 dryRun = 0
 torchPulse = 0
-materialNum = 0
-thcEnable = 0
-useAutoVolts = 0
-pierceHeight = 0
-pierceDelay = 0
-cutHeight = 0
-cutFeedRate = 0
-cutAmps = 0
-cutVolts = 0
-puddleJumpHeight = 0
-puddleJumpDelay = 0
 materialsUpdate = False
 wLabels =\
     [fmonitor + '.aVlab',\
