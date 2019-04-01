@@ -14,7 +14,7 @@ x_pos = 40
 y_pos = 30
 width = 1048.0
 height = 750.0
-gtk_theme = Follow System Theme
+gtk_theme = Greybird
 grid_size = 1.0
 view = p
 mouse_btn_mode = 4
@@ -69,5 +69,5 @@ homed_color = #00FF00
 unhomed_color = #FF0000
 dro_digits = 3
 toggle_readout = True
-tool_in_spindle = 0
+tool_in_spindle = 1
 

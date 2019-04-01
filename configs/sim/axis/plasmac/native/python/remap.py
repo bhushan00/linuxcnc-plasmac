@@ -1,17 +1,16 @@
 import emccanon
 from interpreter import *
-import subprocess as sp
 import hal
 throw_exceptions = 1
 
 # REMAP = M10 modalgroup=4 argspec=PQ python=M10
 def M10(self,**words):
-    if self.params['P'] == 0:
+    if self.params['P'] == 0: # thc-enable
         if self.params['Q'] == 0:
             hal.set_p('plasmac_panel.thc-enable-ext','0')
         else:
             hal.set_p('plasmac_panel.thc-enable-ext','1')
-    elif self.params['P'] == 1:
+    elif self.params['P'] == 1: # cut-height
         hal.set_p('plasmac_panel.cut-height-ext',str(self.params['Q']))
 
 # REMAP = F prolog=setfeed_prolog  ngc=setfeed epilog=setfeed_epilog
@@ -37,13 +36,12 @@ def plasmac_feed_epilog(self,**words):
             return INTERP_ERROR
         if self.blocks[self.remap_level].builtin_used:
             self.params[31] = self.return_value
-            sp.Popen('halcmd setp plasmac.requested-velocity %f' % self.return_value, shell=True)
+            hal.set_p('plasmac.requested-velocity', str(self.return_value))
             pass
-            #print "---------- F builtin recursion, nothing to do"
         else:
             self.feed_rate = self.params["feed"]
             emccanon.enqueue_SET_FEED_RATE(self.feed_rate)
-            sp.Popen('halcmd setp plasmac.requested-velocity %f' % self.feed_rate, shell=True)
+            hal.set_p('plasmac.requested-velocity', str(self.feed_rate))
         return INTERP_OK
     except Exception,e:
         self.set_errormsg("F/setfeed_epilog: %s)" % (e))
