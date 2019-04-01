@@ -5,13 +5,17 @@ throw_exceptions = 1
 
 # REMAP = M10 modalgroup=4 argspec=PQ python=M10
 def M10(self,**words):
+    if hal.component_exists('plasmac_panel'):
+        comp = 'plasmac_panel'
+    else:
+        comp = 'axisui'
     if self.params['P'] == 0: # thc-enable
         if self.params['Q'] == 0:
-            hal.set_p('plasmac_panel.thc-enable-ext','0')
+            hal.set_p(comp + '.thc-enable-ext','0')
         else:
-            hal.set_p('plasmac_panel.thc-enable-ext','1')
+            hal.set_p(comp + '.thc-enable-ext','1')
     elif self.params['P'] == 1: # cut-height
-        hal.set_p('plasmac_panel.cut-height-ext',str(self.params['Q']))
+        hal.set_p(comp + '.cut-height-ext',str(self.params['Q']))
 
 # REMAP = F prolog=setfeed_prolog  ngc=setfeed epilog=setfeed_epilog
 # exposed parameter: #<feed>
