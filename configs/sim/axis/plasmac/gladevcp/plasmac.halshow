@@ -1,13 +1,3 @@
-# halshow watchlist created Sun Mar 31 16:56:46 AEDT 2019
+# halshow watchlist created Wed Apr 03 09:37:54 AEDT 2019
 
-pin+axisui.material-ext
-pin+axisui.thc-enable-ext
-pin+axisui.use-auto-volts-ext
-pin+axisui.pierce-height-ext
-pin+axisui.pierce-delay-ext
-pin+axisui.cut-height-ext
-pin+axisui.cut-feed-rate-ext
-pin+axisui.puddle-jump-height-ext
-pin+axisui.puddle-jump-delay-ext
-pin+axisui.cut-amps-ext
-pin+axisui.cut-volts-ext
+pin+plasmac.mode

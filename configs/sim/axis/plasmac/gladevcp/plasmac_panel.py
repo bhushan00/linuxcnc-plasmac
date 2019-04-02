@@ -490,6 +490,7 @@ class HandlerClass:
         self.materialsFile = self.lcnc.linuxcncIniFile.find('EMC', 'MACHINE').lower() + '.mat'
         self.materialsList = []
         self.configDict = {}
+        hal.set_p('plasmac.mode','%d' % (int(self.lcnc.linuxcncIniFile.find('PLASMAC','MODE') or '0')))
         self.oldMode = 9
         self.materialsUpdate = False
         self.configure_widgets()

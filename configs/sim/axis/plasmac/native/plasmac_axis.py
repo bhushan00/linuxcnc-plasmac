@@ -51,7 +51,7 @@ w('wm','protocol','.','WM_DELETE_WINDOW','destroy .')
 ################################################################################
 # set the default font, gcode font and help balloons
 
-font = inifile.find("PLASMAC","FONT") or 'sans 10'
+font = inifile.find('PLASMAC','FONT') or 'sans 10'
 fname, fsize = font.split()
 w('font','configure','TkDefaultFont','-family', fname, '-size', fsize)
 w('.pane.bottom.t.text','configure','-height','10','-font', font, '-foreground','blue')

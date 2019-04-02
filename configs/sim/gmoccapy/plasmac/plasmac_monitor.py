@@ -37,7 +37,6 @@ class HandlerClass:
     def periodic(self):
         mode = hal.get_value('plasmac.mode')
         if mode != self.oldMode:
-            print 'MODE CHANGED TO',mode
             if mode == 0:
                 self.builder.get_object('arc-voltage').show()
                 self.builder.get_object('arc-voltage-label').show()

@@ -102,6 +102,7 @@ class HandlerClass:
         self.w.plasmac_settings_tabs.setTabEnabled(1, not int(self.ini.find('PLASMAC', 'CONFIG_DISABLE')))
         self.w.plasmac_settings_tabs.setCurrentIndex(0)
         self.materialsUpdate = False
+        hal.set_p('plasmac.mode','%d' % (int(self.lcnc.linuxcncIniFile.find('PLASMAC','MODE') or '0')))
         self.oldMode = 0
         self.mname = self.ini.find('EMC','MACHINE')
         self.configure_widgets()
