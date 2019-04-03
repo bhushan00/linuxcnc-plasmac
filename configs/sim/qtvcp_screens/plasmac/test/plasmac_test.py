@@ -119,7 +119,6 @@ class plasmacTest:
         sp.Popen(['halcmd net p_test:float-switch plasmactest.floatSwitch debounce.0.0.in'], shell=True)
         sp.Popen(['halcmd net p_test:move-down plasmactest.moveDown plasmac.move-down'], shell=True)
         sp.Popen(['halcmd net p_test:move-up plasmactest.moveUp plasmac.move-up'], shell=True)
-        sp.Popen(['halshow plasmac.halshow'], shell=True)
         self.W.connect('delete_event', self.ignore)
         self.W.set_type_hint(gdk.WINDOW_TYPE_HINT_MENU)
         self.W.set_keep_above(True)
