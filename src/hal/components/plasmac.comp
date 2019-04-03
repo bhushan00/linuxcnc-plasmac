@@ -6,7 +6,9 @@ A plasma cutting table control component for use with the linuxcnc master branch
 
 .I VERSIONS:
 .br
-V0.23 - 2019/04/23 - probing test pin added
+V0.24 - 2019/04/03 - rework pre probe error handling
+.br
+V0.23 - 2019/04/03 - probing test pin added
 .br
 V0.22 - 2019/03/28 - probing error handling
 .br
@@ -304,7 +306,7 @@ variable float  height_ovr_counts;          /* number of counts to change height
 variable float  height_ovr_old;             /* old height override value */
 variable bool   initialized;                /* initialization flag */
 variable float  last_arc_voltage;           /* last sensed arc voltage */
-variable bool   motion_disabled;            /* motion disabled */
+variable bool   probe_inhibit;              /* inhibit probing */
 variable float  offset_datum;               /* datum for safe height calcs */
 variable float  offset_min;                 /* minimum allowed offset */
 variable float  offset_max;                 /* maximum allowed offset */
@@ -458,7 +460,7 @@ FUNCTION(_) {
             stop_type = PAUSE;
             rtapi_print_msg(RTAPI_MSG_ERR,"breakaway switch activated\n"
                                           "program is paused...\n");
-            motion_disabled = TRUE;
+            probe_inhibit = TRUE;
             state = GOTO_SAFE_HEIGHT;
         }else if(state > TOUCHOFF && float_switch){
             torch_on = FALSE;
@@ -466,7 +468,7 @@ FUNCTION(_) {
             stop_type = PAUSE;
             rtapi_print_msg(RTAPI_MSG_ERR,"float switch activated\n"
                                           "program is paused...\n");
-            motion_disabled = TRUE;
+            probe_inhibit = TRUE;
             state = GOTO_SAFE_HEIGHT;
         }else if(state > ARC_OK && !arc_ok_out && !dry_run){ ;
             torch_on = FALSE;
@@ -514,22 +516,9 @@ FUNCTION(_) {
 /* state machine */
     switch(state){
         case IDLE:
-            /* if float switch activated */
-            if(float_switch && !motion_disabled){
-                motion_disabled = TRUE;
-                feed_hold = TRUE;
-                rtapi_print_msg(RTAPI_MSG_ERR,"float switch activated while idle\n"
-                                              "motion is disabled...\n");
-            /* if breakaway switch activated */
-            }else if(breakaway && !motion_disabled){
-                motion_disabled = TRUE;
-                feed_hold = TRUE;
-                rtapi_print_msg(RTAPI_MSG_ERR,"breakaway switch activated while idle\n"
-                                              "motion is disabled...\n");
-            /* if we are disabled and the switches are clear */
-            }else if(motion_disabled && !float_switch && !breakaway){
-                motion_disabled = FALSE;
-            }else if(!motion_disabled){
+            if(probe_inhibit && !float_switch && !breakaway && !ohmic_probe){
+                probe_inhibit = FALSE;
+            }else if(!probe_inhibit){
                 /* if we get a paused motion request and we are paused */
                 if(paused_motion_speed && stop_type == PAUSE){
                     state = PAUSED_MOTION;
@@ -559,21 +548,32 @@ FUNCTION(_) {
                         state = PIERCE_HEIGHT;
                     }else{
                         ohmic_enable = TRUE;
-                        if(ohmic_probe && !program_is_paused){
+                        if(ohmic_probe && !probe_inhibit){
                             stop_type = PAUSE;
                             program_pause = TRUE;
-                            if(ohmic_enable){
-                                rtapi_print_msg(RTAPI_MSG_ERR,"ohmic probe detected before probing\n"
-                                                              "program is paused...\n");
-                            }
+                            probe_inhibit = TRUE;
+                            rtapi_print_msg(RTAPI_MSG_ERR,"ohmic probe detected before probing\n"
+                                                              "program is paused...%d\n", probe_inhibit);
                             ohmic_enable = FALSE;
-                        }else{
+                        }else if(float_switch && !probe_inhibit){
+                            stop_type = PAUSE;
+                            program_pause = TRUE;
+                            probe_inhibit = TRUE;
+                            rtapi_print_msg(RTAPI_MSG_ERR,"float switch detected before probing\n"
+                                                          "program is paused...\n");
+                        }else if(breakaway && !probe_inhibit){
+                            stop_type = PAUSE;
+                            program_pause = TRUE;
+                            probe_inhibit = TRUE;
+                            rtapi_print_msg(RTAPI_MSG_ERR,"breakaway switch detected before probing\n"
+                                                          "program is paused...\n");
+                        }else if (!program_is_paused){
                             state = TOUCHOFF;
                         }
                     }
                     cut_offset = 0;
                 /* if we get a resume request and we are paused */
-                }else if(!program_is_idle && stop_type == PAUSE && !ohmic_probe && !float_switch && !breakaway){
+                }else if(!program_is_idle && stop_type == PAUSE){
                     feed_hold = TRUE;
                     if(!program_is_paused){
                         stop_type = NONE;
