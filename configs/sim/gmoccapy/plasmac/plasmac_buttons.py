@@ -25,13 +25,7 @@ import linuxcnc
 import gobject
 import hal
 import gladevcp
-
-class linuxcncInterface(object):
-
-    def __init__(self):
-        self.linuxcncIniFile = linuxcnc.ini(os.environ['INI_FILE_NAME'])
-        self.stat = linuxcnc.stat();
-        self.comd = linuxcnc.command()
+from subprocess import Popen,PIPE
 
 class HandlerClass:
 
@@ -39,28 +33,56 @@ class HandlerClass:
         while self.lcnc.comd.wait_complete() == -1:
             pass
 
-    def on_xToHome_pressed(self,event):
-        print 'XXXXXX'
-        self.goto_home('X')
+    def on_user_button_1_clicked(self,event):
+        self.user_button_action(self.iniButtonCode[1])
 
-    def on_yToHome_pressed(self,event):
-        self.goto_home('Y')
+    def on_user_button_2_clicked(self,event):
+        self.user_button_action(self.iniButtonCode[2])
 
-    def on_zToHome_pressed(self,event):
-        self.goto_home('Z')
+    def on_user_button_3_clicked(self,event):
+        self.user_button_action(self.iniButtonCode[3])
 
-    def goto_home(self,axis):
-        if hal.get_value('halui.program.is-idle'):
-            home = self.lcnc.linuxcncIniFile.find('JOINT_' + str(self.lcnc.linuxcncIniFile.find('TRAJ', 'COORDINATES').upper().index(axis)), 'HOME')
-            mode = hal.get_value('halui.mode.is-mdi')
-            if not mode:
-                self.lcnc.comd.mode(linuxcnc.MODE_MDI)
-                self.wait_for_completion()
-            self.lcnc.comd.mdi('G53 G0 ' + axis + home)
-            self.wait_for_completion()
-            if not mode:
-                self.lcnc.comd.mode(linuxcnc.MODE_MANUAL)
-                self.wait_for_completion()
+    def user_button_action(self, commands):
+        if not commands: return
+        for command in commands.split('\\'):
+            if command.strip()[0] == '%':
+                command = command.strip().strip('%') + '&'
+                Popen(command,stdout=PIPE,stderr=PIPE, shell=True)
+            else:
+                if '[' in command:
+                    newCommand = subCommand = ''
+                    for char in command:
+                        if char == '[':
+                            subCommand += char
+                        elif char == ']':
+                            subCommand += ' '
+                        elif subCommand.startswith('[') and char != ' ':
+                            subCommand += char
+                        elif subCommand.startswith('[') and char == ' ':
+                            f1, f2 = subCommand.split()
+                            newCommand += self.i.find(f1[1:],f2)
+                            newCommand += ' '
+                            subCommand = ''
+                        else:
+                            newCommand += char
+                    if subCommand.startswith('['):
+                        f1, f2 = subCommand.split()
+                        newCommand += self.i.find(f1[1:],f2)
+                        newCommand += ' '
+                    command = newCommand
+                self.s.poll()
+                if not self.s.estop and self.s.enabled and self.s.homed and (self.s.interp_state == linuxcnc.INTERP_IDLE):
+                    mode = self.s.task_mode
+                    if mode != linuxcnc.MODE_MDI:
+                        mode = self.s.task_mode
+                        self.c.mode(linuxcnc.MODE_MDI)
+                        self.c.wait_complete()
+                    self.c.mdi(command)
+                    self.s.poll()
+                    while self.s.interp_state != linuxcnc.INTERP_IDLE:
+                        self.s.poll()
+                    self.c.mode(mode)
+                    self.c.wait_complete()
 
     def set_theme(self):
         theme = gtk.settings_get_default().get_property('gtk-theme-name')
@@ -77,8 +99,24 @@ class HandlerClass:
     def __init__(self, halcomp,builder,useropts):
         self.halcomp = halcomp
         self.builder = builder
-        self.lcnc = linuxcncInterface()
-        self.prefFile = self.lcnc.linuxcncIniFile.find('EMC', 'MACHINE') + '.pref'
+        self.i = linuxcnc.ini(os.environ['INI_FILE_NAME'])
+        self.s = linuxcnc.stat();
+        self.c = linuxcnc.command()
+        self.prefFile = self.i.find('EMC', 'MACHINE') + '.pref'
+        self.iniButtonName = ['Names']
+        self.iniButtonCode = ['Codes']
+        for button in range(1,4):
+            bname = self.i.find('PLASMAC', 'BUTTON_' + str(button) + '_NAME') or '0'
+            self.iniButtonName.append(bname)
+            self.iniButtonCode.append(self.i.find('PLASMAC', 'BUTTON_' + str(button) + '_CODE'))
+            if bname != '0':
+                bname = bname.split('\\')
+                if len(bname) > 1:
+                    blabel = bname[0] + '\n' + bname[1]
+                else:
+                    blabel = bname[0]
+                self.builder.get_object('user-button-' + str(button)).set_label(blabel)
+                self.builder.get_object('user-button-' + str(button)).children()[0].set_justify(gtk.JUSTIFY_CENTER)
         self.set_theme()
 
 def get_handlers(halcomp,builder,useropts):
