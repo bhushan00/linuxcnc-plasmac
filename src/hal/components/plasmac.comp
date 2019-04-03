@@ -6,6 +6,8 @@ A plasma cutting table control component for use with the linuxcnc master branch
 
 .I VERSIONS:
 .br
+V0.23 - 2019/04/23 - probing test pin added
+.br
 V0.22 - 2019/03/28 - probing error handling
 .br
 V0.21 - 2019/03/26 - add ohmic probing
@@ -243,6 +245,7 @@ pin in  float   pid_p_gain                  "proportional gain input [mode 0 & m
 pin in  float   pierce_delay                "time required to pierce stock (seconds)";
 pin in  float   pierce_height               "pierce height (machine units)";
 pin in  float   probe_feed_rate             "probe down velocity (machine units per minute)";
+pin in  bit     probe_test                  "probe test only";
 pin in  bit     program_is_idle             "program is idle, connect to halui.program.is-idle";
 pin in  bit     program_is_paused           "program is paused, connect to halui.program.is-paused";
 pin in  bit     program_is_running          "program is running, connect to halui.program.is-running";
@@ -313,6 +316,7 @@ variable float  pid_error_old;              /* old error for pid calcs */
 variable float  pid_output;                 /* calculated pid output value */
 variable float  pierce_timer;               /* pierce delay timer */
 variable float  pierce_target;              /* pierce height target offset */
+variable bool   probe_testing;              /* probe test active */
 variable float  probe_velocity;             /* probe down velocity */
 variable float  puddle_jump_percent;        /* puddle jump height as percentage of pierce height */
 variable float  puddle_jump_target;         /* puddle jump height target offset */
@@ -420,7 +424,7 @@ FUNCTION(_) {
 
     /* check for an abort */
     /* or for a pause or wait while active */
-    if((external_estop || program_is_idle) && cut_started && !program_run){
+    if(!probe_testing && (external_estop || program_is_idle) && cut_started && !program_run){
         torch_on = FALSE;
         stop_type = STOP;
         program_stop = TRUE;
@@ -428,7 +432,7 @@ FUNCTION(_) {
         axis_x_finish = 0;
         axis_y_finish = 0;
         state = FINISH;
-    }else if(state > IDLE && state < GOTO_SAFE_HEIGHT && stop_type == NONE && cut_started){
+    }else if(!probe_testing && state > IDLE && state < GOTO_SAFE_HEIGHT && stop_type == NONE && cut_started){
         if(program_is_paused){
             torch_on = FALSE;
             stop_type = PAUSE;
@@ -472,6 +476,8 @@ FUNCTION(_) {
                                           "program is paused...\n");
             state = GOTO_SAFE_HEIGHT;
         }
+    }else if(!probe_test && probe_testing){
+        probe_testing = FALSE;
     }
 
     /* calculate arc voltage */
@@ -532,7 +538,7 @@ FUNCTION(_) {
                     dry_run = TRUE;
                     program_run = TRUE;
                 /* if we get a start request and we are stopped or waiting for a restart */
-                }else if(spindle_on && (stop_type == NONE || stop_type == WAIT)){
+                }else if((spindle_on || probe_testing) && (stop_type == NONE || stop_type == WAIT)){
                     feed_hold = TRUE;
                     stop_type = NONE;
                     touchdown = FALSE;
@@ -556,9 +562,11 @@ FUNCTION(_) {
                         if(ohmic_probe && !program_is_paused){
                             stop_type = PAUSE;
                             program_pause = TRUE;
+                            if(ohmic_enable){
+                                rtapi_print_msg(RTAPI_MSG_ERR,"ohmic probe detected before probing\n"
+                                                              "program is paused...\n");
+                            }
                             ohmic_enable = FALSE;
-                            rtapi_print_msg(RTAPI_MSG_ERR,"ohmic probe detected before probing\n"
-                                                          "program is paused...\n");
                         }else{
                             state = TOUCHOFF;
                         }
@@ -574,11 +582,14 @@ FUNCTION(_) {
                 }else if(torch_pulse_start){
                     feed_hold = TRUE;
                     state = TORCHPULSE;
-                /* if ohmic probe test requested */
+                /* if ohmic probe shorted test requested */
                 }else if(ohmic_test){
                     feed_hold = TRUE;
                     ohmic_enable = TRUE;
                     state = OHMIC_TEST;
+                /* if probe test requested */
+                }else if(probe_test){
+                    probe_testing = TRUE;
                 /* if no active cut */
                 }else if(!cut_started){
                     feed_hold = FALSE;
@@ -607,7 +618,7 @@ FUNCTION(_) {
                     zero_target = offset_counts;
                 }
             }else{
-                if(float_switch && !ohmic_probe){
+                if(float_switch || ohmic_probe){
                     offset_counts += 1;
                 }else{
                     if(offset_counts - setup_velocity > zero_target){
@@ -658,7 +669,9 @@ FUNCTION(_) {
                 }
                 if(fabs(offset_current - (pierce_target * offset_scale)) < tolerance){
                     arc_starts = 0;
-                    if(dry_run){
+                    if(probe_testing){
+                        state = GOTO_SAFE_HEIGHT;
+                    }else if(dry_run){
                         pierce_timer = pierce_delay;
                         state = PIERCE_DELAY;
                     }else{
@@ -959,16 +972,18 @@ FUNCTION(_) {
         case GOTO_SAFE_HEIGHT:
             /* move to safe height */
             feed_hold = TRUE;
-            if((offset_counts - setup_velocity) > safe_target){
-                offset_counts -= setup_velocity;
-            }else{
-            offset_counts = safe_target;
-            }
-            if(fabs(offset_current - (safe_target * offset_scale)) < tolerance){
-                if(stop_type == WAIT){
-                    feed_hold = FALSE;
+            if(!probe_testing){
+                if((offset_counts - setup_velocity) > safe_target){
+                    offset_counts -= setup_velocity;
+                }else{
+                offset_counts = safe_target;
                 }
-                state = FINISH;
+                if(fabs(offset_current - (safe_target * offset_scale)) < tolerance){
+                    if(stop_type == WAIT){
+                        feed_hold = FALSE;
+                    }
+                    state = FINISH;
+                }
             }
             break;
         case FINISH:
