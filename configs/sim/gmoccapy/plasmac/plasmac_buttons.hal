@@ -1,4 +1,2 @@
-#outputs
-net plasmac:dry-run     plasmac_buttons.dry-run-start =>  plasmac.dry-run-start
-net plasmac:ohmic-test  plasmac_buttons.ohmic-test   =>  plasmac.ohmic-test
+#hal connections to buttons done in python file
 

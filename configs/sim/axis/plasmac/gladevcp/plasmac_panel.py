@@ -26,25 +26,7 @@ import gobject
 import hal
 from   gladevcp.persistence import widget_defaults,select_widgets
 import gladevcp
-
-#debug = 0
-
-class linuxcncInterface(object):
-
-    def send_command(self,command, wait=True):
-        if self.s.interp_state == linuxcnc.INTERP_IDLE:
-            if self.s.task_mode != linuxcnc.MODE_MDI:
-                self.c.mode(linuxcnc.MODE_MDI)
-                self.c.wait_complete()
-            self.c.mdi(command)
-            if wait:
-                self.c.wait_complete()
-
-    def __init__(self):
-        self.linuxcncIniFile = linuxcnc.ini(os.environ['INI_FILE_NAME'])
-        self.stat = linuxcnc.stat();
-        self.comd = linuxcnc.command()
-
+from   subprocess import Popen,PIPE
 class HandlerClass:
 
     def check_materials_file(self):
@@ -184,31 +166,99 @@ class HandlerClass:
             self.builder.get_object('cut-amps').set_value(self.materialsList[material][7])
             self.builder.get_object('cut-volts').set_value(self.materialsList[material][8])
 
-    def wait_for_completion(self):
-        while self.lcnc.comd.wait_complete() == -1:
-            pass
+    def on_button1_pressed(self,event):
+        self.user_button_pressed(self.iniButtonCode[1])
 
-    def on_xToHome_clicked(self,event):
-        self.goto_home('X')
+    def on_button1_released(self,event):
+        self.user_button_released(self.iniButtonCode[1])
 
-    def on_yToHome_clicked(self,event):
-        self.goto_home('Y')
+    def on_button2_pressed(self,event):
+        self.user_button_pressed(self.iniButtonCode[2])
 
-    def on_zToHome_clicked(self,event):
-        self.goto_home('Z')
+    def on_button2_released(self,event):
+        self.user_button_released(self.iniButtonCode[2])
 
-    def goto_home(self,axis):
-        if hal.get_value('halui.program.is-idle'):
-            home = self.lcnc.linuxcncIniFile.find('JOINT_' + str(self.lcnc.linuxcncIniFile.find('TRAJ', 'COORDINATES').upper().index(axis)), 'HOME')
-            mode = hal.get_value('halui.mode.is-mdi')
-            if not mode:
-                self.lcnc.comd.mode(linuxcnc.MODE_MDI)
-                self.wait_for_completion()
-            self.lcnc.comd.mdi('G53 G0 ' + axis + home)
-            self.wait_for_completion()
-            if not mode:
-                self.lcnc.comd.mode(linuxcnc.MODE_MANUAL)
-                self.wait_for_completion()
+    def on_button3_pressed(self,event):
+        self.user_button_pressed(self.iniButtonCode[3])
+
+    def on_button3_released(self,event):
+        self.user_button_released(self.iniButtonCode[3])
+
+    def on_button4_pressed(self,event):
+        self.user_button_pressed(self.iniButtonCode[4])
+
+    def on_button4_released(self,event):
+        self.user_button_released(self.iniButtonCode[4])
+
+    def on_button5_pressed(self,event):
+        self.user_button_pressed(self.iniButtonCode[5])
+
+    def on_button5_released(self,event):
+        self.user_button_released(self.iniButtonCode[5])
+
+    def on_button6_pressed(self,event):
+        self.user_button_pressed(self.iniButtonCode[6])
+
+    def on_button6_released(self,event):
+        self.user_button_released(self.iniButtonCode[6])
+
+    def user_button_pressed(self, commands):
+        if not commands: return
+        if commands.lower() == 'dry-run':
+            hal.set_p('plasmac.dry-run-start','1')
+        elif commands.lower() == 'ohmic-test':
+            hal.set_p('plasmac.ohmic-test','1')
+        elif commands.lower() == 'probe-test':
+            hal.set_p('plasmac.probe-test','1')
+        else:
+            for command in commands.split('\\'):
+                if command.strip()[0] == '%':
+                    command = command.strip().strip('%') + '&'
+                    Popen(command,stdout=PIPE,stderr=PIPE, shell=True)
+                else:
+                    if '[' in command:
+                        newCommand = subCommand = ''
+                        for char in command:
+                            if char == '[':
+                                subCommand += char
+                            elif char == ']':
+                                subCommand += ' '
+                            elif subCommand.startswith('[') and char != ' ':
+                                subCommand += char
+                            elif subCommand.startswith('[') and char == ' ':
+                                f1, f2 = subCommand.split()
+                                newCommand += self.i.find(f1[1:],f2)
+                                newCommand += ' '
+                                subCommand = ''
+                            else:
+                                newCommand += char
+                        if subCommand.startswith('['):
+                            f1, f2 = subCommand.split()
+                            newCommand += self.i.find(f1[1:],f2)
+                            newCommand += ' '
+                        command = newCommand
+                    self.s.poll()
+                    if not self.s.estop and self.s.enabled and self.s.homed and (self.s.interp_state == linuxcnc.INTERP_IDLE):
+                        mode = self.s.task_mode
+                        if mode != linuxcnc.MODE_MDI:
+                            mode = self.s.task_mode
+                            self.c.mode(linuxcnc.MODE_MDI)
+                            self.c.wait_complete()
+                        self.c.mdi(command)
+                        self.s.poll()
+                        while self.s.interp_state != linuxcnc.INTERP_IDLE:
+                            self.s.poll()
+                        self.c.mode(mode)
+                        self.c.wait_complete()
+
+    def user_button_released(self, commands):
+        if not commands: return
+        if commands.lower() == 'dry-run':
+            hal.set_p('plasmac.dry-run-start','0')
+        elif commands.lower() == 'ohmic-test':
+            hal.set_p('plasmac.ohmic-test','0')
+        elif commands.lower() == 'probe-test':
+            hal.set_p('plasmac.probe-test','0')
 
     def on_forward_pressed(self, widget):
         speed = self.builder.get_object('paused-motion-speed').get_value()
@@ -277,7 +327,7 @@ class HandlerClass:
         self.builder.get_object('torch-pulse-time').set_digits(1)
         self.builder.get_object('torch-pulse-time-adj').configure(.5,.1,5,0.1,0,0)
         self.builder.get_object('use-auto-volts').set_active(1)
-        if self.lcnc.linuxcncIniFile.find('TRAJ', 'LINEAR_UNITS').lower() == 'mm':
+        if self.i.find('TRAJ', 'LINEAR_UNITS').lower() == 'mm':
             self.builder.get_object('cut-feed-rate').set_digits(0)
             self.builder.get_object('cut-feed-rate-adj').configure(4000,50,9999,1,0,0)
             self.builder.get_object('cut-height').set_digits(1)
@@ -294,7 +344,7 @@ class HandlerClass:
             self.builder.get_object('setup-feed-rate-adj').configure(int(self.thcFeedRate * 0.8),1,self.thcFeedRate,1,0,0)
             self.builder.get_object('skip-ihs-distance').set_digits(0)
             self.builder.get_object('skip-ihs-distance-adj').configure(0,0,999,1,0,0)
-        elif self.lcnc.linuxcncIniFile.find('TRAJ', 'LINEAR_UNITS').lower() == 'inch':
+        elif self.i.find('TRAJ', 'LINEAR_UNITS').lower() == 'inch':
             self.builder.get_object('cut-feed-rate').set_digits(1)
             self.builder.get_object('cut-feed-rate-adj').configure(160,2,400,0.1,0,0)
             self.builder.get_object('cut-height').set_digits(2)
@@ -477,20 +527,22 @@ class HandlerClass:
     def __init__(self, halcomp,builder,useropts):
         self.halcomp = halcomp
         self.builder = builder
-        self.lcnc = linuxcncInterface()
-        gtk.settings_get_default().set_property('gtk-theme-name', self.lcnc.linuxcncIniFile.find('PLASMAC', 'THEME'))
-        font = self.lcnc.linuxcncIniFile.find('PLASMAC', 'FONT') or 'sans 10'
+        self.i = linuxcnc.ini(os.environ['INI_FILE_NAME'])
+        self.s = linuxcnc.stat();
+        self.c = linuxcnc.command()
+        gtk.settings_get_default().set_property('gtk-theme-name', self.i.find('PLASMAC', 'THEME'))
+        font = self.i.find('PLASMAC', 'FONT') or 'sans 10'
         gtk.settings_get_default().set_property('gtk-font-name', font)
-        configDisable = self.lcnc.linuxcncIniFile.find('PLASMAC', 'CONFIG_DISABLE') or '0'
+        configDisable = self.i.find('PLASMAC', 'CONFIG_DISABLE') or '0'
         hal.set_p('plasmac_panel.config-disable',configDisable)
-        self.thcFeedRate = (float(self.lcnc.linuxcncIniFile.find('AXIS_Z', 'MAX_VELOCITY')) * \
-                              float(self.lcnc.linuxcncIniFile.find('AXIS_Z', 'OFFSET_AV_RATIO'))) * 60
+        self.thcFeedRate = (float(self.i.find('AXIS_Z', 'MAX_VELOCITY')) * \
+                              float(self.i.find('AXIS_Z', 'OFFSET_AV_RATIO'))) * 60
         hal.set_p('plasmac.thc-feed-rate','%f' % (self.thcFeedRate))
-        self.configFile = self.lcnc.linuxcncIniFile.find('EMC', 'MACHINE').lower() + '.cfg'
-        self.materialsFile = self.lcnc.linuxcncIniFile.find('EMC', 'MACHINE').lower() + '.mat'
+        self.configFile = self.i.find('EMC', 'MACHINE').lower() + '.cfg'
+        self.materialsFile = self.i.find('EMC', 'MACHINE').lower() + '.mat'
         self.materialsList = []
         self.configDict = {}
-        hal.set_p('plasmac.mode','%d' % (int(self.lcnc.linuxcncIniFile.find('PLASMAC','MODE') or '0')))
+        hal.set_p('plasmac.mode','%d' % (int(self.i.find('PLASMAC','MODE') or '0')))
         self.oldMode = 9
         self.materialsUpdate = False
         self.configure_widgets()
@@ -498,6 +550,20 @@ class HandlerClass:
         self.load_settings()
         self.check_materials_file()
         self.get_materials()
+        self.iniButtonName = ['Names']
+        self.iniButtonCode = ['Codes']
+        for button in range(1,7):
+            bname = self.i.find('PLASMAC', 'BUTTON_' + str(button) + '_NAME') or '0'
+            self.iniButtonName.append(bname)
+            self.iniButtonCode.append(self.i.find('PLASMAC', 'BUTTON_' + str(button) + '_CODE'))
+            if bname != '0':
+                bname = bname.split('\\')
+                if len(bname) > 1:
+                    blabel = bname[0] + '\n' + bname[1]
+                else:
+                    blabel = bname[0]
+                self.builder.get_object('button' + str(button)).set_label(blabel)
+                self.builder.get_object('button' + str(button)).children()[0].set_justify(gtk.JUSTIFY_CENTER)
         gobject.timeout_add(100, self.periodic)
 
 def get_handlers(halcomp,builder,useropts):

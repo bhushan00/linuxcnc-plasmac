@@ -344,27 +344,52 @@ w('DynamicHelp::add',fmonitor + '.led-breakaway','-text','Breakaway switch statu
 
 # buttons frame
 w('labelframe',fbuttons,'-relief','flat')
-w('button',fbuttons + '.xtohome','-text','X\nto Home','-command','x_to_home','-width',bwidth/2,'-height','2')
-w('button',fbuttons + '.ytohome','-text','Y\nto Home','-command','y_to_home','-width',bwidth/2,'-height','2')
-w('button',fbuttons + '.ztohome','-text','Z\nto Home','-command','z_to_home','-width',bwidth/2,'-height','2')
-w('button',fbuttons + '.dryRun','-text','Dry\nRun','-width',bwidth/2,'-height','2')
-w('button',fbuttons + '.ohmicTest','-text','Ohmic\nTest','-width',bwidth/2,'-height','2')
-w('bind',fbuttons + '.dryRun','<Button-1>','dry_run 1')
-w('bind',fbuttons + '.dryRun','<ButtonRelease-1>','dry_run 0')
-w('bind',fbuttons + '.ohmicTest','<Button-1>','ohmic_test 1')
-w('bind',fbuttons + '.ohmicTest','<ButtonRelease-1>','ohmic_test 0')
-w('grid',fbuttons + '.xtohome','-row','0','-column','0')
-w('grid',fbuttons + '.ytohome','-row','0','-column','1')
-w('grid',fbuttons + '.ztohome','-row','1','-column','0')
-w('grid',fbuttons + '.dryRun','-row','2','-column','0')
-w('grid',fbuttons + '.ohmicTest','-row','2','-column','1')
+w('button',fbuttons + '.button1','-width',bwidth/2,'-height','2')
+w('button',fbuttons + '.button2','-width',bwidth/2,'-height','2')
+w('button',fbuttons + '.button3','-width',bwidth/2,'-height','2')
+w('button',fbuttons + '.button4','-width',bwidth/2,'-height','2')
+w('button',fbuttons + '.button5','-width',bwidth/2,'-height','2')
+w('button',fbuttons + '.button6','-width',bwidth/2,'-height','2')
+iniButtonName = ['Names']
+iniButtonCode = ['Codes']
+for button in range(1,7):
+    bname = inifile.find('PLASMAC', 'BUTTON_' + str(button) + '_NAME') or '0'
+    iniButtonName.append(bname)
+    iniButtonCode.append(inifile.find('PLASMAC', 'BUTTON_' + str(button) + '_CODE'))
+    if bname != '0':
+        bname = bname.split('\\')
+        if len(bname) > 1:
+            blabel = bname[0] + '\n' + bname[1]
+        else:
+            blabel = bname[0]
+        print 'NAME:',blabel
+        w(fbuttons + '.button' + str(button),'configure','-text',blabel)
+w('bind',fbuttons + '.button1','<Button-1>','button_action 1 1')
+w('bind',fbuttons + '.button1','<ButtonRelease-1>','button_action 1 0')
+w('bind',fbuttons + '.button2','<Button-1>','button_action 2 1')
+w('bind',fbuttons + '.button2','<ButtonRelease-1>','button_action 2 0')
+w('bind',fbuttons + '.button3','<Button-1>','button_action 3 1')
+w('bind',fbuttons + '.button3','<ButtonRelease-1>','button_action 3 0')
+w('bind',fbuttons + '.button4','<Button-1>','button_action 4 1')
+w('bind',fbuttons + '.button4','<ButtonRelease-1>','button_action 4 0')
+w('bind',fbuttons + '.button5','<Button-1>','button_action 5 1')
+w('bind',fbuttons + '.button5','<ButtonRelease-1>','button_action 5 0')
+w('bind',fbuttons + '.button6','<Button-1>','button_action 6 1')
+w('bind',fbuttons + '.button6','<ButtonRelease-1>','button_action 6 0')
+w('grid',fbuttons + '.button1','-row','0','-column','0')
+w('grid',fbuttons + '.button2','-row','0','-column','1')
+w('grid',fbuttons + '.button3','-row','1','-column','0')
+w('grid',fbuttons + '.button4','-row','1','-column','1')
+w('grid',fbuttons + '.button5','-row','2','-column','0')
+w('grid',fbuttons + '.button6','-row','2','-column','1')
 w('grid','columnconfigure',fbuttons,0,'-weight','1')
 
-w('DynamicHelp::add',fbuttons + '.xtohome','-text','Send the X axis to the home position')
-w('DynamicHelp::add',fbuttons + '.ytohome','-text','Send the Y axis to the home position')
-w('DynamicHelp::add',fbuttons + '.ztohome','-text','Send the Z axis to the home position')
-w('DynamicHelp::add',fbuttons + '.dryRun','-text','Start a dry run\nFollows all gcode without torch')
-w('DynamicHelp::add',fbuttons + '.ohmicTest','-text','Test if torch shorted to workpiece')
+w('DynamicHelp::add',fbuttons + '.button1','-text','User configured in ini file')
+w('DynamicHelp::add',fbuttons + '.button2','-text','User configured in ini file')
+w('DynamicHelp::add',fbuttons + '.button3','-text','User configured in ini file')
+w('DynamicHelp::add',fbuttons + '.button4','-text','User configured in ini file')
+w('DynamicHelp::add',fbuttons + '.button5','-text','User configured in ini file')
+w('DynamicHelp::add',fbuttons + '.button6','-text','User configured in ini file')
 
 # populate bottom frame
 w('frame',fcommon + '.spaceframe','-relief','sunken')
@@ -692,20 +717,11 @@ def reload_config():
     get_materials()
     materialsUpdate = False
 
-def x_to_home():
-    goto_home('X')
-
-def y_to_home():
-    goto_home('Y')
-
-def z_to_home():
-    goto_home('Z')
-
-def dry_run(value):
-    hal.set_p('plasmac.dry-run-start',value)
-
-def ohmic_test(value):
-    hal.set_p('plasmac.ohmic-test',value)
+def button_action(button,pressed):
+    if int(pressed):
+        user_button_pressed(iniButtonCode[int(button)])
+    else:
+        user_button_released(iniButtonCode[int(button)])
 
 def torch_pulse(value):
     hal.set_p('plasmac.torch-pulse-start',value)
@@ -751,11 +767,7 @@ def ja_button_activated():
 TclCommands.material_changed = material_changed
 TclCommands.save_config = save_config
 TclCommands.reload_config = reload_config
-TclCommands.x_to_home = x_to_home
-TclCommands.y_to_home = y_to_home
-TclCommands.z_to_home = z_to_home
-TclCommands.dry_run = dry_run
-TclCommands.ohmic_test = ohmic_test
+TclCommands.button_action = button_action
 TclCommands.torch_pulse = torch_pulse
 TclCommands.paused_motion = paused_motion
 TclCommands.joint_mode_switch = joint_mode_switch
@@ -766,6 +778,65 @@ commands = TclCommands(root_window)
 
 ################################################################################
 # some python functions
+
+def user_button_pressed(commands):
+    from subprocess import Popen,PIPE
+    if not commands: return
+    if commands.lower() == 'dry-run':
+        hal.set_p('plasmac.dry-run-start','1')
+    elif commands.lower() == 'ohmic-test':
+        hal.set_p('plasmac.ohmic-test','1')
+    elif commands.lower() == 'probe-test':
+        hal.set_p('plasmac.probe-test','1')
+    else:
+        for command in commands.split('\\'):
+            if command.strip()[0] == '%':
+                command = command.strip().strip('%') + '&'
+                Popen(command,stdout=PIPE,stderr=PIPE, shell=True)
+            else:
+                if '[' in command:
+                    newCommand = subCommand = ''
+                    for char in command:
+                        if char == '[':
+                            subCommand += char
+                        elif char == ']':
+                            subCommand += ' '
+                        elif subCommand.startswith('[') and char != ' ':
+                            subCommand += char
+                        elif subCommand.startswith('[') and char == ' ':
+                            f1, f2 = subCommand.split()
+                            newCommand += inifile.find(f1[1:],f2)
+                            newCommand += ' '
+                            subCommand = ''
+                        else:
+                            newCommand += char
+                    if subCommand.startswith('['):
+                        f1, f2 = subCommand.split()
+                        newCommand += inifile.find(f1[1:],f2)
+                        newCommand += ' '
+                    command = newCommand
+                s.poll()
+                if not s.estop and s.enabled and s.homed and (s.interp_state == linuxcnc.INTERP_IDLE):
+                    mode = s.task_mode
+                    if mode != linuxcnc.MODE_MDI:
+                        mode = s.task_mode
+                        c.mode(linuxcnc.MODE_MDI)
+                        c.wait_complete()
+                    c.mdi(command)
+                    s.poll()
+                    while s.interp_state != linuxcnc.INTERP_IDLE:
+                        s.poll()
+                    c.mode(mode)
+                    c.wait_complete()
+
+def user_button_released(commands):
+    if not commands: return
+    if commands.lower() == 'dry-run':
+        hal.set_p('plasmac.dry-run-start','0')
+    elif commands.lower() == 'ohmic-test':
+        hal.set_p('plasmac.ohmic-test','0')
+    elif commands.lower() == 'probe-test':
+        hal.set_p('plasmac.probe-test','0')
 
 # original in axis.py line 3000
 def user_live_update():
@@ -805,24 +876,26 @@ def user_live_update():
             else:
                 w(widget,'configure','-state','disabled')
     w(fmonitor + '.arc-voltage','configure','-text','%0.1f' % (comp['arc-voltage']))
-    if all_homed() and hal.get_value('halui.program.is-idle'):
-        w(fbuttons + '.xtohome','configure','-state','normal')
-        w(fbuttons + '.ytohome','configure','-state','normal')
-        w(fbuttons + '.ztohome','configure','-state','normal')
-        w(fbuttons + '.dryRun','configure','-state','normal')
+    if all_homed() and hal.get_value('halui.program.is-idle') and hal.get_value('halui.machine.is-on'):
+        for n in range(1,7):
+            if not iniButtonCode[n].startswith('%') and not iniButtonCode[n] in ['probe-test','ohmic-test']:
+                w(fbuttons + '.button' + str(n),'configure','-state','normal')
     else:
-        w(fbuttons + '.xtohome','configure','-state','disabled')
-        w(fbuttons + '.ytohome','configure','-state','disabled')
-        w(fbuttons + '.ztohome','configure','-state','disabled')
-        w(fbuttons + '.dryRun','configure','-state','disabled')
+        for n in range(1,7):
+            if not iniButtonCode[n].startswith('%') and not iniButtonCode[n] in ['probe-test','ohmic-test']:
+                w(fbuttons + '.button' + str(n),'configure','-state','disabled')
     if hal.get_value('halui.machine.is-on') and hal.get_value('halui.program.is-idle'):
         w(ftorch + '.torch-button','configure','-state','normal')
     else:
         w(ftorch + '.torch-button','configure','-state','disabled')
     if hal.get_value('halui.machine.is-on') and not hal.get_value('plasmac.arc-ok-out'):
-        w(fbuttons + '.ohmicTest','configure','-state','normal')
+        for n in range(1,7):
+            if iniButtonCode[n] in ['probe-test','ohmic-test']:
+                w(fbuttons + '.button' + str(n),'configure','-state','normal')
     else:
-        w(fbuttons + '.ohmicTest','configure','-state','disabled')
+        for n in range(1,7):
+            if iniButtonCode[n] in ['probe-test','ohmic-test']:
+                w(fbuttons + '.button' + str(n),'configure','-state','disabled')
     if hal.get_value('halui.program.is-paused') or hal.get_value('plasmac.paused-motion-speed'):
         w(fpausedmotion + '.reverse','configure','-state','normal')
         w(fpausedmotion + '.forward','configure','-state','normal')
