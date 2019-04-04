@@ -26,13 +26,14 @@
                     <property name="n_rows">5</property>
                     <property name="homogeneous">True</property>
                     <child>
-                      <object class="HAL_Button" id="user-button-1">
+                      <object class="HAL_Button" id="button3">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">True</property>
                         <property name="has_tooltip">True</property>
                         <property name="tooltip_text" translatable="yes">move x axis to home position</property>
-                        <signal name="clicked" handler="on_user_button_1_clicked" swapped="no"/>
+                        <signal name="pressed" handler="on_button3_pressed" swapped="no"/>
+                        <signal name="released" handler="on_button3_released" swapped="no"/>
                       </object>
                       <packing>
                         <property name="top_attach">2</property>
@@ -42,13 +43,14 @@
                       </packing>
                     </child>
                     <child>
-                      <object class="HAL_Button" id="user-button-2">
+                      <object class="HAL_Button" id="button4">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">True</property>
                         <property name="has_tooltip">True</property>
                         <property name="tooltip_text" translatable="yes">move y axis to home position</property>
-                        <signal name="clicked" handler="on_user_button_2_clicked" swapped="no"/>
+                        <signal name="pressed" handler="on_button4_pressed" swapped="no"/>
+                        <signal name="released" handler="on_button4_released" swapped="no"/>
                       </object>
                       <packing>
                         <property name="top_attach">3</property>
@@ -58,13 +60,14 @@
                       </packing>
                     </child>
                     <child>
-                      <object class="HAL_Button" id="user-button-3">
+                      <object class="HAL_Button" id="button5">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">True</property>
                         <property name="has_tooltip">True</property>
                         <property name="tooltip_text" translatable="yes">move z axis to home position</property>
-                        <signal name="clicked" handler="on_user_button_3_clicked" swapped="no"/>
+                        <signal name="pressed" handler="on_button5_pressed" swapped="no"/>
+                        <signal name="released" handler="on_button5_released" swapped="no"/>
                       </object>
                       <packing>
                         <property name="top_attach">4</property>
@@ -74,8 +77,7 @@
                       </packing>
                     </child>
                     <child>
-                      <object class="HAL_Button" id="dry-run-start">
-                        <property name="label" translatable="yes">Dry Run</property>
+                      <object class="HAL_Button" id="button1">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">True</property>
@@ -83,6 +85,8 @@
                         <property name="tooltip_text" translatable="yes">do a dry run...
 follow gcode but do not
 turn torch on or use THC</property>
+                        <signal name="pressed" handler="on_button1_pressed" swapped="no"/>
+                        <signal name="released" handler="on_button1_released" swapped="no"/>
                       </object>
                       <packing>
                         <property name="x_padding">4</property>
@@ -90,8 +94,7 @@ turn torch on or use THC</property>
                       </packing>
                     </child>
                     <child>
-                      <object class="HAL_Button" id="ohmic-test">
-                        <property name="label" translatable="yes">Ohmic Test</property>
+                      <object class="HAL_Button" id="button2">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">True</property>
@@ -99,6 +102,8 @@ turn torch on or use THC</property>
                         <property name="tooltip_text" translatable="yes">do a dry run...
 follow gcode but do not
 turn torch on or use THC</property>
+                        <signal name="pressed" handler="on_button2_pressed" swapped="no"/>
+                        <signal name="released" handler="on_button2_released" swapped="no"/>
                       </object>
                       <packing>
                         <property name="top_attach">1</property>
