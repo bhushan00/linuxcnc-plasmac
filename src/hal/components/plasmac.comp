@@ -6,6 +6,8 @@ A plasma cutting table control component for use with the linuxcnc master branch
 
 .I VERSIONS:
 .br
+V0.24.1 - 2019/04/04 - fix probe error handling
+.br
 V0.24 - 2019/04/03 - rework pre probe error handling
 .br
 V0.23 - 2019/04/03 - probing test pin added
@@ -306,7 +308,6 @@ variable float  height_ovr_counts;          /* number of counts to change height
 variable float  height_ovr_old;             /* old height override value */
 variable bool   initialized;                /* initialization flag */
 variable float  last_arc_voltage;           /* last sensed arc voltage */
-variable bool   probe_inhibit;              /* inhibit probing */
 variable float  offset_datum;               /* datum for safe height calcs */
 variable float  offset_min;                 /* minimum allowed offset */
 variable float  offset_max;                 /* maximum allowed offset */
@@ -318,7 +319,7 @@ variable float  pid_error_old;              /* old error for pid calcs */
 variable float  pid_output;                 /* calculated pid output value */
 variable float  pierce_timer;               /* pierce delay timer */
 variable float  pierce_target;              /* pierce height target offset */
-variable bool   probe_testing;              /* probe test active */
+variable bool   probe_inhibit;              /* inhibit probing */
 variable float  probe_velocity;             /* probe down velocity */
 variable float  puddle_jump_percent;        /* puddle jump height as percentage of pierce height */
 variable float  puddle_jump_target;         /* puddle jump height target offset */
@@ -478,8 +479,6 @@ FUNCTION(_) {
                                           "program is paused...\n");
             state = GOTO_SAFE_HEIGHT;
         }
-    }else if(!probe_test && probe_testing){
-        probe_testing = FALSE;
     }
 
     /* calculate arc voltage */
@@ -549,24 +548,36 @@ FUNCTION(_) {
                     }else{
                         ohmic_enable = TRUE;
                         if(ohmic_probe && !probe_inhibit){
-                            stop_type = PAUSE;
-                            program_pause = TRUE;
-                            probe_inhibit = TRUE;
-                            rtapi_print_msg(RTAPI_MSG_ERR,"ohmic probe detected before probing\n"
-                                                              "program is paused...%d\n", probe_inhibit);
                             ohmic_enable = FALSE;
+                            probe_inhibit = TRUE;
+                            if(probe_test){
+                                rtapi_print_msg(RTAPI_MSG_ERR,"ohmic probe detected before probing\n");
+                            }else{
+                                stop_type = PAUSE;
+                                program_pause = TRUE;
+                                rtapi_print_msg(RTAPI_MSG_ERR,"ohmic probe detected before probing\n"
+                                                              "program is paused...\n");
+                            }
                         }else if(float_switch && !probe_inhibit){
-                            stop_type = PAUSE;
-                            program_pause = TRUE;
                             probe_inhibit = TRUE;
-                            rtapi_print_msg(RTAPI_MSG_ERR,"float switch detected before probing\n"
-                                                          "program is paused...\n");
+                            if(probe_test){
+                                rtapi_print_msg(RTAPI_MSG_ERR,"float switch detected before probing\n");
+                            }else{
+                                stop_type = PAUSE;
+                                program_pause = TRUE;
+                                rtapi_print_msg(RTAPI_MSG_ERR,"float switch detected before probing\n"
+                                                              "program is paused...\n");
+                            }
                         }else if(breakaway && !probe_inhibit){
-                            stop_type = PAUSE;
-                            program_pause = TRUE;
                             probe_inhibit = TRUE;
-                            rtapi_print_msg(RTAPI_MSG_ERR,"breakaway switch detected before probing\n"
-                                                          "program is paused...\n");
+                            if(probe_test){
+                                rtapi_print_msg(RTAPI_MSG_ERR,"breakaway switch detected before probing\n");
+                            }else{
+                                stop_type = PAUSE;
+                                program_pause = TRUE;
+                                rtapi_print_msg(RTAPI_MSG_ERR,"breakaway switch detected before probing\n"
+                                                              "program is paused...\n");
+                            }
                         }else if (!program_is_paused){
                             state = TOUCHOFF;
                         }
