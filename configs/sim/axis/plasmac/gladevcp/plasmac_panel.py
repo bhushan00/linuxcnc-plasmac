@@ -27,6 +27,7 @@ import hal
 from   gladevcp.persistence import widget_defaults,select_widgets
 import gladevcp
 from   subprocess import Popen,PIPE
+
 class HandlerClass:
 
     def check_materials_file(self):
@@ -370,6 +371,41 @@ class HandlerClass:
         mode = hal.get_value('plasmac.mode')
         units = hal.get_value('halui.machine.units-per-mm')
         maxPidP = self.thcFeedRate / units * 0.1
+        isHomed = True
+        if hal.get_value('halui.program.is-idle') and hal.get_value('halui.machine.is-on'):
+            self.s.poll()
+            for joint in range(0,int(self.i.find('KINS','JOINTS'))):
+                print joint, self.s.homed[joint]
+                if not self.s.homed[joint]:
+                    isHomed = False
+                    break
+        else:
+            isHomed = False
+        print isHomed
+        if hal.get_value('halui.machine.is-on') and not hal.get_value('plasmac.arc-ok-out'):
+            isOn = True
+        else:
+            isOn = False
+        print isOn        
+        for n in range(1,6):
+            if isOn and self.iniButtonCode[n] in ['ohmic-test']:
+                    self.builder.get_object('button' + str(n)).set_sensitive(True)
+            elif not isOn and self.iniButtonCode[n] in ['ohmic-test']:
+                    self.builder.get_object('button' + str(n)).set_sensitive(False)
+            if isHomed and not self.iniButtonCode[n].startswith('%') and not self.iniButtonCode[n] in ['ohmic-test']:
+                    self.builder.get_object('button' + str(n)).set_sensitive(True)
+            if not isHomed and not self.iniButtonCode[n].startswith('%') and not self.iniButtonCode[n] in ['ohmic-test']:
+                    self.builder.get_object('button' + str(n)).set_sensitive(False)
+        if hal.get_value('halui.machine.is-on') and hal.get_value('halui.program.is-idle'):
+            self.builder.get_object('torch-pulse-start').set_sensitive(True)
+        else:
+            self.builder.get_object('torch-pulse-start').set_sensitive(False)
+        if hal.get_value('halui.program.is-paused') or hal.get_value('plasmac.paused-motion-speed'):
+            self.builder.get_object('forward').set_sensitive(True)
+            self.builder.get_object('reverse').set_sensitive(True)
+        else:
+            self.builder.get_object('forward').set_sensitive(False)
+            self.builder.get_object('reverse').set_sensitive(False)
         if mode != self.oldMode:
             if mode == 0:
                 self.builder.get_object('arc-ok-high').show()

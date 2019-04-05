@@ -129,6 +129,32 @@ class HandlerClass:
                 print '*** configuration file,', self.prefFile, 'is invalid ***'
         gtk.settings_get_default().set_property('gtk-theme-name', theme)
 
+    def periodic(self):
+        isHomed = True
+        if hal.get_value('halui.program.is-idle') and hal.get_value('halui.machine.is-on'):
+            self.s.poll()
+            for joint in range(0,int(self.i.find('KINS','JOINTS'))):
+                if not self.s.homed[joint]:
+                    isHomed = False
+                    break
+        else:
+            isHomed = False
+        if hal.get_value('halui.machine.is-on') and not hal.get_value('plasmac.arc-ok-out'):
+            isOn = True
+        else:
+            isOn = False
+        for n in range(1,6):
+            if isOn and self.iniButtonCode[n] in ['ohmic-test']:
+                    self.builder.get_object('button' + str(n)).set_sensitive(True)
+            elif not isOn and self.iniButtonCode[n] in ['ohmic-test']:
+                    self.builder.get_object('button' + str(n)).set_sensitive(False)
+
+            if isHomed and not self.iniButtonCode[n].startswith('%') and not self.iniButtonCode[n] in ['ohmic-test']:
+                    self.builder.get_object('button' + str(n)).set_sensitive(True)
+            if not isHomed and not self.iniButtonCode[n].startswith('%') and not self.iniButtonCode[n] in ['ohmic-test']:
+                    self.builder.get_object('button' + str(n)).set_sensitive(False)
+        return True
+
     def __init__(self, halcomp,builder,useropts):
         self.halcomp = halcomp
         self.builder = builder
@@ -151,6 +177,7 @@ class HandlerClass:
                 self.builder.get_object('button' + str(button)).set_label(blabel)
                 self.builder.get_object('button' + str(button)).children()[0].set_justify(gtk.JUSTIFY_CENTER)
         self.set_theme()
+        gobject.timeout_add(100, self.periodic)
 
 def get_handlers(halcomp,builder,useropts):
     return [HandlerClass(halcomp,builder,useropts)]

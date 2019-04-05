@@ -27,11 +27,6 @@ import hal, hal_glib
 from   gladevcp.persistence import widget_defaults,select_widgets
 import gladevcp
 
-class linuxcncInterface(object):
-
-    def __init__(self):
-        self.linuxcncIniFile = linuxcnc.ini(os.environ['INI_FILE_NAME'])
-
 class HandlerClass:
 
     def check_materials_file(self):
@@ -220,7 +215,7 @@ class HandlerClass:
         self.builder.get_object('torch-off-delay').set_digits(1)
         self.builder.get_object('torch-off-delay-adj').configure(0,0,9,0.1,0,0)
         self.builder.get_object('use-auto-volts').set_active(1)
-        if self.lcnc.linuxcncIniFile.find('TRAJ', 'LINEAR_UNITS').lower() == 'mm':
+        if self.i.find('TRAJ', 'LINEAR_UNITS').lower() == 'mm':
             self.builder.get_object('cut-feed-rate').set_digits(0)
             self.builder.get_object('cut-feed-rate-adj').configure(4000,50,9999,1,0,0)
             self.builder.get_object('cut-height').set_digits(1)
@@ -237,7 +232,7 @@ class HandlerClass:
             self.builder.get_object('setup-feed-rate-adj').configure(int(self.thcFeedRate * 0.8),1,self.thcFeedRate,1,0,0)
             self.builder.get_object('skip-ihs-distance').set_digits(0)
             self.builder.get_object('skip-ihs-distance-adj').configure(0,0,999,1,0,0)
-        elif self.lcnc.linuxcncIniFile.find('TRAJ', 'LINEAR_UNITS').lower() == 'inch':
+        elif self.i.find('TRAJ', 'LINEAR_UNITS').lower() == 'inch':
             self.builder.get_object('cut-feed-rate').set_digits(1)
             self.builder.get_object('cut-feed-rate-adj').configure(160,2,400,0.1,0,0)
             self.builder.get_object('cut-height').set_digits(2)
@@ -421,19 +416,19 @@ class HandlerClass:
     def __init__(self, halcomp,builder,useropts):
         self.halcomp = halcomp
         self.builder = builder
-        self.lcnc = linuxcncInterface()
+        self.i = linuxcnc.ini(os.environ['INI_FILE_NAME'])
         hal_glib.GPin(halcomp.newpin('config-disable', hal.HAL_BIT, hal.HAL_IN))
-        configDisable = self.lcnc.linuxcncIniFile.find('PLASMAC', 'CONFIG_DISABLE') or '0'
+        configDisable = self.i.find('PLASMAC', 'CONFIG_DISABLE') or '0'
         hal.set_p('plasmac_panel.config-disable',configDisable)
-        self.thcFeedRate = (float(self.lcnc.linuxcncIniFile.find('AXIS_Z', 'MAX_VELOCITY')) * \
-                              float(self.lcnc.linuxcncIniFile.find('AXIS_Z', 'OFFSET_AV_RATIO'))) * 60
+        self.thcFeedRate = (float(self.i.find('AXIS_Z', 'MAX_VELOCITY')) * \
+                              float(self.i.find('AXIS_Z', 'OFFSET_AV_RATIO'))) * 60
         hal.set_p('plasmac.thc-feed-rate','%f' % (self.thcFeedRate))
-        self.configFile = self.lcnc.linuxcncIniFile.find('EMC', 'MACHINE').lower() + '.cfg'
-        self.prefFile = self.lcnc.linuxcncIniFile.find('EMC', 'MACHINE') + '.pref'
-        self.materialsFile = self.lcnc.linuxcncIniFile.find('EMC', 'MACHINE').lower() + '.mat'
+        self.configFile = self.i.find('EMC', 'MACHINE').lower() + '.cfg'
+        self.prefFile = self.i.find('EMC', 'MACHINE') + '.pref'
+        self.materialsFile = self.i.find('EMC', 'MACHINE').lower() + '.mat'
         self.materialsList = []
         self.configDict = {}
-        hal.set_p('plasmac.mode','%d' % (int(self.lcnc.linuxcncIniFile.find('PLASMAC','MODE') or '0')))
+        hal.set_p('plasmac.mode','%d' % (int(self.i.find('PLASMAC','MODE') or '0')))
         self.oldMode = 9
         self.materialsUpdate = False
         self.configure_widgets()

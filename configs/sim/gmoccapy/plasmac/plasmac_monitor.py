@@ -25,13 +25,6 @@ import linuxcnc
 import gobject
 import hal
 
-class linuxcncInterface(object):
-
-    def __init__(self):
-        self.linuxcncIniFile = linuxcnc.ini(os.environ['INI_FILE_NAME'])
-        self.stat = linuxcnc.stat();
-        self.comd = linuxcnc.command()
-
 class HandlerClass:
 
     def periodic(self):
@@ -66,8 +59,8 @@ class HandlerClass:
     def __init__(self, halcomp,builder,useropts):
         self.halcomp = halcomp
         self.builder = builder
-        self.lcnc = linuxcncInterface()
-        self.prefFile = self.lcnc.linuxcncIniFile.find('EMC', 'MACHINE') + '.pref'
+        self.i = linuxcnc.ini(os.environ['INI_FILE_NAME'])
+        self.prefFile = self.i.find('EMC', 'MACHINE') + '.pref'
         self.oldMode = 9
         self.set_theme()
         gobject.timeout_add(100, self.periodic)

@@ -26,13 +26,6 @@ import gobject
 import hal
 import gladevcp
 
-class linuxcncInterface(object):
-
-    def __init__(self):
-        self.linuxcncIniFile = linuxcnc.ini(os.environ['INI_FILE_NAME'])
-        self.stat = linuxcnc.stat();
-        self.comd = linuxcnc.command()
-
 class HandlerClass:
 
     def configure_widgets(self):
@@ -43,17 +36,23 @@ class HandlerClass:
         #self.builder.get_object('torchPulseTimeAdj').configure(.5,.1,5,0.1,0,0)
 
     def periodic(self):
-        self.lcnc.stat.poll()
-        if self.feed_override != self.lcnc.stat.feedrate:
-            self.builder.get_object('feed-override').set_active(int(self.lcnc.stat.feedrate * 100))
-            self.feed_override = int(self.lcnc.stat.feedrate * 100)
-        if self.rapid_override != self.lcnc.stat.rapidrate:
-            self.builder.get_object('rapid-override').set_active(int(self.lcnc.stat.rapidrate * 100))
-            self.feed_override = int(self.lcnc.stat.rapidrate * 100)
+        self.s.poll()
+        if self.feed_override != self.s.feedrate:
+            self.builder.get_object('feed-override').set_active(int(self.s.feedrate * 100))
+            self.feed_override = int(self.s.feedrate * 100)
+        if self.rapid_override != self.s.rapidrate:
+            self.builder.get_object('rapid-override').set_active(int(self.s.rapidrate * 100))
+            self.feed_override = int(self.s.rapidrate * 100)
         if hal.get_value('halui.program.is-idle') and hal.get_value('halui.machine.is-on'):
             self.builder.get_object('torch-pulse-start').set_sensitive(True)
         else:
             self.builder.get_object('torch-pulse-start').set_sensitive(False)
+        if hal.get_value('halui.program.is-paused') or hal.get_value('plasmac.paused-motion-speed'):
+            self.builder.get_object('forward').set_sensitive(True)
+            self.builder.get_object('reverse').set_sensitive(True)
+        else:
+            self.builder.get_object('forward').set_sensitive(False)
+            self.builder.get_object('reverse').set_sensitive(False)
         mode = hal.get_value('plasmac.mode')
         if mode != self.oldMode:
             if mode == 0:
@@ -83,13 +82,13 @@ class HandlerClass:
         tmp1, tmp2 = widget.get_active_text().split()
         speed = float(tmp1) * 0.01
         self.feed_override = speed
-        self.lcnc.comd.feedrate(speed)
+        self.c.feedrate(speed)
 
     def on_rapidOverride_changed(self, widget):
         tmp1, tmp2 = widget.get_active_text().split()
         speed = float(tmp1) * 0.01
         self.rapid_override = speed
-        self.lcnc.comd.rapidrate(speed)
+        self.c.rapidrate(speed)
 
     def on_feedDefault_pressed(self, widget):
         self.builder.get_object('feed-override').set_active(100)
@@ -146,11 +145,13 @@ class HandlerClass:
     def __init__(self, halcomp,builder,useropts):
         self.halcomp = halcomp
         self.builder = builder
-        self.lcnc = linuxcncInterface()
-        self.prefFile = self.lcnc.linuxcncIniFile.find('EMC', 'MACHINE') + '.pref'
+        self.i = linuxcnc.ini(os.environ['INI_FILE_NAME'])
+        self.s = linuxcnc.stat();
+        self.c = linuxcnc.command()
+        self.prefFile = self.i.find('EMC', 'MACHINE') + '.pref'
         self.set_theme()
-        self.maxFeed = int(float(self.lcnc.linuxcncIniFile.find("DISPLAY", "MAX_FEED_OVERRIDE") or '1') * 100)
-        self.maxRapid = int(float(self.lcnc.linuxcncIniFile.find("DISPLAY", "MAX_RAPID_OVERRIDE") or '1') * 100)
+        self.maxFeed = int(float(self.i.find("DISPLAY", "MAX_FEED_OVERRIDE") or '1') * 100)
+        self.maxRapid = int(float(self.i.find("DISPLAY", "MAX_RAPID_OVERRIDE") or '1') * 100)
         self.oldMode = 9
         self.configure_widgets()
         self.feed_override = 0
