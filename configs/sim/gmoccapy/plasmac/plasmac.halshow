@@ -1,3 +1,8 @@
-# halshow watchlist created Wed Apr 03 09:36:30 AEDT 2019
+# halshow watchlist created Fri Apr 05 17:17:07 AEDT 2019
 
-pin+plasmac.mode
+pin+plasmac.target-pierce
+pin+plasmac.target-cut
+pin+plasmac.off-counts
+pin+plasmac.off-current
+pin+plasmac.zero
+pin+plasmac.bottom
