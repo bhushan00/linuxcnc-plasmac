@@ -87,7 +87,7 @@
      <enum>QTabWidget::Rounded</enum>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>0</number>
     </property>
     <widget class="QWidget" name="run_tab">
      <property name="sizePolicy">
@@ -2366,7 +2366,7 @@ F3</string>
     <property name="geometry">
      <rect>
       <x>220</x>
-      <y>470</y>
+      <y>570</y>
       <width>308</width>
       <height>248</height>
      </rect>
@@ -3379,7 +3379,7 @@ Off</string>
       <bool>true</bool>
      </property>
      <property name="joint_number" stdset="0">
-      <number>2</number>
+      <number>3</number>
      </property>
     </widget>
     <widget class="ActionButton" name="jog_z_plus_button">
@@ -3398,7 +3398,7 @@ Off</string>
       <bool>true</bool>
      </property>
      <property name="joint_number" stdset="0">
-      <number>2</number>
+      <number>3</number>
      </property>
     </widget>
     <widget class="JogIncrements" name="jog_increments_button">
@@ -3641,81 +3641,6 @@ Off</string>
     <zorder>jog_rate_status</zorder>
     <zorder>rapid_override_status</zorder>
    </widget>
-   <widget class="StateEnableGridLayout" name="button_layout">
-    <property name="geometry">
-     <rect>
-      <x>272</x>
-      <y>418</y>
-      <width>256</width>
-      <height>48</height>
-     </rect>
-    </property>
-    <property name="is_homed_status" stdset="0">
-     <bool>true</bool>
-    </property>
-    <widget class="PushButton" name="x_to_home">
-     <property name="geometry">
-      <rect>
-       <x>156</x>
-       <y>0</y>
-       <width>48</width>
-       <height>48</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>X
-to
-Home</string>
-     </property>
-     <property name="python_command_option" stdset="0">
-      <bool>false</bool>
-     </property>
-    </widget>
-    <widget class="PushButton" name="y_to_home">
-     <property name="geometry">
-      <rect>
-       <x>208</x>
-       <y>0</y>
-       <width>48</width>
-       <height>48</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Y
-to
-Home</string>
-     </property>
-    </widget>
-    <widget class="PushButton" name="z_to_home">
-     <property name="geometry">
-      <rect>
-       <x>260</x>
-       <y>0</y>
-       <width>48</width>
-       <height>48</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Z
-to
-Home</string>
-     </property>
-    </widget>
-    <widget class="PushButton" name="dry_run">
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>0</y>
-       <width>48</width>
-       <height>48</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Dry
-Run</string>
-     </property>
-    </widget>
-   </widget>
    <widget class="GCodeGraphics" name="preview">
     <property name="geometry">
      <rect>
@@ -3795,7 +3720,7 @@ Run</string>
      <bool>false</bool>
     </property>
    </widget>
-   <widget class="PushButton" name="ohmic_test">
+   <widget class="PushButton" name="button1">
     <property name="geometry">
      <rect>
       <x>220</x>
@@ -3805,8 +3730,75 @@ Run</string>
      </rect>
     </property>
     <property name="text">
-     <string>Ohmic
-Test</string>
+     <string/>
+    </property>
+   </widget>
+   <widget class="PushButton" name="button2">
+    <property name="geometry">
+     <rect>
+      <x>272</x>
+      <y>418</y>
+      <width>48</width>
+      <height>48</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="PushButton" name="button3">
+    <property name="geometry">
+     <rect>
+      <x>324</x>
+      <y>418</y>
+      <width>48</width>
+      <height>48</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="python_command_option" stdset="0">
+     <bool>false</bool>
+    </property>
+   </widget>
+   <widget class="PushButton" name="button4">
+    <property name="geometry">
+     <rect>
+      <x>376</x>
+      <y>418</y>
+      <width>48</width>
+      <height>48</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="PushButton" name="button5">
+    <property name="geometry">
+     <rect>
+      <x>428</x>
+      <y>418</y>
+      <width>48</width>
+      <height>48</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="PushButton" name="button6">
+    <property name="geometry">
+     <rect>
+      <x>480</x>
+      <y>418</y>
+      <width>48</width>
+      <height>48</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
     </property>
    </widget>
    <zorder>mdi_history</zorder>
@@ -3815,12 +3807,16 @@ Test</string>
    <zorder>config_disable</zorder>
    <zorder>button_top_frame</zorder>
    <zorder>dro_frame</zorder>
-   <zorder>button_layout</zorder>
    <zorder>preview</zorder>
    <zorder>plasmac_settings_tabs</zorder>
    <zorder>gcoder</zorder>
    <zorder>error_text</zorder>
-   <zorder>ohmic_test</zorder>
+   <zorder>button1</zorder>
+   <zorder>button2</zorder>
+   <zorder>button3</zorder>
+   <zorder>button4</zorder>
+   <zorder>button5</zorder>
+   <zorder>button6</zorder>
   </widget>
   <widget class="QStatusBar" name="statusBar">
    <property name="styleSheet">
@@ -3862,12 +3858,6 @@ Test</string>
    <class>LED</class>
    <extends>QWidget</extends>
    <header>qtvcp.widgets.led_widget</header>
-  </customwidget>
-  <customwidget>
-   <class>StateEnableGridLayout</class>
-   <extends>QWidget</extends>
-   <header>qtvcp.widgets.container_widgets</header>
-   <container>1</container>
   </customwidget>
   <customwidget>
    <class>JogIncrements</class>
@@ -3944,10 +3934,10 @@ Test</string>
   <tabstop>jog_z_minus_button</tabstop>
   <tabstop>jog_z_plus_button</tabstop>
   <tabstop>zero_z_button</tabstop>
-  <tabstop>x_to_home</tabstop>
-  <tabstop>y_to_home</tabstop>
-  <tabstop>z_to_home</tabstop>
-  <tabstop>dry_run</tabstop>
+  <tabstop>button3</tabstop>
+  <tabstop>button4</tabstop>
+  <tabstop>button5</tabstop>
+  <tabstop>button2</tabstop>
   <tabstop>torch_pulse_start</tabstop>
   <tabstop>reverse</tabstop>
   <tabstop>forward</tabstop>
@@ -4517,7 +4507,7 @@ Test</string>
    <hints>
     <hint type="sourcelabel">
      <x>351</x>
-     <y>705</y>
+     <y>805</y>
     </hint>
     <hint type="destinationlabel">
      <x>346</x>
@@ -4533,7 +4523,7 @@ Test</string>
    <hints>
     <hint type="sourcelabel">
      <x>220</x>
-     <y>607</y>
+     <y>707</y>
     </hint>
     <hint type="destinationlabel">
      <x>189</x>
@@ -4549,7 +4539,7 @@ Test</string>
    <hints>
     <hint type="sourcelabel">
      <x>220</x>
-     <y>607</y>
+     <y>707</y>
     </hint>
     <hint type="destinationlabel">
      <x>211</x>
@@ -4565,7 +4555,7 @@ Test</string>
    <hints>
     <hint type="sourcelabel">
      <x>220</x>
-     <y>666</y>
+     <y>766</y>
     </hint>
     <hint type="destinationlabel">
      <x>184</x>
@@ -4581,7 +4571,7 @@ Test</string>
    <hints>
     <hint type="sourcelabel">
      <x>220</x>
-     <y>662</y>
+     <y>762</y>
     </hint>
     <hint type="destinationlabel">
      <x>226</x>
@@ -4597,7 +4587,7 @@ Test</string>
    <hints>
     <hint type="sourcelabel">
      <x>480</x>
-     <y>652</y>
+     <y>752</y>
     </hint>
     <hint type="destinationlabel">
      <x>363</x>
@@ -4613,59 +4603,11 @@ Test</string>
    <hints>
     <hint type="sourcelabel">
      <x>500</x>
-     <y>659</y>
+     <y>759</y>
     </hint>
     <hint type="destinationlabel">
      <x>384</x>
      <y>567</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>x_to_home</sender>
-   <signal>clicked()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>x_to_home_clicked()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>404</x>
-     <y>459</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>605</x>
-     <y>311</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>y_to_home</sender>
-   <signal>clicked()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>y_to_home_clicked()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>475</x>
-     <y>460</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>604</x>
-     <y>346</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>z_to_home</sender>
-   <signal>clicked()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>z_to_home_clicked()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>507</x>
-     <y>449</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>610</x>
-     <y>378</y>
     </hint>
    </hints>
   </connection>
@@ -4693,7 +4635,7 @@ Test</string>
    <hints>
     <hint type="sourcelabel">
      <x>294</x>
-     <y>601</y>
+     <y>701</y>
     </hint>
     <hint type="destinationlabel">
      <x>292</x>
@@ -4709,7 +4651,7 @@ Test</string>
    <hints>
     <hint type="sourcelabel">
      <x>431</x>
-     <y>654</y>
+     <y>754</y>
     </hint>
     <hint type="destinationlabel">
      <x>433</x>
@@ -4814,22 +4756,6 @@ Test</string>
    </hints>
   </connection>
   <connection>
-   <sender>dry_run</sender>
-   <signal>pressed()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>ohmic_probe_pressed()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>257</x>
-     <y>445</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>429</x>
-     <y>414</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
    <sender>home_button</sender>
    <signal>clicked()</signal>
    <receiver>MainWindow</receiver>
@@ -4842,6 +4768,198 @@ Test</string>
     <hint type="destinationlabel">
      <x>482</x>
      <y>52</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>button1</sender>
+   <signal>pressed()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>button1_pressed()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>228</x>
+     <y>446</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>229</x>
+     <y>473</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>button2</sender>
+   <signal>pressed()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>button2_pressed()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>280</x>
+     <y>446</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>278</x>
+     <y>520</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>button3</sender>
+   <signal>pressed()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>button3_pressed()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>332</x>
+     <y>453</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>368</x>
+     <y>522</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>button4</sender>
+   <signal>pressed()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>button4_pressed()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>386</x>
+     <y>449</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>384</x>
+     <y>500</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>button5</sender>
+   <signal>pressed()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>button5_pressed()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>435</x>
+     <y>455</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>435</x>
+     <y>497</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>button6</sender>
+   <signal>pressed()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>button6_pressed()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>488</x>
+     <y>434</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>518</x>
+     <y>478</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>button1</sender>
+   <signal>released()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>button1_released()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>251</x>
+     <y>445</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>298</x>
+     <y>524</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>button2</sender>
+   <signal>released()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>button2_released()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>307</x>
+     <y>445</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>401</x>
+     <y>507</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>button3</sender>
+   <signal>released()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>button3_released()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>357</x>
+     <y>449</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>341</x>
+     <y>554</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>button4</sender>
+   <signal>released()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>button4_released()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>407</x>
+     <y>442</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>370</x>
+     <y>554</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>button5</sender>
+   <signal>released()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>button5_released()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>461</x>
+     <y>459</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>458</x>
+     <y>479</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>button6</sender>
+   <signal>released()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>button6_released()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>510</x>
+     <y>431</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>521</x>
+     <y>527</y>
     </hint>
    </hints>
   </connection>
@@ -4874,9 +4992,6 @@ Test</string>
   <slot>forward_released()</slot>
   <slot>reverse_pressed()</slot>
   <slot>reverse_released()</slot>
-  <slot>x_to_home_clicked()</slot>
-  <slot>y_to_home_clicked()</slot>
-  <slot>z_to_home_clicked()</slot>
   <slot>edit_clicked()</slot>
   <slot>height_override_changed()</slot>
   <slot>paused_motion_speed_changed()</slot>
@@ -4888,6 +5003,17 @@ Test</string>
   <slot>feed_override_changed()</slot>
   <slot>run_from_line_clicked()</slot>
   <slot>home_clicked()</slot>
-  <slot>ohmic_probe_pressed()</slot>
+  <slot>button1_pressed()</slot>
+  <slot>button2_pressed()</slot>
+  <slot>button3_pressed()</slot>
+  <slot>button4_pressed()</slot>
+  <slot>button5_pressed()</slot>
+  <slot>button6_pressed()</slot>
+  <slot>button1_released()</slot>
+  <slot>button2_released()</slot>
+  <slot>button3_released()</slot>
+  <slot>button4_released()</slot>
+  <slot>button5_released()</slot>
+  <slot>button6_released()</slot>
  </slots>
 </ui>

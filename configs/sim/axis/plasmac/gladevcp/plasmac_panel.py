@@ -381,12 +381,10 @@ class HandlerClass:
                     break
         else:
             isHomed = False
-        print isHomed
         if hal.get_value('halui.machine.is-on') and not hal.get_value('plasmac.arc-ok-out'):
             isOn = True
         else:
             isOn = False
-        print isOn        
         for n in range(1,6):
             if isOn and self.iniButtonCode[n] in ['ohmic-test']:
                     self.builder.get_object('button' + str(n)).set_sensitive(True)

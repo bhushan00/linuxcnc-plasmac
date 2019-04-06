@@ -23,6 +23,7 @@ from qtvcp.qt_action import FilterProgram
 from qtvcp import logger
 from qtvcp.widgets.stylesheeteditor import  StyleSheetEditor as SSE
 
+from subprocess import Popen,PIPE
 
 ##########################
 # *** Set up logging *** #
@@ -40,30 +41,6 @@ KEYBIND = Keylookup()
 STATUS = Status()
 ACTION = Action()
 INFO = Info()
-
-
-#######################################
-# **** TEMP STUFF WHILE BUILDING **** #
-#######################################
-
-taskState = {
-    1: 'ESTOP',
-    2: 'ESTOP_RESET',
-    3: 'OFF',
-    4: 'ON'
-}
-
-interpState = {
-    1: 'IDLE',
-    2: 'READING',
-    3: 'PAUSED',
-    4: 'WAITING'
-}
-
-def showState():
-    print '\nINTERP = %s' %(interpState[STATUS.stat.interp_state])
-    print '  TASK = %s' %(taskState[STATUS.stat.task_state])
-
 
 
 ###################################
@@ -102,14 +79,16 @@ class HandlerClass:
         self.w.plasmac_settings_tabs.setTabEnabled(1, not int(self.ini.find('PLASMAC', 'CONFIG_DISABLE')))
         self.w.plasmac_settings_tabs.setCurrentIndex(0)
         self.materialsUpdate = False
-        hal.set_p('plasmac.mode','%d' % (int(self.lcnc.linuxcncIniFile.find('PLASMAC','MODE') or '0')))
+        hal.set_p('plasmac.mode','%d' % (int(self.ini.find('PLASMAC','MODE') or '0')))
         self.oldMode = 0
+        self.oldTaskMode = STATUS.stat.task_mode
         self.mname = self.ini.find('EMC','MACHINE')
         self.configure_widgets()
         self.load_settings()
         self.w.probe_feed_rate.setMaximum(self.w.setup_feed_rate.value())
         self.check_materials_file()
         self.get_materials()
+        self.init_user_buttons()
         self.w.ho_label.setText('%d V' %(self.w.height_override.value()))
         self.w.tp_label.setText('%0.1f Sec' %((int(self.w.torch_pulse_time.value()) * 0.1)))
         self.w.pm_label.setText('%s%%' %(self.w.paused_motion_speed.value()))
@@ -123,8 +102,6 @@ class HandlerClass:
         STATUS.connect('not-all-homed', self.is_not_homed)
         STATUS.connect('gcode-line-selected', lambda w, line: self.update_selected_line(line))
         STATUS.connect('general', self.dialog_return)
-        STATUS.connect('state-on', self.machine_on)
-        STATUS.connect('state-off', self.machine_off)
         self.fKeys = ('blank','blank','blank',
                       QtCore.Qt.Key_F3,QtCore.Qt.Key_F4,
                       QtCore.Qt.Key_F5,QtCore.Qt.Key_F6,
@@ -139,15 +116,6 @@ class HandlerClass:
         for child in self.w.mdi_history.children():
             if isinstance(child, QtWidgets.QListView):
                 child.setObjectName('mdi_list')
-#        print '\nARC VOLTAGE'
-#        for child in self.w.arc_voltage.children():
-#            print 'child', child, child.objectName
-#            for grandchild in child.children():
-#                print 'grandchild', grandchild, grandchild.objectName()
-#        print '\nGCODER'
-#        for child in self.w.gcoder.children():
-#            print child, child.objectName
-
 
     def class_patch__(self):
         GCODE.exitCall = self.editor_exit
@@ -265,12 +233,6 @@ class HandlerClass:
             if rtn:
                 ACTION.SET_MACHINE_UNHOMED(-1)
 
-    def machine_on(self, w):
-        self.w.ohmic_test.setEnabled(True)
-
-    def machine_off(self, w):
-        self.w.ohmic_test.setEnabled(False)
-
     #######################
     # callbacks from form #
     #######################
@@ -315,22 +277,6 @@ class HandlerClass:
             self.w.cut_feed_rate.setValue(self.materialsList[index][6])
             self.w.cut_amps.setValue(self.materialsList[index][7])
             self.w.cut_volts.setValue(self.materialsList[index][8])
-
-    def x_to_home_clicked(self):
-        self.goto_home('X')
-
-    def y_to_home_clicked(self):
-        self.goto_home('Y')
-
-    def z_to_home_clicked(self):
-        self.goto_home('Z')
-
-    def goto_home(self,axis):
-        if hal.get_value('halui.program.is-idle'):
-            home = self.ini.find('JOINT_' + str(self.ini.find('TRAJ', 'COORDINATES').upper().index(axis)), 'HOME')
-            if not hal.get_value('halui.mode.is-mdi'):
-                self.cmnd.mode(linuxcnc.MODE_MDI)
-            self.cmnd.mdi('G53 G0 ' + axis + home)
 
     def feed_override_changed(self, rate):
         ACTION.SET_FEED_RATE(rate)
@@ -406,9 +352,113 @@ class HandlerClass:
            self.selected_line:
             ACTION.RUN(self.selected_line)
 
+    def button1_pressed(self):
+        self.user_button_pressed(self.iniButtonCode[1])
+
+    def button1_released(self):
+        self.user_button_released(self.iniButtonCode[1])
+
+    def button2_pressed(self):
+        self.user_button_pressed(self.iniButtonCode[2])
+
+    def button2_released(self):
+        self.user_button_released(self.iniButtonCode[2])
+
+    def button3_pressed(self):
+        self.user_button_pressed(self.iniButtonCode[3])
+
+    def button3_released(self):
+        self.user_button_released(self.iniButtonCode[3])
+
+    def button4_pressed(self):
+        self.user_button_pressed(self.iniButtonCode[4])
+
+    def button4_released(self):
+        self.user_button_released(self.iniButtonCode[4])
+
+    def button5_pressed(self):
+        self.user_button_pressed(self.iniButtonCode[5])
+
+    def button5_released(self):
+        self.user_button_released(self.iniButtonCode[5])
+
+    def button6_pressed(self):
+        self.user_button_pressed(self.iniButtonCode[6])
+
+    def button6_released(self):
+        self.user_button_released(self.iniButtonCode[6])
+
     #####################
     # general functions #
     #####################
+
+    def init_user_buttons(self):
+        self.iniButtonName = ['Names']
+        self.iniButtonCode = ['Codes']
+        self.buttons = ['blank',self.w.button1,self.w.button2,self.w.button3,self.w.button4,self.w.button5,self.w.button6]
+        for button in range(1,7):
+            bname = self.ini.find('PLASMAC', 'BUTTON_' + str(button) + '_NAME') or '0'
+            self.iniButtonName.append(bname)
+            self.iniButtonCode.append(self.ini.find('PLASMAC', 'BUTTON_' + str(button) + '_CODE'))
+            if bname != '0':
+                bname = bname.split('\\')
+                if len(bname) > 1:
+                    blabel = bname[0] + '\n' + bname[1]
+                else:
+                    blabel = bname[0]
+                name = 'button' + str(button)
+                self.buttons[button].setText(blabel)
+
+    def user_button_pressed(self, commands):
+        if not commands: return
+        if commands.lower() == 'dry-run':
+            hal.set_p('plasmac.dry-run-start','1')
+        elif commands.lower() == 'ohmic-test':
+            hal.set_p('plasmac.ohmic-test','1')
+        elif commands.lower() == 'probe-test':
+            hal.set_p('plasmac.probe-test','1')
+        else:
+            for command in commands.split('\\'):
+                if command.strip()[0] == '%':
+                    command = command.strip().strip('%') + '&'
+                    Popen(command,stdout=PIPE,stderr=PIPE, shell=True)
+                else:
+                    if '[' in command:
+                        newCommand = subCommand = ''
+                        for char in command:
+                            if char == '[':
+                                subCommand += char
+                            elif char == ']':
+                                subCommand += ' '
+                            elif subCommand.startswith('[') and char != ' ':
+                                subCommand += char
+                            elif subCommand.startswith('[') and char == ' ':
+                                f1, f2 = subCommand.split()
+                                newCommand += self.ini.find(f1[1:],f2)
+                                newCommand += ' '
+                                subCommand = ''
+                            else:
+                                newCommand += char
+                        if subCommand.startswith('['):
+                            f1, f2 = subCommand.split()
+                            newCommand += self.ini.find(f1[1:],f2)
+                            newCommand += ' '
+                        command = newCommand
+                    if STATUS.machine_is_on() and STATUS.is_all_homed() and (STATUS.stat.interp_state == linuxcnc.INTERP_IDLE):
+                        self.oldTaskMode = STATUS.stat.task_mode
+                        if self.oldTaskMode != linuxcnc.MODE_MDI:
+                            self.cmnd.mode(linuxcnc.MODE_MDI)
+                            self.cmnd.wait_complete()
+                        self.cmnd.mdi(command)
+
+    def user_button_released(self, commands):
+        if not commands: return
+        if commands.lower() == 'dry-run':
+            hal.set_p('plasmac.dry-run-start','0')
+        elif commands.lower() == 'ohmic-test':
+            hal.set_p('plasmac.ohmic-test','0')
+        elif commands.lower() == 'probe-test':
+            hal.set_p('plasmac.probe-test','0')
 
     def editor_exit(self):
         if self.w.gcoder.editor.isModified():
@@ -823,7 +873,9 @@ class HandlerClass:
         if self.ini.find('PLASMAC', 'DEBUG') == '1':
             self.w.mdi_history.setEnabled(True)
             self.w.mdi_history.MDILine.setEnabled(True)
-
+        if STATUS.stat.interp_state == linuxcnc.INTERP_IDLE and STATUS.stat.task_mode != self.oldTaskMode and self.oldTaskMode > 0:
+            self.cmnd.mode(self.oldTaskMode)
+            self.cmnd.wait_complete()
         self.w.feed_override.setValue(STATUS.stat.feedrate * 100)
         self.w.rapid_override.setValue(STATUS.stat.rapidrate * 100)
         self.w.jog_rate.setValue(STATUS.get_jograte())
@@ -842,14 +894,14 @@ class HandlerClass:
                               '     ' + \
                               STATUS['old']['m-code'].replace(' ',',')[3:-1] \
                               , 0)
-        if hal.get_value('halui.machine.is-on') and hal.get_value('halui.program.is-idle'):
+        if STATUS.machine_is_on() and hal.get_value('halui.program.is-idle'):
             self.w.home_button.setEnabled(True)
             self.w.edit_button.setEnabled(True)
             self.w.run_from_button.setEnabled(True)
             self.w.torch_pulse_start.setEnabled(True)
             self.w.reverse.setEnabled(False)
             self.w.forward.setEnabled(False)
-        elif hal.get_value('halui.machine.is-on') and \
+        elif STATUS.machine_is_on() and \
             (hal.get_value('halui.program.is-paused') or self.w.reverse.isDown() or self.w.forward.isDown()):
             self.w.home_button.setEnabled(False)
             self.w.edit_button.setEnabled(False)
@@ -864,6 +916,23 @@ class HandlerClass:
             self.w.torch_pulse_start.setEnabled(False)
             self.w.reverse.setEnabled(False)
             self.w.forward.setEnabled(False)
+        if STATUS.machine_is_on() and not hal.get_value('plasmac.arc-ok-out'):
+            isOn = True
+        else:
+            isOn = False
+        for n in range(1,7):
+            if self.iniButtonCode[n] in ['ohmic-test']:
+                if isOn:
+                    self.buttons[n].setEnabled(True)
+                else:
+                    self.buttons[n].setEnabled(False)
+            elif not self.iniButtonCode[n] in ['ohmic-test'] and not self.iniButtonCode[n].startswith('%'):
+                if STATUS.machine_is_on() and STATUS.is_all_homed():
+                    self.buttons[n].setEnabled(True)
+                    if self.iniButtonCode[n] == 'dry-run' and not STATUS.is_file_loaded():
+                        self.buttons[n].setEnabled(False)
+                else:
+                    self.buttons[n].setEnabled(False)
         self.w.plasmac_settings_tabs.setTabEnabled(1, not hal.get_value('plasmac_ui.config_disable'))
         mode = hal.get_value('plasmac.mode')
         if mode != self.oldMode: self.set_mode(mode)
