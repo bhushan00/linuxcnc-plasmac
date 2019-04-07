@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <!-- interface-requires gladevcp 0.0 -->
+  <!-- interface-requires  ñ¡·ŽU 0.0 -->
   <requires lib="gtk+" version="2.18"/>
   <!-- interface-naming-policy project-wide -->
   <object class="GtkWindow" id="window1">
@@ -31,14 +32,15 @@
                         <property name="can_focus">False</property>
                         <property name="tooltip_text" translatable="yes">current arc voltage</property>
                         <property name="xalign">1</property>
-                        <property name="label" translatable="yes">300.0</property>
+                        <property name="label" translatable="yes">300</property>
                         <property name="justify">right</property>
                         <property name="label_pin_type">1</property>
-                        <property name="text_template">%03.1f</property>
+                        <property name="text_template">%03.0f</property>
                         <attributes>
                           <attribute name="weight" value="semibold"/>
-                          <attribute name="size" value="14000"/>
-                          <attribute name="foreground" value="#ffff88e20000"/>
+                          <attribute name="stretch" value="semi-condensed"/>
+                          <attribute name="size" value="20000"/>
+                          <attribute name="foreground" value="#ffff00000000"/>
                         </attributes>
                       </object>
                       <packing>
@@ -187,7 +189,7 @@
                         <property name="led_blink_rate">0</property>
                         <property name="led_size">8</property>
                         <property name="off_color">grey</property>
-                        <property name="on_color">orange</property>
+                        <property name="on_color">#F99B0B</property>
                       </object>
                       <packing>
                         <property name="left_attach">1</property>
@@ -207,7 +209,7 @@
                         <property name="led_blink_rate">0</property>
                         <property name="led_size">8</property>
                         <property name="off_color">grey</property>
-                        <property name="on_color">lightgreen</property>
+                        <property name="on_color">#37F608</property>
                       </object>
                       <packing>
                         <property name="left_attach">1</property>
