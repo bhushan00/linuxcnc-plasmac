@@ -308,10 +308,10 @@ arcfont = fname + ' ' + str(int(fsize) + 2) + ' bold'
 w('label',fmonitor + '.arc-voltage','-anchor','e','-width',swidth,'-fg','blue','-font',arcfont)
 w('label',fmonitor + '.aVlab','-text','Arc Voltage')
 w('canvas',fmonitor + '.led-arc-ok','-width',cwidth,'-height',cheight)
-w(fmonitor + '.led-arc-ok','create','oval',ledx,ledy,ledwidth,ledheight,'-fill','lightgreen','-disabledfill','grey')
-w('label',fmonitor + '.lAOlab','-text','Ark OK')
+w(fmonitor + '.led-arc-ok','create','oval',ledx,ledy,ledwidth,ledheight,'-fill','#37F608','-disabledfill','grey')
+w('label',fmonitor + '.lAOlab','-text','Arc OK')
 w('canvas',fmonitor + '.led-torch','-width',cwidth,'-height',cheight)
-w(fmonitor + '.led-torch','create','oval',ledx,ledy,ledwidth,ledheight,'-fill','orange','-disabledfill','grey')
+w(fmonitor + '.led-torch','create','oval',ledx,ledy,ledwidth,ledheight,'-fill','#F99B0B','-disabledfill','grey')
 w('label',fmonitor + '.lTlab','-text','Torch On')
 w('canvas',fmonitor + '.led-ohmic','-width',cwidth,'-height',cheight)
 w(fmonitor + '.led-ohmic','create','oval',ledx,ledy,ledwidth,ledheight,'-fill','yellow','-disabledfill','grey')
@@ -362,7 +362,6 @@ for button in range(1,7):
             blabel = bname[0] + '\n' + bname[1]
         else:
             blabel = bname[0]
-        print 'NAME:',blabel
         w(fbuttons + '.button' + str(button),'configure','-text',blabel)
 w('bind',fbuttons + '.button1','<Button-1>','button_action 1 1')
 w('bind',fbuttons + '.button1','<ButtonRelease-1>','button_action 1 0')
@@ -840,6 +839,8 @@ def user_button_released(commands):
 
 # original in axis.py line 3000
 def user_live_update():
+    stat = linuxcnc.stat()
+    stat.poll()
     global firstrundone
     if not firstrundone:
         configDisable = inifile.find('PLASMAC', 'CONFIG_DISABLE') or '0'
@@ -876,26 +877,35 @@ def user_live_update():
             else:
                 w(widget,'configure','-state','disabled')
     w(fmonitor + '.arc-voltage','configure','-text','%0.1f' % (comp['arc-voltage']))
-    if all_homed() and hal.get_value('halui.program.is-idle') and hal.get_value('halui.machine.is-on'):
-        for n in range(1,7):
-            if not iniButtonCode[n].startswith('%') and not iniButtonCode[n] in ['probe-test','ohmic-test']:
-                w(fbuttons + '.button' + str(n),'configure','-state','normal')
+    isIdleHomed = True
+    isIdleOn = True
+    if hal.get_value('halui.program.is-idle') and hal.get_value('halui.machine.is-on'):
+        if hal.get_value('plasmac.arc-ok-out'):
+            isIdleOn = False
+        for joint in range(0,int(inifile.find('KINS','JOINTS'))):
+                if not stat.homed[joint]:
+                    isIdleHomed = False
+                    break
     else:
-        for n in range(1,7):
-            if not iniButtonCode[n].startswith('%') and not iniButtonCode[n] in ['probe-test','ohmic-test']:
+        isIdleHomed = False
+        isIdleOn = False 
+    for n in range(1,6):
+        if iniButtonCode[n] in ['ohmic-test']:
+            if isIdleOn:
+                w(fbuttons + '.button' + str(n),'configure','-state','normal')
+            else:
+                w(fbuttons + '.button' + str(n),'configure','-state','disabled')
+        elif not iniButtonCode[n] in ['ohmic-test'] and not iniButtonCode[n].startswith('%'):
+            if isIdleHomed:
+                w(fbuttons + '.button' + str(n),'configure','-state','normal')
+                if iniButtonCode[n] == 'dry-run' and not stat.file:
+                    w(fbuttons + '.button' + str(n),'configure','-state','disabled')
+            else:
                 w(fbuttons + '.button' + str(n),'configure','-state','disabled')
     if hal.get_value('halui.machine.is-on') and hal.get_value('halui.program.is-idle'):
         w(ftorch + '.torch-button','configure','-state','normal')
     else:
         w(ftorch + '.torch-button','configure','-state','disabled')
-    if hal.get_value('halui.machine.is-on') and not hal.get_value('plasmac.arc-ok-out'):
-        for n in range(1,7):
-            if iniButtonCode[n] in ['probe-test','ohmic-test']:
-                w(fbuttons + '.button' + str(n),'configure','-state','normal')
-    else:
-        for n in range(1,7):
-            if iniButtonCode[n] in ['probe-test','ohmic-test']:
-                w(fbuttons + '.button' + str(n),'configure','-state','disabled')
     if hal.get_value('halui.program.is-paused') or hal.get_value('plasmac.paused-motion-speed'):
         w(fpausedmotion + '.reverse','configure','-state','normal')
         w(fpausedmotion + '.forward','configure','-state','normal')

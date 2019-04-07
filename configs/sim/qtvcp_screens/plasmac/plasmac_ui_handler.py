@@ -916,18 +916,14 @@ class HandlerClass:
             self.w.torch_pulse_start.setEnabled(False)
             self.w.reverse.setEnabled(False)
             self.w.forward.setEnabled(False)
-        if STATUS.machine_is_on() and not hal.get_value('plasmac.arc-ok-out'):
-            isOn = True
-        else:
-            isOn = False
         for n in range(1,7):
             if self.iniButtonCode[n] in ['ohmic-test']:
-                if isOn:
+                if STATUS.machine_is_on() and not hal.get_value('plasmac.arc-ok-out') and STATUS.stat.interp_state == linuxcnc.INTERP_IDLE:
                     self.buttons[n].setEnabled(True)
                 else:
                     self.buttons[n].setEnabled(False)
             elif not self.iniButtonCode[n] in ['ohmic-test'] and not self.iniButtonCode[n].startswith('%'):
-                if STATUS.machine_is_on() and STATUS.is_all_homed():
+                if STATUS.machine_is_on() and STATUS.is_all_homed() and STATUS.stat.interp_state == linuxcnc.INTERP_IDLE:
                     self.buttons[n].setEnabled(True)
                     if self.iniButtonCode[n] == 'dry-run' and not STATUS.is_file_loaded():
                         self.buttons[n].setEnabled(False)
