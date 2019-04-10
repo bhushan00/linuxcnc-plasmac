@@ -648,6 +648,7 @@ FUNCTION(_) {
             }
             break;
         case PROBE_HEIGHT:
+            /* move to probe height at setup speed */
             if(probe_testing && !probe_test){
                 state = PROBE_TEST;
             }
@@ -661,7 +662,7 @@ FUNCTION(_) {
             }
             break;
         case PROBE_DOWN:
-            /* probe down to top of stock, then probe up slow to set zero when the float switch activates */
+            /* probe down to top of stock at probe speed, then push a little further for good contact */
             feed_hold = TRUE;
             if(probe_testing && !probe_test){
                 state = PROBE_TEST;
@@ -712,6 +713,7 @@ FUNCTION(_) {
             }
             break;
         case SET_ZERO:
+            /* probe up at minimum speed to find top of stock */
             if(probe_testing && !probe_test){
                 state = PROBE_TEST;
             }
@@ -753,7 +755,7 @@ FUNCTION(_) {
             }
             break;
         case PIERCE_HEIGHT:
-            /* move up to pierce height + float switch mechanical travel */
+            /* move up to pierce height */
             if(probe_testing && !probe_test){
                 state = PROBE_TEST;
                 break;
@@ -784,7 +786,8 @@ FUNCTION(_) {
             }
             break;
         case TORCH_ON:
-            /* turn torch on and start arc fail timer, if too many attempts then turn torch off, pause program and return to idle state */
+            /* turn torch on and start arc fail timer
+             * if too many attempts then turn torch off, pause program and return to idle state */
             feed_hold = TRUE;
             if(arc_starts > arc_max_starts - 1){
                 program_pause = TRUE;
@@ -805,7 +808,8 @@ FUNCTION(_) {
             }
             break;
         case ARC_OK:
-            /* wait for arc ok, if timeout occurs turn torch off then return to TORCH-TRUE for another attempt */
+            /* wait for arc ok
+             * if timeout occurs turn torch off then return to TORCH_ON for another attempt */
             feed_hold = TRUE;
             arc_fail_timer -= thread_period;
             if(arc_fail_timer <= 0){
