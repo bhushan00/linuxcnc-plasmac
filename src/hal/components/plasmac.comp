@@ -6,6 +6,8 @@ A plasma cutting table control component for use with the linuxcnc master branch
 
 .I VERSIONS:
 .br
+V0.26 - 2019/04/10 - remove redundant code
+.br
 V0.25 - 2019/04/10 - add ohmic probe attempts
 .br
 V0.24.4 - 2019/04/09 - add probe starting height
@@ -762,8 +764,6 @@ FUNCTION(_) {
                     offset_counts -= setup_velocity;
                 }else{
                     offset_counts = pierce_target;
-                }
-                if(fabs(offset_current - (pierce_target * offset_scale)) < tolerance){
                     arc_starts = 0;
                     if(probe_testing){
                         state = PROBE_TEST;
@@ -825,38 +825,18 @@ FUNCTION(_) {
                 pierce_timer -= thread_period;
             }else{
                 puddle_jump_timer = puddle_jump_delay;
-                if(puddle_jump_percent > 100){
-                    move_direction = UP;
-                }else if(puddle_jump_percent < 100){
-                    move_direction = DOWN;
-                }else{
-                    move_direction = ZERO;
-                }
                 state = PUDDLE_JUMP;
             }
             break;
         case PUDDLE_JUMP:
             /* move to puddle_jump height */
             feed_hold = TRUE;
-            switch(move_direction){
-                case ZERO:
-                    break;
-                case UP:
-                    if((offset_counts - setup_velocity) > puddle_jump_target){
-                        offset_counts -= setup_velocity;
-                    }else{
-                        offset_counts = puddle_jump_target;
-                    }
-                    break;
-                case DOWN:
-                    if((offset_counts + setup_velocity) < puddle_jump_target){
-                        offset_counts += setup_velocity;
-                    }else{
-                        offset_counts = puddle_jump_target;
-                    }
-                    break;
-            }
-            if(fabs(offset_current - (puddle_jump_target * offset_scale)) < tolerance){
+            if((offset_counts - setup_velocity) > puddle_jump_target){
+                offset_counts -= setup_velocity;
+            }else if((offset_counts + setup_velocity) < puddle_jump_target){
+                offset_counts += setup_velocity;
+            }else{
+                offset_counts = puddle_jump_target;
                 count = 0;
                 if(puddle_jump_timer > 0){
                     feed_hold = FALSE;
@@ -864,13 +844,6 @@ FUNCTION(_) {
                 }else{
                     puddle_jump_timer = 0;
                     feed_hold = TRUE;
-                    if(pierce_height * puddle_jump_percent / 100 < cut_height){
-                        move_direction = UP;
-                    }else if(pierce_height * puddle_jump_percent / 100 > cut_height){
-                        move_direction = DOWN;
-                    }else{
-                        move_direction = ZERO;
-                    }
                     state = CUT_HEIGHT;
                 }
             }
@@ -878,25 +851,12 @@ FUNCTION(_) {
         case CUT_HEIGHT:
             /* move to cut height */
             feed_hold = TRUE;
-            switch(move_direction){
-                case ZERO:
-                    break;
-                case UP:
-                    if((offset_counts - setup_velocity) > cut_target){
-                        offset_counts -= setup_velocity;
-                    }else{
-                        offset_counts = cut_target;
-                    }
-                    break;
-                case DOWN:
-                    if((offset_counts + setup_velocity) < cut_target){
-                        offset_counts += setup_velocity;
-                    }else{
-                        offset_counts = cut_target;
-                    }
-                    break;
-            }
-            if(fabs(offset_current - (cut_target * offset_scale)) < tolerance){
+            if((offset_counts - setup_velocity) > cut_target){
+                offset_counts -= setup_velocity;
+            }else if((offset_counts + setup_velocity) < cut_target){
+                offset_counts += setup_velocity;
+            }else{
+                offset_counts = cut_target;
                 count = 0;
                 /* set feed rate for this cut */
                 if(cut_feed_rate > 0){
@@ -1074,12 +1034,10 @@ FUNCTION(_) {
                 }else{
                 offset_counts = safe_target;
                 }
-                if(fabs(offset_current - (safe_target * offset_scale)) < tolerance){
-                    if(stop_type == WAIT){
-                        feed_hold = FALSE;
-                    }
-                    state = FINISH;
+                if(stop_type == WAIT){
+                    feed_hold = FALSE;
                 }
+                state = FINISH;
             }
             break;
         case FINISH:
@@ -1095,22 +1053,6 @@ FUNCTION(_) {
                 paused_motion = FALSE;
                 adaptive_feed = 1;
                 if(program_is_idle){
-                    //if(offset_counts < 0 && (offset_counts + setup_velocity) < 0){
-                        //offset_counts += setup_velocity;
-                    //}else if(offset_counts > 0 && (offset_counts - setup_velocity) > 0){
-                        //offset_counts -= setup_velocity;
-                    //}else{
-                        //offset_counts = 0;
-                    //}
-                    //if(fabs(offset_current) < tolerance){
-                        //stop_type = NONE;
-                        //safe_height_is_limited = FALSE;
-                        //cut_started = FALSE;
-                        //dry_run = FALSE;
-                    //}
-                //}
-
-
                     if(offset_counts + setup_velocity < offset_max){
                         offset_counts += setup_velocity;
                     }else{
@@ -1121,8 +1063,6 @@ FUNCTION(_) {
                         dry_run = FALSE;
                     }
                 }
-
-
             }else{
                 state = IDLE;
             }
