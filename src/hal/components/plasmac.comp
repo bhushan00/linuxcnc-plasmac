@@ -6,6 +6,8 @@ A plasma cutting table control component for use with the linuxcnc master branch
 
 .I VERSIONS:
 .br
+V0.25 - 2019/04/10 - add ohmic probe attempts
+.br
 V0.24.4 - 2019/04/09 - add probe starting height
 .br
 V0.24.3 - 2019/04/08 - more probing changes
@@ -246,6 +248,7 @@ pin in  s32     mode                        "operating mode";
 pin in  bit     move_down                   "external thc down switch [mode 2])";
 pin in  bit     move_up                     "external thc up switch [mode 2]";
 pin in  float   offset_current              "current z axis offset";
+pin in  s32     ohmic_max_attempts          "maximum ohmic probe attempts before fallback to float switch";
 pin in  bit     ohmic_probe                 "ohmic probe input";
 pin in  bit     ohmic_test                  "test for shorted torch";
 pin in  float   paused_motion_speed         "multiplier for speed of motion when paused, from -1 to 1";
@@ -318,6 +321,7 @@ variable float  last_arc_voltage;           /* last sensed arc voltage */
 variable float  offset_datum;               /* datum for safe height calcs */
 variable float  offset_min;                 /* minimum allowed offset */
 variable float  offset_max;                 /* maximum allowed offset */
+variable float  ohmic_attempts;             /* current ohmic probe attempts */
 variable float  setup_velocity;             /* velocity for setup moves */
 variable bool   paused_motion;              /* paused motion flag */
 variable float  paused_motion_timer;        /* minimum run timer for paused motion */
@@ -664,6 +668,7 @@ FUNCTION(_) {
             if(target_sensed){
                 if(probe_force > 0){
                     probe_force -= 21;
+                    offset_counts -= probe_velocity;
                 }else{
                     target_sensed = 0;
                     if(float_switch || ohmic_probe){
@@ -688,13 +693,20 @@ FUNCTION(_) {
                     offset_counts -= probe_velocity;
                 }
             }else if(float_switch){
-                probe_type = FLOAT;
-                target_sensed = TRUE;
-                probe_force = probe_force_val;
+                if(ohmic_attempts == ohmic_max_attempts){
+                    probe_type = FLOAT;
+                    target_sensed = TRUE;
+                    probe_force = probe_force_val;
+                    ohmic_attempts = 0;
+                }else{
+                    state = PROBE_HEIGHT;
+                    ohmic_attempts += 1;
+                }
             }else if(ohmic_probe){
                 probe_type = OHMIC;
                 target_sensed = TRUE;
                 probe_force = probe_force_val;
+                ohmic_attempts = 0;
             }
             break;
         case SET_ZERO:
