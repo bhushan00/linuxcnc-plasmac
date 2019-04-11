@@ -557,6 +557,8 @@ w('spinbox',fmotion + '.probe-feed-rate')
 w('label',fmotion + '.pFRlab','-text','Probe Speed')
 w('spinbox',fmotion + '.probe-start-height')
 w('label',fmotion + '.pSHlab','-text','Probe Height')
+w('spinbox',fmotion + '.ohmic-max-attempts')
+w('label',fmotion + '.oMAlab','-text','Ohmic Probes')
 w('spinbox',fmotion + '.skip-ihs-distance','-from','0','-to','20')
 w('label',fmotion + '.sIDlab','-text','Skip IHS')
 w('grid',fmotion + '.safe-height','-row','0','-column','0')
@@ -567,14 +569,17 @@ w('grid',fmotion + '.probe-feed-rate','-row','2','-column','0')
 w('grid',fmotion + '.pFRlab','-row','2','-column','1')
 w('grid',fmotion + '.probe-start-height','-row','3','-column','0')
 w('grid',fmotion + '.pSHlab','-row','3','-column','1')
-w('grid',fmotion + '.skip-ihs-distance','-row','4','-column','0')
-w('grid',fmotion + '.sIDlab','-row','4','-column','1')
-w('grid','rowconfigure',fmotion,'0 1 2 3 4','-pad','2')
+w('grid',fmotion + '.ohmic-max-attempts','-row','4','-column','0')
+w('grid',fmotion + '.oMAlab','-row','4','-column','1')
+w('grid',fmotion + '.skip-ihs-distance','-row','5','-column','0')
+w('grid',fmotion + '.sIDlab','-row','5','-column','1')
+w('grid','rowconfigure',fmotion,'0 1 2 3 4 5','-pad','2')
 w('grid','columnconfigure',fmotion,'0 1 2 3','-weight','1')
 w('DynamicHelp::add',fmotion + '.safe-height','-text','Safe height above stock for rapid traverse\n(machine units)')
 w('DynamicHelp::add',fmotion + '.float-switch-travel','-text','Float switch travel\n(machine units)')
 w('DynamicHelp::add',fmotion + '.probe-feed-rate','-text','Probing speed\n(machine units per minute)')
 w('DynamicHelp::add',fmotion + '.probe-start-height','-text','Probing start height\n(machine units)')
+w('DynamicHelp::add',fmotion + '.ohmic-max-attempts','-text','Number of ohmic probes before fallback to the float switch')
 w('DynamicHelp::add',fmotion + '.skip-ihs-distance','-text','Skip probing if start of cut\nis less than this distance\nfrom end of last cut')
 
 # arc frame
@@ -862,10 +867,9 @@ def user_live_update():
             value = float(w(widget,'get'))
             if value != widgetValues[widget]:
                 widgetValues[widget] = value
-                if item == 'arc-max-starts':
+                if item == 'arc-max-starts' or item == 'ohmic-max-attempts':
                     hal.set_p('plasmac.%s' % (item),'%d' % (value))
                 else:
-                    print '\nITEM: %s, VALUE: %f\n' % (item,value)
                     hal.set_p('plasmac.%s' % (item),'%f' % (value))
                 if item == 'setup-feed-rate': #limit max probe feed rate to setup feed rate
                     w(fmotion + '.probe-feed-rate','configure','-to',value)
@@ -974,6 +978,7 @@ def configure_widgets():
     w(fcornerlock + '.cornerlock-threshold','configure','-from','1','-to','99','-increment','1','-format','%0.0f') #90
     w(fkerflock + '.kerfcross-enable','select')
     w(fkerflock + '.kerfcross-threshold','configure','-from','1','-to','10','-increment','0.1','-format','%0.1f') #3
+    w(fmotion + '.ohmic-max-attempts','configure','-from','0','-to','10','-increment','1','-format','%0.0f') #0
     w(farc + '.torch-off-delay','configure','-from','0','-to','9','-increment','0.1','-format','%0.1f') #0
     w(farc + '.arc-fail-delay','configure','-from','0','-to','60','-increment','0.1','-format','%0.1f') #1
     w(farc + '.arc-ok-low','configure','-from','0','-to','200','-increment','0.5','-format','%0.1f') #0
@@ -1001,7 +1006,7 @@ def configure_widgets():
         w(fcutparms + '.pierce-height','configure','-from','0','-to','1','-increment','0.01','-format','%0.2f') #0.16
         w(fmotion + '.float-switch-travel','configure','-from','0','-to','0.75','-increment','0.001','-format','%0.3f') #0.06
         w(fmotion + '.probe-feed-rate','configure','-from','0.1','-to',thcFeedRate,'-increment','0.1','-format','%0.1f') #12
-        w(fmotion + '.probe-start-height','configure','-from','0.1','-to',maxHeight,'-increment','0.1','-format','%0.1f') #1.2
+        w(fmotion + '.probe-start-height','configure','-from','0.1','-to',maxHeight,'-increment','0.01','-format','%0.2f') #1.2
         w(fmotion + '.safe-height','configure','-from','0.04','-to','4','-increment','0.01','-format','%0.2f') #0.75
         w(fmotion + '.skip-ihs-distance','configure','-from','0','-to','99','-increment','0.1','-format','%0.1f') #0
         w(foffsets + '.setup-feed-rate','configure','-from','0.1','-to',thcFeedRate,'-increment','0.1','-format','%0.1f') #int(thcFeedRate * 0.8)
@@ -1236,6 +1241,8 @@ wLabels =\
     fmotion + '.sHlab',\
     fmotion + '.pFRlab',\
     fmotion + '.fSTlab',\
+    fmotion + '.pSHlab',\
+    fmotion + '.oMAlab',\
     fmotion + '.sIDlab',\
     farc + '.aFDlab',\
     farc + '.aVSlab',\
@@ -1273,6 +1280,7 @@ wSpinboxes =\
     fmotion + '.float-switch-travel',\
     fmotion + '.probe-feed-rate',\
     fmotion + '.probe-start-height',\
+    fmotion + '.ohmic-max-attempts',\
     fmotion + '.skip-ihs-distance',\
     farc + '.arc-fail-delay',\
     farc + '.arc-max-starts',\

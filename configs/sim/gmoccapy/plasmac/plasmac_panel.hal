@@ -36,6 +36,7 @@ net plasmac:arc-fail-delay          plasmac_panel.arc-fail-delay-f          =>  
 net plasmac:arc-voltage-offset      plasmac_panel.arc-voltage-offset-f      =>  plasmac.arc-voltage-offset
 net plasmac:arc-voltage-scale       plasmac_panel.arc-voltage-scale-f       =>  plasmac.arc-voltage-scale
 net plasmac:float-switch-travel     plasmac_panel.float-switch-travel-f     =>  plasmac.float-switch-travel
+net plasmac:ohmic-max-attempts      plasmac_panel.ohmic-max-attempts-s      =>  plasmac.ohmic-max-attempts
 net plasmac:pid-d-gain              plasmac_panel.pid-d-gain-f              =>  plasmac.pid-d-gain
 net plasmac:pid-i-gain              plasmac_panel.pid-i-gain-f              =>  plasmac.pid-i-gain
 net plasmac:probe-feed-rate         plasmac_panel.probe-feed-rate-f         =>  plasmac.probe-feed-rate

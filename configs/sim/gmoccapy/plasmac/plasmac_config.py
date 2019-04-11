@@ -56,6 +56,8 @@ class HandlerClass:
         self.builder.get_object('arc-voltage-scale').set_digits(2)
         self.builder.get_object('arc-voltage-scale-adj').configure(1,0.01,99,0.01,0,0)
         self.builder.get_object('max-offset-velocity-in').set_label(str(int(self.thcFeedRate)))
+        self.builder.get_object('ohmic-max-attempts').set_digits(0)
+        self.builder.get_object('ohmic-max-attempts-adj').configure(0,0,10,1,0,0)
         self.builder.get_object('pid-i-gain').set_digits(0)
         self.builder.get_object('pid-i-gain-adj').configure(0,0,1000,1,0,0)
         self.builder.get_object('pid-d-gain').set_digits(0)

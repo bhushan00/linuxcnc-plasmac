@@ -308,6 +308,8 @@ class HandlerClass:
         self.builder.get_object('kerfcross-threshold').set_digits(1)
         self.builder.get_object('kerfcross-threshold-adj').configure(3,1,10,0.1,0,0)
         self.builder.get_object('max-offset-velocity-in').set_label(str(int(self.thcFeedRate)))
+        self.builder.get_object('ohmic-max-attempts').set_digits(0)
+        self.builder.get_object('ohmic-max-attempts-adj').configure(0,0,10,1,0,0)
         self.builder.get_object('pid-p-gain').set_digits(0)
         self.builder.get_object('pid-p-gain-adj').configure(25,0,1000,1,0,0)
         self.builder.get_object('pid-i-gain').set_digits(0)

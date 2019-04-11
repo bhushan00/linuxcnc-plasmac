@@ -560,8 +560,8 @@ class HandlerClass:
                                'puddle_jump_delay','cut_height','cut_feed_rate',\
                                'cut_amps','cut_volts','thc_enable','use_auto_volts',\
                                'thc_threshold','pid_p_gain','cornerlock_enable',\
-                               'cornerlock_threshold','kerfcross_enable',\
-                               'kerfcross_threshold','safe_height','float_switch_travel',\
+                               'cornerlock_threshold','kerfcross_enable','kerfcross_threshold',\
+                               'safe_height','float_switch_travel','ohmic_max_attempts',\
                                'probe_feed_rate','probe_start_height','skip_ihs_distance',\
                                'arc_fail_delay','arc_max_starts','arc_restart_delay',\
                                'torch_off_delay','arc_voltage_scale','arc_voltage_offset',\
