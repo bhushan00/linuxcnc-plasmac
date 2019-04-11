@@ -69,6 +69,7 @@
   <object class="GtkAdjustment" id="pierce-delay-adj"/>
   <object class="GtkAdjustment" id="pierce-height-adj"/>
   <object class="GtkAdjustment" id="probe-feed-rate-adj"/>
+  <object class="GtkAdjustment" id="probe-start-height-adj"/>
   <object class="GtkAdjustment" id="puddle-jump-delay-adj"/>
   <object class="GtkAdjustment" id="puddle-jump-height-adj"/>
   <object class="GtkAdjustment" id="safe-height-adj"/>
@@ -2330,6 +2331,60 @@ this may be reduced due to THC movement</property>
                                 <property name="position">1</property>
                               </packing>
                             </child>
+                            <child>
+                              <object class="GtkHBox" id="hboxC1">
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                                <child>
+                                  <object class="HAL_SpinButton" id="skip-ihs-distance">
+                                    <property name="width_request">75</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="has_tooltip">True</property>
+                                    <property name="tooltip_text" translatable="yes">skip IHS if start of next cut
+is less than this distance
+from end of previous cut</property>
+                                    <property name="invisible_char">●</property>
+                                    <property name="xalign">1</property>
+                                    <property name="primary_icon_activatable">False</property>
+                                    <property name="secondary_icon_activatable">False</property>
+                                    <property name="primary_icon_sensitive">True</property>
+                                    <property name="secondary_icon_sensitive">True</property>
+                                    <property name="adjustment">skip-ihs-distance-adj</property>
+                                    <property name="wrap">True</property>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="fill">False</property>
+                                    <property name="position">0</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkLabel" id="labelC1">
+                                    <property name="width_request">130</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                    <property name="has_tooltip">True</property>
+                                    <property name="tooltip_text" translatable="yes">skip IHS if start of next cut
+is less than this distance
+from end of previous cut</property>
+                                    <property name="xalign">0</property>
+                                    <property name="xpad">2</property>
+                                    <property name="label" translatable="yes">Skip IHS</property>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="fill">False</property>
+                                    <property name="position">1</property>
+                                  </packing>
+                                </child>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">False</property>
+                                <property name="position">2</property>
+                              </packing>
+                            </child>
                           </object>
                           <packing>
                             <property name="expand">True</property>
@@ -2393,25 +2448,23 @@ this may be reduced due to THC movement</property>
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkHBox" id="hboxC1">
+                              <object class="GtkHBox" id="hboxC2">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <child>
-                                  <object class="HAL_SpinButton" id="skip-ihs-distance">
+                                  <object class="HAL_SpinButton" id="probe-start-height">
                                     <property name="width_request">75</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
                                     <property name="has_tooltip">True</property>
-                                    <property name="tooltip_text" translatable="yes">skip IHS if start of next cut
-is less than this distance
-from end of previous cut</property>
+                                    <property name="tooltip_text" translatable="yes">probe start height in machine units</property>
                                     <property name="invisible_char">●</property>
                                     <property name="xalign">1</property>
                                     <property name="primary_icon_activatable">False</property>
                                     <property name="secondary_icon_activatable">False</property>
                                     <property name="primary_icon_sensitive">True</property>
                                     <property name="secondary_icon_sensitive">True</property>
-                                    <property name="adjustment">skip-ihs-distance-adj</property>
+                                    <property name="adjustment">probe-start-height-adj</property>
                                     <property name="wrap">True</property>
                                   </object>
                                   <packing>
@@ -2421,17 +2474,15 @@ from end of previous cut</property>
                                   </packing>
                                 </child>
                                 <child>
-                                  <object class="GtkLabel" id="labelC1">
+                                  <object class="GtkLabel" id="labelC2">
                                     <property name="width_request">130</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">False</property>
                                     <property name="has_tooltip">True</property>
-                                    <property name="tooltip_text" translatable="yes">skip IHS if start of next cut
-is less than this distance
-from end of previous cut</property>
+                                    <property name="tooltip_text" translatable="yes">probe start height in machine units</property>
                                     <property name="xalign">0</property>
                                     <property name="xpad">2</property>
-                                    <property name="label" translatable="yes">Skip IHS</property>
+                                    <property name="label" translatable="yes">Probe Height</property>
                                   </object>
                                   <packing>
                                     <property name="expand">False</property>
@@ -2444,6 +2495,23 @@ from end of previous cut</property>
                                 <property name="expand">False</property>
                                 <property name="fill">False</property>
                                 <property name="position">1</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkHBox" id="hbox4">
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                                <child>
+                                  <placeholder/>
+                                </child>
+                                <child>
+                                  <placeholder/>
+                                </child>
+                              </object>
+                              <packing>
+                                <property name="expand">True</property>
+                                <property name="fill">True</property>
+                                <property name="position">2</property>
                               </packing>
                             </child>
                           </object>

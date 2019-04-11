@@ -555,6 +555,8 @@ w('spinbox',fmotion + '.float-switch-travel')
 w('label',fmotion + '.fSTlab','-text','Float Travel')
 w('spinbox',fmotion + '.probe-feed-rate')
 w('label',fmotion + '.pFRlab','-text','Probe Speed')
+w('spinbox',fmotion + '.probe-start-height')
+w('label',fmotion + '.pSHlab','-text','Probe Height')
 w('spinbox',fmotion + '.skip-ihs-distance','-from','0','-to','20')
 w('label',fmotion + '.sIDlab','-text','Skip IHS')
 w('grid',fmotion + '.safe-height','-row','0','-column','0')
@@ -563,13 +565,16 @@ w('grid',fmotion + '.float-switch-travel','-row','1','-column','0')
 w('grid',fmotion + '.fSTlab','-row','1','-column','1')
 w('grid',fmotion + '.probe-feed-rate','-row','2','-column','0')
 w('grid',fmotion + '.pFRlab','-row','2','-column','1')
-w('grid',fmotion + '.skip-ihs-distance','-row','3','-column','0')
-w('grid',fmotion + '.sIDlab','-row','3','-column','1')
-w('grid','rowconfigure',fmotion,'0 1 2 3','-pad','2')
+w('grid',fmotion + '.probe-start-height','-row','3','-column','0')
+w('grid',fmotion + '.pSHlab','-row','3','-column','1')
+w('grid',fmotion + '.skip-ihs-distance','-row','4','-column','0')
+w('grid',fmotion + '.sIDlab','-row','4','-column','1')
+w('grid','rowconfigure',fmotion,'0 1 2 3 4','-pad','2')
 w('grid','columnconfigure',fmotion,'0 1 2 3','-weight','1')
 w('DynamicHelp::add',fmotion + '.safe-height','-text','Safe height above stock for rapid traverse\n(machine units)')
 w('DynamicHelp::add',fmotion + '.float-switch-travel','-text','Float switch travel\n(machine units)')
 w('DynamicHelp::add',fmotion + '.probe-feed-rate','-text','Probing speed\n(machine units per minute)')
+w('DynamicHelp::add',fmotion + '.probe-start-height','-text','Probing start height\n(machine units)')
 w('DynamicHelp::add',fmotion + '.skip-ihs-distance','-text','Skip probing if start of cut\nis less than this distance\nfrom end of last cut')
 
 # arc frame
@@ -577,7 +582,7 @@ w('spinbox',farc + '.arc-fail-delay')
 w('label',farc + '.aFDlab','-text','Fail Timeout')
 w('spinbox',farc + '.arc-max-starts')
 w('label',farc + '.aMSlab','-text','Max. Starts')
-w('spinbox',farc + '.arc-restart-delay')
+w('spinbox',farc + '.restart-delay')
 w('label',farc + '.aRDlab','-text','Retry Delay')
 w('spinbox',farc + '.torch-off-delay')
 w('label',farc + '.tODlab','-text','Off Delay')
@@ -593,7 +598,7 @@ w('grid',farc + '.arc-fail-delay','-row','0','-column','0')
 w('grid',farc + '.aFDlab','-row','0','-column','1')
 w('grid',farc + '.arc-max-starts','-row','1','-column','0')
 w('grid',farc + '.aMSlab','-row','1','-column','1')
-w('grid',farc + '.arc-restart-delay','-row','2','-column','0')
+w('grid',farc + '.restart-delay','-row','2','-column','0')
 w('grid',farc + '.aRDlab','-row','2','-column','1')
 w('grid',farc + '.torch-off-delay','-row','3','-column','0')
 w('grid',farc + '.tODlab','-row','3','-column','1')
@@ -609,7 +614,7 @@ w('grid','rowconfigure',farc,'0 1 2 3 4 5 6 7','-pad','2')
 w('grid','columnconfigure',farc,'0 1 2 3','-weight','1')
 w('DynamicHelp::add',farc + '.arc-fail-delay','-text','Time to wait for arc ok signal\n(seconds)')
 w('DynamicHelp::add',farc + '.arc-max-starts','-text','Maximum number of attemps\nto sart the torch')
-w('DynamicHelp::add',farc + '.arc-restart-delay','-text','Time to wait between arc start attempts')
+w('DynamicHelp::add',farc + '.restart-delay','-text','Time to wait between arc start attempts')
 w('DynamicHelp::add',farc + '.torch-off-delay','-text','Torch off time delay\n(seconds)')
 w('DynamicHelp::add',farc + '.arc-voltage-scale','-text','Scale value to set correct voltage')
 w('DynamicHelp::add',farc + '.arc-voltage-offset','-text','Offset value to set correct')
@@ -860,6 +865,7 @@ def user_live_update():
                 if item == 'arc-max-starts':
                     hal.set_p('plasmac.%s' % (item),'%d' % (value))
                 else:
+                    print '\nITEM: %s, VALUE: %f\n' % (item,value)
                     hal.set_p('plasmac.%s' % (item),'%f' % (value))
                 if item == 'setup-feed-rate': #limit max probe feed rate to setup feed rate
                     w(fmotion + '.probe-feed-rate','configure','-to',value)
@@ -973,7 +979,7 @@ def configure_widgets():
     w(farc + '.arc-ok-low','configure','-from','0','-to','200','-increment','0.5','-format','%0.1f') #0
     w(farc + '.arc-ok-high','configure','-from','50','-to','200','-increment','0.5','-format','%0.1f') #50
     w(farc + '.arc-max-starts','configure','-from','1','-to','9','-increment','1','-format','%0.0f') #3
-    w(farc + '.arc-restart-delay','configure','-from','1','-to','60','-increment','1','-format','%0.0f') #1
+    w(farc + '.restart-delay','configure','-from','1','-to','60','-increment','1','-format','%0.0f') #1
     w(farc + '.arc-voltage-offset','configure','-from','-100','-to','100','-increment','0.1','-format','%0.1f') #0
     w(farc + '.arc-voltage-scale','configure','-from','0.01','-to','99','-increment','0.01','-format','%0.2f') #1
     w(foffsets + '.maxspeed','configure','-text',str(int(thcFeedRate)))
@@ -985,6 +991,7 @@ def configure_widgets():
         w(fcutparms + '.pierce-height','configure','-from','0','-to','25.4','-increment','0.1','-format','%0.1f') #4
         w(fmotion + '.float-switch-travel','configure','-from','0','-to','20','-increment','0.01','-format','%0.2f') #1.5
         w(fmotion + '.probe-feed-rate','configure','-from','1','-to',thcFeedRate,'-increment','1','-format','%0.0f') #300
+        w(fmotion + '.probe-start-height','configure','-from','1','-to',maxHeight,'-increment','1','-format','%0.0f') #30
         w(fmotion + '.safe-height','configure','-from','1','-to','99','-increment','1','-format','%0.0f') #20
         w(fmotion + '.skip-ihs-distance','configure','-from','0','-to','999','-increment','1','-format','%0.0f') #0
         w(foffsets + '.setup-feed-rate','configure','-from','1','-to',thcFeedRate,'-increment','1','-format','%0.0f') #int(thcFeedRate * 0.8)
@@ -994,6 +1001,7 @@ def configure_widgets():
         w(fcutparms + '.pierce-height','configure','-from','0','-to','1','-increment','0.01','-format','%0.2f') #0.16
         w(fmotion + '.float-switch-travel','configure','-from','0','-to','0.75','-increment','0.001','-format','%0.3f') #0.06
         w(fmotion + '.probe-feed-rate','configure','-from','0.1','-to',thcFeedRate,'-increment','0.1','-format','%0.1f') #12
+        w(fmotion + '.probe-start-height','configure','-from','0.1','-to',maxHeight,'-increment','0.1','-format','%0.1f') #1.2
         w(fmotion + '.safe-height','configure','-from','0.04','-to','4','-increment','0.01','-format','%0.2f') #0.75
         w(fmotion + '.skip-ihs-distance','configure','-from','0','-to','99','-increment','0.1','-format','%0.1f') #0
         w(foffsets + '.setup-feed-rate','configure','-from','0.1','-to',thcFeedRate,'-increment','0.1','-format','%0.1f') #int(thcFeedRate * 0.8)
@@ -1046,7 +1054,7 @@ def load_settings():
                     w(widget,'set',configDict.get(item))
                     if item == 'arc-max-starts':
                         hal.set_p('plasmac.%s' % (item),'%d' % (float(configDict.get(item))))
-                    elif item == 'arc-restart-delay':
+                    elif item == 'restart-delay':
                         hal.set_p('plasmac.restart-delay','%d' % (float(configDict.get(item))))
                     elif item != 'cut-amps' and item != 'paused-motion-speed':
                         hal.set_p('plasmac.%s' % (item),'%f' % (float(configDict.get(item))))
@@ -1189,6 +1197,7 @@ def set_mode(mode):
 firstrundone = 0
 thcFeedRate = (float(inifile.find('AXIS_Z','MAX_VELOCITY')) * \
                float(inifile.find('AXIS_Z','OFFSET_AV_RATIO'))) * 60
+maxHeight = hal.get_value('ini.z.max_limit')
 hal.set_p('plasmac.thc-feed-rate','%f' % (thcFeedRate))
 configFile = inifile.find('EMC','MACHINE').lower() + '.cfg'
 materialsFile = inifile.find('EMC','MACHINE').lower() + '.mat'
@@ -1263,10 +1272,11 @@ wSpinboxes =\
     fmotion + '.safe-height',\
     fmotion + '.float-switch-travel',\
     fmotion + '.probe-feed-rate',\
+    fmotion + '.probe-start-height',\
     fmotion + '.skip-ihs-distance',\
     farc + '.arc-fail-delay',\
     farc + '.arc-max-starts',\
-    farc + '.arc-restart-delay',\
+    farc + '.restart-delay',\
     farc + '.torch-off-delay',\
     farc + '.arc-voltage-scale',\
     farc + '.arc-voltage-offset',\

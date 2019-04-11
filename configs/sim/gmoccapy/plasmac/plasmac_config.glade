@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <!-- interface-requires gladevcp 0.0 -->
-  <!-- interface-requires †GÇ*V 0.0 -->
   <requires lib="gtk+" version="2.18"/>
   <!-- interface-naming-policy project-wide -->
   <object class="GtkAdjustment" id="arc-fail-delay-adj"/>
@@ -15,6 +14,7 @@
   <object class="GtkAdjustment" id="pid-d-gain-adj"/>
   <object class="GtkAdjustment" id="pid-i-gain-adj"/>
   <object class="GtkAdjustment" id="probe-feed-rate-adj"/>
+  <object class="GtkAdjustment" id="probe-start-height-adj"/>
   <object class="GtkAdjustment" id="safe-height-adj"/>
   <object class="GtkAdjustment" id="setup-feed-rate-adj"/>
   <object class="GtkAdjustment" id="skip-ihs-distance-adj"/>
@@ -52,7 +52,7 @@
                           <object class="GtkTable" id="table5">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
-                            <property name="n_rows">4</property>
+                            <property name="n_rows">5</property>
                             <property name="n_columns">2</property>
                             <property name="column_spacing">2</property>
                             <property name="row_spacing">2</property>
@@ -122,8 +122,8 @@ from end of previous cut</property>
                               <packing>
                                 <property name="left_attach">1</property>
                                 <property name="right_attach">2</property>
-                                <property name="top_attach">3</property>
-                                <property name="bottom_attach">4</property>
+                                <property name="top_attach">4</property>
+                                <property name="bottom_attach">5</property>
                               </packing>
                             </child>
                             <child>
@@ -203,6 +203,43 @@ from end of previous cut</property>
                                 <property name="wrap">True</property>
                               </object>
                               <packing>
+                                <property name="top_attach">4</property>
+                                <property name="bottom_attach">5</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="HAL_SpinButton" id="probe-start-height">
+                                <property name="visible">True</property>
+                                <property name="can_focus">True</property>
+                                <property name="has_tooltip">True</property>
+                                <property name="tooltip_text" translatable="yes">probe start height in machine units</property>
+                                <property name="invisible_char">‚óè</property>
+                                <property name="xalign">1</property>
+                                <property name="primary_icon_activatable">False</property>
+                                <property name="secondary_icon_activatable">False</property>
+                                <property name="primary_icon_sensitive">True</property>
+                                <property name="secondary_icon_sensitive">True</property>
+                                <property name="adjustment">probe-start-height-adj</property>
+                                <property name="wrap">True</property>
+                              </object>
+                              <packing>
+                                <property name="top_attach">3</property>
+                                <property name="bottom_attach">4</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkLabel" id="labelC2">
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                                <property name="has_tooltip">True</property>
+                                <property name="tooltip_text" translatable="yes">probe start height in machine units</property>
+                                <property name="xalign">0</property>
+                                <property name="xpad">2</property>
+                                <property name="label" translatable="yes">Probe Height</property>
+                              </object>
+                              <packing>
+                                <property name="left_attach">1</property>
+                                <property name="right_attach">2</property>
                                 <property name="top_attach">3</property>
                                 <property name="bottom_attach">4</property>
                               </packing>

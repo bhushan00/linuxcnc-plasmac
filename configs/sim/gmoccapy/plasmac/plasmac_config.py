@@ -67,6 +67,8 @@ class HandlerClass:
             self.builder.get_object('float-switch-travel-adj').configure(1.5,0,9,0.01,0,0)
             self.builder.get_object('probe-feed-rate').set_digits(0)
             self.builder.get_object('probe-feed-rate-adj').configure(1000,1,self.thcFeedRate,1,0,0)
+            self.builder.get_object('probe-start-height').set_digits(0)
+            self.builder.get_object('probe-start-height-adj').configure(0,1,self.maxHeight,1,0,0)
             self.builder.get_object('safe-height').set_digits(0)
             self.builder.get_object('safe-height-adj').configure(20,1,99,1,0,0)
             self.builder.get_object('setup-feed-rate').set_digits(0)
@@ -78,6 +80,8 @@ class HandlerClass:
             self.builder.get_object('float-switch-travel-adj').configure(0.06,0,1,0.001,0,0)
             self.builder.get_object('probe-feed-rate').set_digits(1)
             self.builder.get_object('probe-feed-rate-adj').configure(40,.1,self.thcFeedRate,.1,0,0)
+            self.builder.get_object('probe-start-height').set_digits(2)
+            self.builder.get_object('probe-start-height-adj').configure(19,.1,self.maxHeight,0.01,0,0)
             self.builder.get_object('safe-height').set_digits(2)
             self.builder.get_object('safe-height-adj').configure(0.75,0.04,4,0.01,0,0)
             self.builder.get_object('setup-feed-rate').set_digits(1)
@@ -238,6 +242,7 @@ class HandlerClass:
         self.configDict = {}
         self.oldMode = 9
         self.materialsUpdate = False
+        self.maxHeight = hal.get_value('ini.z.max_limit')
         self.configure_widgets()
         self.builder.get_object('probe-feed-rate-adj').set_upper(self.builder.get_object('setup-feed-rate').get_value())
         self.load_settings()

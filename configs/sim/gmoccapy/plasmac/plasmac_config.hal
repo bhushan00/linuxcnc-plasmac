@@ -10,6 +10,7 @@ net plasmac:float-switch-travel     plasmac_config.float-switch-travel-f    =>  
 net plasmac:pid-d-gain              plasmac_config.pid-d-gain-f             =>  plasmac.pid-d-gain
 net plasmac:pid-i-gain              plasmac_config.pid-i-gain-f             =>  plasmac.pid-i-gain
 net plasmac:probe-feed-rate         plasmac_config.probe-feed-rate-f        =>  plasmac.probe-feed-rate
+net plasmac:probe-start-height      plasmac_config.probe-start-height-f     =>  plasmac.probe-start-height
 net plasmac:restart-delay           plasmac_config.arc-restart-delay-f      =>  plasmac.restart-delay
 net plasmac:safe-height             plasmac_config.safe-height-f            =>  plasmac.safe-height
 net plasmac:setup-feed-rate         plasmac_config.setup-feed-rate-f        =>  plasmac.setup-feed-rate

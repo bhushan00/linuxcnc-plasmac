@@ -2,55 +2,56 @@
 
 #***** plasmac component ***********************************************
 # inputs
-net plasmac:axis-max-limit          ini.z.max_limit                 =>  plasmac.axis-z-max-limit
-net plasmac:axis-min-limit          ini.z.min_limit                 =>  plasmac.axis-z-min-limit
+net plasmac:axis-max-limit          ini.z.max_limit                     =>  plasmac.axis-z-max-limit
+net plasmac:axis-min-limit          ini.z.min_limit                     =>  plasmac.axis-z-min-limit
 
 #***** gladevcp run page ***********************************************
 # inputs
-net plasmac:cornerlock-enable       gladevcp.cornerlock-enable      =>  plasmac.cornerlock-enable
-net plasmac:cornerlock-threshold    gladevcp.cornerlock-threshold-f =>  plasmac.cornerlock-threshold
-net plasmac:cut-feed-rate           gladevcp.cut-feed-rate-f        =>  plasmac.cut-feed-rate
-net plasmac:cut-height              gladevcp.cut-height-f           =>  plasmac.cut-height
-net plasmac:cut-volts               gladevcp.cut-volts-f            =>  plasmac.cut-volts
-net plasmac:height-override         gladevcp.height-override        =>  plasmac.height-override
-net plasmac:kerfcross-enable        gladevcp.kerfcross-enable       =>  plasmac.kerfcross-enable
-net plasmac:pid-p-gain              gladevcp.pid-p-gain-f           =>  plasmac.pid-p-gain
-net plasmac:pierce-delay            gladevcp.pierce-delay-f         =>  plasmac.pierce-delay
-net plasmac:pierce-height           gladevcp.pierce-height-f        =>  plasmac.pierce-height
-net plasmac:puddle-jump-delay       gladevcp.puddle-jump-delay-f     =>  plasmac.puddle-jump-delay
-net plasmac:puddle-jump-height      gladevcp.puddle-jump-height-f    =>  plasmac.puddle-jump-height
-net plasmac:thc-enable              gladevcp.thc-enable             =>  plasmac.thc-enable
-net plasmac:thc-threshold           gladevcp.thc-threshold-f        =>  plasmac.thc-threshold
-net plasmac:torch-pulse-start       gladevcp.torch-pulse-start      =>  plasmac.torch-pulse-start
-net plasmac:torch-pulse-time        gladevcp.torch-pulse-time       =>  plasmac.torch-pulse-time
-net plasmac:use-auto-volts          gladevcp.use-auto-volts         =>  plasmac.use-auto-volts
+net plasmac:cornerlock-enable       gladevcp.cornerlock-enable          =>  plasmac.cornerlock-enable
+net plasmac:cornerlock-threshold    gladevcp.cornerlock-threshold-f     =>  plasmac.cornerlock-threshold
+net plasmac:cut-feed-rate           gladevcp.cut-feed-rate-f            =>  plasmac.cut-feed-rate
+net plasmac:cut-height              gladevcp.cut-height-f               =>  plasmac.cut-height
+net plasmac:cut-volts               gladevcp.cut-volts-f                =>  plasmac.cut-volts
+net plasmac:height-override         gladevcp.height-override            =>  plasmac.height-override
+net plasmac:kerfcross-enable        gladevcp.kerfcross-enable           =>  plasmac.kerfcross-enable
+net plasmac:pid-p-gain              gladevcp.pid-p-gain-f               =>  plasmac.pid-p-gain
+net plasmac:pierce-delay            gladevcp.pierce-delay-f             =>  plasmac.pierce-delay
+net plasmac:pierce-height           gladevcp.pierce-height-f            =>  plasmac.pierce-height
+net plasmac:puddle-jump-delay       gladevcp.puddle-jump-delay-f        =>  plasmac.puddle-jump-delay
+net plasmac:puddle-jump-height      gladevcp.puddle-jump-height-f       =>  plasmac.puddle-jump-height
+net plasmac:thc-enable              gladevcp.thc-enable                 =>  plasmac.thc-enable
+net plasmac:thc-threshold           gladevcp.thc-threshold-f            =>  plasmac.thc-threshold
+net plasmac:torch-pulse-start       gladevcp.torch-pulse-start          =>  plasmac.torch-pulse-start
+net plasmac:torch-pulse-time        gladevcp.torch-pulse-time           =>  plasmac.torch-pulse-time
+net plasmac:use-auto-volts          gladevcp.use-auto-volts             =>  plasmac.use-auto-volts
 
 #outputs
-net plasmac:arc-ok-out              plasmac.arc-ok-out              =>  gladevcp.arc-ok
-net plasmac:arc-voltage-out         plasmac.arc-voltage-out         =>  gladevcp.arc-voltage
-net plasmac:breakaway-switch-out                                    =>  gladevcp.breakaway-switch
-net plasmac:cornerlock-is-locked    plasmac.cornerlock-is-locked    =>  gladevcp.cornerlock-is-locked
-net plasmac:float-switch-out                                        =>  gladevcp.float-switch
-net plasmac:kerfcross-is-locked     plasmac.kerfcross-is-locked     =>  gladevcp.kerfcross-is-locked
-net plasmac:led-down                plasmac.led-down                =>  gladevcp.led-down
-net plasmac:led-up                  plasmac.led-up                  =>  gladevcp.led-up
-net plasmac:ohmic-probe-out                                         =>  gladevcp.ohmic-probe
-net plasmac:torch-on                                                =>  gladevcp.torch-on
+net plasmac:arc-ok-out              plasmac.arc-ok-out                  =>  gladevcp.arc-ok
+net plasmac:arc-voltage-out         plasmac.arc-voltage-out             =>  gladevcp.arc-voltage
+net plasmac:breakaway-switch-out                                        =>  gladevcp.breakaway-switch
+net plasmac:cornerlock-is-locked    plasmac.cornerlock-is-locked        =>  gladevcp.cornerlock-is-locked
+net plasmac:float-switch-out                                            =>  gladevcp.float-switch
+net plasmac:kerfcross-is-locked     plasmac.kerfcross-is-locked         =>  gladevcp.kerfcross-is-locked
+net plasmac:led-down                plasmac.led-down                    =>  gladevcp.led-down
+net plasmac:led-up                  plasmac.led-up                      =>  gladevcp.led-up
+net plasmac:ohmic-probe-out                                             =>  gladevcp.ohmic-probe
+net plasmac:torch-on                                                    =>  gladevcp.torch-on
 
 #***** gladevcp config page ********************************************
 # inputs
-net plasmac:arc-ok-high             gladevcp.arc-ok-high-f          =>  plasmac.arc-ok-high
-net plasmac:arc-ok-low              gladevcp.arc-ok-low-f           =>  plasmac.arc-ok-low
-net plasmac:arc-max-starts          gladevcp.arc-max-starts-s       =>  plasmac.arc-max-starts
-net plasmac:arc-fail-delay          gladevcp.arc-fail-delay-f       =>  plasmac.arc-fail-delay
-net plasmac:arc-voltage-offset      gladevcp.arc-voltage-offset-f   =>  plasmac.arc-voltage-offset
-net plasmac:arc-voltage-scale       gladevcp.arc-voltage-scale-f    =>  plasmac.arc-voltage-scale
-net plasmac:float-switch-travel     gladevcp.float-switch-travel-f  =>  plasmac.float-switch-travel
-net plasmac:pid-d-gain              gladevcp.pid-d-gain-f           =>  plasmac.pid-d-gain
-net plasmac:pid-i-gain              gladevcp.pid-i-gain-f           =>  plasmac.pid-i-gain
-net plasmac:probe-feed-rate         gladevcp.probe-feed-rate-f      =>  plasmac.probe-feed-rate
-net plasmac:restart-delay           gladevcp.arc-restart-delay-f    =>  plasmac.restart-delay
-net plasmac:safe-height             gladevcp.safe-height-f          =>  plasmac.safe-height
-net plasmac:setup-feed-rate         gladevcp.setup-feed-rate-f      =>  plasmac.setup-feed-rate
-net plasmac:skip-ihs-distance       gladevcp.skip-ihs-distance-f    =>  plasmac.skip-ihs-distance
-net plasmac:torch-off-delay         gladevcp.torch-off-delay-f      =>  plasmac.torch-off-delay
+net plasmac:arc-ok-high             gladevcp.arc-ok-high-f              =>  plasmac.arc-ok-high
+net plasmac:arc-ok-low              gladevcp.arc-ok-low-f               =>  plasmac.arc-ok-low
+net plasmac:arc-max-starts          gladevcp.arc-max-starts-s           =>  plasmac.arc-max-starts
+net plasmac:arc-fail-delay          gladevcp.arc-fail-delay-f           =>  plasmac.arc-fail-delay
+net plasmac:arc-voltage-offset      gladevcp.arc-voltage-offset-f       =>  plasmac.arc-voltage-offset
+net plasmac:arc-voltage-scale       gladevcp.arc-voltage-scale-f        =>  plasmac.arc-voltage-scale
+net plasmac:float-switch-travel     gladevcp.float-switch-travel-f      =>  plasmac.float-switch-travel
+net plasmac:pid-d-gain              gladevcp.pid-d-gain-f               =>  plasmac.pid-d-gain
+net plasmac:pid-i-gain              gladevcp.pid-i-gain-f               =>  plasmac.pid-i-gain
+net plasmac:probe-feed-rate         gladevcp.probe-feed-rate-f          =>  plasmac.probe-feed-rate
+net plasmac:probe-start-height      plasmac_config.probe-start-height-f =>  plasmac.probe-start-height
+net plasmac:restart-delay           gladevcp.arc-restart-delay-f        =>  plasmac.restart-delay
+net plasmac:safe-height             gladevcp.safe-height-f              =>  plasmac.safe-height
+net plasmac:setup-feed-rate         gladevcp.setup-feed-rate-f          =>  plasmac.setup-feed-rate
+net plasmac:skip-ihs-distance       gladevcp.skip-ihs-distance-f        =>  plasmac.skip-ihs-distance
+net plasmac:torch-off-delay         gladevcp.torch-off-delay-f          =>  plasmac.torch-off-delay

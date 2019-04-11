@@ -83,6 +83,7 @@ class HandlerClass:
         self.oldMode = 0
         self.oldTaskMode = STATUS.stat.task_mode
         self.mname = self.ini.find('EMC','MACHINE')
+        self.maxHeight = hal.get_value('ini.z.max_limit')
         self.configure_widgets()
         self.load_settings()
         self.w.probe_feed_rate.setMaximum(self.w.setup_feed_rate.value())
@@ -495,37 +496,60 @@ class HandlerClass:
         if self.ini.find('TRAJ', 'LINEAR_UNITS').lower() == 'mm':
             self.w.cut_feed_rate.setDecimals(0)
             self.w.cut_feed_rate.setRange(50,9999)
+            self.w.cut_feed_rate.setSingleStep(1)
             self.w.cut_height.setDecimals(1)
             self.w.cut_height.setRange(0,25.4)
+            self.w.cut_height.setSingleStep(0.1)
             self.w.float_switch_travel.setDecimals(2)
             self.w.float_switch_travel.setRange(0,9)
+            self.w.float_switch_travel.setSingleStep(0.01)
             self.w.pierce_height.setDecimals(1)
             self.w.pierce_height.setRange(0,25.4)
+            self.w.pierce_height.setSingleStep(0.1)
             self.w.probe_feed_rate.setDecimals(0)
             self.w.probe_feed_rate.setRange(1,self.thcFeedRate)
+            self.w.probe_feed_rate.setSingleStep(0.1)
+            self.w.probe_start_height.setDecimals(0)
+            self.w.probe_start_height.setRange(1,self.maxHeight)
+            self.w.probe_start_height.setSingleStep(1)
             self.w.safe_height.setDecimals(0)
             self.w.safe_height.setRange(1,99)
+            self.w.safe_height.setSingleStep(1)
             self.w.setup_feed_rate.setDecimals(0)
             self.w.setup_feed_rate.setRange(1,self.thcFeedRate)
+            self.w.setup_feed_rate.setSingleStep(1)
             self.w.skip_ihs_distance.setDecimals(0)
             self.w.skip_ihs_distance.setRange(0,999)
+            self.w.skip_ihs_distance.setSingleStep(0.0)
         elif self.ini.find('TRAJ', 'LINEAR_UNITS').lower() == 'inch':
             self.w.cut_feed_rate.setDecimals(1)
             self.w.cut_feed_rate.setRange(2,400)
+            self.w.cut_feed_rate.setSingleStep(0.1)
             self.w.cut_height.setDecimals(2)
             self.w.cut_height.setRange(0,1)
+            self.w.cut_height.setSingleStep(0.01)
             self.w.float_switch_travel.setDecimals(3)
             self.w.float_switch_travel.setRange(0,1)
+            self.w.float_switch_travel.setSingleStep(0.001)
             self.w.pierce_height.setDecimals(2)
             self.w.pierce_height.setRange(0,1)
+            self.w.pierce_height.setSingleStep(0.01)
             self.w.probe_feed_rate.setDecimals(1)
             self.w.probe_feed_rate.setRange(0.1,self.thcFeedRate)
+            self.w.probe_feed_rate.setSingleStep(0.1)
+            self.w.probe_start_height.setDecimals(2)
+            self.w.probe_start_height.setRange(0.1,self.maxHeight)
+            self.w.probe_start_height.setSingleStep(0.01)
             self.w.safe_height.setDecimals(2)
             self.w.safe_height.setRange(0.04,4)
+            self.w.safe_height.setSingleStep(0.01)
             self.w.setup_feed_rate.setDecimals(1)
             self.w.setup_feed_rate.setRange(0.1,self.thcFeedRate)
+            self.w.setup_feed_rate.setSingleStep(0.1)
             self.w.skip_ihs_distance.setDecimals(1)
             self.w.skip_ihs_distance.setRange(0,99)
+            self.w.skip_ihs_distance.setSingleStep(0.1)
+
         else:
             print '*** incorrect [TRAJ]LINEAR_UNITS in ini file'
 
@@ -537,8 +561,8 @@ class HandlerClass:
                                'cut_amps','cut_volts','thc_enable','use_auto_volts',\
                                'thc_threshold','pid_p_gain','cornerlock_enable',\
                                'cornerlock_threshold','kerfcross_enable',\
-                               'kerfcross_threshold','safe_height',\
-                               'float_switch_travel','probe_feed_rate','skip_ihs_distance',\
+                               'kerfcross_threshold','safe_height','float_switch_travel',\
+                               'probe_feed_rate','probe_start_height','skip_ihs_distance',\
                                'arc_fail_delay','arc_max_starts','arc_restart_delay',\
                                'torch_off_delay','arc_voltage_scale','arc_voltage_offset',\
                                'arc_ok_high','arc_ok_low','setup_feed_rate','pid_i_gain',\
