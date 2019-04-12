@@ -6,6 +6,8 @@ A plasma cutting table control component for use with the linuxcnc master branch
 
 .I VERSIONS:
 .br
+V0.26.11 - 2019/04/12 - more probe error checking
+.br
 V0.26.1 - 2019/04/12 - fix probe height for second and subsequent cuts
 .br
 V0.26 - 2019/04/10 - remove redundant code
@@ -319,6 +321,7 @@ variable float  cut_target;                 /* cut height target offset */
 variable bool   dry_run;                    /* dry run in progress */
 variable bool   error_message;              /* 1 if error message has been sent */
 variable bool   first_cut_finished;         /* first cut is complete */
+variable bool   float_detected;             /* float switch detected */
 variable float  height_ovr_counts;          /* number of counts to change height via override */
 variable float  height_ovr_old;             /* old height override value */
 variable bool   initialized;                /* initialization flag */
@@ -658,13 +661,31 @@ FUNCTION(_) {
             if(probe_testing && !probe_test){
                 state = PROBE_TEST;
             }
-            if(offset_counts - setup_velocity > probe_start_target){
+            if(float_switch && !float_detected){
+                stop_type = PAUSE;
+                program_pause = TRUE;
+                state = SAFE_HEIGHT;
+                rtapi_print_msg(RTAPI_MSG_ERR,"float switch detected before probing\n"
+                                              "program is paused...\n");
+            }else if(ohmic_probe){
+                stop_type = PAUSE;
+                program_pause = TRUE;
+                state = SAFE_HEIGHT;
+                rtapi_print_msg(RTAPI_MSG_ERR,"ohmic probe detected before probing\n"
+                                              "program is paused...\n");
+            }else if(offset_counts - setup_velocity > probe_start_target){
                 offset_counts -= setup_velocity;
             }else if(offset_counts + setup_velocity < probe_start_target){
                 offset_counts += setup_velocity;
             }else{
                 offset_counts = probe_start_target;
-                state = PROBE_DOWN;
+                if(float_detected){
+                    if(!float_switch){
+                        float_detected = FALSE;
+                    }
+                }else{
+                    state = PROBE_DOWN;
+                }
             }
             break;
         case PROBE_DOWN:
@@ -701,15 +722,19 @@ FUNCTION(_) {
                 }else{
                     offset_counts -= probe_velocity;
                 }
-            }else if(float_switch){
+            }else if(float_switch && !float_detected){
                 if(ohmic_attempts == ohmic_max_attempts){
+                    rtapi_print_msg(RTAPI_MSG_ERR,"YES");
                     probe_type = FLOAT;
                     target_sensed = TRUE;
                     probe_force = probe_force_val;
                     ohmic_attempts = 0;
+                    float_detected = FALSE;
                 }else{
+                    rtapi_print_msg(RTAPI_MSG_ERR,"NO");
                     state = PROBE_HEIGHT;
                     ohmic_attempts += 1;
+                    float_detected = TRUE;
                 }
             }else if(ohmic_probe){
                 probe_type = OHMIC;
