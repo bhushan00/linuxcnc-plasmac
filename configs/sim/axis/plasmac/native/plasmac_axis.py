@@ -867,7 +867,7 @@ def user_live_update():
             value = float(w(widget,'get'))
             if value != widgetValues[widget]:
                 widgetValues[widget] = value
-                if item == 'arc-max-starts' or item == 'ohmic-max-attempts':
+                if item in 'ohmic-max-attempts,arc-max-starts','restart-delay':
                     hal.set_p('plasmac.%s' % (item),'%d' % (value))
                 else:
                     hal.set_p('plasmac.%s' % (item),'%f' % (value))
@@ -1057,10 +1057,8 @@ def load_settings():
                     if item == 'setup-feed-rate' and float(configDict.get(item)) > thcFeedRate:
                         configDict[item] = thcFeedRate
                     w(widget,'set',configDict.get(item))
-                    if item == 'arc-max-starts':
+                    if item in 'ohmic-max-attempts,arc-max-starts','restart-delay':
                         hal.set_p('plasmac.%s' % (item),'%d' % (float(configDict.get(item))))
-                    elif item == 'restart-delay':
-                        hal.set_p('plasmac.restart-delay','%d' % (float(configDict.get(item))))
                     elif item != 'cut-amps' and item != 'paused-motion-speed':
                         hal.set_p('plasmac.%s' % (item),'%f' % (float(configDict.get(item))))
                 else:
