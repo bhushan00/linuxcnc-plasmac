@@ -867,7 +867,7 @@ def user_live_update():
             value = float(w(widget,'get'))
             if value != widgetValues[widget]:
                 widgetValues[widget] = value
-                if item in 'ohmic-max-attempts,arc-max-starts','restart-delay':
+                if item in 'ohmic-max-attempts,arc-max-starts,restart-delay':
                     hal.set_p('plasmac.%s' % (item),'%d' % (value))
                 else:
                     hal.set_p('plasmac.%s' % (item),'%f' % (value))
@@ -902,7 +902,7 @@ def user_live_update():
         isIdleOn = False 
     for n in range(1,6):
         if iniButtonCode[n] in ['ohmic-test']:
-            if isIdleOn:
+            if isIdleOn or hal.get_value('halui.program.is-paused'):
                 w(fbuttons + '.button' + str(n),'configure','-state','normal')
             else:
                 w(fbuttons + '.button' + str(n),'configure','-state','disabled')
@@ -913,7 +913,7 @@ def user_live_update():
                     w(fbuttons + '.button' + str(n),'configure','-state','disabled')
             else:
                 w(fbuttons + '.button' + str(n),'configure','-state','disabled')
-    if hal.get_value('halui.machine.is-on') and hal.get_value('halui.program.is-idle'):
+    if hal.get_value('halui.machine.is-on') and (hal.get_value('halui.program.is-idle') or hal.get_value('halui.program.is-paused')):
         w(ftorch + '.torch-button','configure','-state','normal')
     else:
         w(ftorch + '.torch-button','configure','-state','disabled')
@@ -1057,7 +1057,7 @@ def load_settings():
                     if item == 'setup-feed-rate' and float(configDict.get(item)) > thcFeedRate:
                         configDict[item] = thcFeedRate
                     w(widget,'set',configDict.get(item))
-                    if item in 'ohmic-max-attempts,arc-max-starts','restart-delay':
+                    if item in 'ohmic-max-attempts,arc-max-starts,restart-delay':
                         hal.set_p('plasmac.%s' % (item),'%d' % (float(configDict.get(item))))
                     elif item != 'cut-amps' and item != 'paused-motion-speed':
                         hal.set_p('plasmac.%s' % (item),'%f' % (float(configDict.get(item))))

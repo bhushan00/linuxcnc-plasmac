@@ -930,7 +930,7 @@ class HandlerClass:
             self.w.home_button.setEnabled(False)
             self.w.edit_button.setEnabled(False)
             self.w.run_from_button.setEnabled(False)
-            self.w.torch_pulse_start.setEnabled(False)
+            self.w.torch_pulse_start.setEnabled(True)
             self.w.reverse.setEnabled(True)
             self.w.forward.setEnabled(True)
         else:
@@ -942,7 +942,7 @@ class HandlerClass:
             self.w.forward.setEnabled(False)
         for n in range(1,7):
             if self.iniButtonCode[n] in ['ohmic-test']:
-                if STATUS.machine_is_on() and not hal.get_value('plasmac.arc-ok-out') and STATUS.stat.interp_state == linuxcnc.INTERP_IDLE:
+                if STATUS.machine_is_on() and hal.get_value('halui.program.is-paused') or hal.get_value('halui.program.is-idle'):
                     self.buttons[n].setEnabled(True)
                 else:
                     self.buttons[n].setEnabled(False)

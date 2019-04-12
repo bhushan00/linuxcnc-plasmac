@@ -43,7 +43,7 @@ class HandlerClass:
         if self.rapid_override != self.s.rapidrate:
             self.builder.get_object('rapid-override').set_active(int(self.s.rapidrate * 100))
             self.feed_override = int(self.s.rapidrate * 100)
-        if hal.get_value('halui.program.is-idle') and hal.get_value('halui.machine.is-on'):
+        if hal.get_value('halui.machine.is-on') and not hal.get_value('halui.program.is-running'):
             self.builder.get_object('torch-pulse-start').set_sensitive(True)
         else:
             self.builder.get_object('torch-pulse-start').set_sensitive(False)

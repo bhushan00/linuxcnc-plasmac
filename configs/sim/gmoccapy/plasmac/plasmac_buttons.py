@@ -145,7 +145,7 @@ class HandlerClass:
             isIdleOn = False 
         for n in range(1,6):
             if self.iniButtonCode[n] in ['ohmic-test']:
-                if isIdleOn:
+                if isIdleOn or hal.get_value('halui.program.is-paused'):
                     self.builder.get_object('button' + str(n)).set_sensitive(True)
                 else:
                     self.builder.get_object('button' + str(n)).set_sensitive(False)

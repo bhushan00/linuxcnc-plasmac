@@ -392,7 +392,7 @@ class HandlerClass:
             isIdleOn = False 
         for n in range(1,6):
             if self.iniButtonCode[n] in ['ohmic-test']:
-                if isIdleOn:
+                if isIdleOn or hal.get_value('halui.program.is-paused'):
                     self.builder.get_object('button' + str(n)).set_sensitive(True)
                 else:
                     self.builder.get_object('button' + str(n)).set_sensitive(False)
@@ -403,7 +403,7 @@ class HandlerClass:
                         self.builder.get_object('button' + str(n)).set_sensitive(False)
                 else:
                     self.builder.get_object('button' + str(n)).set_sensitive(False)
-        if hal.get_value('halui.machine.is-on') and hal.get_value('halui.program.is-idle'):
+        if hal.get_value('halui.machine.is-on') and not hal.get_value('halui.program.is-running'):
             self.builder.get_object('torch-pulse-start').set_sensitive(True)
         else:
             self.builder.get_object('torch-pulse-start').set_sensitive(False)
