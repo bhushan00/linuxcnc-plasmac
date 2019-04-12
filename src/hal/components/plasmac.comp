@@ -316,6 +316,7 @@ variable float  cut_started;                /* cut has started */
 variable float  cut_target;                 /* cut height target offset */
 variable bool   dry_run;                    /* dry run in progress */
 variable bool   error_message;              /* 1 if error message has been sent */
+variable bool   first_cut_finished;         /* first cut is complete */
 variable float  height_ovr_counts;          /* number of counts to change height via override */
 variable float  height_ovr_old;             /* old height override value */
 variable bool   initialized;                /* initialization flag */
@@ -618,10 +619,12 @@ FUNCTION(_) {
                                                               "program is paused...\n");
                             }
                         }else if (!program_is_paused){
-                            if(probe_start_height){
-                                probe_start_target = offset_counts - ((axis_z_position - probe_start_height) / offset_scale);
-                            }else{
-                                probe_start_target = offset_counts;
+                            if(!first_cut_finished){
+                                if(probe_start_height){
+                                    probe_start_target = offset_counts - ((axis_z_position - probe_start_height) / offset_scale);
+                                }else{
+                                    probe_start_target = offset_counts;
+                                }
                             }
                             state = PROBE_HEIGHT;
                         }
@@ -1041,6 +1044,7 @@ FUNCTION(_) {
                 if(stop_type == WAIT){
                     feed_hold = FALSE;
                 }
+                first_cut_finished = TRUE;
                 state = FINISH;
             }
             break;
@@ -1057,6 +1061,7 @@ FUNCTION(_) {
                 paused_motion = FALSE;
                 adaptive_feed = 1;
                 if(program_is_idle){
+                    first_cut_finished = FALSE;
                     if(offset_counts + setup_velocity < offset_max){
                         offset_counts += setup_velocity;
                     }else{
