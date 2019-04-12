@@ -6,6 +6,8 @@ A plasma cutting table control component for use with the linuxcnc master branch
 
 .I VERSIONS:
 .br
+V0.26.1 - 2019/04/12 - fix probe height for second and subsequent cuts
+.br
 V0.26 - 2019/04/10 - remove redundant code
 .br
 V0.25 - 2019/04/10 - add ohmic probe attempts
@@ -574,7 +576,7 @@ FUNCTION(_) {
                     if(!safe_height_is_limited){
                         safe_target = 0;
                     }
-                    if(axis_x_finish || axis_y_finish){
+                    if((axis_x_finish || axis_y_finish) && first_cut_finished){
                         cut_offset = sqrt(pow(axis_x_finish - axis_x_position, 2) + pow(axis_y_finish - axis_y_position, 2));
                         axis_x_finish = 0;
                         axis_y_finish = 0;
@@ -584,6 +586,7 @@ FUNCTION(_) {
                         pierce_target = pierce_target + cut_height_last - cut_height_first;
                         puddle_jump_target = puddle_jump_target + cut_height_last - cut_height_first;
                         cut_height_first = cut_height_last;
+                        cut_offset = 0;
                         state = PIERCE_HEIGHT;
                     }else{
                         ohmic_enable = TRUE;
@@ -626,10 +629,10 @@ FUNCTION(_) {
                                     probe_start_target = offset_counts;
                                 }
                             }
+                            cut_offset = 0;
                             state = PROBE_HEIGHT;
                         }
                     }
-                    cut_offset = 0;
                 /* if we get a resume request and we are paused */
                 }else if(!program_is_idle && stop_type == PAUSE){
                     feed_hold = TRUE;
