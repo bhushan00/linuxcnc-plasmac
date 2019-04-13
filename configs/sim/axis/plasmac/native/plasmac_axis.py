@@ -274,10 +274,22 @@ w('DynamicHelp::add',ftorch + '.torch-pulse-time','-text','Length of torch pulse
 
 # override frame
 w('labelframe',foverride,'-text','Height Override:','-relief','ridge')
-w('scale',foverride + '.height-override','-orient','horizontal')
-w('pack',foverride + '.height-override','-fill','x','-expand','1')
+w('Button',foverride + '.raise','-text','Raise','-takefocus','0','-width','3')
+w('bind',foverride + '.raise','<ButtonPress-1>','height_raise')
+w('Button',foverride + '.lower','-text','Lower','-takefocus','0','-width','3')
+w('bind',foverride + '.lower','<ButtonPress-1>','height_lower')
+w('label',foverride + '.height-override','-width','3','-justify','center')
+w('Button',foverride + '.reset','-text','Reset','-takefocus','0','-width','3')
+w('bind',foverride + '.reset','<ButtonPress-1>','height_reset')
+w('pack',foverride + '.raise','-side','left')
+w('pack',foverride + '.lower','-side','left')
+w('pack',foverride + '.height-override','-side','left','-fill','x','-expand','1')
+w('pack',foverride + '.reset','-side','right')
 w('grid',foverride,'-column','0','-row','3','-columnspan','1','-padx','4','-pady','2 0','-sticky','ew')
-w('DynamicHelp::add',foverride + '.height-override','-text','Adjust torch height dynamically')
+w('DynamicHelp::add',foverride + '.raise','-text','Voltage value to raise height')
+w('DynamicHelp::add',foverride + '.lower','-text','Voltage value to lower height')
+w('DynamicHelp::add',foverride + '.reset','-text','Set height override to 0')
+w('DynamicHelp::add',foverride + '.height-override','-text','Voltage value of height override')
 
 # paused motion frame
 w('labelframe',fpausedmotion,'-text','Paused Motion Speed:','-relief','ridge')
@@ -384,12 +396,12 @@ w('grid',fbuttons + '.button5','-row','2','-column','0')
 w('grid',fbuttons + '.button6','-row','2','-column','1')
 w('grid','columnconfigure',fbuttons,0,'-weight','1')
 
-w('DynamicHelp::add',fbuttons + '.button1','-text','User configured in ini file')
-w('DynamicHelp::add',fbuttons + '.button2','-text','User configured in ini file')
-w('DynamicHelp::add',fbuttons + '.button3','-text','User configured in ini file')
-w('DynamicHelp::add',fbuttons + '.button4','-text','User configured in ini file')
-w('DynamicHelp::add',fbuttons + '.button5','-text','User configured in ini file')
-w('DynamicHelp::add',fbuttons + '.button6','-text','User configured in ini file')
+w('DynamicHelp::add',fbuttons + '.button1','-text','User button 1\nconfigured in ini file')
+w('DynamicHelp::add',fbuttons + '.button2','-text','User button 2\nconfigured in ini file')
+w('DynamicHelp::add',fbuttons + '.button3','-text','User button 3\nconfigured in ini file')
+w('DynamicHelp::add',fbuttons + '.button4','-text','User button 4\nconfigured in ini file')
+w('DynamicHelp::add',fbuttons + '.button5','-text','User button 5\nconfigured in ini file')
+w('DynamicHelp::add',fbuttons + '.button6','-text','User button 6\nconfigured in ini file')
 
 # populate bottom frame
 w('frame',fcommon + '.spaceframe','-relief','sunken')
@@ -742,6 +754,24 @@ def paused_motion(direction):
         speed = float(w(fpausedmotion + '.paused-motion-speed','get'))
         hal.set_p('plasmac.paused-motion-speed','%f' % (speed * int(direction)))
 
+def height_lower():
+        global torch_height 
+        torch_height -= 0.1
+        w(foverride + '.height-override','configure','-text','%0.1f V' % (torch_height))
+        hal.set_p('plasmac.height-override','%f' %(torch_height))
+
+def height_raise():
+        global torch_height 
+        torch_height += 0.1
+        w(foverride + '.height-override','configure','-text','%0.1f V' % (torch_height))
+        hal.set_p('plasmac.height-override','%f' %(torch_height))
+
+def height_reset():
+        global torch_height 
+        torch_height = 0
+        w(foverride + '.height-override','configure','-text','%0.1f V' % (torch_height))
+        hal.set_p('plasmac.height-override','%f' %(torch_height))
+
 def goto_home(axis):
     if hal.get_value('halui.program.is-idle'):
         home = inifile.find('JOINT_' + str(inifile.find('TRAJ', 'COORDINATES').upper().index(axis)), 'HOME')
@@ -780,6 +810,9 @@ TclCommands.reload_config = reload_config
 TclCommands.button_action = button_action
 TclCommands.torch_pulse = torch_pulse
 TclCommands.paused_motion = paused_motion
+TclCommands.height_raise = height_raise
+TclCommands.height_lower = height_lower
+TclCommands.height_reset = height_reset
 TclCommands.joint_mode_switch = joint_mode_switch
 TclCommands.ja_button_activated = ja_button_activated
 commands = TclCommands(root_window)
@@ -923,6 +956,14 @@ def user_live_update():
     else:
         w(fpausedmotion + '.reverse','configure','-state','disabled')
         w(fpausedmotion + '.forward','configure','-state','disabled')
+    if hal.get_value('halui.program.is-running'):
+        w(foverride + '.raise','configure','-state','normal')
+        w(foverride + '.lower','configure','-state','normal')
+        w(foverride + '.reset','configure','-state','normal')
+    else:
+        w(foverride + '.raise','configure','-state','disabled')
+        w(foverride + '.lower','configure','-state','disabled')
+        w(foverride + '.reset','configure','-state','disabled')
     if hal.get_value('axisui.config-disable'):
         w('.plasmac','itemconfigure','config','-state','disabled')
     else:
@@ -964,7 +1005,6 @@ def user_hal_pins():
 
 def configure_widgets():
     w(ftorch + '.torch-pulse-time','configure','-from','0','-to','3','-resolution','0.1')
-    w(foverride + '.height-override','configure','-from','-10','-to','10','-resolution','0.1') #0
     w(fpausedmotion + '.paused-motion-speed','configure','-from','.01','-to','1','-resolution','0.01') #0
     w(fcutparms + '.pierce-delay','configure','-from','0','-to','10','-increment','0.1','-format','%0.1f') #0.1
     w(fcutparms + '.puddle-jump-height','configure','-from','0','-to','200','-increment','1','-format','%0.0f') #0
@@ -1016,8 +1056,7 @@ def configure_widgets():
 def load_settings():
     for widget in wCheckbuttons + wSpinboxes + wScalesConfig:
         tmp, item = widget.rsplit('.',1)
-        if item != 'height-override':
-            configDict[item] = '0'
+        configDict[item] = '0'
     convertFile = False
     if os.path.exists(configFile):
         try:
@@ -1209,6 +1248,9 @@ configDict = {}
 dryRun = 0
 torchPulse = 0
 materialsUpdate = False
+torch_height = 0
+w(foverride + '.height-override','configure','-text','%0.1f V' % (torch_height))
+hal.set_p('plasmac.height-override','%f' % (torch_height))
 wLabels =\
     [fmonitor + '.aVlab',\
     fmonitor + '.lTlab',\
@@ -1294,7 +1336,6 @@ wSpinboxes =\
     ]
 wScales =\
     [ftorch + '.torch-pulse-time',\
-    foverride + '.height-override',\
     fpausedmotion + '.paused-motion-speed',\
     ]
 wScalesConfig =\
@@ -1303,7 +1344,6 @@ wScalesConfig =\
     ]
 wScalesHal =\
     [ftorch + '.torch-pulse-time',\
-    foverride + '.height-override',\
     ]
 wComboBoxes =\
     [fmaterial + '.materials',\
