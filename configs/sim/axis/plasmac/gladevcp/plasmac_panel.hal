@@ -12,7 +12,6 @@ net plasmac:cornerlock-threshold    gladevcp.cornerlock-threshold-f     =>  plas
 net plasmac:cut-feed-rate           gladevcp.cut-feed-rate-f            =>  plasmac.cut-feed-rate
 net plasmac:cut-height              gladevcp.cut-height-f               =>  plasmac.cut-height
 net plasmac:cut-volts               gladevcp.cut-volts-f                =>  plasmac.cut-volts
-net plasmac:height-override         gladevcp.height-override            =>  plasmac.height-override
 net plasmac:kerfcross-enable        gladevcp.kerfcross-enable           =>  plasmac.kerfcross-enable
 net plasmac:pid-p-gain              gladevcp.pid-p-gain-f               =>  plasmac.pid-p-gain
 net plasmac:pierce-delay            gladevcp.pierce-delay-f             =>  plasmac.pierce-delay

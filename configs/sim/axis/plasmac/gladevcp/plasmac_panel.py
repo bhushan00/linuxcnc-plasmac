@@ -167,6 +167,21 @@ class HandlerClass:
             self.builder.get_object('cut-amps').set_value(self.materialsList[material][7])
             self.builder.get_object('cut-volts').set_value(self.materialsList[material][8])
 
+    def on_heightLower_pressed(self, widget):
+        self.torch_height -= 0.1
+        self.builder.get_object('height-override').set_text('%0.1f V' % (self.torch_height))
+        hal.set_p('plasmac.height-override','%f' %(self.torch_height))
+
+    def on_heightRaise_pressed(self, widget):
+        self.torch_height += 0.1
+        self.builder.get_object('height-override').set_text('%0.1f V' % (self.torch_height))
+        hal.set_p('plasmac.height-override','%f' %(self.torch_height))
+
+    def on_heightReset_pressed(self, widget):
+        self.torch_height = 0
+        self.builder.get_object('height-override').set_text('%0.1f V' % (self.torch_height))
+        hal.set_p('plasmac.height-override','%f' %(self.torch_height))
+
     def on_button1_pressed(self,event):
         self.user_button_pressed(self.iniButtonCode[1])
 
@@ -591,6 +606,9 @@ class HandlerClass:
         self.maxHeight = hal.get_value('ini.z.max_limit')
         self.configure_widgets()
         self.builder.get_object('probe-feed-rate-adj').set_upper(self.builder.get_object('setup-feed-rate').get_value())
+        self.torch_height = 0
+        self.builder.get_object('height-override').set_text('%0.1f V' % (self.torch_height))
+        hal.set_p('plasmac.height-override','%f' % (self.torch_height))
         self.load_settings()
         self.check_materials_file()
         self.get_materials()
