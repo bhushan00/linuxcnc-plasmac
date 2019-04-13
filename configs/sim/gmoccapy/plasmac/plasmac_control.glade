@@ -95,7 +95,10 @@
                         <property name="height_request">36</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="tooltip_text" translatable="yes">paused motion speed as % of current feed rate</property>
+                        <property name="tooltip_text" translatable="yes">motion while paused multiplier
+-.1 to -1 causes reverse motion up until start of cut
+.1 to 1 causes forward motion
+NOTE: if forward motion goes past the end of the cut then reverse motion cannot get back to this cut</property>
                         <property name="model">paused-motion-speeds</property>
                         <child>
                           <object class="GtkCellRendererText" id="cellrenderertext4"/>
@@ -186,7 +189,7 @@
                         <property name="height_request">36</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="tooltip_text" translatable="yes">on time for torch pulse</property>
+                        <property name="tooltip_text" translatable="yes">on time of torch pulse (Seconds)</property>
                         <property name="model">torch-pulse-times</property>
                         <property name="column">1</property>
                         <child>

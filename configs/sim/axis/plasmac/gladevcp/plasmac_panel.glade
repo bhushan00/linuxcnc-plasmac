@@ -452,7 +452,7 @@
                                     <property name="width_request">130</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">False</property>
-                                    <property name="tooltip_text" translatable="yes">an external estop has been activated</property>
+                                    <property name="tooltip_text" translatable="yes">breakaway switch is activated</property>
                                     <property name="double_buffered">False</property>
                                     <property name="xalign">0</property>
                                     <property name="label" translatable="yes">Breakaway</property>
@@ -1919,6 +1919,8 @@ turn off to use cut volts from parameters</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">True</property>
+                                <property name="tooltip_text" translatable="yes">user button 1
+configured from ini file</property>
                                 <signal name="pressed" handler="on_button1_pressed" swapped="no"/>
                                 <signal name="released" handler="on_button1_released" swapped="no"/>
                               </object>
@@ -1933,6 +1935,8 @@ turn off to use cut volts from parameters</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">True</property>
+                                <property name="tooltip_text" translatable="yes">user button 2
+configured from ini file</property>
                                 <signal name="pressed" handler="on_button2_pressed" swapped="no"/>
                                 <signal name="released" handler="on_button2_released" swapped="no"/>
                               </object>
@@ -1947,6 +1951,8 @@ turn off to use cut volts from parameters</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">True</property>
+                                <property name="tooltip_text" translatable="yes">user button 3
+configured from ini file</property>
                                 <signal name="pressed" handler="on_button3_pressed" swapped="no"/>
                                 <signal name="released" handler="on_button3_released" swapped="no"/>
                               </object>
@@ -1973,6 +1979,8 @@ turn off to use cut volts from parameters</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">True</property>
+                                <property name="tooltip_text" translatable="yes">user button 4
+configured from ini file</property>
                                 <signal name="pressed" handler="on_button4_pressed" swapped="no"/>
                                 <signal name="released" handler="on_button4_released" swapped="no"/>
                               </object>
@@ -1987,6 +1995,8 @@ turn off to use cut volts from parameters</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">True</property>
+                                <property name="tooltip_text" translatable="yes">user button 5
+configured from ini file</property>
                                 <signal name="pressed" handler="on_button5_pressed" swapped="no"/>
                                 <signal name="released" handler="on_button5_released" swapped="no"/>
                               </object>
@@ -2001,6 +2011,8 @@ turn off to use cut volts from parameters</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">True</property>
+                                <property name="tooltip_text" translatable="yes">user button 6
+configured from ini file</property>
                                 <signal name="pressed" handler="on_button6_pressed" swapped="no"/>
                                 <signal name="released" handler="on_button6_released" swapped="no"/>
                               </object>
@@ -2056,6 +2068,7 @@ turn off to use cut volts from parameters</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="receives_default">True</property>
+                            <property name="tooltip_text" translatable="yes">reverse motion when paused</property>
                             <signal name="pressed" handler="on_reverse_pressed" swapped="no"/>
                             <signal name="released" handler="on_reverse_released" swapped="no"/>
                           </object>
@@ -2091,6 +2104,7 @@ NOTE: if forward motion goes past the end of the cut then reverse motion cannot 
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="receives_default">True</property>
+                            <property name="tooltip_text" translatable="yes">forward motion when paused</property>
                             <signal name="pressed" handler="on_forward_pressed" swapped="no"/>
                             <signal name="released" handler="on_forward_released" swapped="no"/>
                           </object>

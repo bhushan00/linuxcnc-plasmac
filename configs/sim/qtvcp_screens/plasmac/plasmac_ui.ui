@@ -83,11 +83,16 @@
       <height>0</height>
      </size>
     </property>
+    <property name="toolTip">
+     <string>select a material with preset cut parameters
+to reload an edited material file,
+select Reload from the Configure tab</string>
+    </property>
     <property name="tabShape">
      <enum>QTabWidget::Rounded</enum>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>0</number>
     </property>
     <widget class="QWidget" name="run_tab">
      <property name="sizePolicy">
@@ -95,6 +100,9 @@
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
+     </property>
+     <property name="toolTip">
+      <string>the 'normal' run mode page</string>
      </property>
      <attribute name="title">
       <string>Run</string>
@@ -144,6 +152,9 @@
           <height>24</height>
          </rect>
         </property>
+        <property name="toolTip">
+         <string>enable/disable corner lock mode</string>
+        </property>
         <property name="text">
          <string>Enable</string>
         </property>
@@ -156,6 +167,9 @@
           <width>102</width>
           <height>24</height>
          </rect>
+        </property>
+        <property name="toolTip">
+         <string>THC is locked if actual speed drops below this percentage of requested speed</string>
         </property>
         <property name="wrapping">
          <bool>true</bool>
@@ -210,6 +224,9 @@
           <width>24</width>
           <height>24</height>
          </rect>
+        </property>
+        <property name="toolTip">
+         <string>THC is locked due to corner lock mode</string>
         </property>
         <property name="color">
          <color>
@@ -314,6 +331,9 @@
           <height>24</height>
          </rect>
         </property>
+        <property name="toolTip">
+         <string>piercing height in machine units</string>
+        </property>
         <property name="wrapping">
          <bool>true</bool>
         </property>
@@ -341,6 +361,9 @@
           <width>102</width>
           <height>24</height>
          </rect>
+        </property>
+        <property name="toolTip">
+         <string>piercing delay in seconds</string>
         </property>
         <property name="wrapping">
          <bool>true</bool>
@@ -370,6 +393,10 @@
           <height>24</height>
          </rect>
         </property>
+        <property name="toolTip">
+         <string>puddle jump height as a percentage of pierce height
+set to 0 to disable</string>
+        </property>
         <property name="wrapping">
          <bool>true</bool>
         </property>
@@ -398,6 +425,10 @@
           <height>24</height>
          </rect>
         </property>
+        <property name="toolTip">
+         <string>puddle jump delay in seconds
+set to 0 to disable</string>
+        </property>
         <property name="wrapping">
          <bool>true</bool>
         </property>
@@ -425,6 +456,9 @@
           <width>102</width>
           <height>24</height>
          </rect>
+        </property>
+        <property name="toolTip">
+         <string>cutting height in machine units</string>
         </property>
         <property name="wrapping">
          <bool>true</bool>
@@ -460,6 +494,10 @@
           <height>24</height>
          </rect>
         </property>
+        <property name="toolTip">
+         <string>cutting feed rate in machine units per minute
+setting this to 0 will use feed rate from program</string>
+        </property>
         <property name="wrapping">
          <bool>true</bool>
         </property>
@@ -494,6 +532,10 @@
           <height>24</height>
          </rect>
         </property>
+        <property name="toolTip">
+         <string>cutting current in amps
+indicator only, not used.</string>
+        </property>
         <property name="wrapping">
          <bool>true</bool>
         </property>
@@ -518,6 +560,10 @@
           <width>102</width>
           <height>24</height>
          </rect>
+        </property>
+        <property name="toolTip">
+         <string>cutting voltage in volts
+only used if not using auto volts</string>
         </property>
         <property name="wrapping">
          <bool>true</bool>
@@ -683,6 +729,9 @@
           <height>24</height>
          </rect>
         </property>
+        <property name="toolTip">
+         <string>enable/disable THC</string>
+        </property>
         <property name="text">
          <string>Enable</string>
         </property>
@@ -695,6 +744,10 @@
           <width>118</width>
           <height>24</height>
          </rect>
+        </property>
+        <property name="toolTip">
+         <string>use automatic cut voltage calculation
+turn off to use cut volts from parameters</string>
         </property>
         <property name="text">
          <string>Use Auto Volts</string>
@@ -761,6 +814,9 @@
           <height>24</height>
          </rect>
         </property>
+        <property name="toolTip">
+         <string>minimum voltage change required to allow THC to activate</string>
+        </property>
         <property name="wrapping">
          <bool>true</bool>
         </property>
@@ -789,6 +845,11 @@
           <height>24</height>
          </rect>
         </property>
+        <property name="toolTip">
+         <string>THC reaction speed
+for modes 1&amp;2 this is the P gain for THC PID calculations
+for mode 3 this is the percentage of max velocity used for THC</string>
+        </property>
         <property name="wrapping">
          <bool>true</bool>
         </property>
@@ -814,6 +875,9 @@
           <height>23</height>
          </rect>
         </property>
+        <property name="toolTip">
+         <string>the torch is moving up</string>
+        </property>
         <property name="color">
          <color>
           <red>252</red>
@@ -830,6 +894,9 @@
           <width>24</width>
           <height>24</height>
          </rect>
+        </property>
+        <property name="toolTip">
+         <string>the torch is moving down</string>
         </property>
         <property name="color">
          <color>
@@ -886,6 +953,9 @@
           <height>24</height>
          </rect>
         </property>
+        <property name="toolTip">
+         <string>enable/disable kerf crossing mode</string>
+        </property>
         <property name="text">
          <string>Enable</string>
         </property>
@@ -898,6 +968,9 @@
           <width>102</width>
           <height>24</height>
          </rect>
+        </property>
+        <property name="toolTip">
+         <string>THC is locked if voltage change exceeds this level</string>
         </property>
         <property name="wrapping">
          <bool>true</bool>
@@ -956,6 +1029,9 @@
           <height>24</height>
          </rect>
         </property>
+        <property name="toolTip">
+         <string>THC is locked due to kerf crossing mode</string>
+        </property>
         <property name="color">
          <color>
           <red>252</red>
@@ -973,6 +1049,9 @@
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
+     </property>
+     <property name="toolTip">
+      <string>configuration page for seldom required settings</string>
      </property>
      <attribute name="title">
       <string>Config</string>
@@ -1022,6 +1101,10 @@
           <height>24</height>
          </rect>
         </property>
+        <property name="toolTip">
+         <string>safe traverse height in machine units
+this may be reduced due to THC movement</string>
+        </property>
         <property name="wrapping">
          <bool>true</bool>
         </property>
@@ -1044,6 +1127,9 @@
           <height>24</height>
          </rect>
         </property>
+        <property name="toolTip">
+         <string>float switch travel in machine units</string>
+        </property>
         <property name="wrapping">
          <bool>true</bool>
         </property>
@@ -1065,6 +1151,9 @@
           <width>102</width>
           <height>24</height>
          </rect>
+        </property>
+        <property name="toolTip">
+         <string>probing velocity in machine units per minute</string>
         </property>
         <property name="wrapping">
          <bool>true</bool>
@@ -1090,6 +1179,11 @@
           <width>102</width>
           <height>24</height>
          </rect>
+        </property>
+        <property name="toolTip">
+         <string>skip IHS if start of next cut
+is less than this distance
+from end of previous cut</string>
         </property>
         <property name="wrapping">
          <bool>true</bool>
@@ -1169,7 +1263,8 @@
          </rect>
         </property>
         <property name="toolTip">
-         <string>probe starting height in machine units</string>
+         <string>probe starting height
+in machine units</string>
         </property>
         <property name="wrapping">
          <bool>true</bool>
@@ -1213,7 +1308,8 @@
          </rect>
         </property>
         <property name="toolTip">
-         <string>probe starting height in machine units</string>
+         <string>number of ohmic probe attempts
+before fallback to float switch</string>
         </property>
         <property name="wrapping">
          <bool>true</bool>
@@ -1294,6 +1390,9 @@
           <height>24</height>
          </rect>
         </property>
+        <property name="toolTip">
+         <string>timeout for arc failure in seconds</string>
+        </property>
         <property name="wrapping">
          <bool>true</bool>
         </property>
@@ -1318,6 +1417,9 @@
           <width>102</width>
           <height>24</height>
          </rect>
+        </property>
+        <property name="toolTip">
+         <string>maximumum number of allowed attempts to start the arc</string>
         </property>
         <property name="wrapping">
          <bool>true</bool>
@@ -1344,6 +1446,10 @@
           <height>24</height>
          </rect>
         </property>
+        <property name="toolTip">
+         <string>time before next arc start attempt
+after a failure in seconds</string>
+        </property>
         <property name="wrapping">
          <bool>true</bool>
         </property>
@@ -1365,6 +1471,9 @@
           <width>102</width>
           <height>24</height>
          </rect>
+        </property>
+        <property name="toolTip">
+         <string>arc off delay in seconds</string>
         </property>
         <property name="wrapping">
          <bool>true</bool>
@@ -1393,6 +1502,9 @@
           <width>102</width>
           <height>24</height>
          </rect>
+        </property>
+        <property name="toolTip">
+         <string>multiplier to convert arc input voltage to actual voltage</string>
         </property>
         <property name="wrapping">
          <bool>true</bool>
@@ -1428,6 +1540,9 @@
           <height>24</height>
          </rect>
         </property>
+        <property name="toolTip">
+         <string>offset required to set actual voltage to zero when arc voltage is zero</string>
+        </property>
         <property name="wrapping">
          <bool>true</bool>
         </property>
@@ -1462,6 +1577,9 @@
           <height>24</height>
          </rect>
         </property>
+        <property name="toolTip">
+         <string>maximum voltage level for valid arc ok signal</string>
+        </property>
         <property name="wrapping">
          <bool>true</bool>
         </property>
@@ -1486,6 +1604,9 @@
           <width>102</width>
           <height>24</height>
          </rect>
+        </property>
+        <property name="toolTip">
+         <string>minimum voltage level for valid arc ok signal</string>
         </property>
         <property name="wrapping">
          <bool>true</bool>
@@ -1654,6 +1775,16 @@
           <height>24</height>
          </rect>
         </property>
+        <property name="toolTip">
+         <string>offset feed rate in machine units per minute
+used for moving to:
+probe height
+pierce height
+puddle jump height
+cutting height
+safe height
+this also sets the maximum probe feed rate</string>
+        </property>
         <property name="wrapping">
          <bool>true</bool>
         </property>
@@ -1679,6 +1810,9 @@
           <height>24</height>
          </rect>
         </property>
+        <property name="toolTip">
+         <string>I gain for THC PID calculations</string>
+        </property>
         <property name="wrapping">
          <bool>true</bool>
         </property>
@@ -1703,6 +1837,9 @@
           <width>102</width>
           <height>24</height>
          </rect>
+        </property>
+        <property name="toolTip">
+         <string>D gain for THC PID calculations</string>
         </property>
         <property name="wrapping">
          <bool>true</bool>
@@ -1781,6 +1918,9 @@
           <height>24</height>
          </rect>
         </property>
+        <property name="toolTip">
+         <string>maximum allowed offset feed rate in machine units per minute</string>
+        </property>
         <property name="frameShape">
          <enum>QFrame::StyledPanel</enum>
         </property>
@@ -1835,6 +1975,10 @@
           <height>48</height>
          </rect>
         </property>
+        <property name="toolTip">
+         <string>save settings to config file.
+Note: this also saves current cut parameters as the default</string>
+        </property>
         <property name="text">
          <string>Save</string>
         </property>
@@ -1847,6 +1991,9 @@
           <width>100</width>
           <height>48</height>
          </rect>
+        </property>
+        <property name="toolTip">
+         <string>reload settings from config file</string>
         </property>
         <property name="text">
          <string>Reload</string>
@@ -2528,6 +2675,9 @@ F3</string>
        <height>48</height>
       </rect>
      </property>
+     <property name="toolTip">
+      <string>forward motion when paused</string>
+     </property>
      <property name="text">
       <string>Fwd</string>
      </property>
@@ -2541,6 +2691,9 @@ F3</string>
        <height>48</height>
       </rect>
      </property>
+     <property name="toolTip">
+      <string>reverse motion when paused</string>
+     </property>
      <property name="text">
       <string>Rev</string>
      </property>
@@ -2553,6 +2706,9 @@ F3</string>
        <width>48</width>
        <height>48</height>
       </rect>
+     </property>
+     <property name="toolTip">
+      <string>pulse torch on</string>
      </property>
      <property name="text">
       <string>On</string>
@@ -2613,6 +2769,9 @@ F3</string>
      <property name="focusPolicy">
       <enum>Qt::StrongFocus</enum>
      </property>
+     <property name="toolTip">
+      <string>on time of torch pulse (Seconds)</string>
+     </property>
      <property name="styleSheet">
       <string notr="true"/>
      </property>
@@ -2649,6 +2808,12 @@ F3</string>
      </property>
      <property name="focusPolicy">
       <enum>Qt::StrongFocus</enum>
+     </property>
+     <property name="toolTip">
+      <string>motion while paused multiplier
+-.1 to -1 causes reverse motion up until start of cut
+.1 to 1 causes forward motion
+NOTE: if forward motion goes past the end of the cut then reverse motion cannot get back to this cut</string>
      </property>
      <property name="styleSheet">
       <string notr="true"/>
@@ -2738,6 +2903,9 @@ F3</string>
        <pointsize>10</pointsize>
       </font>
      </property>
+     <property name="toolTip">
+      <string>current arc voltage</string>
+     </property>
      <property name="styleSheet">
       <string notr="true"/>
      </property>
@@ -2778,6 +2946,9 @@ F3</string>
        <width>24</width>
        <height>24</height>
       </rect>
+     </property>
+     <property name="toolTip">
+      <string>a valid arc is established</string>
      </property>
      <property name="color">
       <color>
@@ -2822,6 +2993,9 @@ F3</string>
        <height>24</height>
       </rect>
      </property>
+     <property name="toolTip">
+      <string>torch on signal is being sent to plasma supply</string>
+     </property>
      <property name="color">
       <color>
        <red>255</red>
@@ -2852,6 +3026,9 @@ F3</string>
        <height>24</height>
       </rect>
      </property>
+     <property name="toolTip">
+      <string>breakaway switch is activated</string>
+     </property>
      <property name="text">
       <string>Breakaway</string>
      </property>
@@ -2877,6 +3054,9 @@ F3</string>
        <width>24</width>
        <height>24</height>
       </rect>
+     </property>
+     <property name="toolTip">
+      <string>the ohmic probe is activated</string>
      </property>
      <property name="color">
       <color>
@@ -2911,6 +3091,9 @@ F3</string>
        <width>24</width>
        <height>24</height>
       </rect>
+     </property>
+     <property name="toolTip">
+      <string>the float switch is activated</string>
      </property>
      <property name="color">
       <color>
@@ -3817,6 +4000,10 @@ Off</string>
       <height>48</height>
      </rect>
     </property>
+    <property name="toolTip">
+     <string>user button 1
+configured from ini file</string>
+    </property>
     <property name="text">
      <string/>
     </property>
@@ -3830,6 +4017,10 @@ Off</string>
       <height>48</height>
      </rect>
     </property>
+    <property name="toolTip">
+     <string>user button 2
+configured from ini file</string>
+    </property>
     <property name="text">
      <string/>
     </property>
@@ -3842,6 +4033,10 @@ Off</string>
       <width>48</width>
       <height>48</height>
      </rect>
+    </property>
+    <property name="toolTip">
+     <string>user button 3
+configured from ini file</string>
     </property>
     <property name="text">
      <string/>
@@ -3859,6 +4054,10 @@ Off</string>
       <height>48</height>
      </rect>
     </property>
+    <property name="toolTip">
+     <string>user button 4
+configured from ini file</string>
+    </property>
     <property name="text">
      <string/>
     </property>
@@ -3872,6 +4071,10 @@ Off</string>
       <height>48</height>
      </rect>
     </property>
+    <property name="toolTip">
+     <string>user button 5
+configured from ini file</string>
+    </property>
     <property name="text">
      <string/>
     </property>
@@ -3884,6 +4087,10 @@ Off</string>
       <width>48</width>
       <height>48</height>
      </rect>
+    </property>
+    <property name="toolTip">
+     <string>user button 6
+configured from ini file</string>
     </property>
     <property name="text">
      <string/>
