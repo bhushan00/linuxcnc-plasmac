@@ -90,7 +90,9 @@ class HandlerClass:
         self.check_materials_file()
         self.get_materials()
         self.init_user_buttons()
-        self.w.ho_label.setText('%d V' %(self.w.height_override.value()))
+        self.torch_height = 0
+        self.w.height_override.setText('%0.1f V' % (self.torch_height))
+        hal.set_p('plasmac.height-override','%f' % (self.torch_height))
         self.w.tp_label.setText('%0.1f Sec' %((int(self.w.torch_pulse_time.value()) * 0.1)))
         self.w.pm_label.setText('%s%%' %(self.w.paused_motion_speed.value()))
         self.w.setStyleSheet(open('plasmac_ui.qss').read())
@@ -288,9 +290,20 @@ class HandlerClass:
     def jog_rate_changed(self, rate):
         STATUS.set_jograte(float(rate))
 
-    def height_override_changed(self, height):
-        self.w.ho_label.setText('%0.1f V' %(int(height) * 0.1))
-        hal.set_p('plasmac.height-override','%f' %(int(height) * 0.1))
+    def height_lower_pressed(self):
+        self.torch_height -= 0.1
+        self.w.height_override.setText('%0.1f V' % (self.torch_height))
+        hal.set_p('plasmac.height-override','%f' %(self.torch_height))
+
+    def height_raise_pressed(self):
+        self.torch_height += 0.1
+        self.w.height_override.setText('%0.1f V' % (self.torch_height))
+        hal.set_p('plasmac.height-override','%f' %(self.torch_height))
+
+    def height_reset_pressed(self):
+        self.torch_height = 0
+        self.w.height_override.setText('%0.1f V' % (self.torch_height))
+        hal.set_p('plasmac.height-override','%f' %(self.torch_height))
 
     def torch_pulse_time_changed(self, time):
         self.w.tp_label.setText('%0.1f Sec' %(int(time) * 0.1))
@@ -763,8 +776,10 @@ class HandlerClass:
                 self.w.arc_voltage.show()
                 self.w.aVLabel.setText('Arc Voltage')
                 self.w.height_override.show()
+                self.w.height_raise.show()
+                self.w.height_lower.show()
+                self.w.height_reset.show()
                 self.w.ho_label.show()
-                self.w.ho_label_1.show()
                 self.w.cut_volts.show()
                 self.w.cVLabel.show()
                 self.w.cut_frame.resize(self.w.cut_frame.geometry().width(), self.w.cut_frame.geometry().height() + 26)
@@ -808,8 +823,10 @@ class HandlerClass:
                 self.w.arc_voltage.show()
                 self.w.aVLabel.setText('Arc Voltage')
                 self.w.height_override.show()
+                self.w.height_raise.show()
+                self.w.height_lower.show()
+                self.w.height_reset.show()
                 self.w.ho_label.show()
-                self.w.ho_label_1.show()
                 self.w.cut_volts.show()
                 self.w.cVLabel.show()
                 self.w.cut_frame.resize(self.w.cut_frame.geometry().width(), self.w.cut_frame.geometry().height() + 26)
@@ -844,8 +861,10 @@ class HandlerClass:
             self.w.arc_voltage.close()
             self.w.aVLabel.setText('')
             self.w.height_override.close()
+            self.w.height_raise.close()
+            self.w.height_lower.close()
+            self.w.height_reset.close()
             self.w.ho_label.close()
-            self.w.ho_label_1.close()
             self.w.cut_volts.close()
             self.w.cVLabel.close()
             self.w.cut_frame.resize(self.w.cut_frame.geometry().width(), self.w.cut_frame.geometry().height() - 26)
@@ -940,6 +959,18 @@ class HandlerClass:
             self.w.torch_pulse_start.setEnabled(False)
             self.w.reverse.setEnabled(False)
             self.w.forward.setEnabled(False)
+
+
+        if hal.get_value('halui.program.is-running'):
+            self.w.height_raise.setEnabled(True)
+            self.w.height_lower.setEnabled(True)
+            self.w.height_reset.setEnabled(True)
+        else:
+            self.w.height_raise.setEnabled(False)
+            self.w.height_lower.setEnabled(False)
+            self.w.height_reset.setEnabled(False)
+
+
         for n in range(1,7):
             if self.iniButtonCode[n] in ['ohmic-test']:
                 if STATUS.machine_is_on() and hal.get_value('halui.program.is-paused') or hal.get_value('halui.program.is-idle'):

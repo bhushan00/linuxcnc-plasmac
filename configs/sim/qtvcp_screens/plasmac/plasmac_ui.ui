@@ -92,7 +92,7 @@ select Reload from the Configure tab</string>
      <enum>QTabWidget::Rounded</enum>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>1</number>
     </property>
     <widget class="QWidget" name="run_tab">
      <property name="sizePolicy">
@@ -2618,9 +2618,9 @@ F3</string>
      </property>
      <property name="geometry">
       <rect>
-       <x>58</x>
-       <y>202</y>
-       <width>192</width>
+       <x>100</x>
+       <y>200</y>
+       <width>160</width>
        <height>16</height>
       </rect>
      </property>
@@ -2638,7 +2638,7 @@ F3</string>
      <property name="geometry">
       <rect>
        <x>58</x>
-       <y>98</y>
+       <y>96</y>
        <width>192</width>
        <height>16</height>
       </rect>
@@ -2654,7 +2654,7 @@ F3</string>
      <property name="geometry">
       <rect>
        <x>58</x>
-       <y>150</y>
+       <y>148</y>
        <width>192</width>
        <height>16</height>
       </rect>
@@ -2670,7 +2670,7 @@ F3</string>
      <property name="geometry">
       <rect>
        <x>260</x>
-       <y>150</y>
+       <y>148</y>
        <width>48</width>
        <height>48</height>
       </rect>
@@ -2686,7 +2686,7 @@ F3</string>
      <property name="geometry">
       <rect>
        <x>0</x>
-       <y>150</y>
+       <y>148</y>
        <width>48</width>
        <height>48</height>
       </rect>
@@ -2702,7 +2702,7 @@ F3</string>
      <property name="geometry">
       <rect>
        <x>0</x>
-       <y>98</y>
+       <y>96</y>
        <width>48</width>
        <height>48</height>
       </rect>
@@ -2714,54 +2714,11 @@ F3</string>
       <string>On</string>
      </property>
     </widget>
-    <widget class="QScrollBar" name="height_override">
-     <property name="geometry">
-      <rect>
-       <x>58</x>
-       <y>222</y>
-       <width>192</width>
-       <height>24</height>
-      </rect>
-     </property>
-     <property name="focusPolicy">
-      <enum>Qt::StrongFocus</enum>
-     </property>
-     <property name="styleSheet">
-      <string notr="true"/>
-     </property>
-     <property name="minimum">
-      <number>-100</number>
-     </property>
-     <property name="maximum">
-      <number>100</number>
-     </property>
-     <property name="singleStep">
-      <number>1</number>
-     </property>
-     <property name="value">
-      <number>0</number>
-     </property>
-     <property name="sliderPosition">
-      <number>0</number>
-     </property>
-     <property name="tracking">
-      <bool>true</bool>
-     </property>
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-     <property name="invertedAppearance">
-      <bool>false</bool>
-     </property>
-     <property name="invertedControls">
-      <bool>false</bool>
-     </property>
-    </widget>
     <widget class="QScrollBar" name="torch_pulse_time">
      <property name="geometry">
       <rect>
        <x>58</x>
-       <y>118</y>
+       <y>116</y>
        <width>192</width>
        <height>24</height>
       </rect>
@@ -2801,7 +2758,7 @@ F3</string>
      <property name="geometry">
       <rect>
        <x>58</x>
-       <y>170</y>
+       <y>168</y>
        <width>192</width>
        <height>24</height>
       </rect>
@@ -2840,27 +2797,30 @@ NOTE: if forward motion goes past the end of the cut then reverse motion cannot 
       <bool>false</bool>
      </property>
     </widget>
-    <widget class="QLabel" name="ho_label">
+    <widget class="QLabel" name="height_override">
      <property name="geometry">
       <rect>
-       <x>206</x>
-       <y>202</y>
-       <width>50</width>
+       <x>156</x>
+       <y>220</y>
+       <width>48</width>
        <height>16</height>
       </rect>
+     </property>
+     <property name="toolTip">
+      <string>amount to raise/lower height in volts</string>
      </property>
      <property name="text">
       <string>0</string>
      </property>
      <property name="alignment">
-      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+      <set>Qt::AlignCenter</set>
      </property>
     </widget>
     <widget class="QLabel" name="tp_label">
      <property name="geometry">
       <rect>
        <x>206</x>
-       <y>98</y>
+       <y>96</y>
        <width>50</width>
        <height>16</height>
       </rect>
@@ -3103,16 +3063,63 @@ NOTE: if forward motion goes past the end of the cut then reverse motion cannot 
       </color>
      </property>
     </widget>
+    <widget class="PushButton" name="height_raise">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>200</y>
+       <width>48</width>
+       <height>48</height>
+      </rect>
+     </property>
+     <property name="toolTip">
+      <string>raise height while cutting</string>
+     </property>
+     <property name="text">
+      <string>Raise</string>
+     </property>
+    </widget>
+    <widget class="PushButton" name="height_reset">
+     <property name="geometry">
+      <rect>
+       <x>260</x>
+       <y>200</y>
+       <width>48</width>
+       <height>48</height>
+      </rect>
+     </property>
+     <property name="toolTip">
+      <string>reset cut height offset to 0</string>
+     </property>
+     <property name="text">
+      <string>Reset</string>
+     </property>
+    </widget>
+    <widget class="PushButton" name="height_lower">
+     <property name="geometry">
+      <rect>
+       <x>52</x>
+       <y>200</y>
+       <width>48</width>
+       <height>48</height>
+      </rect>
+     </property>
+     <property name="toolTip">
+      <string>lower height while cutting</string>
+     </property>
+     <property name="text">
+      <string>Lower</string>
+     </property>
+    </widget>
     <zorder>tp_label_1</zorder>
     <zorder>pm_label_1</zorder>
     <zorder>forward</zorder>
     <zorder>reverse</zorder>
     <zorder>torch_pulse_start</zorder>
-    <zorder>height_override</zorder>
     <zorder>torch_pulse_time</zorder>
     <zorder>paused_motion_speed</zorder>
     <zorder>ho_label_1</zorder>
-    <zorder>ho_label</zorder>
+    <zorder>height_override</zorder>
     <zorder>tp_label</zorder>
     <zorder>pm_label</zorder>
     <zorder>arc_voltage</zorder>
@@ -3127,6 +3134,9 @@ NOTE: if forward motion goes past the end of the cut then reverse motion cannot 
     <zorder>ohmic_probe_led</zorder>
     <zorder>breakaway_switch_led</zorder>
     <zorder>float_switch_led</zorder>
+    <zorder>height_raise</zorder>
+    <zorder>height_reset</zorder>
+    <zorder>height_lower</zorder>
    </widget>
    <widget class="QFrame" name="dro_frame">
     <property name="enabled">
@@ -4271,7 +4281,6 @@ configured from ini file</string>
   <tabstop>viewz2</tabstop>
   <tabstop>viewp</tabstop>
   <tabstop>clear</tabstop>
-  <tabstop>height_override</tabstop>
   <tabstop>torch_pulse_time</tabstop>
   <tabstop>paused_motion_speed</tabstop>
   <tabstop>thc_enable</tabstop>
@@ -4561,8 +4570,8 @@ configured from ini file</string>
    <slot>spin_value_changed()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>32</x>
-     <y>175</y>
+     <x>34</x>
+     <y>202</y>
     </hint>
     <hint type="destinationlabel">
      <x>260</x>
@@ -4795,22 +4804,6 @@ configured from ini file</string>
    </hints>
   </connection>
   <connection>
-   <sender>height_override</sender>
-   <signal>valueChanged(int)</signal>
-   <receiver>MainWindow</receiver>
-   <slot>height_override_changed()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>351</x>
-     <y>805</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>346</x>
-     <y>581</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
    <sender>torch_pulse_start</sender>
    <signal>pressed()</signal>
    <receiver>MainWindow</receiver>
@@ -4818,7 +4811,7 @@ configured from ini file</string>
    <hints>
     <hint type="sourcelabel">
      <x>220</x>
-     <y>707</y>
+     <y>613</y>
     </hint>
     <hint type="destinationlabel">
      <x>189</x>
@@ -4834,7 +4827,7 @@ configured from ini file</string>
    <hints>
     <hint type="sourcelabel">
      <x>220</x>
-     <y>707</y>
+     <y>613</y>
     </hint>
     <hint type="destinationlabel">
      <x>211</x>
@@ -4850,7 +4843,7 @@ configured from ini file</string>
    <hints>
     <hint type="sourcelabel">
      <x>220</x>
-     <y>766</y>
+     <y>665</y>
     </hint>
     <hint type="destinationlabel">
      <x>184</x>
@@ -4866,7 +4859,7 @@ configured from ini file</string>
    <hints>
     <hint type="sourcelabel">
      <x>220</x>
-     <y>762</y>
+     <y>665</y>
     </hint>
     <hint type="destinationlabel">
      <x>226</x>
@@ -4882,7 +4875,7 @@ configured from ini file</string>
    <hints>
     <hint type="sourcelabel">
      <x>480</x>
-     <y>752</y>
+     <y>665</y>
     </hint>
     <hint type="destinationlabel">
      <x>363</x>
@@ -4898,7 +4891,7 @@ configured from ini file</string>
    <hints>
     <hint type="sourcelabel">
      <x>500</x>
-     <y>759</y>
+     <y>665</y>
     </hint>
     <hint type="destinationlabel">
      <x>384</x>
@@ -4930,7 +4923,7 @@ configured from ini file</string>
    <hints>
     <hint type="sourcelabel">
      <x>294</x>
-     <y>701</y>
+     <y>609</y>
     </hint>
     <hint type="destinationlabel">
      <x>292</x>
@@ -4946,7 +4939,7 @@ configured from ini file</string>
    <hints>
     <hint type="sourcelabel">
      <x>431</x>
-     <y>754</y>
+     <y>661</y>
     </hint>
     <hint type="destinationlabel">
      <x>433</x>
@@ -5290,6 +5283,54 @@ configured from ini file</string>
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>height_raise</sender>
+   <signal>pressed()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>height_raise_pressed()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>235</x>
+     <y>709</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>209</x>
+     <y>718</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>height_lower</sender>
+   <signal>pressed()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>height_lower_pressed()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>311</x>
+     <y>703</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>325</x>
+     <y>718</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>height_reset</sender>
+   <signal>pressed()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>height_reset_pressed()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>496</x>
+     <y>700</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>496</x>
+     <y>719</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <designerdata>
   <property name="gridDeltaX">
@@ -5342,5 +5383,8 @@ configured from ini file</string>
   <slot>button4_released()</slot>
   <slot>button5_released()</slot>
   <slot>button6_released()</slot>
+  <slot>height_raise_pressed()</slot>
+  <slot>height_lower_pressed()</slot>
+  <slot>height_reset_pressed()</slot>
  </slots>
 </ui>
