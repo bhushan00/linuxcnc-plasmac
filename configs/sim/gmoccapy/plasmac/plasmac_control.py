@@ -53,6 +53,10 @@ class HandlerClass:
         else:
             self.builder.get_object('forward').set_sensitive(False)
             self.builder.get_object('reverse').set_sensitive(False)
+        if hal.get_value('halui.program.is-running'):
+            self.builder.get_object('height-frame').set_sensitive(True)
+        else:
+            self.builder.get_object('height-frame').set_sensitive(False)
         mode = hal.get_value('plasmac.mode')
         if mode != self.oldMode:
             if mode == 0:

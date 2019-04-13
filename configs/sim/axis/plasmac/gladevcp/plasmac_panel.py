@@ -418,6 +418,10 @@ class HandlerClass:
                         self.builder.get_object('button' + str(n)).set_sensitive(False)
                 else:
                     self.builder.get_object('button' + str(n)).set_sensitive(False)
+        if hal.get_value('halui.program.is-running'):
+            self.builder.get_object('height-frame').set_sensitive(True)
+        else:
+            self.builder.get_object('height-frame').set_sensitive(False)
         if hal.get_value('halui.machine.is-on') and not hal.get_value('halui.program.is-running'):
             self.builder.get_object('torch-pulse-start').set_sensitive(True)
         else:
