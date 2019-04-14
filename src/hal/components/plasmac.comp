@@ -6,6 +6,8 @@ A plasma cutting table control component for use with the linuxcnc master branch
 
 .I VERSIONS:
 .br
+V0.27 - 2019/04/14 - fix height override
+.br
 V0.26.11 - 2019/04/12 - more probe error checking
 .br
 V0.26.1 - 2019/04/12 - fix probe height for second and subsequent cuts
@@ -910,7 +912,9 @@ FUNCTION(_) {
              * if kerf crossing is enabled, only allow THC if the voltage change is less than the threshold voltage (modes 0 & 1 only)
              * adjust torch height and target voltage to suit if height override requested (modes 0 & 1 only)*/
             if(!dry_run){
-                if(mode < 2){ /* thc control by arc voltage */
+                /* thc control by arc voltage */
+                if(mode < 2){
+                    /* set target voltage */
                     if(target_volts[0] == 0){
                         /* wait until velocity is at least 99% of requested velocity before sampling arc voltage */
                         if(use_auto_volts){
@@ -925,6 +929,20 @@ FUNCTION(_) {
                         }else{
                             target_volts[0] = cut_volts;
                         }
+                    /* height override setup*/
+                    }else if(fabs(height_override - height_ovr_old) > 0.05){
+                        height_ovr_counts -= (height_override - height_ovr_old) / 10 * units_per_mm / offset_scale;
+                        height_ovr_old = height_override;
+                    /* height override z motion */
+                    }else if(height_ovr_counts != 0){
+                        if((setup_velocity) < height_ovr_counts){
+                            offset_counts -= setup_velocity;
+                            height_ovr_counts -= setup_velocity;
+                        }else{
+                            offset_counts -= height_ovr_counts;
+                            height_ovr_counts = 0;
+                        }
+                    /* torch height control */
                     }else if(thc_enable){
                         /* lock thc if velocity < requested velocity * cornerlock threshold percentage */
                         if(cornerlock_enable == TRUE && current_velocity * 60 < requested_feed_rate * feed_override * cornerlock_threshold * 0.01){
@@ -939,13 +957,8 @@ FUNCTION(_) {
                             kerfcross_is_locked = FALSE;
                             last_arc_voltage = arc_voltage;
                         }
-                        /* height override setup*/
-                        if(height_override != height_ovr_old){
-                            height_ovr_counts += (height_override - height_ovr_old) / 10 * units_per_mm / offset_scale;
-                            height_ovr_old = height_override;
-                        }
-                        /* do thc if ok to go*/
-                        if(height_ovr_counts == 0 && !cornerlock_is_locked && !kerfcross_is_locked){
+                        /* do thc if ok to go */
+                        if(!cornerlock_is_locked && !kerfcross_is_locked){
                             pid_error_now = (target_volts[0] + height_override - arc_voltage) * 0.1;
                             if(fabs(pid_error_now) < fabs(thc_threshold * 0.1)){
                                 pid_error_now = 0;
@@ -959,53 +972,33 @@ FUNCTION(_) {
                             }else if(pid_output < -thc_velocity){
                                 pid_output = -thc_velocity;
                             }
-                            if(offset_counts + pid_output <= offset_min){
-                                rtapi_print_msg(RTAPI_MSG_ERR,"bottom limit reached while THC moving down\n"
-                                                              "program is stopped...\n");
+                            /* if we hit a soft limit during thc*/
+                            if(offset_counts + pid_output <= offset_min || offset_counts + pid_output >= offset_max){
                                 torch_on = FALSE;
                                 stop_type = STOP;
                                 program_stop = TRUE;
-                                state = FINISH;
+                                if(offset_counts + pid_output <= offset_min){
+                                    rtapi_print_msg(RTAPI_MSG_ERR,"bottom limit reached while THC moving down\n"
+                                                                  "program is stopped...\n");
+                                }else{
+                                    rtapi_print_msg(RTAPI_MSG_ERR,"top limit reached while THC moving up \n"
+                                                                  "program is stopped...\n");
+                                }
                                 pid_output = 0;
-                            }else if(offset_counts + pid_output >= offset_max){
-                                rtapi_print_msg(RTAPI_MSG_ERR,"top limit reached while THC moving up \n"
-                                                              "program is stopped...\n");
-                                torch_on = FALSE;
-                                stop_type = STOP;
-                                program_stop = TRUE;
                                 state = FINISH;
-                                pid_output = 0;
                             }
                             offset_counts += pid_output;
-                        /* height override raise */
-                        }else if(height_ovr_counts > 0){
-                            if((setup_velocity) < height_ovr_counts){
-                                offset_counts -= setup_velocity;
-                                height_ovr_counts -= setup_velocity;
-                            }else{
-                                offset_counts -= height_ovr_counts;
-                                height_ovr_counts = 0;
-                            }
-                        /* height override lower */
-                        }else if(height_ovr_counts < 0){
-                            if((setup_velocity) < height_ovr_counts){
-                                offset_counts += setup_velocity;
-                                height_ovr_counts += setup_velocity;
-                            }else{
-                                offset_counts += height_ovr_counts;
-                                height_ovr_counts = 0;
-                            }
                         }
-                        if(pid_output > 0){
-                            led_up = TRUE;
-                        }else if((pid_output) < 0){
-                            led_down = TRUE;
-                        }else{
-                            led_down = FALSE;
-                            led_up = FALSE;
-                        }
-                        pid_output = 0;
                     }
+                    if(pid_output > 0){
+                        led_up = TRUE;
+                    }else if((pid_output) < 0){
+                        led_down = TRUE;
+                    }else{
+                        led_down = FALSE;
+                        led_up = FALSE;
+                    }
+                    pid_output = 0;
                 }else{ /* thc control by move-up and move-down inputs (no kerf crossing in this mode) */
                     if(thc_enable){
                         /* lock thc if velocity < requested velocity * cornerlock threshold percentage */
@@ -1073,6 +1066,8 @@ FUNCTION(_) {
                     feed_hold = FALSE;
                 }
                 first_cut_finished = TRUE;
+                // here for height override for remainder of job
+                height_ovr_old = 0;
                 state = FINISH;
             }
             break;
@@ -1098,6 +1093,8 @@ FUNCTION(_) {
                         safe_height_is_limited = FALSE;
                         cut_started = FALSE;
                         dry_run = FALSE;
+                        // here for height override for one cut only
+                        //height_ovr_old = 0;
                     }
                 }
             }else{
