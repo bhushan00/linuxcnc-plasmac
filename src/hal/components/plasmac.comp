@@ -5,6 +5,8 @@ description
 A plasma cutting table control component for use with the linuxcnc master branch.
 
 .I VERSIONS:
+ .br
++V0.30 - 2019/04/14 - fix torch pulse and ohmic test while paused
 .br
 V0.29 - 2019/04/14 - show thc locked until target voltage established
 .br
@@ -643,11 +645,9 @@ FUNCTION(_) {
                         }
                     }
                 /* if we get a resume request and we are paused */
-                }else if(!program_is_idle && stop_type == PAUSE){
+                }else if(!program_is_paused && stop_type == PAUSE){
                     feed_hold = TRUE;
-                    if(!program_is_paused){
-                        stop_type = NONE;
-                    }
+                    stop_type = NONE;
                 /* if torch pulse requested */
                 }else if(torch_pulse_start){
                     feed_hold = TRUE;
