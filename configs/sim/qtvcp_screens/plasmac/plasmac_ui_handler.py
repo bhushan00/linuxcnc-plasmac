@@ -961,7 +961,7 @@ class HandlerClass:
             self.w.forward.setEnabled(False)
 
 
-        if hal.get_value('halui.program.is-running'):
+        if STATUS.machine_is_on():
             self.w.height_raise.setEnabled(True)
             self.w.height_lower.setEnabled(True)
             self.w.height_reset.setEnabled(True)

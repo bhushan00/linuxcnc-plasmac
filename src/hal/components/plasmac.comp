@@ -730,14 +730,12 @@ FUNCTION(_) {
                 }
             }else if(float_switch && !float_detected){
                 if(ohmic_attempts == ohmic_max_attempts){
-                    rtapi_print_msg(RTAPI_MSG_ERR,"YES");
                     probe_type = FLOAT;
                     target_sensed = TRUE;
                     probe_force = probe_force_val;
                     ohmic_attempts = 0;
                     float_detected = FALSE;
                 }else{
-                    rtapi_print_msg(RTAPI_MSG_ERR,"NO");
                     state = PROBE_HEIGHT;
                     ohmic_attempts += 1;
                     float_detected = TRUE;

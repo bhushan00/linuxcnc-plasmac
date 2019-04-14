@@ -956,7 +956,7 @@ def user_live_update():
     else:
         w(fpausedmotion + '.reverse','configure','-state','disabled')
         w(fpausedmotion + '.forward','configure','-state','disabled')
-    if hal.get_value('halui.program.is-running'):
+    if hal.get_value('halui.machine.is-on'):
         w(foverride + '.raise','configure','-state','normal')
         w(foverride + '.lower','configure','-state','normal')
         w(foverride + '.reset','configure','-state','normal')
