@@ -6,6 +6,8 @@ A plasma cutting table control component for use with the linuxcnc master branch
 
 .I VERSIONS:
 .br
+V0.29 - 2019/04/14 - show thc locked until target voltage established
+.br
 V0.28 - 2019/04/14 - change all stop on error to pause on error
 .br
 V0.27 - 2019/04/14 - fix height override
@@ -927,6 +929,11 @@ FUNCTION(_) {
                                     target_volts[0] = (target_volts[1] + target_volts[2] + target_volts[3]) / 3;
                                     last_arc_voltage = target_volts[0];
                                 }
+                            }
+                            if(target_volts[0] == 0){
+                                cornerlock_is_locked = TRUE;
+                            }else{
+                                cornerlock_is_locked = FALSE;
                             }
                         }else{
                             target_volts[0] = cut_volts;
