@@ -357,15 +357,15 @@ w('DynamicHelp::add',fmonitor + '.led-breakaway','-text','Breakaway switch statu
 
 # buttons frame
 w('labelframe',fbuttons,'-relief','flat')
+w('button',fbuttons + '.torch-enable','-width',bwidth/2,'-height','2')
 w('button',fbuttons + '.button1','-width',bwidth/2,'-height','2')
 w('button',fbuttons + '.button2','-width',bwidth/2,'-height','2')
 w('button',fbuttons + '.button3','-width',bwidth/2,'-height','2')
 w('button',fbuttons + '.button4','-width',bwidth/2,'-height','2')
 w('button',fbuttons + '.button5','-width',bwidth/2,'-height','2')
-w('button',fbuttons + '.button6','-width',bwidth/2,'-height','2')
 iniButtonName = ['Names']
 iniButtonCode = ['Codes']
-for button in range(1,7):
+for button in range(1,6):
     bname = inifile.find('PLASMAC', 'BUTTON_' + str(button) + '_NAME') or '0'
     iniButtonName.append(bname)
     iniButtonCode.append(inifile.find('PLASMAC', 'BUTTON_' + str(button) + '_CODE'))
@@ -376,6 +376,7 @@ for button in range(1,7):
         else:
             blabel = bname[0]
         w(fbuttons + '.button' + str(button),'configure','-text',blabel)
+w('bind',fbuttons + '.torch-enable','<ButtonPress-1>','torch_enable')
 w('bind',fbuttons + '.button1','<ButtonPress-1>','button_action 1 1')
 w('bind',fbuttons + '.button1','<ButtonRelease-1>','button_action 1 0')
 w('bind',fbuttons + '.button2','<ButtonPress-1>','button_action 2 1')
@@ -386,22 +387,20 @@ w('bind',fbuttons + '.button4','<ButtonPress-1>','button_action 4 1')
 w('bind',fbuttons + '.button4','<ButtonRelease-1>','button_action 4 0')
 w('bind',fbuttons + '.button5','<ButtonPress-1>','button_action 5 1')
 w('bind',fbuttons + '.button5','<ButtonRelease-1>','button_action 5 0')
-w('bind',fbuttons + '.button6','<ButtonPress-1>','button_action 6 1')
-w('bind',fbuttons + '.button6','<ButtonRelease-1>','button_action 6 0')
-w('grid',fbuttons + '.button1','-row','0','-column','0')
-w('grid',fbuttons + '.button2','-row','0','-column','1')
-w('grid',fbuttons + '.button3','-row','1','-column','0')
-w('grid',fbuttons + '.button4','-row','1','-column','1')
-w('grid',fbuttons + '.button5','-row','2','-column','0')
-w('grid',fbuttons + '.button6','-row','2','-column','1')
+w('grid',fbuttons + '.torch-enable','-row','0','-column','0')
+w('grid',fbuttons + '.button1','-row','0','-column','1')
+w('grid',fbuttons + '.button2','-row','1','-column','0')
+w('grid',fbuttons + '.button3','-row','1','-column','1')
+w('grid',fbuttons + '.button4','-row','2','-column','0')
+w('grid',fbuttons + '.button5','-row','2','-column','1')
 w('grid','columnconfigure',fbuttons,0,'-weight','1')
 
+w('DynamicHelp::add',fbuttons + '.torch-enable','-text','enable/disable torch\nif disabled when run pressed then dry run will commence')
 w('DynamicHelp::add',fbuttons + '.button1','-text','User button 1\nconfigured in ini file')
 w('DynamicHelp::add',fbuttons + '.button2','-text','User button 2\nconfigured in ini file')
 w('DynamicHelp::add',fbuttons + '.button3','-text','User button 3\nconfigured in ini file')
 w('DynamicHelp::add',fbuttons + '.button4','-text','User button 4\nconfigured in ini file')
 w('DynamicHelp::add',fbuttons + '.button5','-text','User button 5\nconfigured in ini file')
-w('DynamicHelp::add',fbuttons + '.button6','-text','User button 6\nconfigured in ini file')
 
 # populate bottom frame
 w('frame',fcommon + '.spaceframe','-relief','sunken')
@@ -772,6 +771,15 @@ def height_reset():
         w(foverride + '.height-override','configure','-text','%0.1f V' % (torch_height))
         hal.set_p('plasmac.height-override','%f' %(torch_height))
 
+def torch_enable():
+    if hal.get_value('plasmac.torch-enable'):
+        hal.set_p('plasmac.torch-enable','0')
+        w(fbuttons + '.torch-enable','configure','-bg','red','-activebackground','#AA0000','-text','Torch\nDisabled')
+    else:
+        hal.set_p('plasmac.torch-enable','1')
+        w(fbuttons + '.torch-enable','configure','-bg','green','-activebackground','#00AA00','-text','Torch\nEnabled')
+
+
 def goto_home(axis):
     if hal.get_value('halui.program.is-idle'):
         home = inifile.find('JOINT_' + str(inifile.find('TRAJ', 'COORDINATES').upper().index(axis)), 'HOME')
@@ -813,6 +821,7 @@ TclCommands.paused_motion = paused_motion
 TclCommands.height_raise = height_raise
 TclCommands.height_lower = height_lower
 TclCommands.height_reset = height_reset
+TclCommands.torch_enable = torch_enable
 TclCommands.joint_mode_switch = joint_mode_switch
 TclCommands.ja_button_activated = ja_button_activated
 commands = TclCommands(root_window)
@@ -1245,12 +1254,13 @@ configFile = inifile.find('EMC','MACHINE').lower() + '.cfg'
 materialsFile = inifile.find('EMC','MACHINE').lower() + '.mat'
 materialsList = []
 configDict = {}
-dryRun = 0
 torchPulse = 0
 materialsUpdate = False
 torch_height = 0
 w(foverride + '.height-override','configure','-text','%0.1f V' % (torch_height))
 hal.set_p('plasmac.height-override','%f' % (torch_height))
+hal.set_p('plasmac.torch-enable','0')
+w(fbuttons + '.torch-enable','configure','-bg','red','-activebackground','#AA0000','-text','Torch\nDisabled')
 wLabels =\
     [fmonitor + '.aVlab',\
     fmonitor + '.lTlab',\

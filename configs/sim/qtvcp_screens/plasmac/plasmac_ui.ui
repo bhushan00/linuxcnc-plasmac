@@ -4004,7 +4004,7 @@ Off</string>
    <widget class="PushButton" name="button1">
     <property name="geometry">
      <rect>
-      <x>220</x>
+      <x>272</x>
       <y>418</y>
       <width>48</width>
       <height>48</height>
@@ -4021,7 +4021,7 @@ configured from ini file</string>
    <widget class="PushButton" name="button2">
     <property name="geometry">
      <rect>
-      <x>272</x>
+      <x>324</x>
       <y>418</y>
       <width>48</width>
       <height>48</height>
@@ -4038,7 +4038,7 @@ configured from ini file</string>
    <widget class="PushButton" name="button3">
     <property name="geometry">
      <rect>
-      <x>324</x>
+      <x>376</x>
       <y>418</y>
       <width>48</width>
       <height>48</height>
@@ -4058,7 +4058,7 @@ configured from ini file</string>
    <widget class="PushButton" name="button4">
     <property name="geometry">
      <rect>
-      <x>376</x>
+      <x>428</x>
       <y>418</y>
       <width>48</width>
       <height>48</height>
@@ -4075,7 +4075,7 @@ configured from ini file</string>
    <widget class="PushButton" name="button5">
     <property name="geometry">
      <rect>
-      <x>428</x>
+      <x>480</x>
       <y>418</y>
       <width>48</width>
       <height>48</height>
@@ -4089,21 +4089,27 @@ configured from ini file</string>
      <string/>
     </property>
    </widget>
-   <widget class="PushButton" name="button6">
+   <widget class="PushButton" name="torch_enable">
     <property name="geometry">
      <rect>
-      <x>480</x>
+      <x>220</x>
       <y>418</y>
       <width>48</width>
       <height>48</height>
      </rect>
     </property>
+    <property name="font">
+     <font>
+      <family>DejaVu Sans</family>
+     </font>
+    </property>
     <property name="toolTip">
-     <string>user button 6
-configured from ini file</string>
+     <string>enable/disable torch
+if disabled when run activated then a dry run will commence</string>
     </property>
     <property name="text">
-     <string/>
+     <string>Torch
+Enabled</string>
     </property>
    </widget>
    <zorder>mdi_history</zorder>
@@ -4121,7 +4127,7 @@ configured from ini file</string>
    <zorder>button3</zorder>
    <zorder>button4</zorder>
    <zorder>button5</zorder>
-   <zorder>button6</zorder>
+   <zorder>torch_enable</zorder>
   </widget>
   <widget class="QStatusBar" name="statusBar">
    <property name="styleSheet">
@@ -5066,7 +5072,7 @@ configured from ini file</string>
    <slot>button1_pressed()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>228</x>
+     <x>280</x>
      <y>446</y>
     </hint>
     <hint type="destinationlabel">
@@ -5082,7 +5088,7 @@ configured from ini file</string>
    <slot>button2_pressed()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>280</x>
+     <x>332</x>
      <y>446</y>
     </hint>
     <hint type="destinationlabel">
@@ -5098,7 +5104,7 @@ configured from ini file</string>
    <slot>button3_pressed()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>332</x>
+     <x>384</x>
      <y>453</y>
     </hint>
     <hint type="destinationlabel">
@@ -5114,7 +5120,7 @@ configured from ini file</string>
    <slot>button4_pressed()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>386</x>
+     <x>438</x>
      <y>449</y>
     </hint>
     <hint type="destinationlabel">
@@ -5130,28 +5136,12 @@ configured from ini file</string>
    <slot>button5_pressed()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>435</x>
+     <x>487</x>
      <y>455</y>
     </hint>
     <hint type="destinationlabel">
      <x>435</x>
      <y>497</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>button6</sender>
-   <signal>pressed()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>button6_pressed()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>488</x>
-     <y>434</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>518</x>
-     <y>478</y>
     </hint>
    </hints>
   </connection>
@@ -5162,7 +5152,7 @@ configured from ini file</string>
    <slot>button1_released()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>251</x>
+     <x>303</x>
      <y>445</y>
     </hint>
     <hint type="destinationlabel">
@@ -5178,7 +5168,7 @@ configured from ini file</string>
    <slot>button2_released()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>307</x>
+     <x>359</x>
      <y>445</y>
     </hint>
     <hint type="destinationlabel">
@@ -5194,7 +5184,7 @@ configured from ini file</string>
    <slot>button3_released()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>357</x>
+     <x>409</x>
      <y>449</y>
     </hint>
     <hint type="destinationlabel">
@@ -5210,7 +5200,7 @@ configured from ini file</string>
    <slot>button4_released()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>407</x>
+     <x>459</x>
      <y>442</y>
     </hint>
     <hint type="destinationlabel">
@@ -5226,28 +5216,12 @@ configured from ini file</string>
    <slot>button5_released()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>461</x>
+     <x>513</x>
      <y>459</y>
     </hint>
     <hint type="destinationlabel">
      <x>458</x>
      <y>479</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>button6</sender>
-   <signal>released()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>button6_released()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>510</x>
-     <y>431</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>521</x>
-     <y>527</y>
     </hint>
    </hints>
   </connection>
@@ -5274,7 +5248,7 @@ configured from ini file</string>
    <slot>spin_value_changed()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>87</x>
+     <x>63</x>
      <y>168</y>
     </hint>
     <hint type="destinationlabel">
@@ -5331,6 +5305,38 @@ configured from ini file</string>
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>torch_enable</sender>
+   <signal>pressed()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>torch_enable_pressed()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>239</x>
+     <y>445</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>212</x>
+     <y>441</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>torch_enable</sender>
+   <signal>released()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>torch_enable_released()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>237</x>
+     <y>427</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>211</x>
+     <y>397</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <designerdata>
   <property name="gridDeltaX">
@@ -5376,15 +5382,15 @@ configured from ini file</string>
   <slot>button3_pressed()</slot>
   <slot>button4_pressed()</slot>
   <slot>button5_pressed()</slot>
-  <slot>button6_pressed()</slot>
   <slot>button1_released()</slot>
   <slot>button2_released()</slot>
   <slot>button3_released()</slot>
   <slot>button4_released()</slot>
   <slot>button5_released()</slot>
-  <slot>button6_released()</slot>
   <slot>height_raise_pressed()</slot>
   <slot>height_lower_pressed()</slot>
   <slot>height_reset_pressed()</slot>
+  <slot>torch_enable_pressed()</slot>
+  <slot>torch_enable_released()</slot>
  </slots>
 </ui>

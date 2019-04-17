@@ -407,10 +407,14 @@ class HandlerClass:
     #####################
 
     def init_user_buttons(self):
+        hal.set_p('plasmac.torch-enable','0')
+        self.w.torch_enable.setText('Torch\nDisabled')
+        self.w.torch_enable.setStyleSheet('background-color:qlineargradient\
+(x1:0,y1:1,x2:0,y2:0,stop:0#004000,stop:0.15#c00000,stop:0.85#c00000,stop:1#400000)')
         self.iniButtonName = ['Names']
         self.iniButtonCode = ['Codes']
-        self.buttons = ['blank',self.w.button1,self.w.button2,self.w.button3,self.w.button4,self.w.button5,self.w.button6]
-        for button in range(1,7):
+        self.buttons = ['blank',self.w.button1,self.w.button2,self.w.button3,self.w.button4,self.w.button5]
+        for button in range(1,6):
             bname = self.ini.find('PLASMAC', 'BUTTON_' + str(button) + '_NAME') or '0'
             self.iniButtonName.append(bname)
             self.iniButtonCode.append(self.ini.find('PLASMAC', 'BUTTON_' + str(button) + '_CODE'))
@@ -422,6 +426,26 @@ class HandlerClass:
                     blabel = bname[0]
                 name = 'button' + str(button)
                 self.buttons[button].setText(blabel)
+
+    def torch_enable_pressed(self):
+        if hal.get_value('plasmac.torch-enable'):
+            hal.set_p('plasmac.torch-enable','0')
+            self.w.torch_enable.setText('Torch\nDisabled')
+            self.w.torch_enable.setStyleSheet('background-color:qlineargradient\
+(x1:0,y1:1,x2:0,y2:0,stop:0#004000,stop:0.25#c00000,stop:0.75#c00000,stop:1#400000)')
+        else:
+            hal.set_p('plasmac.torch-enable','1')
+            self.w.torch_enable.setText('Torch\nEnabled')
+            self.w.torch_enable.setStyleSheet('background-color:qlineargradient\
+(x1:0,y1:1,x2:0,y2:0,stop:0#004000,stop:0.25#00c000,stop:0.75#00c000,stop:1#004000)')
+
+    def torch_enable_released(self):
+        if hal.get_value('plasmac.torch-enable'):
+            self.w.torch_enable.setStyleSheet('background-color:qlineargradient\
+(x1:0,y1:1,x2:0,y2:0,stop:0#004000,stop:0.15#00c000,stop:0.85#00c000,stop:1#004000)')
+        else:
+            self.w.torch_enable.setStyleSheet('background-color:qlineargradient\
+(x1:0,y1:1,x2:0,y2:0,stop:0#004000,stop:0.15#c00000,stop:0.85#c00000,stop:1#400000)')
 
     def user_button_pressed(self, commands):
         if not commands: return
@@ -971,7 +995,7 @@ class HandlerClass:
             self.w.height_reset.setEnabled(False)
 
 
-        for n in range(1,7):
+        for n in range(1,6):
             if self.iniButtonCode[n] in ['ohmic-test']:
                 if STATUS.machine_is_on() and hal.get_value('halui.program.is-paused') or hal.get_value('halui.program.is-idle'):
                     self.buttons[n].setEnabled(True)
@@ -980,8 +1004,6 @@ class HandlerClass:
             elif not self.iniButtonCode[n] in ['ohmic-test'] and not self.iniButtonCode[n].startswith('%'):
                 if STATUS.machine_is_on() and STATUS.is_all_homed() and STATUS.stat.interp_state == linuxcnc.INTERP_IDLE:
                     self.buttons[n].setEnabled(True)
-                    if self.iniButtonCode[n] == 'dry-run' and not STATUS.is_file_loaded():
-                        self.buttons[n].setEnabled(False)
                 else:
                     self.buttons[n].setEnabled(False)
         self.w.plasmac_settings_tabs.setTabEnabled(1, not hal.get_value('plasmac_ui.config_disable'))

@@ -182,6 +182,22 @@ class HandlerClass:
         self.builder.get_object('height-override').set_text('%0.1f V' % (self.torch_height))
         hal.set_p('plasmac.height-override','%f' %(self.torch_height))
 
+    def on_torch_enable_pressed(self,event):
+        if hal.get_value('plasmac.torch-enable'):
+            hal.set_p('plasmac.torch-enable','0')
+            self.torchButton.set_label('Torch Disabled')
+            self.torchButton.modify_bg(gtk.STATE_NORMAL, gtk.gdk.color_parse('red'))
+            self.torchButton.modify_bg(gtk.STATE_PRELIGHT, gtk.gdk.color_parse('red'))
+            self.torchButton.modify_bg(gtk.STATE_ACTIVE, gtk.gdk.color_parse('red'))
+            self.torchButton.modify_bg(gtk.STATE_SELECTED, gtk.gdk.color_parse('red'))
+        else:
+            hal.set_p('plasmac.torch-enable','1')
+            self.torchButton.set_label('Torch Enabled')
+            self.torchButton.modify_bg(gtk.STATE_NORMAL, gtk.gdk.color_parse('green'))
+            self.torchButton.modify_bg(gtk.STATE_PRELIGHT, gtk.gdk.color_parse('green'))
+            self.torchButton.modify_bg(gtk.STATE_ACTIVE, gtk.gdk.color_parse('green'))
+            self.torchButton.modify_bg(gtk.STATE_SELECTED, gtk.gdk.color_parse('green'))
+
     def on_button1_pressed(self,event):
         self.user_button_pressed(self.iniButtonCode[1])
 
@@ -212,17 +228,9 @@ class HandlerClass:
     def on_button5_released(self,event):
         self.user_button_released(self.iniButtonCode[5])
 
-    def on_button6_pressed(self,event):
-        self.user_button_pressed(self.iniButtonCode[6])
-
-    def on_button6_released(self,event):
-        self.user_button_released(self.iniButtonCode[6])
-
     def user_button_pressed(self, commands):
         if not commands: return
-        if commands.lower() == 'dry-run':
-            hal.set_p('plasmac.dry-run-start','1')
-        elif commands.lower() == 'ohmic-test':
+        if commands.lower() == 'ohmic-test':
             hal.set_p('plasmac.ohmic-test','1')
         elif commands.lower() == 'probe-test':
             hal.set_p('plasmac.probe-test','1')
@@ -269,9 +277,7 @@ class HandlerClass:
 
     def user_button_released(self, commands):
         if not commands: return
-        if commands.lower() == 'dry-run':
-            hal.set_p('plasmac.dry-run-start','0')
-        elif commands.lower() == 'ohmic-test':
+        if commands.lower() == 'ohmic-test':
             hal.set_p('plasmac.ohmic-test','0')
         elif commands.lower() == 'probe-test':
             hal.set_p('plasmac.probe-test','0')
@@ -405,7 +411,7 @@ class HandlerClass:
         else:
             isIdleHomed = False
             isIdleOn = False 
-        for n in range(1,6):
+        for n in range(1,5):
             if self.iniButtonCode[n] in ['ohmic-test']:
                 if isIdleOn or hal.get_value('halui.program.is-paused'):
                     self.builder.get_object('button' + str(n)).set_sensitive(True)
@@ -414,8 +420,6 @@ class HandlerClass:
             elif not self.iniButtonCode[n] in ['ohmic-test'] and not self.iniButtonCode[n].startswith('%'):
                 if isIdleHomed:
                     self.builder.get_object('button' + str(n)).set_sensitive(True)
-                    if self.iniButtonCode[n] == 'dry-run' and not self.s.file:
-                        self.builder.get_object('button' + str(n)).set_sensitive(False)
                 else:
                     self.builder.get_object('button' + str(n)).set_sensitive(False)
         if hal.get_value('halui.program.is-running'):
@@ -616,9 +620,16 @@ class HandlerClass:
         self.load_settings()
         self.check_materials_file()
         self.get_materials()
+        hal.set_p('plasmac.torch-enable','0')
+        self.torchButton = self.builder.get_object('torch-enable')
+        self.torchButton.set_label('Torch Disabled')
+        self.torchButton.modify_bg(gtk.STATE_NORMAL, gtk.gdk.color_parse('red'))
+        self.torchButton.modify_bg(gtk.STATE_PRELIGHT, gtk.gdk.color_parse('red'))
+        self.torchButton.modify_bg(gtk.STATE_ACTIVE, gtk.gdk.color_parse('red'))
+        self.torchButton.modify_bg(gtk.STATE_SELECTED, gtk.gdk.color_parse('red'))
         self.iniButtonName = ['Names']
         self.iniButtonCode = ['Codes']
-        for button in range(1,7):
+        for button in range(1,6):
             bname = self.i.find('PLASMAC', 'BUTTON_' + str(button) + '_NAME') or '0'
             self.iniButtonName.append(bname)
             self.iniButtonCode.append(self.i.find('PLASMAC', 'BUTTON_' + str(button) + '_CODE'))

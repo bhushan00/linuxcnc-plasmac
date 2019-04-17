@@ -6,6 +6,8 @@ A plasma cutting table control component for use with the linuxcnc master branch
 
 .I VERSIONS:
  .br
++V0.31 - 2019/04/17 - use torch-enable instead of dry-run
+ .br
 +V0.30 - 2019/04/14 - fix torch pulse and ohmic test while paused
 .br
 V0.29 - 2019/04/14 - show thc locked until target voltage established
@@ -250,7 +252,6 @@ pin in  float   current_velocity            "current machine velocity , connect 
 pin in  float   cut_feed_rate               "cut feed rate, set to 0 to use feed rate from gcod file (machine units per minute)";
 pin in  float   cut_height                  "cut height (machine units)";
 pin in  float   cut_volts                   "cut voltage (volts)";
-pin in  bit     dry_run_start               "do a dry run, no torch or thc";
 pin in  bit     external_estop              "external estop input";
 pin in  float   feed_override               "feed override value from gui (connect to halui.feed-override.value)";
 pin in  bit     float_switch                "float switch input (can also act as breakaway if it actuates when torch breaks away)";
@@ -288,6 +289,7 @@ pin in  bit     spindle_on                  "start a new cut, connect to spindle
 pin in  bit     thc_enable                  "enable thc";
 pin in  float   thc_feed_rate               "maximum feed rate for thc (machine units per minute)";
 pin in  float   thc_threshold               "thc threshold (volts), changes below this have no effect";
+pin in  bit     torch_enable                "enable torch";
 pin in  float   torch_off_delay             "time delay to turn torch off (seconds)";
 pin in  bit     torch_pulse_start           "torch pulse start";
 pin in  float   torch_pulse_time            "torch pulse time (seconds)";
@@ -326,7 +328,6 @@ variable float  cut_height_last;            /* cut height at end of cut */
 variable float  cut_offset;                 /* offset from last cut end to this cut start */
 variable float  cut_started;                /* cut has started */
 variable float  cut_target;                 /* cut height target offset */
-variable bool   dry_run;                    /* dry run in progress */
 variable bool   error_message;              /* 1 if error message has been sent */
 variable bool   first_cut_finished;         /* first cut is complete */
 variable bool   float_detected;             /* float switch detected */
@@ -520,7 +521,7 @@ FUNCTION(_) {
                                           "program is paused.");
             probe_inhibit = TRUE;
             state = SAFE_HEIGHT;
-        }else if(state > ARC_OK && !arc_ok_out && !dry_run){ ;
+        }else if(state > ARC_OK && !arc_ok_out && torch_enable){ ;
             torch_on = FALSE;
             program_pause = TRUE;
             stop_type = PAUSE;
@@ -570,10 +571,6 @@ FUNCTION(_) {
                 /* if we get a paused motion request and we are paused */
                 if(paused_motion_speed && stop_type == PAUSE){
                     state = PAUSED_MOTION;
-                /* if we get a dry run request and we are stopped or waiting for a restart */
-                }else if(dry_run_start && !dry_run && (stop_type == NONE || stop_type == WAIT)){
-                    dry_run = TRUE;
-                    program_run = TRUE;
                 /* if we get a start request and we are stopped or waiting for a restart */
                 }else if((spindle_on || probe_test) && (stop_type == NONE || stop_type == WAIT)){
                     feed_hold = TRUE;
@@ -804,7 +801,7 @@ FUNCTION(_) {
                     arc_starts = 0;
                     if(probe_testing){
                         state = PROBE_TEST;
-                    }else if(dry_run){
+                    }else if(!torch_enable){
                         pierce_timer = pierce_delay;
                         state = PIERCE_DELAY;
                     }else if(spindle_on){
@@ -836,8 +833,10 @@ FUNCTION(_) {
                 restart_timer -= thread_period;
                 if(restart_timer <= 0){
                     restart_timer = 0;
-                    torch_on = TRUE;
                     arc_fail_timer = arc_fail_delay;
+                    if(torch_enable){
+                        torch_on = TRUE;
+                    }
                     state = ARC_OK;
                 }
             }
@@ -913,7 +912,7 @@ FUNCTION(_) {
              * if corner lock enabled, only allow THC if current velocity is greater than the threshold percentage of requested velocity
              * if kerf crossing is enabled, only allow THC if the voltage change is less than the threshold voltage (modes 0 & 1 only)
              * adjust torch height and target voltage to suit if height override requested (modes 0 & 1 only)*/
-            if(!dry_run){
+            if(torch_enable){
                 /* thc control by arc voltage */
                 if(mode < 2){
                     /* set target voltage */
@@ -1100,7 +1099,6 @@ FUNCTION(_) {
                         stop_type = NONE;
                         safe_height_is_limited = FALSE;
                         cut_started = FALSE;
-                        dry_run = FALSE;
                         // here for height override for one cut only
                         //height_ovr_old = 0;
                     }
@@ -1113,7 +1111,9 @@ FUNCTION(_) {
             /* single pulse the torch on and off */
             if(!torch_pulse){
                 torch_pulse_timer = torch_pulse_time;
-                torch_on = TRUE;
+                if(torch_enable){
+                    torch_on = TRUE;
+                }
                 torch_pulse = TRUE;
             }else{
                 if(torch_pulse_timer > 0){
