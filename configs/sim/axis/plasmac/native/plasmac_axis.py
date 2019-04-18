@@ -1045,8 +1045,8 @@ def configure_widgets():
         w(fcutparms + '.pierce-height','configure','-from','0','-to','25.4','-increment','0.1','-format','%0.1f') #4
         w(fmotion + '.float-switch-travel','configure','-from','0','-to','20','-increment','0.01','-format','%0.2f') #1.5
         w(fmotion + '.probe-feed-rate','configure','-from','1','-to',thcFeedRate,'-increment','1','-format','%0.0f') #300
-        w(fmotion + '.probe-start-height','configure','-from','1','-to',maxHeight,'-increment','1','-format','%0.0f') #30
-        w(fmotion + '.safe-height','configure','-from','1','-to','99','-increment','1','-format','%0.0f') #20
+        w(fmotion + '.probe-start-height','configure','-from','1','-to',maxHeight,'-increment','1','-format','%0.0f') #20
+        w(fmotion + '.safe-height','configure','-from','1','-to',maxHeight,'-increment','1','-format','%0.0f') #20
         w(fmotion + '.skip-ihs-distance','configure','-from','0','-to','999','-increment','1','-format','%0.0f') #0
         w(foffsets + '.setup-feed-rate','configure','-from','1','-to',thcFeedRate,'-increment','1','-format','%0.0f') #int(thcFeedRate * 0.8)
     elif inifile.find('TRAJ','LINEAR_UNITS').lower() == 'inch':
@@ -1055,8 +1055,8 @@ def configure_widgets():
         w(fcutparms + '.pierce-height','configure','-from','0','-to','1','-increment','0.01','-format','%0.2f') #0.16
         w(fmotion + '.float-switch-travel','configure','-from','0','-to','0.75','-increment','0.001','-format','%0.3f') #0.06
         w(fmotion + '.probe-feed-rate','configure','-from','0.1','-to',thcFeedRate,'-increment','0.1','-format','%0.1f') #12
-        w(fmotion + '.probe-start-height','configure','-from','0.1','-to',maxHeight,'-increment','0.01','-format','%0.2f') #1.2
-        w(fmotion + '.safe-height','configure','-from','0.04','-to','4','-increment','0.01','-format','%0.2f') #0.75
+        w(fmotion + '.probe-start-height','configure','-from','0.1','-to',maxHeight,'-increment','0.01','-format','%0.2f') #0.75
+        w(fmotion + '.safe-height','configure','-from','0.1','-to',maxHeight,'-increment','0.01','-format','%0.2f') #0.75
         w(fmotion + '.skip-ihs-distance','configure','-from','0','-to','99','-increment','0.1','-format','%0.1f') #0
         w(foffsets + '.setup-feed-rate','configure','-from','0.1','-to',thcFeedRate,'-increment','0.1','-format','%0.1f') #int(thcFeedRate * 0.8)
     else:
