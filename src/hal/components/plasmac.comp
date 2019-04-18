@@ -6,6 +6,8 @@ A plasma cutting table control component for use with the linuxcnc master branch
 
 .I VERSIONS:
  .br
++V0.32 - 2019/04/17 - fix safe height error
+ .br
 +V0.31 - 2019/04/17 - use torch-enable instead of dry-run
  .br
 +V0.30 - 2019/04/14 - fix torch pulse and ohmic test while paused
@@ -1066,16 +1068,18 @@ FUNCTION(_) {
             if(!probe_test){
                 if((offset_counts - setup_velocity) > safe_target){
                     offset_counts -= setup_velocity;
+                }else if((offset_counts + setup_velocity) < safe_target){
+                    offset_counts += setup_velocity;
                 }else{
-                offset_counts = safe_target;
+                    offset_counts = safe_target;
+                    if(stop_type == WAIT){
+                        feed_hold = FALSE;
+                    }
+                    first_cut_finished = TRUE;
+                    // height override here for for remainder of job
+                    height_ovr_old = 0;
+                    state = FINISH;
                 }
-                if(stop_type == WAIT){
-                    feed_hold = FALSE;
-                }
-                first_cut_finished = TRUE;
-                // here for height override for remainder of job
-                height_ovr_old = 0;
-                state = FINISH;
             }
             break;
         case FINISH:
@@ -1092,14 +1096,16 @@ FUNCTION(_) {
                 adaptive_feed = 1;
                 if(program_is_idle){
                     first_cut_finished = FALSE;
-                    if(offset_counts + setup_velocity < offset_max){
+                    if(offset_counts - setup_velocity > offset_max){
+                        offset_counts -= setup_velocity;
+                    }else if(offset_counts + setup_velocity < offset_max){
                         offset_counts += setup_velocity;
                     }else{
                         offset_counts = offset_max;
                         stop_type = NONE;
                         safe_height_is_limited = FALSE;
                         cut_started = FALSE;
-                        // here for height override for one cut only
+                        // height override here for one cut only
                         //height_ovr_old = 0;
                     }
                 }
