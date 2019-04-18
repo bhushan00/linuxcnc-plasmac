@@ -6,6 +6,8 @@ A plasma cutting table control component for use with the linuxcnc master branch
 
 .I VERSIONS:
  .br
++V0.33 - 2019/04/18 - fix probe trip error
+ .br
 +V0.32 - 2019/04/17 - fix safe height error
  .br
 +V0.31 - 2019/04/17 - use torch-enable instead of dry-run
@@ -798,6 +800,8 @@ FUNCTION(_) {
                 feed_hold = TRUE;
                 if(offset_counts - setup_velocity > pierce_target){
                     offset_counts -= setup_velocity;
+                }else if(offset_counts + setup_velocity < pierce_target){
+                    offset_counts += setup_velocity;
                 }else{
                     offset_counts = pierce_target;
                     arc_starts = 0;
@@ -871,9 +875,9 @@ FUNCTION(_) {
         case PUDDLE_JUMP:
             /* move to puddle_jump height */
             feed_hold = TRUE;
-            if((offset_counts - setup_velocity) > puddle_jump_target){
+            if(offset_counts - setup_velocity > puddle_jump_target){
                 offset_counts -= setup_velocity;
-            }else if((offset_counts + setup_velocity) < puddle_jump_target){
+            }else if(offset_counts + setup_velocity < puddle_jump_target){
                 offset_counts += setup_velocity;
             }else{
                 offset_counts = puddle_jump_target;
@@ -891,9 +895,9 @@ FUNCTION(_) {
         case CUT_HEIGHT:
             /* move to cut height */
             feed_hold = TRUE;
-            if((offset_counts - setup_velocity) > cut_target){
+            if(offset_counts - setup_velocity > cut_target){
                 offset_counts -= setup_velocity;
-            }else if((offset_counts + setup_velocity) < cut_target){
+            }else if(offset_counts + setup_velocity < cut_target){
                 offset_counts += setup_velocity;
             }else{
                 offset_counts = cut_target;
@@ -1066,9 +1070,9 @@ FUNCTION(_) {
             /* move to safe height */
             feed_hold = TRUE;
             if(!probe_test){
-                if((offset_counts - setup_velocity) > safe_target){
+                if(offset_counts - setup_velocity > safe_target){
                     offset_counts -= setup_velocity;
-                }else if((offset_counts + setup_velocity) < safe_target){
+                }else if(offset_counts + setup_velocity < safe_target){
                     offset_counts += setup_velocity;
                 }else{
                     offset_counts = safe_target;
