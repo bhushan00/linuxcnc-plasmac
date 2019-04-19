@@ -6,6 +6,8 @@ A plasma cutting table control component for use with the linuxcnc master branch
 
 .I VERSIONS:
  .br
++V0.34 - 2019/04/19 - add zero height state
+ .br
 +V0.33 - 2019/04/18 - fix probe trip error
  .br
 +V0.32 - 2019/04/17 - fix safe height error
@@ -375,6 +377,7 @@ variable float  torch_off_timer;            /* arc off delay timer */
 variable bool   torch_pulse;                /* torch pulse flag */
 variable float  torch_pulse_timer;          /* torch pulse timer */
 variable float  velocity_scale;             /* the velocity multipler */
+variable float  zero_target;                /* zero height target offset */
 
 /* DEBUGGING PINS */
 //pin out s32     state_out;
@@ -395,7 +398,8 @@ option singleton yes;
 typedef enum{IDLE,
              PROBE_HEIGHT,
              PROBE_DOWN,
-             SET_ZERO,
+             PROBE_UP,
+             ZERO_HEIGHT,
              PIERCE_HEIGHT,
              TORCH_ON,
              ARC_OK,
@@ -667,6 +671,7 @@ FUNCTION(_) {
             /* move to probe height at setup speed */
             if(probe_testing && !probe_test){
                 state = PROBE_TEST;
+                break;
             }
             if(float_switch && !float_detected){
                 stop_type = PAUSE;
@@ -709,7 +714,7 @@ FUNCTION(_) {
                 }else{
                     target_sensed = 0;
                     if(float_switch || ohmic_probe){
-                        state = SET_ZERO;
+                        state = PROBE_UP;
                     }else{
                         rtapi_print_msg(RTAPI_MSG_ERR,"probe trip error while probing.");
                         state = IDLE;
@@ -748,10 +753,11 @@ FUNCTION(_) {
                 ohmic_attempts = 0;
             }
             break;
-        case SET_ZERO:
+        case PROBE_UP:
             /* probe up at minimum speed to find top of stock */
             if(probe_testing && !probe_test){
                 state = PROBE_TEST;
+                break;
             }
             if(float_switch || ohmic_probe){
                 offset_counts += 1;
@@ -761,6 +767,7 @@ FUNCTION(_) {
                 }else{
                     probe_offset = float_switch_travel / offset_scale;
                 }
+                zero_target = offset_counts + probe_offset;
                 cut_target = cut_height_first = offset_datum = offset_counts + probe_offset + (cut_height / offset_scale);
                 pierce_target = offset_counts + probe_offset + (pierce_height / offset_scale);
                 puddle_jump_target = offset_counts + probe_offset + (pierce_height * (puddle_jump_percent / 100) / offset_scale);
@@ -780,14 +787,28 @@ FUNCTION(_) {
                     safe_target = offset_max;
                     safe_height_is_limited = TRUE;
                     ohmic_enable = FALSE;
-                    state = PIERCE_HEIGHT;
+                    state = ZERO_HEIGHT;
                 }else{
                     if(!safe_target){
                         safe_target = offset_counts + safe_preferred;
                     }
                     ohmic_enable = FALSE;
-                    state = PIERCE_HEIGHT;
+                    state = ZERO_HEIGHT;
                 }
+            }
+            break;
+        case ZERO_HEIGHT:
+            if(probe_testing && !probe_test){
+                state = PROBE_TEST;
+                break;
+            }
+            if(offset_counts - setup_velocity > zero_target){
+                offset_counts -= setup_velocity;
+            }else if(offset_counts + setup_velocity < zero_target){
+                offset_counts += setup_velocity;
+            }else{
+                offset_counts = zero_target;
+                state = PIERCE_HEIGHT;
             }
             break;
         case PIERCE_HEIGHT:
@@ -1172,7 +1193,9 @@ FUNCTION(_) {
             /* wait here until probe_test input released */
             if(!probe_test){
                 probe_testing = FALSE;
-                if(offset_counts + setup_velocity < offset_max){
+                if(offset_counts - setup_velocity > offset_max){
+                    offset_counts -= setup_velocity;
+                }else if(offset_counts + setup_velocity < offset_max){
                     offset_counts += setup_velocity;
                 }else{
                     offset_counts = offset_max;
