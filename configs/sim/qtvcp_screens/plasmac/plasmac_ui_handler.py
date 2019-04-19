@@ -83,7 +83,7 @@ class HandlerClass:
         self.oldMode = 0
         self.oldTaskMode = STATUS.stat.task_mode
         self.mname = self.ini.find('EMC','MACHINE')
-        self.maxHeight = hal.get_value('ini.z.max_limit')
+        self.maxHeight = hal.get_value('ini.z.max_limit') - hal.get_value('ini.z.min_limit')
         self.configure_widgets()
         self.load_settings()
         self.w.probe_feed_rate.setMaximum(self.w.setup_feed_rate.value())

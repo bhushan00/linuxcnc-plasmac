@@ -1248,7 +1248,7 @@ def set_mode(mode):
 firstrundone = 0
 thcFeedRate = (float(inifile.find('AXIS_Z','MAX_VELOCITY')) * \
                float(inifile.find('AXIS_Z','OFFSET_AV_RATIO'))) * 60
-maxHeight = hal.get_value('ini.z.max_limit')
+maxHeight = hal.get_value('ini.z.max_limit') - hal.get_value('ini.z.min_limit')
 hal.set_p('plasmac.thc-feed-rate','%f' % (thcFeedRate))
 configFile = inifile.find('EMC','MACHINE').lower() + '.cfg'
 materialsFile = inifile.find('EMC','MACHINE').lower() + '.mat'

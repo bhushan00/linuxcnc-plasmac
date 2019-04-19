@@ -611,7 +611,7 @@ class HandlerClass:
         hal.set_p('plasmac.mode','%d' % (int(self.i.find('PLASMAC','MODE') or '0')))
         self.oldMode = 9
         self.materialsUpdate = False
-        self.maxHeight = hal.get_value('ini.z.max_limit')
+        self.maxHeight = hal.get_value('ini.z.max_limit') - hal.get_value('ini.z.min_limit')
         self.configure_widgets()
         self.builder.get_object('probe-feed-rate-adj').set_upper(self.builder.get_object('setup-feed-rate').get_value())
         self.torch_height = 0
