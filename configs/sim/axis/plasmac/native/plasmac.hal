@@ -1,7 +1,7 @@
 
 #***** DEBOUNCE FOR THE FLOAT SWITCH ***********************************
 loadrt  debounce                cfg=3
-setp    debounce.0.delay        1
+setp    debounce.0.delay        5
 addf    debounce.0              servo-thread
 
 #***** PLASMAC COMPONENT ***********************************************
@@ -9,6 +9,7 @@ loadrt  plasmac
 addf    plasmac     servo-thread
 
 # inputs
+# the next line needs to be the joint associated with the Z axis
 net plasmac:axis-position        joint.3.pos-fb                  =>  plasmac.axis-z-position
 net plasmac:axis-x-position      axis.x.pos-cmd                  =>  plasmac.axis-x-position
 net plasmac:axis-y-position      axis.y.pos-cmd                  =>  plasmac.axis-y-position
@@ -37,6 +38,7 @@ net plasmac:program-stop         plasmac.program-stop            =>  halui.progr
 net plasmac:torch-on             plasmac.torch-on
 
 #***** SET THE FOLLOWING TO SUIT YOUR CONFIGURATION ********************
+# the following could be done here or added to your machine hal file
 
 # FOR MODE 0
 #net plasmac:arc-voltage-in      ***YOUR PLASMA ARC VOLTAGE***   =>  plasmac.arc-voltage-in
