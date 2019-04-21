@@ -1034,8 +1034,8 @@ def configure_widgets():
     w(farc + '.arc-ok-high','configure','-from','50','-to','200','-increment','0.5','-format','%0.1f') #50
     w(farc + '.arc-max-starts','configure','-from','1','-to','9','-increment','1','-format','%0.0f') #3
     w(farc + '.restart-delay','configure','-from','1','-to','60','-increment','1','-format','%0.0f') #1
-    w(farc + '.arc-voltage-offset','configure','-from','-100','-to','100','-increment','0.1','-format','%0.1f') #0
-    w(farc + '.arc-voltage-scale','configure','-from','0.01','-to','99','-increment','0.01','-format','%0.2f') #1
+    w(farc + '.arc-voltage-offset','configure','-from','-99999','-to','99999','-increment','0.1','-format','%0.1f') #0
+    w(farc + '.arc-voltage-scale','configure','-from','-999','-to','999','-increment','0.000001','-format','%0.6f') #1
     w(foffsets + '.maxspeed','configure','-text',str(int(thcFeedRate)))
     w(foffsets + '.pid-i-gain','configure','-from','0','-to','1000','-increment','1','-format','%0.0f') #0
     w(foffsets + '.pid-d-gain','configure','-from','0','-to','1000','-increment','1','-format','%0.0f') #0
