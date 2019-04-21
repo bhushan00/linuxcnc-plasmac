@@ -6,6 +6,8 @@ A plasma cutting table control component for use with the linuxcnc master branch
 
 .I VERSIONS:
  .br
++V0.37 - 2019/04/21 - send z to near top after error
+ .br
 +V0.36 - 2019/04/21 - clear offsets after job and probe test
  .br
 +V0.35 - 2019/04/19 - fix probe setup for opposite z coordinates
@@ -412,6 +414,7 @@ typedef enum{IDLE,
              CUT_HEIGHT,
              CUTTING,
              SAFE_HEIGHT,
+             MAX_HEIGHT,
              FINISH,
              TORCHPULSE,
              PAUSED_MOTION,
@@ -493,7 +496,7 @@ FUNCTION(_) {
         if(program_is_paused){
             torch_on = FALSE;
             stop_type = PAUSE;
-            state = SAFE_HEIGHT;
+            state = MAX_HEIGHT;
         }else if(!spindle_on){
             if(torch_off_delay > 0){
                 torch_off_timer = torch_off_delay;
@@ -516,7 +519,7 @@ FUNCTION(_) {
             rtapi_print_msg(RTAPI_MSG_ERR,"breakaway switch activated\n"
                                           "program is paused.");
             probe_inhibit = TRUE;
-            state = SAFE_HEIGHT;
+            state = MAX_HEIGHT;
         }else if(state > PIERCE_HEIGHT && float_switch){
             torch_on = FALSE;
             program_pause = TRUE;
@@ -524,7 +527,7 @@ FUNCTION(_) {
             rtapi_print_msg(RTAPI_MSG_ERR,"float switch activated\n"
                                           "program is paused.");
             probe_inhibit = TRUE;
-            state = SAFE_HEIGHT;
+            state = MAX_HEIGHT;
         }else if(state > PIERCE_HEIGHT && ohmic_probe){
             torch_on = FALSE;
             program_pause = TRUE;
@@ -532,14 +535,14 @@ FUNCTION(_) {
             rtapi_print_msg(RTAPI_MSG_ERR,"ohmic_probe activated\n"
                                           "program is paused.");
             probe_inhibit = TRUE;
-            state = SAFE_HEIGHT;
+            state = MAX_HEIGHT;
         }else if(state > ARC_OK && !arc_ok_out && torch_enable){ ;
             torch_on = FALSE;
             program_pause = TRUE;
             stop_type = PAUSE;
             rtapi_print_msg(RTAPI_MSG_ERR,"valid arc lost\n"
                                           "program is paused.");
-            state = SAFE_HEIGHT;
+            state = MAX_HEIGHT;
         }
     }
 
@@ -684,7 +687,7 @@ FUNCTION(_) {
                 }else{
                     stop_type = PAUSE;
                     program_pause = TRUE;
-                    state = SAFE_HEIGHT;
+                    state = MAX_HEIGHT;
                     rtapi_print_msg(RTAPI_MSG_ERR,"float switch detected before probing\n"
                                                   "program is paused.");
                 }
@@ -695,7 +698,7 @@ FUNCTION(_) {
                 }else{
                     stop_type = PAUSE;
                     program_pause = TRUE;
-                    state = SAFE_HEIGHT;
+                    state = MAX_HEIGHT;
                     rtapi_print_msg(RTAPI_MSG_ERR,"ohmic probe detected before probing\n"
                                                   "program is paused.");
                 }
@@ -744,7 +747,7 @@ FUNCTION(_) {
                     }else{
                         rtapi_print_msg(RTAPI_MSG_ERR,"bottom limit reached while probe testing.");
                     }
-                    state = SAFE_HEIGHT;
+                    state = MAX_HEIGHT;
                 }else{
                     offset_counts -= probe_velocity;
                 }
@@ -795,7 +798,7 @@ FUNCTION(_) {
                                                    "program is paused.");
                     stop_type = PAUSE;
                     program_pause = TRUE;
-                    state = SAFE_HEIGHT;
+                    state = MAX_HEIGHT;
                 }else if(offset_counts + safe_preferred >= offset_max && !safe_height_is_limited){
                     rtapi_print_msg(RTAPI_MSG_ERR, "safe traverse height has been reduced.");
                     safe_target = offset_max;
@@ -852,7 +855,7 @@ FUNCTION(_) {
             }else if(!probe_testing){
                 stop_type = PAUSE;
                 program_pause = TRUE;
-                state = SAFE_HEIGHT;
+                state = MAX_HEIGHT;
                 rtapi_print_msg(RTAPI_MSG_ERR,"invalid pierce height\n"
                                               "or invalid cut height\n"
                                               "or invalid cut volts.");
@@ -1032,7 +1035,7 @@ FUNCTION(_) {
                                                                   "program is paused...");
                                 }
                                 pid_output = 0;
-                                state = SAFE_HEIGHT;
+                                state = MAX_HEIGHT;
 
                             }
                             offset_counts += pid_output;
@@ -1063,7 +1066,7 @@ FUNCTION(_) {
                                 program_pause = TRUE;
                                 rtapi_print_msg(RTAPI_MSG_ERR,"bottom limit reached while THC moving down\n"
                                                               "program is stopped...");
-                                state = SAFE_HEIGHT;
+                                state = MAX_HEIGHT;
                             }else{ /* move down at requested velocity */
                                 offset_counts -= thc_velocity;
                                 led_down = TRUE;
@@ -1075,7 +1078,7 @@ FUNCTION(_) {
                                 program_pause = TRUE;
                                 rtapi_print_msg(RTAPI_MSG_ERR,"top limit reached while THC moving up\n"
                                                               "program is stopped.");
-                                state = SAFE_HEIGHT;
+                                state = MAX_HEIGHT;
                             }else{ /* move up at requested velocity */
                                 offset_counts += thc_velocity;
                                 led_up = TRUE;
@@ -1115,6 +1118,26 @@ FUNCTION(_) {
                         feed_hold = FALSE;
                     }
                     first_cut_finished = TRUE;
+                    // do height override here for for remainder of job
+                    height_ovr_old = 0;
+                    state = FINISH;
+                }
+            }
+            break;
+        case MAX_HEIGHT:
+            /* move to safe height */
+            feed_hold = TRUE;
+            if(!probe_test){
+                if(offset_counts - setup_velocity > offset_max){
+                    offset_counts -= setup_velocity;
+                }else if(offset_counts + setup_velocity < offset_max){
+                    offset_counts += setup_velocity;
+                }else{
+                    offset_counts = offset_max;
+                    if(stop_type == WAIT){
+                        feed_hold = FALSE;
+                    }
+//                    first_cut_finished = TRUE;
                     // do height override here for for remainder of job
                     height_ovr_old = 0;
                     state = FINISH;
