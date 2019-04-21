@@ -6,6 +6,8 @@ A plasma cutting table control component for use with the linuxcnc master branch
 
 .I VERSIONS:
  .br
++V0.36 - 2019/04/21 - clear offsets after job and probe test
+ .br
 +V0.35 - 2019/04/19 - fix probe setup for opposite z coordinates
  .br
 +V0.34 - 2019/04/19 - add zero height state
@@ -270,7 +272,7 @@ pin in  float   kerfcross_threshold         "kerf crossing threshold [mode 0 & m
 pin in  s32     mode                        "operating mode";
 pin in  bit     move_down                   "external thc down switch [mode 2])";
 pin in  bit     move_up                     "external thc up switch [mode 2]";
-pin in  float   offset_current              "current z axis offset";
+pin in  float   offset_current              "current z axis offset, connect to axis.z.eoffset";
 pin in  s32     ohmic_max_attempts          "maximum ohmic probe attempts before fallback to float switch";
 pin in  bit     ohmic_probe                 "ohmic probe input";
 pin in  bit     ohmic_test                  "test for shorted torch";
@@ -1113,7 +1115,7 @@ FUNCTION(_) {
                         feed_hold = FALSE;
                     }
                     first_cut_finished = TRUE;
-                    // height override here for for remainder of job
+                    // do height override here for for remainder of job
                     height_ovr_old = 0;
                     state = FINISH;
                 }
@@ -1133,16 +1135,16 @@ FUNCTION(_) {
                 adaptive_feed = 1;
                 if(program_is_idle){
                     first_cut_finished = FALSE;
-                    if(offset_counts - setup_velocity > offset_max){
+                    if(offset_counts - setup_velocity > 0){
                         offset_counts -= setup_velocity;
-                    }else if(offset_counts + setup_velocity < offset_max){
+                    }else if(offset_counts + setup_velocity < 0){
                         offset_counts += setup_velocity;
                     }else{
-                        offset_counts = offset_max;
+                        offset_counts = 0;
                         stop_type = NONE;
                         safe_height_is_limited = FALSE;
                         cut_started = FALSE;
-                        // height override here for one cut only
+                        // do height override here for one cut only
                         //height_ovr_old = 0;
                     }
                 }
@@ -1205,12 +1207,12 @@ FUNCTION(_) {
             /* wait here until probe_test input released */
             if(!probe_test){
                 probe_testing = FALSE;
-                if(offset_counts - setup_velocity > offset_max){
+                if(offset_counts - setup_velocity > 0){
                     offset_counts -= setup_velocity;
-                }else if(offset_counts + setup_velocity < offset_max){
+                }else if(offset_counts + setup_velocity < 0){
                     offset_counts += setup_velocity;
                 }else{
-                    offset_counts = offset_max;
+                    offset_counts = 0;
                     state = FINISH;
                 }
             }
