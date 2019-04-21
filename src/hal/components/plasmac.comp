@@ -5,22 +5,22 @@ description
 A plasma cutting table control component for use with the linuxcnc master branch.
 
 .I VERSIONS:
- .br
-+V0.37 - 2019/04/21 - send z to near top after error
- .br
-+V0.36 - 2019/04/21 - clear offsets after job and probe test
- .br
-+V0.35 - 2019/04/19 - fix probe setup for opposite z coordinates
- .br
-+V0.34 - 2019/04/19 - add zero height state
- .br
-+V0.33 - 2019/04/18 - fix probe trip error
- .br
-+V0.32 - 2019/04/17 - fix safe height error
- .br
-+V0.31 - 2019/04/17 - use torch-enable instead of dry-run
- .br
-+V0.30 - 2019/04/14 - fix torch pulse and ohmic test while paused
+.br
+V0.37 - 2019/04/21 - send z to near top after error
+.br
+V0.36 - 2019/04/21 - clear offsets after job and probe test
+.br
+V0.35 - 2019/04/19 - fix probe setup for opposite z coordinates
+.br
+V0.34 - 2019/04/19 - add zero height state
+.br
+V0.33 - 2019/04/18 - fix probe trip error
+.br
+V0.32 - 2019/04/17 - fix safe height error
+.br
+V0.31 - 2019/04/17 - use torch-enable instead of dry-run
+.br
+V0.30 - 2019/04/14 - fix torch pulse and ohmic test while paused
 .br
 V0.29 - 2019/04/14 - show thc locked until target voltage established
 .br
@@ -207,15 +207,9 @@ IHS may be disabled if the start of the next cut is less than plasmac.skip-ihs-d
 
 
 .I NOTES
-.br
-As at 12 Dec 2018:
 .RS 1
 .br
-- there has been no testing done with a plasma cutter attached.
-.br
-- software simulation appears to work ok.
-.br
-- hardware testing has been limited to a parallel port driven XYZ test rig with simulated arc voltage, arc ok and up/down signals.
+- arc-voltage-in is NOT an analog input, it is a floating point number representing the arc voltage which should be linear. An example would be the velocity output of an encoder. To set it up at zero volts, use the actual value of arc-voltage-in as the value for arc-voltage-offset, then apply a known voltage and set arc-voltage scale to known voltage / arc-voltage-out.
 .RE
 
 .I EXAMPLE CONFIGURATION
@@ -226,9 +220,9 @@ There are example configuration files for both metric and imperial located in:
 - run in place "configs/sim/   axis/plasmac/   gmoccappy/plasmac   qtvcp_screens/plasmac"
 .br
 - installed    "/usr/share/doc/linuxcnc/examples/sample-configs/sim/   axis/plasmac/   gmoccappy/plasmac    qtvcp_screens/plasmac"
-.RE
 .br
 - Example ngc files can be found in "nc_files/plasmac/"
+.RE
 
 .I DISCLAIMER
 .br
@@ -249,7 +243,7 @@ pin in  float   arc_ok_high                 "maximum voltage level for Arc OK si
 pin in  bit     arc_ok_in                   "external arc ok input signal [mode 1 & mode 2]";
 pin in  float   arc_ok_low                  "minimum voltage level for Arc OK signal [mode 0] (volts)";
 pin in  s32     arc_max_starts              "maximum attempts at starting the arc";
-pin in  float   arc_voltage_in              "arc voltage input [mode 0 & mode 1]";
+pin in  float   arc_voltage_in              "arc voltage input [mode 0 & mode 1] see Notes above";
 pin in  float   arc_voltage_offset          "offset to set arc voltage to 0 at 0 volts";
 pin in  float   arc_voltage_scale           "scale to convert arc_voltage input to actual volts";
 pin in  float   axis_z_min_limit            "axis z minimum limit, connect to ini.z.min-limit";
