@@ -6,6 +6,8 @@ A plasma cutting table control component for use with the linuxcnc master branch
 
 .I VERSIONS:
 .br
+V0.38 - 2019/04/22 - change thc enable after cornerlock to 99% velocity
+.br
 V0.37 - 2019/04/21 - send z to near top after error
 .br
 V0.36 - 2019/04/21 - clear offsets after job and probe test
@@ -989,8 +991,12 @@ FUNCTION(_) {
                     /* torch height control */
                     }else if(thc_enable){
                         /* lock thc if velocity < requested velocity * cornerlock threshold percentage */
-                        if(cornerlock_enable == TRUE && current_velocity * 60 < requested_feed_rate * feed_override * cornerlock_threshold * 0.01){
-                            cornerlock_is_locked = TRUE;
+                        if(cornerlock_enable){
+                            if(current_velocity * 60 < requested_feed_rate * feed_override * cornerlock_threshold * 0.01){
+                                cornerlock_is_locked = TRUE;
+                            }else if(cornerlock_is_locked && current_velocity * 60 > requested_feed_rate * feed_override * 0.99){
+                                cornerlock_is_locked = FALSE;
+                            }
                         }else{
                             cornerlock_is_locked = FALSE;
                         }
