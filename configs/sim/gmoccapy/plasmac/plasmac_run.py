@@ -194,14 +194,14 @@ class HandlerClass:
         self.builder.get_object('use-auto-volts').set_active(1)
         if self.i.find('TRAJ', 'LINEAR_UNITS').lower() == 'mm':
             self.builder.get_object('cut-feed-rate').set_digits(0)
-            self.builder.get_object('cut-feed-rate-adj').configure(4000,50,9999,1,0,0)
+            self.builder.get_object('cut-feed-rate-adj').configure(4000,0,9999,1,0,0)
             self.builder.get_object('cut-height').set_digits(2)
             self.builder.get_object('cut-height-adj').configure(1,0,25,0.01,0,0)
             self.builder.get_object('pierce-height').set_digits(2)
             self.builder.get_object('pierce-height-adj').configure(4,0,25,0.01,0,0)
         elif self.i.find('TRAJ', 'LINEAR_UNITS').lower() == 'inch':
             self.builder.get_object('cut-feed-rate').set_digits(1)
-            self.builder.get_object('cut-feed-rate-adj').configure(160,2,400,0.1,0,0)
+            self.builder.get_object('cut-feed-rate-adj').configure(160,0,400,0.1,0,0)
             self.builder.get_object('cut-height').set_digits(3)
             self.builder.get_object('cut-height-adj').configure(0.04,0,1,0.001,0,0)
             self.builder.get_object('pierce-height').set_digits(3)

@@ -1040,7 +1040,7 @@ def configure_widgets():
     w(foffsets + '.pid-i-gain','configure','-from','0','-to','1000','-increment','1','-format','%0.0f') #0
     w(foffsets + '.pid-d-gain','configure','-from','0','-to','1000','-increment','1','-format','%0.0f') #0
     if inifile.find('TRAJ','LINEAR_UNITS').lower() == 'mm':
-        w(fcutparms + '.cut-feed-rate','configure','-from','50','-to','9999','-increment','1','-format','%0.0f') #4000
+        w(fcutparms + '.cut-feed-rate','configure','-from','0','-to','9999','-increment','1','-format','%0.0f') #4000
         w(fcutparms + '.cut-height','configure','-from','0','-to','25','-increment','0.01','-format','%0.02f') #1
         w(fcutparms + '.pierce-height','configure','-from','0','-to','25','-increment','0.01','-format','%0.2f') #4
         w(fmotion + '.float-switch-travel','configure','-from','0','-to','20','-increment','0.01','-format','%0.2f') #1.5
@@ -1050,7 +1050,7 @@ def configure_widgets():
         w(fmotion + '.skip-ihs-distance','configure','-from','0','-to','999','-increment','1','-format','%0.0f') #0
         w(foffsets + '.setup-feed-rate','configure','-from','1','-to',thcFeedRate,'-increment','1','-format','%0.0f') #int(thcFeedRate * 0.8)
     elif inifile.find('TRAJ','LINEAR_UNITS').lower() == 'inch':
-        w(fcutparms + '.cut-feed-rate','configure','-from','2','-to','400','-increment','0.1','-format','%0.1f') #160
+        w(fcutparms + '.cut-feed-rate','configure','-from','0','-to','400','-increment','0.1','-format','%0.1f') #160
         w(fcutparms + '.cut-height','configure','-from','0','-to','1','-increment','0.001','-format','%0.3f') #0.04
         w(fcutparms + '.pierce-height','configure','-from','0','-to','1','-increment','0.001','-format','%0.3f') #0.16
         w(fmotion + '.float-switch-travel','configure','-from','0','-to','0.75','-increment','0.001','-format','%0.3f') #0.06

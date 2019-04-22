@@ -532,7 +532,7 @@ class HandlerClass:
     def configure_widgets(self):
         if self.ini.find('TRAJ', 'LINEAR_UNITS').lower() == 'mm':
             self.w.cut_feed_rate.setDecimals(0)
-            self.w.cut_feed_rate.setRange(50,9999)
+            self.w.cut_feed_rate.setRange(0,9999)
             self.w.cut_feed_rate.setSingleStep(1)
             self.w.cut_height.setDecimals(2)
             self.w.cut_height.setRange(0,25)
@@ -560,7 +560,7 @@ class HandlerClass:
             self.w.skip_ihs_distance.setSingleStep(0.0)
         elif self.ini.find('TRAJ', 'LINEAR_UNITS').lower() == 'inch':
             self.w.cut_feed_rate.setDecimals(1)
-            self.w.cut_feed_rate.setRange(2,400)
+            self.w.cut_feed_rate.setRange(0,400)
             self.w.cut_feed_rate.setSingleStep(0.1)
             self.w.cut_height.setDecimals(3)
             self.w.cut_height.setRange(0,1)
