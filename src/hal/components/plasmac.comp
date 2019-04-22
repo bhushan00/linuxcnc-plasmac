@@ -6,6 +6,8 @@ A plasma cutting table control component for use with the linuxcnc master branch
 
 .I VERSIONS:
 .br
+V0.39 - 2019/04/22 - fix velocity calc for gcode set F word
+.br
 V0.38 - 2019/04/22 - change thc enable after cornerlock to 99% velocity
 .br
 V0.37 - 2019/04/21 - send z to near top after error
@@ -288,7 +290,7 @@ pin in  bit     program_is_paused           "program is paused, connect to halui
 pin in  bit     program_is_running          "program is running, connect to halui.program.is-running";
 pin in  float   puddle_jump_delay           "delay move from pierce height to cut height (seconds), leave disconnected if not required";
 pin in  float   puddle_jump_height          "puddle jump height (percentage of pierce height), leave disconnected if not required";
-pin in  float   requested_velocity          "requested velocity, set by a known requested velocity or connnect to motion.requested-vel";
+pin in  float   requested_velocity          "requested velocity, set by a known requested velocity or connect to motion.requested-vel";
 pin in  float   restart_delay               "time from arc failure till next restart attempt";
 pin in  float   safe_height                 "requested safe traverse height (machine units)";
 pin in  float   setup_feed_rate             "feed rate for moves to pierce and cut heights (machine units per minute)";
@@ -940,7 +942,7 @@ FUNCTION(_) {
                 if(cut_feed_rate > 0){
                     requested_feed_rate = cut_feed_rate;
                 }else{
-                    requested_feed_rate = requested_velocity * 60;
+                    requested_feed_rate = requested_velocity;
                 }
                 feed_hold = FALSE;
                 state = CUTTING;
@@ -1053,9 +1055,12 @@ FUNCTION(_) {
                 }else{ /* thc control by move-up and move-down inputs (no kerf crossing in this mode) */
                     if(thc_enable){
                         /* lock thc if velocity < requested velocity * cornerlock threshold percentage */
-                        if(cornerlock_enable == TRUE &&
-                           current_velocity * 60 < requested_feed_rate * feed_override * cornerlock_threshold * 0.01){
+                        if(cornerlock_enable){
+                            if(current_velocity * 60 < requested_feed_rate * feed_override * cornerlock_threshold * 0.01){
                                 cornerlock_is_locked = TRUE;
+                            }else if(cornerlock_is_locked && current_velocity * 60 > requested_feed_rate * feed_override * 0.99){
+                                cornerlock_is_locked = FALSE;
+                            }
                         }else{
                             cornerlock_is_locked = FALSE;
                         }
