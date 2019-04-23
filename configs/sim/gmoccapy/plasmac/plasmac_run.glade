@@ -418,7 +418,7 @@ set to 0 to disable</property>
                                 <property name="can_focus">True</property>
                                 <property name="has_tooltip">True</property>
                                 <property name="tooltip_text" translatable="yes">cutting feed rate in machine units per minute
-setting this to 0 will use feed rate from program</property>
+set this to 0 to use feed rate from gcode</property>
                                 <property name="max_length">5</property>
                                 <property name="invisible_char">●</property>
                                 <property name="xalign">1</property>

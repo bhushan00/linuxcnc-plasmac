@@ -92,7 +92,7 @@ select Reload from the Configure tab</string>
      <enum>QTabWidget::Rounded</enum>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>0</number>
     </property>
     <widget class="QWidget" name="run_tab">
      <property name="sizePolicy">
@@ -496,7 +496,7 @@ set to 0 to disable</string>
         </property>
         <property name="toolTip">
          <string>cutting feed rate in machine units per minute
-setting this to 0 will use feed rate from program</string>
+set this to 0 to use feed rate from gcode</string>
         </property>
         <property name="wrapping">
          <bool>true</bool>
