@@ -4118,6 +4118,12 @@ if disabled when run activated then a dry run will commence</string>
 Enabled</string>
     </property>
    </widget>
+   <zorder>button5</zorder>
+   <zorder>button4</zorder>
+   <zorder>button3</zorder>
+   <zorder>button2</zorder>
+   <zorder>button1</zorder>
+   <zorder>torch_enable</zorder>
    <zorder>mdi_history</zorder>
    <zorder>control_frame</zorder>
    <zorder>screen_options</zorder>
@@ -4128,12 +4134,6 @@ Enabled</string>
    <zorder>plasmac_settings_tabs</zorder>
    <zorder>gcoder</zorder>
    <zorder>error_text</zorder>
-   <zorder>button1</zorder>
-   <zorder>button2</zorder>
-   <zorder>button3</zorder>
-   <zorder>button4</zorder>
-   <zorder>button5</zorder>
-   <zorder>torch_enable</zorder>
   </widget>
   <widget class="QStatusBar" name="statusBar">
    <property name="styleSheet">

@@ -33,7 +33,7 @@ notify_start_timeout = 10
 EntryDialog-geometry = 554 422 206 92
 toolDialog_play_sound = True
 toolDialog_sound_type = RING
-FileDialog-geometry = 318 199 731 424
+FileDialog-geometry = 336 226 731 424
 fileDialog_play_sound = True
 fileDialog_sound_type = RING
 ToolChangeDialog-geometry = 0 0 100 30
@@ -50,7 +50,7 @@ CalculatorDialog_sound_type = RING
 LcncDialog-geometry = 0 0 640 480
 
 [BOOK_KEEPING]
-last_file_path = /home/phill/imac/git/lcnc/nc_files/plasmac
+last_file_path = /home/phill/Desktop
 
 [SCREEN_CONTROL_LAST_SETTING]
 statusadjustmentbar_4-hi-value = 75
