@@ -6,6 +6,10 @@ A plasma cutting table control component for use with the linuxcnc master branch
 
 .I VERSIONS:
 .br
+V0.42 - 2019/04/25 - use fperiod instead of calculated time
+.br
+V0.41 - 2019/04/25 - more explanatory probe error message
+.br
 V0.40 - 2019/04/25 - begin adding pins for statistics
 .br
 V0.39 - 2019/04/22 - fix velocity calc for gcode set F word
@@ -381,7 +385,6 @@ variable float  safe_target;                /* safe height target offset */
 variable float  target_sensed;              /* sensed top of stock */
 variable float  target_volts[4];            /* target voltage for thc, set by arc voltage at cut height */
 variable int    thc_velocity;               /* velocity for thc moves */
-variable float  thread_period;              /* thread time in seconds */
 variable float  tolerance;                  /* tolerance when comparing axis z height */
 variable float  torch_off_timer;            /* arc off delay timer */
 variable bool   torch_pulse;                /* torch pulse flag */
@@ -449,8 +452,7 @@ FUNCTION(_) {
 
     /* do these first run only */
     if(!initialized && units_per_mm){
-        thread_period = period * 1e-9;
-        offset_scale = thread_period * units_per_mm;
+        offset_scale = units_per_mm * fperiod;
         velocity_scale = 1 / units_per_mm / 60;
         tolerance = 0.001 * units_per_mm;
         offset_enable = TRUE;
@@ -480,7 +482,7 @@ FUNCTION(_) {
 
     /* turn torch off if torch off timer completed */
     if(torch_off_timer > 0){
-        torch_off_timer -= thread_period;
+        torch_off_timer -= fperiod;
         if(torch_off_timer <= 0){
             torch_on = FALSE;
             torch_off_timer = 0;
@@ -879,7 +881,7 @@ FUNCTION(_) {
                 }
             }else{
                 error_message = 0;
-                restart_timer -= thread_period;
+                restart_timer -= fperiod;
                 if(restart_timer <= 0){
                     restart_timer = 0;
                     arc_fail_timer = arc_fail_delay;
@@ -895,7 +897,7 @@ FUNCTION(_) {
             /* wait for arc ok
              * if timeout occurs turn torch off then return to TORCH_ON for another attempt */
             feed_hold = TRUE;
-            arc_fail_timer -= thread_period;
+            arc_fail_timer -= fperiod;
             if(arc_fail_timer <= 0){
                 torch_on = FALSE;
                 restart_timer = restart_delay;
@@ -910,7 +912,7 @@ FUNCTION(_) {
             /* wait for arc to pierce stock */
             feed_hold = TRUE;
             if(pierce_timer > 0){
-                pierce_timer -= thread_period;
+                pierce_timer -= fperiod;
             }else{
                 puddle_jump_timer = puddle_jump_delay;
                 state = PUDDLE_JUMP;
@@ -928,7 +930,7 @@ FUNCTION(_) {
                 count = 0;
                 if(puddle_jump_timer > 0){
                     feed_hold = FALSE;
-                    puddle_jump_timer -= thread_period;
+                    puddle_jump_timer -= fperiod;
                 }else{
                     puddle_jump_timer = 0;
                     feed_hold = TRUE;
@@ -1024,8 +1026,8 @@ FUNCTION(_) {
                                 pid_error_now = 0;
                             }
                             pid_output = pid_error_now * pid_p_gain;
-                            pid_output += pid_error_now * pid_i_gain * thread_period;
-                            pid_output += (pid_error_now - pid_error_old) * pid_d_gain / thread_period;
+                            pid_output += pid_error_now * pid_i_gain * fperiod;
+                            pid_output += (pid_error_now - pid_error_old) * pid_d_gain / fperiod;
                             pid_error_old = pid_error_now;
                             if(pid_output > thc_velocity){
                                 pid_output = thc_velocity;
@@ -1202,7 +1204,7 @@ FUNCTION(_) {
                 torch_pulse = TRUE;
             }else{
                 if(torch_pulse_timer > 0){
-                    torch_pulse_timer -= thread_period;
+                    torch_pulse_timer -= fperiod;
                 }else{
                     torch_on = FALSE;
                     if(!torch_pulse_start){
@@ -1223,10 +1225,10 @@ FUNCTION(_) {
                     feed_hold = FALSE;
                     program_resume = TRUE;
                 }else{
-                    paused_motion_timer -= thread_period;
+                    paused_motion_timer -= fperiod;
                 }
             }else{
-                paused_motion_timer -= thread_period;
+                paused_motion_timer -= fperiod;
                 feed_hold = TRUE;
                 program_pause = TRUE;
                 if(program_is_paused && paused_motion_timer <= 0){
