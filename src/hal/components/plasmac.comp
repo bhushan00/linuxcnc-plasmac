@@ -622,31 +622,31 @@ FUNCTION(_) {
                             ohmic_enable = FALSE;
                             probe_inhibit = TRUE;
                             if(probe_testing){
-                                rtapi_print_msg(RTAPI_MSG_ERR,"ohmic probe detected before probing.");
+                                rtapi_print_msg(RTAPI_MSG_ERR,"ohmic probe detected before moving to probe height.");
                             }else{
                                 stop_type = PAUSE;
                                 program_pause = TRUE;
-                                rtapi_print_msg(RTAPI_MSG_ERR,"ohmic probe detected before probing\n"
+                                rtapi_print_msg(RTAPI_MSG_ERR,"ohmic probe detected before moving to probe height.\n"
                                                               "program is paused.");
                             }
                         }else if(float_switch && !probe_inhibit){
                             probe_inhibit = TRUE;
                             if(probe_testing){
-                                rtapi_print_msg(RTAPI_MSG_ERR,"float switch detected before probing.");
+                                rtapi_print_msg(RTAPI_MSG_ERR,"float switch detected before moving to probe height.");
                             }else{
                                 stop_type = PAUSE;
                                 program_pause = TRUE;
-                                rtapi_print_msg(RTAPI_MSG_ERR,"float switch detected before probing\n"
+                                rtapi_print_msg(RTAPI_MSG_ERR,"float switch detected before moving to probe height.\n"
                                                               "program is paused.");
                             }
                         }else if(breakaway && !probe_inhibit){
                             probe_inhibit = TRUE;
                             if(probe_testing){
-                                rtapi_print_msg(RTAPI_MSG_ERR,"breakaway switch detected before probing.");
+                                rtapi_print_msg(RTAPI_MSG_ERR,"breakaway switch detected before moving to probe height.");
                             }else{
                                 stop_type = PAUSE;
                                 program_pause = TRUE;
-                                rtapi_print_msg(RTAPI_MSG_ERR,"breakaway switch detected before probing\n"
+                                rtapi_print_msg(RTAPI_MSG_ERR,"breakaway switch detected before moving to probe height.\n"
                                                               "program is paused.");
                             }
                         }else if (!program_is_paused){
@@ -687,24 +687,24 @@ FUNCTION(_) {
             }
             if(float_switch && !float_detected){
                 if(probe_testing){
-                    rtapi_print_msg(RTAPI_MSG_ERR,"float switch detected before probing.");
+                    rtapi_print_msg(RTAPI_MSG_ERR,"float switch detected while moving to probe height.");
                     state = PROBE_TEST;
                 }else{
                     stop_type = PAUSE;
                     program_pause = TRUE;
                     state = MAX_HEIGHT;
-                    rtapi_print_msg(RTAPI_MSG_ERR,"float switch detected before probing\n"
+                    rtapi_print_msg(RTAPI_MSG_ERR,"float switch detected while moving to probe height.\n"
                                                   "program is paused.");
                 }
             }else if(ohmic_probe){
                 if(probe_testing){
-                    rtapi_print_msg(RTAPI_MSG_ERR,"ohmic probe detected before probing.");
+                    rtapi_print_msg(RTAPI_MSG_ERR,"ohmic probe detected while moving to probe height.");
                     state = PROBE_TEST;
                 }else{
                     stop_type = PAUSE;
                     program_pause = TRUE;
                     state = MAX_HEIGHT;
-                    rtapi_print_msg(RTAPI_MSG_ERR,"ohmic probe detected before probing\n"
+                    rtapi_print_msg(RTAPI_MSG_ERR,"ohmic probe detected while moving to probe height.\n"
                                                   "program is paused.");
                 }
             }else if(offset_counts - setup_velocity > probe_start_target){
@@ -745,7 +745,7 @@ FUNCTION(_) {
             }else if(!float_switch && !ohmic_probe){
                 if(axis_z_position - (probe_velocity * offset_scale) <= axis_z_min_limit){
                     if(!probe_test){
-                        rtapi_print_msg(RTAPI_MSG_ERR,"bottom limit reached while probing down\n"
+                        rtapi_print_msg(RTAPI_MSG_ERR,"bottom limit reached while probing down.\n"
                                                       "program is paused.");
                         stop_type = PAUSE;
                         program_pause = TRUE;
@@ -799,7 +799,7 @@ FUNCTION(_) {
                 offset_max = offset_counts + (axis_z_max_limit - axis_z_position - (1 * units_per_mm)) / offset_scale;
                 if(offset_counts + safe_min >= offset_max){
                     safe_target = offset_max;
-                    rtapi_print_msg(RTAPI_MSG_ERR, "material too high for safe traverse\n"
+                    rtapi_print_msg(RTAPI_MSG_ERR, "material too high for safe traverse.\n"
                                                    "program is paused.");
                     stop_type = PAUSE;
                     program_pause = TRUE;
@@ -861,8 +861,8 @@ FUNCTION(_) {
                 stop_type = PAUSE;
                 program_pause = TRUE;
                 state = MAX_HEIGHT;
-                rtapi_print_msg(RTAPI_MSG_ERR,"invalid pierce height\n"
-                                              "or invalid cut height\n"
+                rtapi_print_msg(RTAPI_MSG_ERR,"invalid pierce height.\n"
+                                              "or invalid cut height.\n"
                                               "or invalid cut volts.");
             }
             break;
@@ -1038,10 +1038,10 @@ FUNCTION(_) {
                                 stop_type = PAUSE;
                                 program_pause = TRUE;
                                 if(offset_counts + pid_output <= offset_min){
-                                    rtapi_print_msg(RTAPI_MSG_ERR,"bottom limit reached while THC moving down\n"
+                                    rtapi_print_msg(RTAPI_MSG_ERR,"bottom limit reached while THC moving down.\n"
                                                                   "program is paused...");
                                 }else{
-                                    rtapi_print_msg(RTAPI_MSG_ERR,"top limit reached while THC moving up \n"
+                                    rtapi_print_msg(RTAPI_MSG_ERR,"top limit reached while THC moving up.\n"
                                                                   "program is paused...");
                                 }
                                 pid_output = 0;
@@ -1077,7 +1077,7 @@ FUNCTION(_) {
                                 torch_on = FALSE;
                                 stop_type = PAUSE;
                                 program_pause = TRUE;
-                                rtapi_print_msg(RTAPI_MSG_ERR,"bottom limit reached while THC moving down\n"
+                                rtapi_print_msg(RTAPI_MSG_ERR,"bottom limit reached while THC moving down.\n"
                                                               "program is stopped...");
                                 state = MAX_HEIGHT;
                             }else{ /* move down at requested velocity */
@@ -1089,7 +1089,7 @@ FUNCTION(_) {
                                 torch_on = FALSE;
                                 stop_type = PAUSE;
                                 program_pause = TRUE;
-                                rtapi_print_msg(RTAPI_MSG_ERR,"top limit reached while THC moving up\n"
+                                rtapi_print_msg(RTAPI_MSG_ERR,"top limit reached while THC moving up.\n"
                                                               "program is stopped.");
                                 state = MAX_HEIGHT;
                             }else{ /* move up at requested velocity */
