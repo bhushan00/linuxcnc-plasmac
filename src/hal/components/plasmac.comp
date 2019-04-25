@@ -6,6 +6,8 @@ A plasma cutting table control component for use with the linuxcnc master branch
 
 .I VERSIONS:
 .br
+V0.40 - 2019/04/25 - begin adding pins for statistics
+.br
 V0.39 - 2019/04/22 - fix velocity calc for gcode set F word
 .br
 V0.38 - 2019/04/22 - change thc enable after cornerlock to 99% velocity
@@ -311,6 +313,8 @@ pin out float   adaptive_feed               "for reverse-run, connect to motion.
 pin out bit     arc_ok_out                  "arc ok output";
 pin out float   arc_voltage_out             "arc voltage output [mode 0 & mode 1]";
 pin out bit     cornerlock_is_locked        "corner locked indicator";
+pin out float   cut_length                  "length of current cut job";
+pin out float   cut_time                    "time of current cut job";
 pin out bit     feed_hold                   "feed hold, connect to motion.feed_hold";
 pin out bit     kerfcross_is_locked         "kerf crossing locked indicator [mode 0 & mode 1]";
 pin out bit     led_down                    "thc move down indicator";
@@ -319,11 +323,13 @@ pin out s32     offset_counts               "number of counts to offset, connect
 pin out bit     offset_enable               "enable offsets, connect to axis.z.eoffset-enable";
 pin out float   offset_scale                "offset scale, connect to axis.z.eoffset-scale";
 pin out bit     ohmic_enable                "on only while probing";
+pin out s32     pierce_count                "number of pierce attempts";
 pin out bit     program_pause               "pause the current program, connect to halui.program.pause";
 pin out bit     program_resume              "resume the currently paused program, connect to halui.program.resume";
 pin out bit     program_run                 "run the currently loaded program, connect to halui.program.run";
 pin out bit     program_stop                "stop current program, connect to halui.program.stop";
 pin out bit     safe_height_is_limited      "safe height is limited indicator";
+pin out s32     state_out                   "current state output";
 pin out bit     torch_on                    "turn torch on, connect to your torch on input";
 
 /* VARIABLES */
@@ -384,7 +390,6 @@ variable float  velocity_scale;             /* the velocity multipler */
 variable float  zero_target;                /* zero height target offset */
 
 /* DEBUGGING PINS */
-//pin out s32     state_out;
 //pin out s32     stop_type_out;
 
 function _;
@@ -440,7 +445,6 @@ probe_type_t probe_type = FLOAT;
 FUNCTION(_) {
 
     /* DEBUGGING STUFF */
-    //state_out = state;
     //stop_type_out = stop_type;
 
     /* do these first run only */
@@ -454,6 +458,9 @@ FUNCTION(_) {
         initialized = TRUE;
         probe_force_val = 0.126 * units_per_mm / offset_scale;
     }
+
+    /* output the current state */
+    state_out = state;
 
     /* convert feed rates to velocity */
     setup_velocity = setup_feed_rate * velocity_scale;
@@ -489,7 +496,7 @@ FUNCTION(_) {
         cut_started = FALSE;
         axis_x_finish = 0;
         axis_y_finish = 0;
-        state = FINISH;
+        state = MAX_HEIGHT;
     }else if(!probe_test && state > IDLE && state < SAFE_HEIGHT && stop_type == NONE && cut_started){
         if(program_is_paused){
             torch_on = FALSE;
@@ -878,6 +885,7 @@ FUNCTION(_) {
                     arc_fail_timer = arc_fail_delay;
                     if(torch_enable){
                         torch_on = TRUE;
+                        pierce_count += 1;
                     }
                     state = ARC_OK;
                 }
@@ -1108,6 +1116,8 @@ FUNCTION(_) {
                 }
             }
             cut_height_last = offset_counts;
+            cut_length = cut_length + current_velocity * fperiod;
+            cut_time = cut_time + fperiod;
             break;
         case SAFE_HEIGHT:
             /* move to safe height */
@@ -1157,6 +1167,8 @@ FUNCTION(_) {
             led_down = FALSE;
             led_up = FALSE;
             ohmic_enable = FALSE;
+            cut_length = 0;
+            cut_time = 0;
             if(stop_type == STOP){
                 program_run = FALSE;
                 paused_motion = FALSE;

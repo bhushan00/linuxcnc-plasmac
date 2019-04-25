@@ -34,7 +34,8 @@
           <object class="GtkHBox" id="config">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <property name="spacing">2</property>
+            <property name="spacing">8</property>
+            <property name="homogeneous">True</property>
             <child>
               <object class="GtkVBox" id="vbox3">
                 <property name="visible">True</property>
@@ -581,8 +582,8 @@ this also sets the maximum probe feed rate</property>
                 </child>
               </object>
               <packing>
-                <property name="expand">False</property>
-                <property name="fill">False</property>
+                <property name="expand">True</property>
+                <property name="fill">True</property>
                 <property name="position">0</property>
               </packing>
             </child>
@@ -975,8 +976,8 @@ this also sets the maximum probe feed rate</property>
                 </child>
               </object>
               <packing>
-                <property name="expand">False</property>
-                <property name="fill">False</property>
+                <property name="expand">True</property>
+                <property name="fill">True</property>
                 <property name="position">1</property>
               </packing>
             </child>

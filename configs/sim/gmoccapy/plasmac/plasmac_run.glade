@@ -64,7 +64,8 @@
           <object class="GtkHBox" id="hbox1">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <property name="spacing">2</property>
+            <property name="spacing">8</property>
+            <property name="homogeneous">True</property>
             <child>
               <object class="GtkVBox" id="vbox1">
                 <property name="visible">True</property>
@@ -565,7 +566,7 @@ Note: this also saves current cut parameters as the default</property>
                 </child>
               </object>
               <packing>
-                <property name="expand">False</property>
+                <property name="expand">True</property>
                 <property name="fill">True</property>
                 <property name="position">0</property>
               </packing>
@@ -1278,8 +1279,8 @@ for mode 3 this is the percentage of max velocity used for THC</property>
                 </child>
               </object>
               <packing>
-                <property name="expand">False</property>
-                <property name="fill">False</property>
+                <property name="expand">True</property>
+                <property name="fill">True</property>
                 <property name="position">1</property>
               </packing>
             </child>
