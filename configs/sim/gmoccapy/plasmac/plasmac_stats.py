@@ -1,8 +1,11 @@
 #!/usr/bin/env python
 
 '''
-plasmac_monitor.py
+plasmac_stats.py
 Copyright (C) 2019  Phillip A Carter
+
+Inspired by and some parts copied from the work of John
+(islander261 on the LinuxCNC forum) 
 
 This program is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the
@@ -25,30 +28,13 @@ import linuxcnc
 import gobject
 import hal
 import hal_glib
+import time
 from gladevcp.persistence import IniFile
 from gladevcp.persistence import widget_defaults
 from gladevcp.persistence import select_widgets
 from gmoccapy import getiniinfo
-#from gmoccapy import preferences
 
 class HandlerClass:
-
-    def periodic(self):
-        #mode = hal.get_value('plasmac.mode')
-        #if mode != self.oldMode:
-            #if mode == 0:
-                #self.builder.get_object('arc-voltage').show()
-                #self.builder.get_object('arc-voltage-label').show()
-            #elif mode == 1:
-                #self.builder.get_object('arc-voltage').show()
-                #self.builder.get_object('arc-voltage-label').show()
-            #elif mode == 2:
-                #self.builder.get_object('arc-voltage').hide()
-                #self.builder.get_object('arc-voltage-label').hide()
-            #else:
-                #pass
-            #self.oldMode = mode
-        return True
 
     def set_theme(self):
         theme = gtk.settings_get_default().get_property('gtk-theme-name')
@@ -63,25 +49,68 @@ class HandlerClass:
         gtk.settings_get_default().set_property('gtk-theme-name', theme)
 
     def state_changed(self,halpin):
-        if halpin.get() != self.CUTTING and self.oldState == self.CUTTING:
-            print 'STATE:',halpin.get()
-#        if halpin.get() == self.FINISH:
-            self.CUT_DISTANCE = self.CUT_DISTANCE + hal.get_value('plasmac.cut-length')
-            self.CUT_TIME = self.CUT_TIME + hal.get_value('plasmac.cut-time')
-            m, s = divmod(self.CUT_TIME, 60)
-            h, m = divmod(m, 60)
-            print 'STATE:',halpin.get(),',   DIST:',self.CUT_DISTANCE,'TIME: %d:%02d:%02d' %(h,m,s)
-            self.builder.get_object('cut-distance').set_label('%0.2f' %(self.CUT_DISTANCE))
-            self.builder.get_object('cut-time').set_label('%d:%02d:%02d' %(h,m,s))
-        self.oldState = halpin.get()
+        if hal.get_value('plasmac.torch-enable') == 1:
+            if halpin.get() != self.CUTTING and self.oldState == self.CUTTING:
+                self.CUT_DISTANCE = self.CUT_DISTANCE + hal.get_value('plasmac.cut-length')
+                if hal.get_value('halui.machine.units-per-mm') == 1:
+                    self.builder.get_object('cut-distance').set_label('%0.2f M' %(self.CUT_DISTANCE))
+                else:
+                    self.builder.get_object('cut-distance').set_label('%0.2f\"' %(self.CUT_DISTANCE))
+                    self.CUT_TIME = self.CUT_TIME + hal.get_value('plasmac.cut-time')
+                    self.display_time('cut-time', self.CUT_TIME)
+            elif halpin.get() == self.PROBE_HEIGHT and self.oldState == self.IDLE:
+                self.probeStart = time.time()
+            elif halpin.get() > self.ZERO_HEIGHT and (self.oldState >= self.PROBE_HEIGHT and self.oldState <= self.PROBE_UP):
+                self.PROBE_TIME = self.PROBE_TIME + (time.time() - self.probeStart)
+                self.display_time('probe-time', self.PROBE_TIME)
+            self.oldState = halpin.get()
 
     def pierce_count_changed(self,halpin):
         if hal.get_value('plasmac_stats.state') >= self.TORCH_ON:
             self.PIERCE_COUNT += 1
             self.builder.get_object('pierce-count').set_label('%d' %(self.PIERCE_COUNT))
 
+    def motion_type_changed(self,halpin):
+        if hal.get_value('plasmac.torch-enable') == 1:
+            if halpin.get() == 1 and self.oldMotionType != 1:
+                self.rapidStart = time.time()
+            elif halpin.get() != 1 and self.oldMotionType == 1:
+                self.RAPID_TIME = self.RAPID_TIME + (time.time() - self.rapidStart)
+                self.display_time('rapid-time', self.RAPID_TIME)
+            self.oldMotionType = halpin.get()
+    def pierce_reset(self,halbutton):
+        self.PIERCE_COUNT = 0
+        self.builder.get_object('pierce-count').set_label('%d' %(self.PIERCE_COUNT))
+
+    def cut_distance_reset(self,halbutton):
+        self.CUT_DISTANCE = 0.0
+        self.builder.get_object('cut-distance').set_label('%0.2f' %(self.CUT_DISTANCE))
+
+    def cut_time_reset(self,halbutton):
+        self.CUT_TIME = 0.0
+        self.display_time('cut-time', self.CUT_TIME)
+
+    def rapid_time_reset(self,halbutton):
+        self.RAPID_TIME = 0.0
+        self.display_time('rapid-time', self.RAPID_TIME)
+
+    def probe_time_reset(self,halbutton):
+        self.PROBE_TIME = 0.0
+        self.display_time('probe-time', self.PROBE_TIME)
+
+    def all_reset(self,halbutton):
+        self.pierce_reset(0)
+        self.cut_distance_reset(0)
+        self.cut_time_reset(0)
+        self.rapid_time_reset(0)
+        self.probe_time_reset(0)
+
+    def display_time(self,widget,time):
+        m, s = divmod(time, 60)
+        h, m = divmod(m, 60)
+        self.builder.get_object(widget).set_label('%d:%02d:%02d' %(h,m,s))
+
     def on_stats_box_destroy(self, obj, data = None):
-        print 'BOX SAVE STATE'
         self.ini.save_state(self)
 
     def __init__(self, halcomp,builder,useropts):
@@ -90,14 +119,24 @@ class HandlerClass:
         self.i = linuxcnc.ini(os.environ['INI_FILE_NAME'])
         self.prefFile = self.i.find('EMC', 'MACHINE') + '.pref'
         self.set_theme()
-
-        self.plasmacStatePin = hal_glib.GPin(halcomp.newpin('state', hal.HAL_S32, hal.HAL_IN))
-        self.plasmacPierceCount = hal_glib.GPin(halcomp.newpin('pierce-count', hal.HAL_S32, hal.HAL_IN))
-        self.plasmacStatePin.connect('value-changed', self.state_changed)
-        self.plasmacPierceCount.connect('value-changed', self.pierce_count_changed)
-
-        self.oldState = 0
-        self.cutDistance = 0
+        self.statePin = hal_glib.GPin(halcomp.newpin('state', hal.HAL_S32, hal.HAL_IN))
+        self.statePin.connect('value-changed', self.state_changed)
+        self.pierceCount = hal_glib.GPin(halcomp.newpin('pierce-count', hal.HAL_S32, hal.HAL_IN))
+        self.pierceCount.connect('value-changed', self.pierce_count_changed)
+        self.rapidTime = hal_glib.GPin(halcomp.newpin('motion-type', hal.HAL_S32, hal.HAL_IN))
+        self.rapidTime.connect('value-changed', self.motion_type_changed)
+        self.pierceReset = self.builder.get_object('pierce-count-reset')
+        self.pierceReset.connect('pressed', self.pierce_reset)
+        self.cutDistanceReset = self.builder.get_object('cut-distance-reset')
+        self.cutDistanceReset.connect('pressed', self.cut_distance_reset)
+        self.cutTimeReset = self.builder.get_object('cut-time-reset')
+        self.cutTimeReset.connect('pressed', self.cut_time_reset)
+        self.rapidTimeReset = self.builder.get_object('rapid-time-reset')
+        self.rapidTimeReset.connect('pressed', self.rapid_time_reset)
+        self.probeTimeReset = self.builder.get_object('probe-time-reset')
+        self.probeTimeReset.connect('pressed', self.probe_time_reset)
+        self.allReset = self.builder.get_object('all-reset')
+        self.allReset.connect('pressed', self.all_reset)
         # plasmac states
         self.IDLE          =  0
         self.PROBE_HEIGHT  =  1
@@ -118,25 +157,27 @@ class HandlerClass:
         self.PAUSED_MOTION = 16
         self.OHMIC_TEST    = 17
         self.PROBE_TEST    = 18
-        self.defaults = { IniFile.vars : { 
-                                           "PIERCE_COUNT" : 0,
-                                           "CUT_TIME"     : 0.0,
-                                           "CUT_DISTANCE" : 0.0,
-                                           "RAPID_TIME"   : 0,
-                                           "PROBE_TIME"   : 0,
-                                         },
+        self.oldState =  0
+        self.oldMotionType =  0
+        self.defaults = {IniFile.vars:{"PIERCE_COUNT" : 0,
+                                       "CUT_TIME"     : 0.0,
+                                       "CUT_DISTANCE" : 0.0,
+                                       "RAPID_TIME"   : 0.0,
+                                       "PROBE_TIME"   : 0.0,
+                                      },
                         }
         get_ini_info = getiniinfo.GetIniInfo()
         self.ini_filename = __name__ + ".var"
         self.ini = IniFile(self.ini_filename, self.defaults, self.builder)
         self.ini.restore_state(self)
-        m, s = divmod(self.CUT_TIME, 60)
-        h, m = divmod(m, 60)
-        self.builder.get_object('cut-distance').set_label('%0.2f' %(self.CUT_DISTANCE))
-        self.builder.get_object('cut-time').set_label('%d:%02d:%02d' %(h,m,s))
-
-
-        gobject.timeout_add(100, self.periodic)
+        self.builder.get_object('pierce-count').set_label('%d' %(self.PIERCE_COUNT))
+        if hal.get_value('halui.machine.units-per-mm') == 1:
+            self.builder.get_object('cut-distance').set_label('%0.2f M' %(self.CUT_DISTANCE))
+        else:
+            self.builder.get_object('cut-distance').set_label('%0.2f\"' %(self.CUT_DISTANCE))
+        self.display_time('cut-time', self.CUT_TIME)
+        self.display_time('rapid-time', self.RAPID_TIME)
+        self.display_time('probe-time', self.PROBE_TIME)
 
 def get_handlers(halcomp,builder,useropts):
     return [HandlerClass(halcomp,builder,useropts)]
