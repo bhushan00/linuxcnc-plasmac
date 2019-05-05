@@ -1,0 +1,41 @@
+;lines testing tool change
+
+G20
+G64 P0.01
+M52 P1 ;to enable reverse-run
+F80
+
+G0 X0.6 Y1
+M6 T4
+G41.1 D#<_kerf_width>
+G1 X1 Y1
+M3S1
+G1 X5
+M5
+G40
+
+G0 Y2
+M6 T41
+M3S1
+G1 X1
+M5
+
+G0 X0.6 Y3
+M6 T3
+G42.1 D#<_kerf_width>
+G1 X1 Y3
+M3S1
+G1 X5
+M5
+G40
+
+G0 Y4
+M6 T2
+M3S1
+G1 X1
+M5
+
+G0 X0 Y0
+;M6 T0
+M2
+

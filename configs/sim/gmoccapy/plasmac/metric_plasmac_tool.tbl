@@ -3,7 +3,10 @@
 [VERSION 1]
 
 #example only, may be deleted
-#[MILD STEEL 1thick]
+#[TOOL_NUMBER_1]
+#NAME               = 
+#KERF_WIDTH         = 
+#THC                = (0 = off, 1 = on)
 #PIERCE_HEIGHT      = 
 #PIERCE_DELAY       = 
 #PUDDLE_JUMP_HEIGHT = (optional, set to 0 or delete if not required)
@@ -13,72 +16,67 @@
 #CUT_AMPS           = (optional, only used for operator information)
 #CUT_VOLTS          = (modes 0 & 1 only, if not using auto voltage sampling)
 
-[Mild Steel 2mm]
+[TOOL_NUMBER_1]
+NAME               = Mild Steel 1mm
+KERF_WIDTH         = 1
+THC                = 1
 PIERCE_HEIGHT      = 3.8
 PIERCE_DELAY       = 0.2
 PUDDLE_JUMP_HEIGHT = 0
 PUDDLE_JUMP_DELAY  = 0
 CUT_HEIGHT         = 1.5
-CUT_SPEED          = 5560
+CUT_SPEED          = 1111
 CUT_AMPS           = 45
 CUT_VOLTS          = 128
 
-[Mild Steel 3mm]
+[TOOL_NUMBER_2]
+NAME               = Mild Steel 2mm
+KERF_WIDTH         = 2 
+THC                = 0
 PIERCE_HEIGHT      = 3.8
 PIERCE_DELAY       = 0.2
 PUDDLE_JUMP_HEIGHT = 0
 PUDDLE_JUMP_DELAY  = 0
 CUT_HEIGHT         = 1.5
-CUT_SPEED          = 3960
+CUT_SPEED          = 2222
 CUT_AMPS           = 45
 CUT_VOLTS          = 128
 
-[Mild Steel 4mm]
+[TOOL_NUMBER_3]
+NAME               = Mild Steel 3mm
+KERF_WIDTH         = 3 
+THC                = 0
 PIERCE_HEIGHT      = 3.8
-PIERCE_DELAY       = 0.4
+PIERCE_DELAY       = 0.2
 PUDDLE_JUMP_HEIGHT = 0
 PUDDLE_JUMP_DELAY  = 0
 CUT_HEIGHT         = 1.5
-CUT_SPEED          = 2800
+CUT_SPEED          = 3333
 CUT_AMPS           = 45
 CUT_VOLTS          = 128
 
-[Mild Steel 6mm]
+[TOOL_NUMBER_4]
+NAME               = Mild Steel 4mm
+KERF_WIDTH         = 4 
+THC                = 0
 PIERCE_HEIGHT      = 3.8
-PIERCE_DELAY       = 0.6
+PIERCE_DELAY       = 0.2
 PUDDLE_JUMP_HEIGHT = 0
 PUDDLE_JUMP_DELAY  = 0
 CUT_HEIGHT         = 1.5
-CUT_SPEED          = 1430
+CUT_SPEED          = 4444
 CUT_AMPS           = 45
-CUT_VOLTS          = 130
+CUT_VOLTS          = 128
 
-[Mild Steel 8mm]
+[TOOL_NUMBER_41]
+NAME               = Mild Steel 44mm
+KERF_WIDTH         = 5 
+THC                = 0
 PIERCE_HEIGHT      = 3.8
-PIERCE_DELAY       = 0.6
+PIERCE_DELAY       = 0.2
 PUDDLE_JUMP_HEIGHT = 0
 PUDDLE_JUMP_DELAY  = 0
 CUT_HEIGHT         = 1.5
-CUT_SPEED          = 1020
+CUT_SPEED          = 4004
 CUT_AMPS           = 45
-CUT_VOLTS          = 133
-
-[Mild Steel 10mm]
-PIERCE_HEIGHT      = 3.8
-PIERCE_DELAY       = 0.8
-PUDDLE_JUMP_HEIGHT = 0
-PUDDLE_JUMP_DELAY  = 0
-CUT_HEIGHT         = 1.5
-CUT_SPEED          = 780
-CUT_AMPS           = 45
-CUT_VOLTS          = 136
-
-[Mild Steel 12mm]
-PIERCE_HEIGHT      = 3.8
-PIERCE_DELAY       = 1
-PUDDLE_JUMP_HEIGHT = 0
-PUDDLE_JUMP_DELAY  = 0
-CUT_HEIGHT         = 1.5
-CUT_SPEED          = 540
-CUT_AMPS           = 45
-CUT_VOLTS          = 140
+CUT_VOLTS          = 128

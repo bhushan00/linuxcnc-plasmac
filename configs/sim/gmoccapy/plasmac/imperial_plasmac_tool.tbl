@@ -1,0 +1,82 @@
+#plasmac configuration file
+#the next line is required for version checking
+[VERSION 1]
+
+#example only, may be deleted
+#[TOOL_NUMBER_1]
+#NAME               = 
+#KERF_WIDTH         = 
+#THC                = (0 = off, 1 = on)
+#PIERCE_HEIGHT      = 
+#PIERCE_DELAY       = 
+#PUDDLE_JUMP_HEIGHT = (optional, set to 0 or delete if not required)
+#PUDDLE_JUMP_DELAY  = (optional, set to 0 or delete if not required)
+#CUT_HEIGHT         = 
+#CUT_SPEED          = 
+#CUT_AMPS           = (optional, only used for operator information)
+#CUT_VOLTS          = (modes 0 & 1 only, if not using auto voltage sampling)
+
+[TOOL_NUMBER_1]
+NAME               = Mild Steel 0.1"
+KERF_WIDTH         = 0.1
+THC                = 1
+PIERCE_HEIGHT      = 0.15
+PIERCE_DELAY       = 0.2
+PUDDLE_JUMP_HEIGHT = 0
+PUDDLE_JUMP_DELAY  = 0
+CUT_HEIGHT         = 0.06
+CUT_SPEED          = 111
+CUT_AMPS           = 45
+CUT_VOLTS          = 128
+
+[TOOL_NUMBER_2]
+NAME               = Mild Steel 0.2"
+KERF_WIDTH         = 0.2 
+THC                = 0
+PIERCE_HEIGHT      = 0.15
+PIERCE_DELAY       = 0.2
+PUDDLE_JUMP_HEIGHT = 0
+PUDDLE_JUMP_DELAY  = 0
+CUT_HEIGHT         = 0.06
+CUT_SPEED          = 122
+CUT_AMPS           = 45
+CUT_VOLTS          = 128
+
+[TOOL_NUMBER_3]
+NAME               = Mild Steel 0.3"
+KERF_WIDTH         = 0.3 
+THC                = 0
+PIERCE_HEIGHT      = 0.15
+PIERCE_DELAY       = 0.2
+PUDDLE_JUMP_HEIGHT = 0
+PUDDLE_JUMP_DELAY  = 0
+CUT_HEIGHT         = 0.06
+CUT_SPEED          = 133
+CUT_AMPS           = 45
+CUT_VOLTS          = 128
+
+[TOOL_NUMBER_4]
+NAME               = Mild Steel 0.4"
+KERF_WIDTH         = 0.4 
+THC                = 0
+PIERCE_HEIGHT      = 0.15
+PIERCE_DELAY       = 0.2
+PUDDLE_JUMP_HEIGHT = 0
+PUDDLE_JUMP_DELAY  = 0
+CUT_HEIGHT         = 0.06
+CUT_SPEED          = 144
+CUT_AMPS           = 45
+CUT_VOLTS          = 128
+
+[TOOL_NUMBER_41]
+NAME               = Mild Steel 0.5
+KERF_WIDTH         = 0.5 
+THC                = 0
+PIERCE_HEIGHT      = 0.15
+PIERCE_DELAY       = 0.2
+PUDDLE_JUMP_HEIGHT = 0
+PUDDLE_JUMP_DELAY  = 0
+CUT_HEIGHT         = 0.06
+CUT_SPEED          = 100
+CUT_AMPS           = 45
+CUT_VOLTS          = 128

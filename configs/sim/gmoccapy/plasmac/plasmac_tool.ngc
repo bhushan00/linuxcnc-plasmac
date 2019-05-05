@@ -1,0 +1,6 @@
+o<plasmac_tool> sub
+;we need this here to get correct feed rates when changing tools
+F0
+o<plasmac_tool> endsub [1]
+
+;m2
