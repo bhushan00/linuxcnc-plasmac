@@ -1,3 +1,0 @@
-Examples of how to connect Axis with the plasmac HAL component for use in plasma cutting machines.
-
-These configs use a python file referred as a USER_COMMAND_FILE in the ini file to directly modify the Axis GUI.
