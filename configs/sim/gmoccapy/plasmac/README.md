@@ -67,15 +67,17 @@ A dry run is available by running the gcode with the torch disabled.
 Ohmic Test enables the ohmic probe to test for a shorted torch.
 
 ***
-####TOOL HANDLING
-Tool handling is done by remapping the T word, so a M6 Tn will load the parameters associated with tool number n.
-So if you don't want to use this feature then you can comment out:  
+#### TOOL HANDLING
+Tool handling is done by remapping the T word, so a M6 Tn will load the parameters associated with tool number n.  
+If you don't want to use this feature then you can comment out:  
 - REMAP = T prolog=plasmac_tool_prolog ngc=plasmac_tool epilog=plasmac_tool_epilog  
 in the in file.
 
-The standard LinuxCNC tool table is bypassed and a plasmac specific tool table is used. The tool table name is derived from **[EMC]MACHINE** in the in file, so a machine named METRIC_PLASMAC would have a tool table named metric_plasmac_tool.tbl.
+The standard LinuxCNC tool table is bypassed and a plasmac specific tool table is used.  
+The tool table name is derived from **[EMC]MACHINE** in the in file, so a machine named METRIC_PLASMAC would have a tool table named metric_plasmac_tool.tbl.
 
-Tool numbers do not need to be consecutive nor do they need to be in numerical order. The maximum allowed tool number is 99999 as I believe this is the largest LinuxCNC will accept.
+Tool numbers do not need to be consecutive nor do they need to be in numerical order.  
+The maximum allowed tool number is 99999 as I believe this is the largest LinuxCNC will accept.
 
 When a tool is changed it only changes the cut parameter, LinuxCNC knows nothing of the tool or its offsets. (i.e. it does NOT do a real tool change)
 
@@ -86,9 +88,12 @@ To use cutter compensation you will need to use G41.1, G42.1 and G40 with the ne
 
 Tools can be selected manually with the Tool number spin button but this does not load the new **#<kerf_width>** value, to do this you need to do a M6 Tn via MDI.
 
-There is weird behaviour in Gmoccapy with the F word display. It seems that it displays the FeedRate for the segment after the one that is cutting. If you display the DRO in the preview then is does show the correct velocity. (I think this may be a result of remapping)
+There is weird behaviour in Gmoccapy with the F word display.  
+It seems that it displays the FeedRate for the segment after the one that is cutting.  
+If you display the DRO in the preview, it shows the correct velocity.  
+I think this may be a result of remapping...
 
-There is a python program named toolverter.py in the Gmoccapy folder to convert SheetCam tooltables to the plasmac format.
+There is a python program named toolverter.py in the Gmoccapy folder to convert SheetCam tooltables to the plasmac format.  
 If there are requests for other conversion types I would be happy to have a crack at them.
 
 ***
