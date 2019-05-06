@@ -131,7 +131,7 @@ The minimum .ini file requirements for the plasmac component are:
   
 All other .ini file settings are for the example configurations.  
 
-The .cfg  and .mat files are plain text and may be edited with any text editor.  
+The .cfg  and .tbl files are plain text and may be edited with any text editor.  
 Lines beginning with # are ignored in both these files.  
 
 The python directory is for remapping of the F word.  
