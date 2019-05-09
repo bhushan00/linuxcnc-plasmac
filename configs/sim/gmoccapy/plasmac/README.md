@@ -57,8 +57,8 @@ Target voltage can be selected from:
 - the **plasmac.cut-volts** input pin.  
 
 IHS may be disabled with one of two different types:  
-- Type 0 - If the start of the next cut is less than **plasmac.skip-ihs-distance** from the end of the last cut and THC is enabled.  
-- Type 1 - If the start of the next cut is less than **plasmac.skip-ihs-distance** from the start of the last cut.  
+If THC is enabled then if the start of the next cut is less than **plasmac.skip-ihs-distance** from the end of the last cut.  
+If THC is disabled then if the start of the next cut is less than **plasmac.skip-ihs-distance** from the last successful probe.  
 This feature is disabled after any error. For example if there is an arc failure while cutting then IHS will be performed regardless of where the cut is.
 
 Paused Motion allows reversing and forwarding along the current segment while paused.  

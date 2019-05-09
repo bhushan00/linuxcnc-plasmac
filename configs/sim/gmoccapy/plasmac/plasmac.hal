@@ -8,9 +8,6 @@ addf    debounce.0              servo-thread
 loadrt  plasmac
 addf    plasmac     servo-thread
 
-# settings
-setp plasmac.skip-ihs-type       [PLASMAC]SKIP_IHS_TYPE
-
 # inputs
 # the next line needs to be the joint associated with the Z axis
 net plasmac:axis-position        joint.3.pos-fb                  =>  plasmac.axis-z-position
