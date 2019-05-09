@@ -210,7 +210,7 @@ class HandlerClass:
                 self.save_settings()
         else:
             self.save_settings()
-            print '*** creating new plasmac configuration file,', self.configFile
+            print '*** creating new config tab configuration file,', self.configFile
 
     def save_settings(self):
         try:

@@ -26,30 +26,32 @@ import gobject
 import hal, hal_glib
 from   gladevcp.persistence import widget_defaults,select_widgets
 import gladevcp
+from subprocess import Popen,PIPE
+import time
 
 class HandlerClass:
 
-    def check_tool_file(self):
+    def check_material_file(self):
         version = '[VERSION 1]'
-        tempToolDict = {}
-        if os.path.exists(self.toolFile):
-            if not version in open(self.toolFile).read():
-                print '*** upgrading tool file if we needed to ...'
+        tempMaterialDict = {}
+        if os.path.exists(self.materialFile):
+            if not version in open(self.materialFile).read():
+                print '*** upgrading material file if we needed to ...'
                 # well, it should if we ever need it and we write the code :-)
-                #with open(self.toolFile, 'r') as f_in:
+                #with open(self.materialFile, 'r') as f_in:
                 #    for line in f_in:
                 #        if not line.strip().startswith('#') and len(line.strip()):
                 #            read in old version
                 #            convert to new version
                 #            write new version
-        else: # create a new tool file if it doesn't exist
-            with open(self.toolFile, 'w') as f_out:
+        else: # create a new material file if it doesn't exist
+            with open(self.materialFile, 'w') as f_out:
                 f_out.write(\
-                    '#plasmac tool file\n'\
+                    '#plasmac material file\n'\
                     '#the next line is required for version checking\n'\
                     + version + '\n\n'\
                     '#example only, may be deleted\n'\
-                    '#[TOOL_NUMBER_1]    = \n'\
+                    '#[MATERIAL_NUMBER_1]  \n'\
                     '#NAME               = \n'\
                     '#KERF_WIDTH         = \n'\
                     '#THC                = (0 = off, 1 = on)\n'\
@@ -62,9 +64,10 @@ class HandlerClass:
                     '#CUT_AMPS           = (optional, only used for operator information)\n'\
                     '#CUT_VOLTS          = (modes 0 & 1 only, if not using auto voltage sampling)\n'\
                     '\n')
-            print '*** new material file,', self.toolFile, 'created'
+            print '*** creating new material configuration file,', self.materialFile
 
-    def get_tools(self):
+    def get_material(self):
+        self.getMaterials = 1
         t_number = 0
         t_name = 'Default'
         k_width = self.builder.get_object('kerf-width').get_value()
@@ -78,11 +81,15 @@ class HandlerClass:
         c_amps = self.builder.get_object('cut-amps').get_value()
         c_volts = self.builder.get_object('cut-volts').get_value()
         try:
-            with open(self.toolFile, 'r') as f_in:
+            with open(self.materialFile, 'r') as f_in:
+                self.builder.get_object('materials').clear()
+                self.materialList = []
                 for line in f_in:
                     if not line.startswith('#'):
-                        if line.startswith('[TOOL_NUMBER_') and line.strip().endswith(']'):
-                            self.toolFileDict[t_number] = [t_name, k_width, thc_enable, p_height, p_delay, pj_height, pj_delay, c_height, c_speed, c_amps, c_volts]
+                        if line.startswith('[MATERIAL_NUMBER_') and line.strip().endswith(']'):
+                            self.materialFileDict[t_number] = [t_name, k_width, thc_enable, p_height, p_delay, pj_height, pj_delay, c_height, c_speed, c_amps, c_volts]
+                            iter = self.builder.get_object('materials').append()
+                            self.builder.get_object('materials').set(iter, 0, 'Material:%d\t%s' % (t_number, t_name))
                             a,b,c = line.split('_')
                             t_number = int(c.replace(']',''))
                             t_name = 'none'
@@ -91,7 +98,7 @@ class HandlerClass:
                             t_name = line.split('=')[1].strip()
                         elif line.startswith('KERF_WIDTH'):
                             k_width = float(line.split('=')[1].strip())
-                            self.toolKerfMap[t_number] = k_width
+                            self.materialKerfMap[t_number] = k_width
                         elif line.startswith('THC'):
                             thc_enable = int(line.split('=')[1].strip())
                         elif line.startswith('PIERCE_HEIGHT'):
@@ -110,75 +117,114 @@ class HandlerClass:
                             c_amps = float(line.split('=')[1].strip())
                         elif line.startswith('CUT_VOLTS'):
                             c_volts = float(line.split('=')[1].strip())
-                self.toolFileDict[t_number] = [t_name, k_width, thc_enable, p_height, p_delay, pj_height, pj_delay, c_height, c_speed, c_amps, c_volts]
+                self.materialFileDict[t_number] = [t_name, k_width, thc_enable, p_height, p_delay, pj_height, pj_delay, c_height, c_speed, c_amps, c_volts]
+                self.materialList.append(t_number)
+                iter = self.builder.get_object('materials').append()
+                self.builder.get_object('materials').set(iter, 0, 'Material:%d\t%s' % (t_number, t_name))
         except:
-            print '*** materials file,', self.materialsFile, 'is invalid'
-        self.toolList = []
-        for tool in self.toolKerfMap.keys():
-            self.toolList.append(tool)
-        if sorted(self.toolFileDict,reverse=True)[0] > 99999:
-            self.builder.get_object('tool-number-adj').configure(0,0,99999,1,0,0)
-            print '*** largest tool number is 99999 ***'
+            print '*** material file,', self.materialFile, 'is invalid'
+        self.builder.get_object('material').set_active(0)
+
+        self.materialList = []
+        for material in self.materialKerfMap.keys():
+            self.materialList.append(material)
+        if sorted(self.materialFileDict,reverse=True)[0] > 99999:
+            self.builder.get_object('material-number-adj').configure(0,0,99999,1,0,0)
+            print '*** largest material number is 99999 ***'
         else:
-            self.builder.get_object('tool-number-adj').configure(0,0,sorted(self.toolFileDict,reverse=True)[0],1,0,0)
+            self.builder.get_object('material-number-adj').configure(0,0,sorted(self.materialFileDict,reverse=True)[0],1,0,0)
+        self.getMaterials = 0
 
     def on_save_clicked(self,widget,data=None):
         self.save_settings()
-        self.toolFileDict[0][0] = self.builder.get_object('tool-name').get_text()
-        self.toolFileDict[0][1] = self.builder.get_object('kerf-width').get_value()
-        self.toolFileDict[0][2] = self.builder.get_object('thc-enable').get_active()
-        self.toolFileDict[0][3] = self.builder.get_object('pierce-height').get_value()
-        self.toolFileDict[0][4] = self.builder.get_object('pierce-delay').get_value()
-        self.toolFileDict[0][5] = self.builder.get_object('puddle-jump-height').get_value()
-        self.toolFileDict[0][6] = self.builder.get_object('puddle-jump-delay').get_value()
-        self.toolFileDict[0][7] = self.builder.get_object('cut-height').get_value()
-        self.toolFileDict[0][8] = self.builder.get_object('cut-feed-rate').get_value()
-        self.toolFileDict[0][9] = self.builder.get_object('cut-amps').get_value()
-        self.toolFileDict[0][10] = self.builder.get_object('cut-volts').get_value()
+        self.materialFileDict[0][0] = self.builder.get_object('material-name').get_text()
+        self.materialFileDict[0][1] = self.builder.get_object('kerf-width').get_value()
+        self.materialFileDict[0][2] = self.builder.get_object('thc-enable').get_active()
+        self.materialFileDict[0][3] = self.builder.get_object('pierce-height').get_value()
+        self.materialFileDict[0][4] = self.builder.get_object('pierce-delay').get_value()
+        self.materialFileDict[0][5] = self.builder.get_object('puddle-jump-height').get_value()
+        self.materialFileDict[0][6] = self.builder.get_object('puddle-jump-delay').get_value()
+        self.materialFileDict[0][7] = self.builder.get_object('cut-height').get_value()
+        self.materialFileDict[0][8] = self.builder.get_object('cut-feed-rate').get_value()
+        self.materialFileDict[0][9] = self.builder.get_object('cut-amps').get_value()
+        self.materialFileDict[0][10] = self.builder.get_object('cut-volts').get_value()
 
     def on_reload_clicked(self,widget,data=None):
-        self.toolUpdate = True
+        self.materialUpdate = True
         self.load_settings()
-        self.toolFileDict = {}
-        self.toolKerfMap = {0: 0.0}
-        self.get_tools()
-        self.toolUpdate = False
+        self.materialFileDict = {}
+        self.materialKerfMap = {0: 0.0}
+        self.get_material()
+        self.materialUpdate = False
 
-    def on_tool_number_value_changed(self,widget):
-        tool = int(self.builder.get_object('tool-number').get_value())
-        if tool in self.toolKerfMap.keys():
-            self.builder.get_object('tool-name').set_text(self.toolFileDict[tool][0])
-            self.builder.get_object('kerf-width').set_value(self.toolFileDict[tool][1])
-            self.builder.get_object('thc-enable').set_active(self.toolFileDict[tool][2])
-            self.builder.get_object('pierce-height').set_value(self.toolFileDict[tool][3])
-            self.builder.get_object('pierce-delay').set_value(self.toolFileDict[tool][4])
-            self.builder.get_object('puddle-jump-height').set_value(self.toolFileDict[tool][5])
-            self.builder.get_object('puddle-jump-delay').set_value(self.toolFileDict[tool][6])
-            self.builder.get_object('cut-height').set_value(self.toolFileDict[tool][7])
-            self.builder.get_object('cut-feed-rate').set_value(self.toolFileDict[tool][8])
-            self.builder.get_object('cut-amps').set_value(self.toolFileDict[tool][9])
-            self.builder.get_object('cut-volts').set_value(self.toolFileDict[tool][10])
-            hal.set_p('plasmac_run.tool-change-number',str(tool))
+    def on_thc_on_toggled(self,button):
+        if button.get_active():
+            Popen(['halcmd unlinkp plasmac.thc-enable'], stdin=PIPE, shell=True)
+            time.sleep(0.05)
+            hal.set_p('plasmac.thc-enable','1')
+
+    def on_thc_auto_toggled(self,button):
+        if button.get_active():
+            hal.connect('plasmac.thc-enable','plasmac:thc-enable')
+            print 'AUTO'
+
+    def on_thc_off_toggled(self,button):
+        if button.get_active():
+            Popen(['halcmd unlinkp plasmac.thc-enable'], stdin=PIPE, shell=True)
+            time.sleep(0.05)
+            hal.set_p('plasmac.thc-enable','0')
+
+    def on_material_changed(self,widget):
+        if not self.getMaterials:
+            material, name = self.builder.get_object('material').get_active_text().split('\t', 1)
+            text, num = material.split(':', 1)
+            self.builder.get_object('material-number').set_value(int(num))
+
+    def on_material_number_changed(self,widget):
+        material = int(self.builder.get_object('material-number').get_value())
+        if material in self.materialKerfMap.keys():
+            self.builder.get_object('material-name').set_text(self.materialFileDict[material][0])
+            self.builder.get_object('kerf-width').set_value(self.materialFileDict[material][1])
+            self.builder.get_object('thc-enable').set_active(self.materialFileDict[material][2])
+            self.builder.get_object('pierce-height').set_value(self.materialFileDict[material][3])
+            self.builder.get_object('pierce-delay').set_value(self.materialFileDict[material][4])
+            self.builder.get_object('puddle-jump-height').set_value(self.materialFileDict[material][5])
+            self.builder.get_object('puddle-jump-delay').set_value(self.materialFileDict[material][6])
+            self.builder.get_object('cut-height').set_value(self.materialFileDict[material][7])
+            self.builder.get_object('cut-feed-rate').set_value(self.materialFileDict[material][8])
+            self.builder.get_object('cut-amps').set_value(self.materialFileDict[material][9])
+            self.builder.get_object('cut-volts').set_value(self.materialFileDict[material][10])
+            hal.set_p('plasmac_run.material-change-number',str(material))
         else:
-            if tool < self.oldTool:
-                self.builder.get_object('tool-number').set_value(self.toolList[self.toolList.index(self.oldTool) - 1])
+            if material < self.oldMaterial:
+                self.builder.get_object('material-number').set_value(self.materialList[self.materialList.index(self.oldMaterial) - 1])
             else:
-                self.builder.get_object('tool-number').set_value(self.toolList[self.toolList.index(self.oldTool) + 1])
-        self.oldTool = tool
+                self.builder.get_object('material-number').set_value(self.materialList[self.materialList.index(self.oldMaterial) + 1])
+        if material in self.materialList:
+            self.builder.get_object('material').set_active(self.materialList.index(material))
+        self.oldMaterial = material
 
-    def tool_change_number_changed(self,halpin):
-        tool = halpin.get()
-        if tool in self.toolKerfMap.keys():
-            self.builder.get_object('tool-number').set_value(tool)
-            hal.set_p('plasmac_run.tool-change-diameter',str(self.toolKerfMap[tool]))
+    def material_change_number_changed(self,halpin):
+        hal.set_p('motion.digital-in-03','0')
+        material = halpin.get()
+        if material in self.materialKerfMap.keys():
+            self.builder.get_object('material-number').set_value(material)
+            hal.set_p('plasmac_run.material-change','1')
+            hal.set_p('motion.digital-in-03','1')
         else:
-            hal.set_p('plasmac_run.tool-change-diameter','-2')
+            hal.set_p('plasmac_run.material-change','-1')
 
+    def material_change_changed(self,halpin):
+        if halpin.get() == 0:
+            hal.set_p('motion.digital-in-03','0')
 
     def on_setupFeedRate_value_changed(self, widget):
         self.builder.get_object('probe-feed-rate-adj').configure(self.builder.get_object('probe-feed-rate').get_value(),0,self.builder.get_object('setup-feed-rate').get_value(),1,0,0)
 
     def configure_widgets(self):
+        self.builder.get_object('material-number').hide()
+        self.builder.get_object('material-number-label').hide()
+        self.builder.get_object('material-name').hide()
         self.builder.get_object('cornerlock-enable').set_active(1)
         self.builder.get_object('cornerlock-threshold').set_digits(0)
         self.builder.get_object('cornerlock-threshold-adj').configure(90,1,99,1,0,0)
@@ -200,8 +246,8 @@ class HandlerClass:
         self.builder.get_object('thc-enable').set_active(1)
         self.builder.get_object('thc-threshold').set_digits(2)
         self.builder.get_object('thc-threshold-adj').configure(1,0.05,9,0.01,0,0)
-        self.builder.get_object('tool-number').set_digits(0)
-        self.builder.get_object('tool-number-adj').configure(0,0,99999,1,0,0)
+        self.builder.get_object('material-number').set_digits(0)
+        self.builder.get_object('material-number-adj').configure(0,0,99999,1,0,0)
         self.builder.get_object('use-auto-volts').set_active(1)
         if self.i.find('TRAJ', 'LINEAR_UNITS').lower() == 'mm':
             self.builder.get_object('kerf-width').set_digits(2)
@@ -305,7 +351,7 @@ class HandlerClass:
             except:
                 print '*** plasmac configuration file,', self.configFile, 'is invalid ***'
             for item in self.configDict:
-                if item == 'tool-number' or item == 'kerf-width':
+                if item == 'material-number' or item == 'kerf-width':
                     self.builder.get_object(item).set_value(0)
                 elif isinstance(self.builder.get_object(item), gladevcp.hal_widgets.HAL_SpinButton):
                     if item in tmpDict:
@@ -330,14 +376,14 @@ class HandlerClass:
                 self.save_settings()
         else:
             self.save_settings()
-            print '*** creating new plasmac configuration file,', self.configFile
+            print '*** creating new run tab configuration file,', self.configFile
 
     def save_settings(self):
         try:
             with open(self.configFile, 'w') as f_out:
                 f_out.write('#plasmac configuration file, format is:\n#name = value\n\n')
                 for key in sorted(self.configDict.iterkeys()):
-                    if key == 'tool-number' or key == 'kerf-width':
+                    if key == 'material-number' or key == 'kerf-width':
                         pass
                     elif isinstance(self.builder.get_object(key), gladevcp.hal_widgets.HAL_SpinButton):
                         value = self.builder.get_object(key).get_value()
@@ -357,27 +403,32 @@ class HandlerClass:
         self.i = linuxcnc.ini(os.environ['INI_FILE_NAME'])
         self.c = linuxcnc.command()
         self.s = linuxcnc.stat()
-        self.toolNumberPin = hal_glib.GPin(halcomp.newpin('tool-change-number', hal.HAL_S32, hal.HAL_IN))
-        self.toolNumberPin.connect('value-changed', self.tool_change_number_changed)
-        self.toolDiameterPin = hal_glib.GPin(halcomp.newpin('tool-change-diameter', hal.HAL_FLOAT, hal.HAL_IN))
+        self.materialNumberPin = hal_glib.GPin(halcomp.newpin('material-change-number', hal.HAL_S32, hal.HAL_IN))
+        self.materialNumberPin.connect('value-changed', self.material_change_number_changed)
+        self.materialChangePin = hal_glib.GPin(halcomp.newpin('material-change', hal.HAL_S32, hal.HAL_IN))
+        self.materialChangePin.connect('value-changed', self.material_change_changed)
+        hal.new_sig('plasmac:thc-enable',hal.HAL_BIT)
+        hal.connect('plasmac_run.thc-enable','plasmac:thc-enable')
+        if self.builder.get_object('thc-auto').get_active():
+            hal.connect('plasmac.thc-enable','plasmac:thc-enable')
         self.thcFeedRate = (float(self.i.find('AXIS_Z', 'MAX_VELOCITY')) * \
                               float(self.i.find('AXIS_Z', 'OFFSET_AV_RATIO'))) * 60
         hal.set_p('plasmac.thc-feed-rate','%f' % (self.thcFeedRate))
         self.configFile = self.i.find('EMC', 'MACHINE').lower() + '_run.cfg'
         self.prefFile = self.i.find('EMC', 'MACHINE') + '.pref'
-        self.toolFile = self.i.find('EMC', 'MACHINE').lower() + '_tool.tbl'
-        self.toolFileDict = {}
-        self.toolKerfMap = {0: 0.0}
-        self.toolDict = {}
+        self.materialFile = self.i.find('EMC', 'MACHINE').lower() + '_material.cfg'
+        self.materialFileDict = {}
+        self.materialKerfMap = {0: 0.0}
+        self.materialDict = {}
         self.configDict = {}
         hal.set_p('plasmac.mode','%d' % (int(self.i.find('PLASMAC','MODE') or '0')))
         self.oldMode = 9
-        self.oldTool = -1
-        self.toolUpdate = False
+        self.oldMaterial = -1
+        self.materialUpdate = False
         self.configure_widgets()
         self.load_settings()
-        self.check_tool_file()
-        self.get_tools()
+        self.check_material_file()
+        self.get_material()
         self.set_theme()
         gobject.timeout_add(100, self.periodic)
 

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 '''
-toolverter.py
+materialverter.py
 Copyright (C) 2019  Phillip A Carter
 
 This program is free software; you can redistribute it and/or modify it
@@ -25,11 +25,11 @@ import gtk
 import gtk.glade
 import os
 
-class toolConverter:
+class materialConverter:
 
     def __init__(self):
         self.W = gtk.Window()
-        self.W.set_title('Plasmac Tool File Converter')
+        self.W.set_title('Plasmac Material File Converter')
         self.W.connect('delete_event', self.on_window_delete_event)
         self.create_widgets()
         self.W.show_all()
@@ -126,11 +126,11 @@ class toolConverter:
         try:
             with open(self.outFileName, 'w') as f_out:
                 f_out.write(\
-                    '#plasmac tool file\n'\
+                    '#plasmac material file\n'\
                     '#the next line is required for version checking\n'\
                      + version + '\n\n'\
                     '#example only, may be deleted\n'\
-                    '#[TOOL_NUMBER_1]    = \n'\
+                    '#[MATERIAL_NUMBER_1]    = \n'\
                     '#NAME               = \n'\
                     '#KERF_WIDTH         = \n'\
                     '#THC                = (0 = off, 1 = on)\n'\
@@ -155,50 +155,50 @@ class toolConverter:
                         if count and valid:
                             self.output()
                         valid = False
-                        self.toolNum = ''
-                        self.toolName = 'NAME               = '
-                        self.toolKerf = 'KERF_WIDTH         = '
-                        self.toolTHC = 'THC                = '
-                        self.toolPierceH = 'PIERCE_HEIGHT      = '
-                        self.toolPierceD = 'PIERCE_DELAY       = '
-                        self.toolPuddleH = 'PUDDLE_JUMP_HEIGHT = 0'
-                        self.toolPuddleD = 'PUDDLE_JUMP_DELAY  = 0'
-                        self.toolCutH = 'CUT_HEIGHT         = '
-                        self.toolCutS = 'CUT_SPEED          = '
-                        self.toolCutA = 'CUT_AMPS           = '
-                        self.toolCutV = 'CUT_VOLTS          = '
+                        self.materialNum = ''
+                        self.materialName = 'NAME               = '
+                        self.materialKerf = 'KERF_WIDTH         = '
+                        self.materialTHC = 'THC                = '
+                        self.materialPierceH = 'PIERCE_HEIGHT      = '
+                        self.materialPierceD = 'PIERCE_DELAY       = '
+                        self.materialPuddleH = 'PUDDLE_JUMP_HEIGHT = 0'
+                        self.materialPuddleD = 'PUDDLE_JUMP_DELAY  = 0'
+                        self.materialCutH = 'CUT_HEIGHT         = '
+                        self.materialCutS = 'CUT_SPEED          = '
+                        self.materialCutA = 'CUT_AMPS           = '
+                        self.materialCutV = 'CUT_VOLTS          = '
                     elif 'PlasmaTool' in line:
                         valid = True
                     elif line.startswith('Tool\ number'):
                         a,b = line.split('=')
-                        self.toolNum = '[TOOL_NUMBER_%s]' % (b.strip().replace(']',''))
+                        self.materialNum = '[MATERIAL_NUMBER_%s]' % (b.strip().replace(']',''))
                     elif line.startswith('Name'):
                         a,b = line.split('=',1)
-                        self.toolName = 'NAME               = %s' % (b.strip())
+                        self.materialName = 'NAME               = %s' % (b.strip())
                     elif line.startswith('Kerf\ width'):
                         a,b = line.split('=',1)
-                        self.toolKerf = "{id:}{val:.{i}f}".format(id='KERF_WIDTH         = ', i=self.precision, val=float(b.strip()) / self.divisor)
+                        self.materialKerf = "{id:}{val:.{i}f}".format(id='KERF_WIDTH         = ', i=self.precision, val=float(b.strip()) / self.divisor)
                     elif line.startswith('NO\ DTHC'):
                         a,b = line.split('=',1)
-                        self.toolTHC = 'THC                = %s' % (b.strip())
+                        self.materialTHC = 'THC                = %s' % (b.strip())
                     elif line.startswith('Pierce\ height'):
                         a,b = line.split('=',1)
-                        self.toolPierceH = "{id:}{val:.{i}f}".format(id='PIERCE_HEIGHT      = ', i=self.precision, val=float(b.strip()) / self.divisor)
+                        self.materialPierceH = "{id:}{val:.{i}f}".format(id='PIERCE_HEIGHT      = ', i=self.precision, val=float(b.strip()) / self.divisor)
                     elif line.startswith('Pierce\ delay'):
                         a,b = line.split('=',1)
-                        self.toolPierceD = 'PIERCE_DELAY       = %s' % (b.strip())
+                        self.materialPierceD = 'PIERCE_DELAY       = %s' % (b.strip())
                     elif line.startswith('Cut\ height'):
                         a,b = line.split('=',1)
-                        self.toolCutH = "{id:}{val:.{i}f}".format(id='CUT_HEIGHT         = ', i=self.precision, val=float(b.strip()) / self.divisor)
+                        self.materialCutH = "{id:}{val:.{i}f}".format(id='CUT_HEIGHT         = ', i=self.precision, val=float(b.strip()) / self.divisor)
                     elif line.startswith('Feed\ rate'):
                         a,b = line.split('=',1)
-                        self.toolCutS = "{id:}{val:.{i}f}".format(id='CUT_SPEED          = ', i=0, val=float(b.strip()) / self.divisor)
+                        self.materialCutS = "{id:}{val:.{i}f}".format(id='CUT_SPEED          = ', i=0, val=float(b.strip()) / self.divisor)
                     elif line.startswith('Tip\ Size\ -Amps'):
                         a,b = line.split('=',1)
-                        self.toolCutA = 'CUT_AMPS           = %s' % (b.strip())
+                        self.materialCutA = 'CUT_AMPS           = %s' % (b.strip())
                     elif line.startswith('Preset\ volts'):
                         a,b = line.split('=',1)
-                        self.toolCutV = 'CUT_VOLTS          = %s' % (b.strip())
+                        self.materialCutV = 'CUT_VOLTS          = %s' % (b.strip())
                     count += 1
                 if valid:
                     self.output()
@@ -210,24 +210,24 @@ class toolConverter:
     def output(self):
         try:
             with open(self.outFileName, 'a') as f_out:
-                f_out.write(self.toolNum + '\n' + \
-                            self.toolName + '\n' + \
-                            self.toolKerf + '\n' + \
-                            self.toolTHC + '\n' + \
-                            self.toolPierceH + '\n' + \
-                            self.toolPierceD + '\n' + \
-                            self.toolPuddleH + '\n' + \
-                            self.toolPuddleD + '\n' + \
-                            self.toolCutH + '\n' + \
-                            self.toolCutS + '\n' + \
-                            self.toolCutA + '\n' + \
-                            self.toolCutV + '\n\n')
+                f_out.write(self.materialNum + '\n' + \
+                            self.materialName + '\n' + \
+                            self.materialKerf + '\n' + \
+                            self.materialTHC + '\n' + \
+                            self.materialPierceH + '\n' + \
+                            self.materialPierceD + '\n' + \
+                            self.materialPuddleH + '\n' + \
+                            self.materialPuddleD + '\n' + \
+                            self.materialCutH + '\n' + \
+                            self.materialCutS + '\n' + \
+                            self.materialCutA + '\n' + \
+                            self.materialCutV + '\n\n')
         except:
             self.outLabel.set_text('WRITE ERROR!!!')
 
 if __name__ == '__main__':
     try:
-        a = toolConverter()
+        a = materialConverter()
         gtk.main()
     except KeyboardInterrupt:
         pass

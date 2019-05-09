@@ -10,13 +10,24 @@
   <object class="GtkAdjustment" id="cut-volts-adj"/>
   <object class="GtkAdjustment" id="kerf-width-adj"/>
   <object class="GtkAdjustment" id="kerfcross-threshold-adj"/>
+  <object class="GtkAdjustment" id="material-number-adj"/>
+  <object class="GtkListStore" id="materials">
+    <columns>
+      <!-- column-name numName -->
+      <column type="gchararray"/>
+    </columns>
+    <data>
+      <row>
+        <col id="0" translatable="yes">Tool:0\tDefault</col>
+      </row>
+    </data>
+  </object>
   <object class="GtkAdjustment" id="pid-p-gain-adj"/>
   <object class="GtkAdjustment" id="pierce-delay-adj"/>
   <object class="GtkAdjustment" id="pierce-height-adj"/>
   <object class="GtkAdjustment" id="puddle-jump-delay-adj"/>
   <object class="GtkAdjustment" id="puddle-jump-height-adj"/>
   <object class="GtkAdjustment" id="thc-threshold-adj"/>
-  <object class="GtkAdjustment" id="tool-number-adj"/>
   <object class="GtkWindow" id="window1">
     <property name="can_focus">False</property>
     <child>
@@ -51,7 +62,7 @@
                           <object class="GtkTable" id="table3">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
-                            <property name="n_rows">12</property>
+                            <property name="n_rows">13</property>
                             <property name="n_columns">2</property>
                             <property name="column_spacing">2</property>
                             <property name="row_spacing">2</property>
@@ -105,8 +116,8 @@ indicator only, not used.</property>
                               </object>
                               <packing>
                                 <property name="right_attach">2</property>
-                                <property name="top_attach">8</property>
-                                <property name="bottom_attach">9</property>
+                                <property name="top_attach">9</property>
+                                <property name="bottom_attach">10</property>
                               </packing>
                             </child>
                             <child>
@@ -159,8 +170,8 @@ only used if not using auto volts</property>
                               </object>
                               <packing>
                                 <property name="right_attach">2</property>
-                                <property name="top_attach">9</property>
-                                <property name="bottom_attach">10</property>
+                                <property name="top_attach">10</property>
+                                <property name="bottom_attach">11</property>
                               </packing>
                             </child>
                             <child>
@@ -181,8 +192,8 @@ only used if not using auto volts</property>
                                 <property name="wrap">True</property>
                               </object>
                               <packing>
-                                <property name="top_attach">4</property>
-                                <property name="bottom_attach">5</property>
+                                <property name="top_attach">5</property>
+                                <property name="bottom_attach">6</property>
                               </packing>
                             </child>
                             <child>
@@ -199,8 +210,8 @@ only used if not using auto volts</property>
                               <packing>
                                 <property name="left_attach">1</property>
                                 <property name="right_attach">2</property>
-                                <property name="top_attach">4</property>
-                                <property name="bottom_attach">5</property>
+                                <property name="top_attach">5</property>
+                                <property name="bottom_attach">6</property>
                               </packing>
                             </child>
                             <child>
@@ -217,8 +228,8 @@ only used if not using auto volts</property>
                               <packing>
                                 <property name="left_attach">1</property>
                                 <property name="right_attach">2</property>
-                                <property name="top_attach">5</property>
-                                <property name="bottom_attach">6</property>
+                                <property name="top_attach">6</property>
+                                <property name="bottom_attach">7</property>
                               </packing>
                             </child>
                             <child>
@@ -235,8 +246,8 @@ only used if not using auto volts</property>
                               <packing>
                                 <property name="left_attach">1</property>
                                 <property name="right_attach">2</property>
-                                <property name="top_attach">6</property>
-                                <property name="bottom_attach">7</property>
+                                <property name="top_attach">7</property>
+                                <property name="bottom_attach">8</property>
                               </packing>
                             </child>
                             <child>
@@ -254,8 +265,8 @@ setting this to 0 will use feed rate from program</property>
                               <packing>
                                 <property name="left_attach">1</property>
                                 <property name="right_attach">2</property>
-                                <property name="top_attach">7</property>
-                                <property name="bottom_attach">8</property>
+                                <property name="top_attach">8</property>
+                                <property name="bottom_attach">9</property>
                               </packing>
                             </child>
                             <child>
@@ -273,8 +284,8 @@ set to 0 to disable</property>
                               <packing>
                                 <property name="left_attach">1</property>
                                 <property name="right_attach">2</property>
-                                <property name="top_attach">10</property>
-                                <property name="bottom_attach">11</property>
+                                <property name="top_attach">11</property>
+                                <property name="bottom_attach">12</property>
                               </packing>
                             </child>
                             <child>
@@ -292,8 +303,8 @@ set to 0 to disable</property>
                               <packing>
                                 <property name="left_attach">1</property>
                                 <property name="right_attach">2</property>
-                                <property name="top_attach">11</property>
-                                <property name="bottom_attach">12</property>
+                                <property name="top_attach">12</property>
+                                <property name="bottom_attach">13</property>
                               </packing>
                             </child>
                             <child>
@@ -314,8 +325,8 @@ set to 0 to disable</property>
                                 <property name="wrap">True</property>
                               </object>
                               <packing>
-                                <property name="top_attach">5</property>
-                                <property name="bottom_attach">6</property>
+                                <property name="top_attach">6</property>
+                                <property name="bottom_attach">7</property>
                               </packing>
                             </child>
                             <child>
@@ -336,8 +347,8 @@ set to 0 to disable</property>
                                 <property name="wrap">True</property>
                               </object>
                               <packing>
-                                <property name="top_attach">6</property>
-                                <property name="bottom_attach">7</property>
+                                <property name="top_attach">7</property>
+                                <property name="bottom_attach">8</property>
                               </packing>
                             </child>
                             <child>
@@ -359,8 +370,8 @@ set this to 0 to use feed rate from gcode</property>
                                 <property name="wrap">True</property>
                               </object>
                               <packing>
-                                <property name="top_attach">7</property>
-                                <property name="bottom_attach">8</property>
+                                <property name="top_attach">8</property>
+                                <property name="bottom_attach">9</property>
                               </packing>
                             </child>
                             <child>
@@ -382,8 +393,8 @@ set to 0 to disable</property>
                                 <property name="wrap">True</property>
                               </object>
                               <packing>
-                                <property name="top_attach">10</property>
-                                <property name="bottom_attach">11</property>
+                                <property name="top_attach">11</property>
+                                <property name="bottom_attach">12</property>
                               </packing>
                             </child>
                             <child>
@@ -405,25 +416,8 @@ set to 0 to disable</property>
                                 <property name="wrap">True</property>
                               </object>
                               <packing>
-                                <property name="top_attach">11</property>
-                                <property name="bottom_attach">12</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <object class="GtkLabel" id="labelR4">
-                                <property name="width_request">130</property>
-                                <property name="visible">True</property>
-                                <property name="can_focus">False</property>
-                                <property name="has_tooltip">True</property>
-                                <property name="tooltip_text" translatable="yes">tool number
-NOTE: changing this manually will not change the tool, just the parameters</property>
-                                <property name="xalign">0</property>
-                                <property name="xpad">2</property>
-                                <property name="label" translatable="yes">Tool Number</property>
-                              </object>
-                              <packing>
-                                <property name="left_attach">1</property>
-                                <property name="right_attach">2</property>
+                                <property name="top_attach">12</property>
+                                <property name="bottom_attach">13</property>
                               </packing>
                             </child>
                             <child>
@@ -440,12 +434,12 @@ NOTE: changing this manually will not change the tool, just the parameters</prop
                               <packing>
                                 <property name="left_attach">1</property>
                                 <property name="right_attach">2</property>
-                                <property name="top_attach">2</property>
-                                <property name="bottom_attach">3</property>
+                                <property name="top_attach">3</property>
+                                <property name="bottom_attach">4</property>
                               </packing>
                             </child>
                             <child>
-                              <object class="HAL_SpinButton" id="tool-number">
+                              <object class="HAL_SpinButton" id="material-number">
                                 <property name="width_request">75</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
@@ -459,10 +453,14 @@ NOTE: changing this manually will not change the tool, just the parameters</prop
                                 <property name="secondary_icon_activatable">False</property>
                                 <property name="primary_icon_sensitive">True</property>
                                 <property name="secondary_icon_sensitive">True</property>
-                                <property name="adjustment">tool-number-adj</property>
+                                <property name="adjustment">material-number-adj</property>
                                 <property name="wrap">True</property>
-                                <signal name="value-changed" handler="on_tool_number_value_changed" swapped="no"/>
+                                <signal name="value-changed" handler="on_material_number_changed" swapped="no"/>
                               </object>
+                              <packing>
+                                <property name="top_attach">1</property>
+                                <property name="bottom_attach">2</property>
+                              </packing>
                             </child>
                             <child>
                               <object class="HAL_SpinButton" id="kerf-width">
@@ -482,8 +480,8 @@ NOTE: changing this manually will not change the tool, just the parameters</prop
                                 <property name="wrap">True</property>
                               </object>
                               <packing>
-                                <property name="top_attach">2</property>
-                                <property name="bottom_attach">3</property>
+                                <property name="top_attach">3</property>
+                                <property name="bottom_attach">4</property>
                               </packing>
                             </child>
                             <child>
@@ -500,8 +498,8 @@ NOTE: changing this manually will not change the tool, just the parameters</prop
                               <packing>
                                 <property name="left_attach">1</property>
                                 <property name="right_attach">2</property>
-                                <property name="top_attach">3</property>
-                                <property name="bottom_attach">4</property>
+                                <property name="top_attach">4</property>
+                                <property name="bottom_attach">5</property>
                               </packing>
                             </child>
                             <child>
@@ -539,21 +537,60 @@ NOTE: changing this manually will not change the tool, just the parameters</prop
                                 </child>
                               </object>
                               <packing>
-                                <property name="top_attach">3</property>
-                                <property name="bottom_attach">4</property>
+                                <property name="top_attach">4</property>
+                                <property name="bottom_attach">5</property>
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkLabel" id="tool-name">
+                              <object class="GtkComboBox" id="material">
+                                <property name="width_request">205</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
-                                <property name="tooltip_text" translatable="yes">name of the material</property>
-                                <property name="label" translatable="yes">Default</property>
-                                <attributes>
-                                  <attribute name="size" value="12000"/>
-                                </attributes>
+                                <property name="model">materials</property>
+                                <signal name="changed" handler="on_material_changed" swapped="no"/>
+                                <child>
+                                  <object class="GtkCellRendererText" id="cellrenderertext1"/>
+                                  <attributes>
+                                    <attribute name="text">0</attribute>
+                                  </attributes>
+                                </child>
                               </object>
                               <packing>
+                                <property name="right_attach">2</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkLabel" id="material-name">
+                                <property name="width_request">130</property>
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                                <property name="has_tooltip">True</property>
+                                <property name="tooltip_text" translatable="yes">tool name
+</property>
+                                <property name="xalign">0</property>
+                                <property name="xpad">2</property>
+                                <property name="label" translatable="yes">Material Name</property>
+                              </object>
+                              <packing>
+                                <property name="right_attach">2</property>
+                                <property name="top_attach">2</property>
+                                <property name="bottom_attach">3</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkLabel" id="material-number-label">
+                                <property name="width_request">130</property>
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                                <property name="has_tooltip">True</property>
+                                <property name="tooltip_text" translatable="yes">tool number
+NOTE: changing this manually will not change the tool, just the parameters</property>
+                                <property name="xalign">0</property>
+                                <property name="xpad">2</property>
+                                <property name="label" translatable="yes">Material Number</property>
+                              </object>
+                              <packing>
+                                <property name="left_attach">1</property>
                                 <property name="right_attach">2</property>
                                 <property name="top_attach">1</property>
                                 <property name="bottom_attach">2</property>
@@ -667,7 +704,7 @@ Note: this also saves current cut parameters as the default</property>
                           <object class="GtkTable" id="table2">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
-                            <property name="n_rows">5</property>
+                            <property name="n_rows">6</property>
                             <property name="n_columns">3</property>
                             <property name="column_spacing">2</property>
                             <property name="row_spacing">2</property>
@@ -727,6 +764,8 @@ turn off to use cut volts from parameters</property>
                               </object>
                               <packing>
                                 <property name="right_attach">3</property>
+                                <property name="top_attach">1</property>
+                                <property name="bottom_attach">2</property>
                               </packing>
                             </child>
                             <child>
@@ -777,8 +816,8 @@ turn off to use cut volts from parameters</property>
                               </object>
                               <packing>
                                 <property name="right_attach">3</property>
-                                <property name="top_attach">1</property>
-                                <property name="bottom_attach">2</property>
+                                <property name="top_attach">2</property>
+                                <property name="bottom_attach">3</property>
                               </packing>
                             </child>
                             <child>
@@ -831,8 +870,8 @@ for mode 3 this is the percentage of max velocity used for THC</property>
                               </object>
                               <packing>
                                 <property name="right_attach">3</property>
-                                <property name="top_attach">2</property>
-                                <property name="bottom_attach">3</property>
+                                <property name="top_attach">3</property>
+                                <property name="bottom_attach">4</property>
                               </packing>
                             </child>
                             <child>
@@ -849,8 +888,8 @@ for mode 3 this is the percentage of max velocity used for THC</property>
                               <packing>
                                 <property name="left_attach">2</property>
                                 <property name="right_attach">3</property>
-                                <property name="top_attach">3</property>
-                                <property name="bottom_attach">4</property>
+                                <property name="top_attach">4</property>
+                                <property name="bottom_attach">5</property>
                               </packing>
                             </child>
                             <child>
@@ -869,8 +908,8 @@ for mode 3 this is the percentage of max velocity used for THC</property>
                               <packing>
                                 <property name="left_attach">1</property>
                                 <property name="right_attach">2</property>
-                                <property name="top_attach">3</property>
-                                <property name="bottom_attach">4</property>
+                                <property name="top_attach">4</property>
+                                <property name="bottom_attach">5</property>
                                 <property name="x_options">GTK_FILL</property>
                               </packing>
                             </child>
@@ -888,8 +927,8 @@ for mode 3 this is the percentage of max velocity used for THC</property>
                               <packing>
                                 <property name="left_attach">2</property>
                                 <property name="right_attach">3</property>
-                                <property name="top_attach">4</property>
-                                <property name="bottom_attach">5</property>
+                                <property name="top_attach">5</property>
+                                <property name="bottom_attach">6</property>
                               </packing>
                             </child>
                             <child>
@@ -908,8 +947,8 @@ for mode 3 this is the percentage of max velocity used for THC</property>
                               <packing>
                                 <property name="left_attach">1</property>
                                 <property name="right_attach">2</property>
-                                <property name="top_attach">4</property>
-                                <property name="bottom_attach">5</property>
+                                <property name="top_attach">5</property>
+                                <property name="bottom_attach">6</property>
                               </packing>
                             </child>
                             <child>
@@ -919,8 +958,8 @@ for mode 3 this is the percentage of max velocity used for THC</property>
                                 <property name="can_focus">False</property>
                               </object>
                               <packing>
-                                <property name="top_attach">3</property>
-                                <property name="bottom_attach">4</property>
+                                <property name="top_attach">4</property>
+                                <property name="bottom_attach">5</property>
                               </packing>
                             </child>
                             <child>
@@ -930,8 +969,71 @@ for mode 3 this is the percentage of max velocity used for THC</property>
                                 <property name="can_focus">False</property>
                               </object>
                               <packing>
-                                <property name="top_attach">4</property>
-                                <property name="bottom_attach">5</property>
+                                <property name="top_attach">5</property>
+                                <property name="bottom_attach">6</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkHBox" id="hbox3">
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                                <property name="homogeneous">True</property>
+                                <child>
+                                  <object class="GtkRadioButton" id="thc-off">
+                                    <property name="label" translatable="yes">Disabled</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="receives_default">False</property>
+                                    <property name="tooltip_text" translatable="yes">THC is disabled</property>
+                                    <property name="active">True</property>
+                                    <property name="draw_indicator">True</property>
+                                    <property name="group">thc-auto</property>
+                                    <signal name="toggled" handler="on_thc_off_toggled" swapped="no"/>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">True</property>
+                                    <property name="fill">True</property>
+                                    <property name="position">0</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkRadioButton" id="thc-auto">
+                                    <property name="label" translatable="yes">Auto</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="receives_default">False</property>
+                                    <property name="tooltip_text" translatable="yes">THC is enabled/disabled from the cut parameters</property>
+                                    <property name="active">True</property>
+                                    <property name="draw_indicator">True</property>
+                                    <signal name="toggled" handler="on_thc_auto_toggled" swapped="no"/>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">True</property>
+                                    <property name="fill">True</property>
+                                    <property name="position">1</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkRadioButton" id="thc-on">
+                                    <property name="label" translatable="yes">Enabled</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="receives_default">False</property>
+                                    <property name="tooltip_text" translatable="yes">THC is enabled</property>
+                                    <property name="active">True</property>
+                                    <property name="draw_indicator">True</property>
+                                    <property name="group">thc-auto</property>
+                                    <signal name="toggled" handler="on_thc_on_toggled" swapped="no"/>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">True</property>
+                                    <property name="fill">True</property>
+                                    <property name="position">2</property>
+                                  </packing>
+                                </child>
+                              </object>
+                              <packing>
+                                <property name="right_attach">3</property>
                               </packing>
                             </child>
                           </object>
@@ -1331,5 +1433,6 @@ for mode 3 this is the percentage of max velocity used for THC</property>
       </object>
     </child>
   </object>
+  <object class="GtkAdjustment" id="tool-name-adj"/>
   <object class="GtkAdjustment" id="torch-off-delay-adj"/>
 </interface>

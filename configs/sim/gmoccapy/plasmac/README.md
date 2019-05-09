@@ -1,12 +1,12 @@
 #### PLASMAC
 
-A plasma control component for linuxcnc using the linuxcnc master branch merged with the feature/reverse-run-master2 branch.
+A plasma control component for linuxcnc using the linuxcnc master branch merged with the feature/reverse-run-master2 branch.  
 
-Not dependent on any particular hardware and should work with any hardware that provides the correct I/O.
+Not dependent on any particular hardware and should work with any hardware that provides the correct I/O.  
 
-No Z axis commands are required in gcode as all required height movements are controlled by this component.
+No Z axis commands are required in gcode as all required height movements are controlled by this component.  
 
-Should scale correctly for both metric and inch configuraions.
+Should scale correctly for both metric and inch configuraions.  
 
 Three different operating modes:  
 - 0 - Use the **plasmac.arc-voltage-in** input pin for both arc-OK and THC.  
@@ -40,14 +40,17 @@ Turn torch off, move to safe height and stop program if the following occur:
 - minimum height is reached during THC.  
 - maximum height is reached during THC.  
 
-Safe height may be reduced if torch height (during THC moves) plus safe height would exceed the maximum height.
-The minimum allowed reduced safe height is Pierce Height plus 1mm (0.04").
-If safe height is reduced an error message is sent.
+Safe height may be reduced if torch height (during THC moves) plus safe height would exceed the maximum height.  
+The minimum allowed reduced safe height is Pierce Height plus 1mm (0.04").  
+If safe height is reduced an error message is sent.  
 
-Usage of the **plasmac.cut-feed-rate** input pin requires remapping of the F word, if not using this set the **plasmac.cut-feed-rate** input pin to 0 which will then use the feed rate from the gcode file.
+Usage of the **plasmac.cut-feed-rate** input pin requires that a gcode file contain the feedrate command:  
+**F#<_hal[plasmac.cut-feed-rate]>**  
+This reads the feed rate from the cut parameters on the Run tab and sets the value the component needs for THC calculations.  
+If you don't want to do it this way then use a standard **Fnnn** to set the feed rate but you will need to set the Cut Feed Rate in the run to zero and plasmac will use **motion.requested−vel** for calculations.  
 
-Cut height can be adjusted on the fly by adding an offset to the **plasmac.height-override** input pin.
-This offset is added to the THC voltage target to lower or raise the torch.
+Cut height can be adjusted on the fly by adding an offset to the **plasmac.height-override** input pin.  
+This offset either positive or negative is added to the THC voltage target to lower or raise the torch.  
 
 Target voltage can be selected from:  
 - a voltage automatically read from the initial cut height.  
@@ -62,38 +65,48 @@ Paused Motion allows reversing and forwarding along the current segment while pa
 Reverse paused motion can only go back as far as the start of the cut the control point is currently on.  
 Forward paused motion can continue on through any number of cuts to the end of the gcode program.  
 
-A dry run is available by running the gcode with the torch disabled.
+A dry run is available by running the gcode with the torch disabled.  
 
-Ohmic Test enables the ohmic probe to test for a shorted torch.
+Ohmic Test enables the ohmic probe to test for a shorted torch.  
 
 ***
-#### TOOL HANDLING
-Tool handling is done by remapping the T word, so a M6 Tn will load the parameters associated with tool number n.  
-If you don't want to use this feature then you can comment out:  
-- REMAP = T prolog=plasmac_tool_prolog ngc=plasmac_tool epilog=plasmac_tool_epilog  
-in the in file.
+#### MATERIAL HANDLING
+Material handling has nothing at all to do with the LinuxCNC tool table. In fact **M6 Tn** commands should not be used with these configs.  
+There is a material file with its name is derived from **[EMC]MACHINE** in the in file, so a machine named METRIC_PLASMAC would have a material file named metric_plasmac_material.cfg
+  
+It is not a requirement that you use a material file, if required you can change the cut parameters manually in the Run tab. It is also not a requirement to use the automatic material changes, just omit them from the gcode file.
 
-The standard LinuxCNC tool table is bypassed and a plasmac specific tool table is used.  
-The tool table name is derived from **[EMC]MACHINE** in the in file, so a machine named METRIC_PLASMAC would have a tool table named metric_plasmac_tool.tbl.
+For manual material handling all you need in the gcode is:  
+**F#<_hal[plasmac.cut-feed-rate]>**  
+**M3 S1**  
+.  
+.  
+**M5**  
 
-Tool numbers do not need to be consecutive nor do they need to be in numerical order.  
-The maximum allowed tool number is 99999 as I believe this is the largest LinuxCNC will accept.
+For automatic material handling in your gcode you need:  
+**M190 Pn**  
+**M66 P3 L3 Q1**  
+**F#<_hal[plasmac.cut-feed-rate]>**  
+**M3 S1**  
+.  
+.  
+**M5**  
+M190 Pn changes the material to number n  
+M66 P3 L3 Q1 waits for change to be confirmed  
 
-When a tool is changed it only changes the cut parameter, LinuxCNC knows nothing of the tool or its offsets. (i.e. it does NOT do a real tool change)
+Material numbers do not need to be consecutive nor do they need to be in numerical order.  
+The maximum allowed material number is 99999 for no particular reason.  
 
-To use cutter compensation you will need to use G41.1, G42.1 and G40 with the new global parameter **#<kerf_width>** like so:  
-- G41.1 D#<kerf_width> for left of programmed path  
-- G42.1 D#<kerf_width> for right of programmed path  
-- G40 to turn compensation off  
+When a material is changed it only changes the cut parameters in the Run tab, LinuxCNC knows nothing of the material nor does plasmac know anything about LinuxCNC tool. (i.e. it does NOT do a tool change)  
 
-Tools can be selected manually with the Tool number spin button but this does not load the new **#<kerf_width>** value, to do this you need to do a M6 Tn via MDI.
+To use cutter compensation you will need to use G41.1, G42.1 and G40 with the cut file parameter hal pin **#<_hal[plasmac_run.kerf-width-f]>** like so:  
+- **G41.1 D#<_hal[plasmac_run.kerf-width-f>** ; with cutter compensation  
+- **G42.1 D#<_hal[plasmac_run.kerf-width-f>** for right of programmed path  
+- **G40** to turn compensation off  
 
-There is weird behaviour in Gmoccapy with the F word display.  
-It seems that it displays the FeedRate for the segment after the one that is cutting.  
-If you display the DRO in the preview, it shows the correct velocity.  
-I think this may be a result of remapping...
+Materials can be selected manually with the either the Cut Parameters combobox or via MDI with M190 Pn.  
 
-There is a python program named toolverter.py in the Gmoccapy folder to convert SheetCam tooltables to the plasmac format.  
+There is a python program named materialverter.py in the Gmoccapy folder to convert SheetCam tooltables to the plasmac format.  
 If there are requests for other conversion types I would be happy to have a crack at them.
 
 ***
@@ -114,11 +127,10 @@ plasmac_xxx.hal|hal connections for the panel.
 plasmac_xxx.py|python code for the panel.
 units_plasmac_run.cfg|configuration settings for the run tab.
 units_plasmac_config.cfg|configuration settings for the config tab.
-units_plasmac_tool.tbl|tool table file for cut parameters.
+units_plasmac_material.cfg|material file for cut parameters.
 units_startup.ngc|startup gcode commands.
-plasmac_feed.ngc|for remapping of the gcode F word
-plasmac_tool.ngc|for remapping of the gcode T word
 plasmac_gcode.py|removes z axis moves from the opened gcode file
+plasmac_stat.var|saved statistics
 toolverter.py|tool table file converter
 
 The .ini files are notated for extra the requirements for these configurations.
@@ -131,15 +143,14 @@ The minimum .ini file requirements for the plasmac component are:
   
 All other .ini file settings are for the example configurations.  
 
-The .cfg  and .tbl files are plain text and may be edited with any text editor.  
+The .cfg files are plain text and may be edited with any text editor.  
 Lines beginning with # are ignored in both these files.  
-
-The python directory is for remapping of the F word.  
 
 ***  
 #### TEST PANEL  
 
-In the test directory there is a simple test panel and associated python file which can be used to test the example configuration as referenced in the ini file.  
+There is a ./test directory which has a simple test panel and associated python file which can be used to test the example configuration as referenced in the ini file.  
+These can be commented out or deleted from the ini file and the directory can be deleted.
 
 ***  
 #### NGC EXAMPLES  
