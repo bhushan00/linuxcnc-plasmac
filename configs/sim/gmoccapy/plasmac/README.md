@@ -131,7 +131,7 @@ units_plasmac_material.cfg|material file for cut parameters.
 units_startup.ngc|startup gcode commands.
 plasmac_gcode.py|removes z axis moves from the opened gcode file
 plasmac_stat.var|saved statistics
-toolverter.py|tool table file converter
+materialverter.py|tool table file converter
 
 The .ini files are notated for extra the requirements for these configurations.
 
