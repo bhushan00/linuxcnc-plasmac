@@ -222,6 +222,7 @@ class HandlerClass:
         self.builder.get_object('probe-feed-rate-adj').configure(self.builder.get_object('probe-feed-rate').get_value(),0,self.builder.get_object('setup-feed-rate').get_value(),1,0,0)
 
     def configure_widgets(self):
+        #adj settings are (value, min, max, change, 0, 0)
         self.builder.get_object('material-number').hide()
         self.builder.get_object('material-number-label').hide()
         self.builder.get_object('material-name').hide()
@@ -244,6 +245,8 @@ class HandlerClass:
         self.builder.get_object('puddle-jump-delay').set_digits(2)
         self.builder.get_object('puddle-jump-delay-adj').configure(0,0,9,0.01,0,0)
         self.builder.get_object('thc-enable').set_active(1)
+        self.builder.get_object('thc-delay').set_digits(1)
+        self.builder.get_object('thc-delay-adj').configure(0,0,9,0.1,0,0)
         self.builder.get_object('thc-threshold').set_digits(2)
         self.builder.get_object('thc-threshold-adj').configure(1,0.05,9,0.01,0,0)
         self.builder.get_object('material-number').set_digits(0)
@@ -282,6 +285,7 @@ class HandlerClass:
                 self.builder.get_object('kerf-frame').set_shadow_type(gtk.SHADOW_OUT)
                 self.builder.get_object('pid-p-gain-adj').configure(self.builder.get_object('pid-p-gain-adj').get_value(),1,maxPidP,1,0,0)
                 self.builder.get_object('pid-p-label').set_text('Speed (PID P)')
+                self.builder.get_object('delay-box').show()
                 self.builder.get_object('threshold-box').show()
                 self.builder.get_object('volts-box').show()
             elif mode == 1:
@@ -291,6 +295,7 @@ class HandlerClass:
                 self.builder.get_object('kerf-frame').set_shadow_type(gtk.SHADOW_OUT)
                 self.builder.get_object('pid-p-gain-adj').configure(self.builder.get_object('pid-p-gain-adj').get_value(),1,maxPidP,1,0,0)
                 self.builder.get_object('pid-p-label').set_text('Speed (PID P)')
+                self.builder.get_object('delay-box').show()
                 self.builder.get_object('threshold-box').show()
                 self.builder.get_object('volts-box').show()
             elif mode == 2:
@@ -300,6 +305,7 @@ class HandlerClass:
                 self.builder.get_object('kerf-frame').set_shadow_type(gtk.SHADOW_NONE)
                 self.builder.get_object('pid-p-gain-adj').configure(self.builder.get_object('pid-p-gain-adj').get_value(),1,100,1,0,0)
                 self.builder.get_object('pid-p-label').set_text('Speed (%)')
+                self.builder.get_object('delay-box').hide()
                 self.builder.get_object('threshold-box').hide()
                 self.builder.get_object('volts-box').hide()
             else:

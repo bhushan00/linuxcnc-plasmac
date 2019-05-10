@@ -27,6 +27,7 @@
   <object class="GtkAdjustment" id="pierce-height-adj"/>
   <object class="GtkAdjustment" id="puddle-jump-delay-adj"/>
   <object class="GtkAdjustment" id="puddle-jump-height-adj"/>
+  <object class="GtkAdjustment" id="thc-delay-adj"/>
   <object class="GtkAdjustment" id="thc-threshold-adj"/>
   <object class="GtkWindow" id="window1">
     <property name="can_focus">False</property>
@@ -444,8 +445,8 @@ set to 0 to disable</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="has_tooltip">True</property>
-                                <property name="tooltip_text" translatable="yes">tool number
-NOTE: changing this manually will not change the tool, just the parameters</property>
+                                <property name="tooltip_text" translatable="yes">material number
+</property>
                                 <property name="max_length">5</property>
                                 <property name="invisible_char">●</property>
                                 <property name="xalign">1</property>
@@ -546,6 +547,8 @@ NOTE: changing this manually will not change the tool, just the parameters</prop
                                 <property name="width_request">205</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
+                                <property name="tooltip_text" translatable="yes">material number and material name
+</property>
                                 <property name="model">materials</property>
                                 <signal name="changed" handler="on_material_changed" swapped="no"/>
                                 <child>
@@ -565,7 +568,7 @@ NOTE: changing this manually will not change the tool, just the parameters</prop
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="has_tooltip">True</property>
-                                <property name="tooltip_text" translatable="yes">tool name
+                                <property name="tooltip_text" translatable="yes">material name
 </property>
                                 <property name="xalign">0</property>
                                 <property name="xpad">2</property>
@@ -583,8 +586,8 @@ NOTE: changing this manually will not change the tool, just the parameters</prop
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="has_tooltip">True</property>
-                                <property name="tooltip_text" translatable="yes">tool number
-NOTE: changing this manually will not change the tool, just the parameters</property>
+                                <property name="tooltip_text" translatable="yes">material number
+</property>
                                 <property name="xalign">0</property>
                                 <property name="xpad">2</property>
                                 <property name="label" translatable="yes">Material Number</property>
@@ -704,7 +707,7 @@ Note: this also saves current cut parameters as the default</property>
                           <object class="GtkTable" id="table2">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
-                            <property name="n_rows">6</property>
+                            <property name="n_rows">7</property>
                             <property name="n_columns">3</property>
                             <property name="column_spacing">2</property>
                             <property name="row_spacing">2</property>
@@ -816,8 +819,8 @@ turn off to use cut volts from parameters</property>
                               </object>
                               <packing>
                                 <property name="right_attach">3</property>
-                                <property name="top_attach">2</property>
-                                <property name="bottom_attach">3</property>
+                                <property name="top_attach">3</property>
+                                <property name="bottom_attach">4</property>
                               </packing>
                             </child>
                             <child>
@@ -870,8 +873,8 @@ for mode 3 this is the percentage of max velocity used for THC</property>
                               </object>
                               <packing>
                                 <property name="right_attach">3</property>
-                                <property name="top_attach">3</property>
-                                <property name="bottom_attach">4</property>
+                                <property name="top_attach">4</property>
+                                <property name="bottom_attach">5</property>
                               </packing>
                             </child>
                             <child>
@@ -888,8 +891,8 @@ for mode 3 this is the percentage of max velocity used for THC</property>
                               <packing>
                                 <property name="left_attach">2</property>
                                 <property name="right_attach">3</property>
-                                <property name="top_attach">4</property>
-                                <property name="bottom_attach">5</property>
+                                <property name="top_attach">5</property>
+                                <property name="bottom_attach">6</property>
                               </packing>
                             </child>
                             <child>
@@ -908,8 +911,8 @@ for mode 3 this is the percentage of max velocity used for THC</property>
                               <packing>
                                 <property name="left_attach">1</property>
                                 <property name="right_attach">2</property>
-                                <property name="top_attach">4</property>
-                                <property name="bottom_attach">5</property>
+                                <property name="top_attach">5</property>
+                                <property name="bottom_attach">6</property>
                                 <property name="x_options">GTK_FILL</property>
                               </packing>
                             </child>
@@ -927,8 +930,8 @@ for mode 3 this is the percentage of max velocity used for THC</property>
                               <packing>
                                 <property name="left_attach">2</property>
                                 <property name="right_attach">3</property>
-                                <property name="top_attach">5</property>
-                                <property name="bottom_attach">6</property>
+                                <property name="top_attach">6</property>
+                                <property name="bottom_attach">7</property>
                               </packing>
                             </child>
                             <child>
@@ -947,8 +950,8 @@ for mode 3 this is the percentage of max velocity used for THC</property>
                               <packing>
                                 <property name="left_attach">1</property>
                                 <property name="right_attach">2</property>
-                                <property name="top_attach">5</property>
-                                <property name="bottom_attach">6</property>
+                                <property name="top_attach">6</property>
+                                <property name="bottom_attach">7</property>
                               </packing>
                             </child>
                             <child>
@@ -958,8 +961,8 @@ for mode 3 this is the percentage of max velocity used for THC</property>
                                 <property name="can_focus">False</property>
                               </object>
                               <packing>
-                                <property name="top_attach">4</property>
-                                <property name="bottom_attach">5</property>
+                                <property name="top_attach">5</property>
+                                <property name="bottom_attach">6</property>
                               </packing>
                             </child>
                             <child>
@@ -969,8 +972,8 @@ for mode 3 this is the percentage of max velocity used for THC</property>
                                 <property name="can_focus">False</property>
                               </object>
                               <packing>
-                                <property name="top_attach">5</property>
-                                <property name="bottom_attach">6</property>
+                                <property name="top_attach">6</property>
+                                <property name="bottom_attach">7</property>
                               </packing>
                             </child>
                             <child>
@@ -1034,6 +1037,58 @@ for mode 3 this is the percentage of max velocity used for THC</property>
                               </object>
                               <packing>
                                 <property name="right_attach">3</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkHBox" id="delay-box">
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                                <child>
+                                  <object class="HAL_SpinButton" id="thc-delay">
+                                    <property name="width_request">75</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="has_tooltip">True</property>
+                                    <property name="tooltip_text" translatable="yes">delay from start of cut until THC is active in seconds</property>
+                                    <property name="max_length">5</property>
+                                    <property name="invisible_char">●</property>
+                                    <property name="xalign">1</property>
+                                    <property name="invisible_char_set">True</property>
+                                    <property name="primary_icon_activatable">False</property>
+                                    <property name="secondary_icon_activatable">False</property>
+                                    <property name="primary_icon_sensitive">True</property>
+                                    <property name="secondary_icon_sensitive">True</property>
+                                    <property name="adjustment">thc-delay-adj</property>
+                                    <property name="wrap">True</property>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">True</property>
+                                    <property name="fill">True</property>
+                                    <property name="position">0</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkLabel" id="thc-delay-label">
+                                    <property name="width_request">128</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                    <property name="has_tooltip">True</property>
+                                    <property name="tooltip_text" translatable="yes">delay from start of cut until THC is active in seconds</property>
+                                    <property name="xalign">0</property>
+                                    <property name="xpad">2</property>
+                                    <property name="label" translatable="yes">Delay</property>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">True</property>
+                                    <property name="fill">True</property>
+                                    <property name="position">1</property>
+                                  </packing>
+                                </child>
+                              </object>
+                              <packing>
+                                <property name="right_attach">3</property>
+                                <property name="top_attach">2</property>
+                                <property name="bottom_attach">3</property>
                               </packing>
                             </child>
                           </object>

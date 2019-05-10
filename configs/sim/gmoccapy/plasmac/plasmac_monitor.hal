@@ -4,8 +4,10 @@ net plasmac:arc-voltage-out         plasmac.arc-voltage-out =>  plasmac_monitor.
 net plasmac:breakaway-switch-out                            =>  plasmac_monitor.breakaway-switch
 net plasmac:cornerlock-is-locked                            =>  plasmac_monitor.led-corner-lock
 net plasmac:float-switch-out                                =>  plasmac_monitor.float-switch
+net plasmac:kerfcross-is-locked                             =>  plasmac_monitor.led-kerf-lock
 net plasmac:led-down                                        =>  plasmac_monitor.led-down
 net plasmac:led-up                                          =>  plasmac_monitor.led-up
 net plasmac:ohmic-probe-out                                 =>  plasmac_monitor.ohmic-probe
 net plasmac:torch-on                                        =>  plasmac_monitor.torch-on
+net plasmac:thc_active              plasmac.thc-active      =>  plasmac_monitor.thc-active
 

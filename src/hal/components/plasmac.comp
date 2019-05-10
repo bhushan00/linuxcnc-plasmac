@@ -6,6 +6,8 @@ A plasma cutting table control component for use with the linuxcnc master branch
 
 .I VERSIONS:
 .br
+V0.46 - 2019/05/10 - add THC delay
+.br
 V0.45 - 2019/05/10 - use thc enable to set IHS skip type
 .br
 V0.44 - 2019/04/30 - invert and modify IHS skip types
@@ -313,6 +315,7 @@ pin in  float   setup_feed_rate             "feed rate for moves to pierce and c
 pin in  float   skip_ihs_distance           "skip IHS if less than this distance from last cut";
 pin in  bit     spindle_on                  "start a new cut, connect to spindle.0.on";
 pin in  bit     thc_enable                  "enable/disable thc and set the IHS skip type";
+pin in  float   thc_delay                   "delay from start of cut to THC enable (seconds)";
 pin in  float   thc_feed_rate               "maximum feed rate for thc (machine units per minute)";
 pin in  float   thc_threshold               "thc threshold (volts), changes below this have no effect";
 pin in  bit     torch_enable                "enable torch";
@@ -344,6 +347,7 @@ pin out bit     program_run                 "run the currently loaded program, c
 pin out bit     program_stop                "stop current program, connect to halui.program.stop";
 pin out bit     safe_height_is_limited      "safe height is limited indicator";
 pin out s32     state_out                   "current state output";
+pin out bit     thc_active                  "thc is active indicator";
 pin out bit     torch_on                    "turn torch on, connect to your torch on input";
 
 /* VARIABLES */
@@ -395,7 +399,10 @@ variable float  safe_min;                   /* minimum safe height allowed */
 variable float  safe_preferred;             /* preferred safe height offset */
 variable float  safe_target;                /* safe height target offset */
 variable float  target_sensed;              /* sensed top of stock */
-variable float  target_volts[4];            /* target voltage for thc, set by arc voltage at cut height */
+variable int    target_samples = 6;         /* number of samples for setting target_volts */
+variable float  target_total;               /* total voltage of samples for setting target_volts */
+variable float  target_volts;               /* target voltage for thc, set by arc voltage at cut height */
+variable float  thc_delay_timer;            /* thc delay timer */
 variable int    thc_velocity;               /* velocity for thc moves */
 variable float  tolerance;                  /* tolerance when comparing axis z height */
 variable float  torch_off_timer;            /* arc off delay timer */
@@ -523,7 +530,7 @@ FUNCTION(_) {
                 torch_on = FALSE;
             }
             stop_type = WAIT;
-            if(thc_enable && ((!use_auto_volts || (use_auto_volts && target_volts[0])) || !torch_enable)){
+            if(thc_enable && ((!use_auto_volts || (use_auto_volts && target_volts)) || !torch_enable)){
                 axis_x_finish = axis_x_position;
                 axis_y_finish = axis_y_position;
             }else{
@@ -968,6 +975,7 @@ FUNCTION(_) {
                     requested_feed_rate = requested_velocity;
                 }
                 feed_hold = FALSE;
+                thc_delay_timer = thc_delay;
                 state = CUTTING;
             }
             break;
@@ -980,101 +988,108 @@ FUNCTION(_) {
             if(torch_enable){
                 /* thc control by arc voltage */
                 if(mode < 2){
-                    /* set target voltage */
-                    if(target_volts[0] == 0){
-                        /* wait until velocity is at least 99% of requested velocity before sampling arc voltage */
-                        if(use_auto_volts){
-                            if(current_velocity * 60 > requested_feed_rate * feed_override * 0.99){
-                                count += 1;
-                                target_volts[count] = arc_voltage;
-                                if(count == 3){
-                                    target_volts[0] = (target_volts[1] + target_volts[2] + target_volts[3]) / 3;
-                                    last_arc_voltage = target_volts[0];
+                    thc_delay_timer -= fperiod;
+                    if(thc_delay_timer <= 0){
+                        /* set target voltage */
+                        if(target_volts == 0){
+                            if(use_auto_volts){
+                                /* wait until velocity is at least 99.9% of requested velocity before sampling arc voltage */
+                                if(current_velocity * 60 > requested_feed_rate * feed_override * 0.999){
+                                    count += 1;
+                                    target_total += arc_voltage;
+                                    if(count == target_samples){
+                                        target_volts = target_total / target_samples;
+                                        last_arc_voltage = target_volts;
+                                        thc_active = TRUE;
+                                        count = 0;
+                                        target_total = 0;
+                                    }
                                 }
+                                if(target_volts == 0){
+                                    cornerlock_is_locked = TRUE;
+                                }else{
+                                    cornerlock_is_locked = FALSE;
+                                }
+                            }else{
+                                target_volts = cut_volts;
                             }
-                            if(target_volts[0] == 0){
-                                cornerlock_is_locked = TRUE;
+                        /* height override setup*/
+                        }else if(fabs(height_override - height_ovr_old) > 0.05){
+                            height_ovr_counts -= (height_override - height_ovr_old) / 10 * units_per_mm / offset_scale;
+                            height_ovr_old = height_override;
+                        /* height override z motion */
+                        }else if(height_ovr_counts != 0){
+                            if((setup_velocity) < height_ovr_counts){
+                                offset_counts -= setup_velocity;
+                                height_ovr_counts -= setup_velocity;
+                            }else{
+                                offset_counts -= height_ovr_counts;
+                                height_ovr_counts = 0;
+                            }
+                        /* torch height control */
+                        }else if(thc_enable){
+                            /* lock thc if velocity < requested velocity * cornerlock threshold percentage */
+                            if(cornerlock_enable){
+                                if(current_velocity * 60 < requested_feed_rate * feed_override * cornerlock_threshold * 0.01){
+                                    cornerlock_is_locked = TRUE;
+                                }else if(cornerlock_is_locked && current_velocity * 60 > requested_feed_rate * feed_override * 0.99){
+                                    cornerlock_is_locked = FALSE;
+                                }
                             }else{
                                 cornerlock_is_locked = FALSE;
                             }
-                        }else{
-                            target_volts[0] = cut_volts;
-                        }
-                    /* height override setup*/
-                    }else if(fabs(height_override - height_ovr_old) > 0.05){
-                        height_ovr_counts -= (height_override - height_ovr_old) / 10 * units_per_mm / offset_scale;
-                        height_ovr_old = height_override;
-                    /* height override z motion */
-                    }else if(height_ovr_counts != 0){
-                        if((setup_velocity) < height_ovr_counts){
-                            offset_counts -= setup_velocity;
-                            height_ovr_counts -= setup_velocity;
-                        }else{
-                            offset_counts -= height_ovr_counts;
-                            height_ovr_counts = 0;
-                        }
-                    /* torch height control */
-                    }else if(thc_enable){
-                        /* lock thc if velocity < requested velocity * cornerlock threshold percentage */
-                        if(cornerlock_enable){
-                            if(current_velocity * 60 < requested_feed_rate * feed_override * cornerlock_threshold * 0.01){
-                                cornerlock_is_locked = TRUE;
-                            }else if(cornerlock_is_locked && current_velocity * 60 > requested_feed_rate * feed_override * 0.99){
-                                cornerlock_is_locked = FALSE;
+                            /* lock thc if voltage change > kerfcross threshold volts */
+                            if(kerfcross_enable == TRUE && last_arc_voltage > 0 && arc_voltage > last_arc_voltage + kerfcross_threshold){
+                                kerfcross_is_locked = TRUE;
+                            }else{
+                                kerfcross_is_locked = FALSE;
+                                last_arc_voltage = arc_voltage;
                             }
-                        }else{
-                            cornerlock_is_locked = FALSE;
-                        }
-                        /* lock thc if voltage change > kerfcross threshold volts */
-                        if(kerfcross_enable == TRUE && last_arc_voltage > 0 && arc_voltage > last_arc_voltage + kerfcross_threshold){
-                            kerfcross_is_locked = TRUE;
-                        }else{
-                            kerfcross_is_locked = FALSE;
-                            last_arc_voltage = arc_voltage;
-                        }
-                        /* do thc if ok to go */
-                        if(!cornerlock_is_locked && !kerfcross_is_locked){
-                            pid_error_now = (target_volts[0] + height_override - arc_voltage) * 0.1;
-                            if(fabs(pid_error_now) < fabs(thc_threshold * 0.1)){
-                                pid_error_now = 0;
-                            }
-                            pid_output = pid_error_now * pid_p_gain;
-                            pid_output += pid_error_now * pid_i_gain * fperiod;
-                            pid_output += (pid_error_now - pid_error_old) * pid_d_gain / fperiod;
-                            pid_error_old = pid_error_now;
-                            if(pid_output > thc_velocity){
-                                pid_output = thc_velocity;
-                            }else if(pid_output < -thc_velocity){
-                                pid_output = -thc_velocity;
-                            }
-                            /* if we hit a soft limit during thc*/
-                            if(offset_counts + pid_output <= offset_min || offset_counts + pid_output >= offset_max){
-                                torch_on = FALSE;
-                                stop_type = PAUSE;
-                                program_pause = TRUE;
-                                if(offset_counts + pid_output <= offset_min){
-                                    rtapi_print_msg(RTAPI_MSG_ERR,"bottom limit reached while THC moving down.\n"
-                                                                  "program is paused...");
-                                }else{
-                                    rtapi_print_msg(RTAPI_MSG_ERR,"top limit reached while THC moving up.\n"
-                                                                  "program is paused...");
+                            /* do thc if ok to go */
+                            if(!cornerlock_is_locked && !kerfcross_is_locked){
+                                pid_error_now = (target_volts + height_override - arc_voltage) * 0.1;
+                                if(fabs(pid_error_now) < fabs(thc_threshold * 0.1)){
+                                    pid_error_now = 0;
                                 }
-                                pid_output = 0;
-                                state = MAX_HEIGHT;
+                                pid_output = pid_error_now * pid_p_gain;
+                                pid_output += pid_error_now * pid_i_gain * fperiod;
+                                pid_output += (pid_error_now - pid_error_old) * pid_d_gain / fperiod;
+                                pid_error_old = pid_error_now;
+                                if(pid_output > thc_velocity){
+                                    pid_output = thc_velocity;
+                                }else if(pid_output < -thc_velocity){
+                                    pid_output = -thc_velocity;
+                                }
+                                /* if we hit a soft limit during thc*/
+                                if(offset_counts + pid_output <= offset_min || offset_counts + pid_output >= offset_max){
+                                    torch_on = FALSE;
+                                    stop_type = PAUSE;
+                                    program_pause = TRUE;
+                                    thc_active = FALSE;
+                                    if(offset_counts + pid_output <= offset_min){
+                                        rtapi_print_msg(RTAPI_MSG_ERR,"bottom limit reached while THC moving down.\n"
+                                                                      "program is paused...");
+                                    }else{
+                                        rtapi_print_msg(RTAPI_MSG_ERR,"top limit reached while THC moving up.\n"
+                                                                      "program is paused...");
+                                    }
+                                    pid_output = 0;
+                                    state = MAX_HEIGHT;
 
+                                }
+                                offset_counts += pid_output;
                             }
-                            offset_counts += pid_output;
                         }
+                        if(pid_output > 0){
+                            led_up = TRUE;
+                        }else if((pid_output) < 0){
+                            led_down = TRUE;
+                        }else{
+                            led_down = FALSE;
+                            led_up = FALSE;
+                        }
+                        pid_output = 0;
                     }
-                    if(pid_output > 0){
-                        led_up = TRUE;
-                    }else if((pid_output) < 0){
-                        led_down = TRUE;
-                    }else{
-                        led_down = FALSE;
-                        led_up = FALSE;
-                    }
-                    pid_output = 0;
                 }else{ /* thc control by move-up and move-down inputs (no kerf crossing in this mode) */
                     if(thc_enable){
                         /* lock thc if velocity < requested velocity * cornerlock threshold percentage */
@@ -1167,7 +1182,7 @@ FUNCTION(_) {
                     if(stop_type == WAIT){
                         feed_hold = FALSE;
                     }
-                    /* do height override here for for remainder of job */
+                    /* do height override here for remainder of job */
                     height_ovr_old = 0;
                     state = FINISH;
                 }
@@ -1175,7 +1190,8 @@ FUNCTION(_) {
             break;
         case FINISH:
             /* clean up and return to idle state */
-            target_volts[0] = 0;
+            target_volts = 0;
+            thc_active = FALSE;
             cornerlock_is_locked = FALSE;
             kerfcross_is_locked = FALSE;
             led_down = FALSE;
