@@ -6,6 +6,8 @@ A plasma cutting table control component for use with the linuxcnc master branch
 
 .I VERSIONS:
 .br
+V0.47 - 2019/05/10 - fix THC active indicator
+.br
 V0.46 - 2019/05/10 - add THC delay
 .br
 V0.45 - 2019/05/10 - use thc enable to set IHS skip type
@@ -1000,7 +1002,6 @@ FUNCTION(_) {
                                     if(count == target_samples){
                                         target_volts = target_total / target_samples;
                                         last_arc_voltage = target_volts;
-                                        thc_active = TRUE;
                                         count = 0;
                                         target_total = 0;
                                     }
@@ -1028,6 +1029,7 @@ FUNCTION(_) {
                             }
                         /* torch height control */
                         }else if(thc_enable){
+                            thc_active = TRUE;
                             /* lock thc if velocity < requested velocity * cornerlock threshold percentage */
                             if(cornerlock_enable){
                                 if(current_velocity * 60 < requested_feed_rate * feed_override * cornerlock_threshold * 0.01){
