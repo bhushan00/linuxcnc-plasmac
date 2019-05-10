@@ -1,4 +1,4 @@
-;lines test for skip ihs type 0
+;test for skip ihs with thc disabled
 
 G20
 G64 P0.0004
@@ -10,19 +10,19 @@ M3S1
 G1 X5
 M5
 
-G0 Y2
-M3S1
-G1 X1
-M5
-
-G0 Y3
+G0 X1 Y2
 M3S1
 G1 X5
 M5
 
-G0 Y4
+G0 X1 Y3
 M3S1
-G1 X1
+G1 X5
+M5
+
+G0 X1 Y4
+M3S1
+G1 X5
 M5
 
 G0 X0 Y0
