@@ -4,12 +4,6 @@ net plasmac:axis-max-limit          ini.z.max_limit                     =>  plas
 net plasmac:axis-min-limit          ini.z.min_limit                     =>  plasmac.axis-z-min-limit
 
 #***** run page ********************************************************
-# inputs
-net plasmac:cornerlock-is-locked    plasmac.cornerlock-is-locked        =>  plasmac_run.cornerlock-is-locked
-net plasmac:kerfcross-is-locked     plasmac.kerfcross-is-locked         =>  plasmac_run.kerfcross-is-locked
-net plasmac:led-down                plasmac.led-down                    =>  plasmac_run.led-down
-net plasmac:led-up                  plasmac.led-up                      =>  plasmac_run.led-up
-
 # outputs
 net plasmac:cornerlock-enable       plasmac_run.cornerlock-enable       =>  plasmac.cornerlock-enable
 net plasmac:cornerlock-threshold    plasmac_run.cornerlock-threshold-f  =>  plasmac.cornerlock-threshold

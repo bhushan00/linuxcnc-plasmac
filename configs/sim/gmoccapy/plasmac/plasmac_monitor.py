@@ -33,12 +33,18 @@ class HandlerClass:
             if mode == 0:
                 self.builder.get_object('arc-voltage').show()
                 self.builder.get_object('arc-voltage-label').show()
+                self.builder.get_object('led-kerf-lock').show()
+                self.builder.get_object('kerf-lock-label').show()
             elif mode == 1:
                 self.builder.get_object('arc-voltage').show()
                 self.builder.get_object('arc-voltage-label').show()
+                self.builder.get_object('led-kerf-lock').show()
+                self.builder.get_object('kerf-lock-label').show()
             elif mode == 2:
                 self.builder.get_object('arc-voltage').hide()
                 self.builder.get_object('arc-voltage-label').hide()
+                self.builder.get_object('led-kerf-lock').hide()
+                self.builder.get_object('kerf-lock-label').hide()
             else:
                 pass
             self.oldMode = mode
