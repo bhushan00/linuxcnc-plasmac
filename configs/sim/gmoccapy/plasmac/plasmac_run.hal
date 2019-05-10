@@ -23,5 +23,6 @@ net plasmac:pierce-delay            plasmac_run.pierce-delay-f          =>  plas
 net plasmac:pierce-height           plasmac_run.pierce-height-f         =>  plasmac.pierce-height
 net plasmac:puddle-jump-delay       plasmac_run.puddle-jump-delay-f     =>  plasmac.puddle-jump-delay
 net plasmac:puddle-jump-height      plasmac_run.puddle-jump-height-f    =>  plasmac.puddle-jump-height
+#net plasmac:thc-enable              plasmac_run.thc-enable
 net plasmac:thc-threshold           plasmac_run.thc-threshold-f         =>  plasmac.thc-threshold
 net plasmac:use-auto-volts          plasmac_run.use-auto-volts          =>  plasmac.use-auto-volts

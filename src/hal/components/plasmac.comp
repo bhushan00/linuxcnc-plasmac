@@ -6,8 +6,6 @@ A plasma cutting table control component for use with the linuxcnc master branch
 
 .I VERSIONS:
 .br
-V0.45 - 2019/05/02 - use thc_enable to set skip IHS type
-.br
 V0.44 - 2019/04/30 - invert and modify IHS skip types
 .br
 V0.43 - 2019/04/30 - add IHS skip types
@@ -307,8 +305,9 @@ pin in  float   restart_delay               "time from arc failure till next res
 pin in  float   safe_height                 "requested safe traverse height (machine units)";
 pin in  float   setup_feed_rate             "feed rate for moves to pierce and cut heights (machine units per minute)";
 pin in  float   skip_ihs_distance           "skip IHS if less than this distance from last cut";
+pin in  bit     skip_ihs_type               "type of IHS skip, 0 = from end of last cut, 1 = from last successful probe";
 pin in  bit     spindle_on                  "start a new cut, connect to spindle.0.on";
-pin in  bit     thc_enable                  "enable/disable thc and set IHS skip type (0 = if start near last good probe, 1 = if start near end of last";
+pin in  bit     thc_enable                  "enable thc";
 pin in  float   thc_feed_rate               "maximum feed rate for thc (machine units per minute)";
 pin in  float   thc_threshold               "thc threshold (volts), changes below this have no effect";
 pin in  bit     torch_enable                "enable torch";
@@ -611,7 +610,7 @@ FUNCTION(_) {
                     }else{
                         probe_testing = TRUE;
                     }
-                    if(!thc_enable && first_cut_finished){
+                    if(!skip_ihs_type && first_cut_finished){
                         cut_offset = sqrt(pow(axis_x_start - axis_x_position, 2) + pow(axis_y_start - axis_y_position, 2));
                     }else if((axis_x_finish || axis_y_finish) && first_cut_finished){
                         cut_offset = sqrt(pow(axis_x_finish - axis_x_position, 2) + pow(axis_y_finish - axis_y_position, 2));
@@ -619,7 +618,7 @@ FUNCTION(_) {
                         axis_y_finish = 0;
                     }
                     if(cut_offset && cut_offset < skip_ihs_distance){
-                        if(thc_enable){
+                        if(skip_ihs_type){
                             cut_target = cut_target + cut_height_last - cut_height_first;
                             pierce_target = pierce_target + cut_height_last - cut_height_first;
                             puddle_jump_target = puddle_jump_target + cut_height_last - cut_height_first;
