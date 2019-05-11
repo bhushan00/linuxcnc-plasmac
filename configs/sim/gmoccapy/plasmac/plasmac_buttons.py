@@ -81,26 +81,19 @@ class HandlerClass:
                     command = command.strip().strip('%') + '&'
                     Popen(command,stdout=PIPE,stderr=PIPE, shell=True)
                 else:
-                    if '[' in command:
+                    if '{' in command:
                         newCommand = subCommand = ''
                         for char in command:
-                            if char == '[':
-                                subCommand += char
-                            elif char == ']':
-                                subCommand += ' '
-                            elif subCommand.startswith('[') and char != ' ':
-                                subCommand += char
-                            elif subCommand.startswith('[') and char == ' ':
-                                f1, f2 = subCommand.split()
-                                newCommand += self.i.find(f1[1:],f2)
-                                newCommand += ' '
+                            if char == '{':
+                                subCommand = ':'
+                            elif char == '}':
+                                f1, f2 = subCommand.replace(':',"").split()
+                                newCommand += self.i.find(f1,f2)
                                 subCommand = ''
+                            elif subCommand.startswith(':'):
+                                subCommand += char
                             else:
                                 newCommand += char
-                        if subCommand.startswith('['):
-                            f1, f2 = subCommand.split()
-                            newCommand += self.i.find(f1[1:],f2)
-                            newCommand += ' '
                         command = newCommand
                     self.s.poll()
                     if not self.s.estop and self.s.enabled and self.s.homed and (self.s.interp_state == linuxcnc.INTERP_IDLE):
