@@ -26,6 +26,7 @@ import gobject
 import hal
 import gladevcp
 from subprocess import Popen,PIPE
+import time
 
 class HandlerClass:
 
@@ -45,35 +46,39 @@ class HandlerClass:
             self.torchButton.modify_bg(gtk.STATE_ACTIVE, gtk.gdk.color_parse('green'))
             self.torchButton.modify_bg(gtk.STATE_SELECTED, gtk.gdk.color_parse('green'))
 
-    def on_button1_pressed(self,event):
-        self.user_button_pressed(self.iniButtonCode[1])
+    def on_button1_pressed(self,button):
+        self.user_button_pressed(button.get_name(),self.iniButtonCode[1])
 
-    def on_button1_released(self,event):
-        self.user_button_released(self.iniButtonCode[1])
+    def on_button1_released(self,button):
+        self.user_button_released(button.get_name(),self.iniButtonCode[1])
 
-    def on_button2_pressed(self,event):
-        self.user_button_pressed(self.iniButtonCode[2])
+    def on_button2_pressed(self,button):
+        self.user_button_pressed(button.get_name(),self.iniButtonCode[2])
 
-    def on_button2_released(self,event):
-        self.user_button_released(self.iniButtonCode[2])
+    def on_button2_released(self,button):
+        self.user_button_released(button.get_name(),self.iniButtonCode[2])
 
-    def on_button3_pressed(self,event):
-        self.user_button_pressed(self.iniButtonCode[3])
+    def on_button3_pressed(self,button):
+        self.user_button_pressed(button.get_name(),self.iniButtonCode[3])
 
-    def on_button3_released(self,event):
-        self.user_button_released(self.iniButtonCode[3])
+    def on_button3_released(self,button):
+        self.user_button_released(button.get_name(),self.iniButtonCode[3])
 
-    def on_button4_pressed(self,event):
-        self.user_button_pressed(self.iniButtonCode[4])
+    def on_button4_pressed(self,button):
+        self.user_button_pressed(button.get_name(),self.iniButtonCode[4])
 
-    def on_button4_released(self,event):
-        self.user_button_released(self.iniButtonCode[4])
+    def on_button4_released(self,button):
+        self.user_button_released(button.get_name(),self.iniButtonCode[4])
 
-    def user_button_pressed(self, commands):
+    def user_button_pressed(self, button, commands):
         if not commands: return
         if commands.lower() == 'ohmic-test':
             hal.set_p('plasmac.ohmic-test','1')
-        elif commands.lower() == 'probe-test':
+        elif 'probe-test' in commands.lower():
+            self.probePressed = True
+            self.probeButton = button
+            if commands.lower().replace('probe-test','').strip():
+                self.probeTimer = float(commands.lower().replace('probe-test','').strip()) + time.time()
             hal.set_p('plasmac.probe-test','1')
         else:
             for command in commands.split('\\'):
@@ -109,12 +114,15 @@ class HandlerClass:
                         self.c.mode(mode)
                         self.c.wait_complete()
 
-    def user_button_released(self, commands):
+    def user_button_released(self, button, commands):
+        self.probePressed = False
         if not commands: return
         if commands.lower() == 'ohmic-test':
             hal.set_p('plasmac.ohmic-test','0')
-        elif commands.lower() == 'probe-test':
-            hal.set_p('plasmac.probe-test','0')
+        elif 'probe-test' in commands.lower():
+            if not self.probeTimer and button == self.probeButton:
+                hal.set_p('plasmac.probe-test','0')
+                self.probeButton = ''
 
     def set_theme(self):
         theme = gtk.settings_get_default().get_property('gtk-theme-name')
@@ -143,17 +151,22 @@ class HandlerClass:
             isIdleHomed = False
             isIdleOn = False 
         for n in range(1,5):
-            if self.iniButtonCode[n] in ['ohmic-test']:
+            if 'ohmic-test' in self.iniButtonCode[n]: # or 'probe-test' in self.iniButtonCode[n]:
                 if isIdleOn or hal.get_value('halui.program.is-paused'):
                     self.builder.get_object('button' + str(n)).set_sensitive(True)
                 else:
                     self.builder.get_object('button' + str(n)).set_sensitive(False)
-            elif not self.iniButtonCode[n] in ['ohmic-test'] and not self.iniButtonCode[n].startswith('%'):
+#            elif not self.iniButtonCode[n] in ['ohmic-test'] and not self.iniButtonCode[n].startswith('%'):
+            elif not self.iniButtonCode[n].startswith('%'):
                 if isIdleHomed:
                     self.builder.get_object('button' + str(n)).set_sensitive(True)
                 else:
                     self.builder.get_object('button' + str(n)).set_sensitive(False)
-
+        if self.probeTimer:
+            if time.time() >= self.probeTimer:
+                self.probeTimer = 0
+                if not self.probePressed:
+                    hal.set_p('plasmac.probe-test','0')
         return True
 
     def __init__(self, halcomp,builder,useropts):
@@ -172,6 +185,9 @@ class HandlerClass:
         self.torchButton.modify_bg(gtk.STATE_SELECTED, gtk.gdk.color_parse('red'))
         self.iniButtonName = ['Names']
         self.iniButtonCode = ['Codes']
+        self.probePressed = False
+        self.probeTimer = 0
+        self.probeButton = ''
         for button in range(1,5):
             bname = self.i.find('PLASMAC', 'BUTTON_' + str(button) + '_NAME') or '0'
             self.iniButtonName.append(bname)
