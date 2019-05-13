@@ -9,8 +9,6 @@ loadrt  plasmac
 addf    plasmac     servo-thread
 
 # inputs
-# the next line needs to be the joint associated with the Z axis
-net plasmac:axis-position        joint.3.pos-fb                  =>  plasmac.axis-z-position
 net plasmac:axis-x-position      axis.x.pos-cmd                  =>  plasmac.axis-x-position
 net plasmac:axis-y-position      axis.y.pos-cmd                  =>  plasmac.axis-y-position
 net plasmac:breakaway-switch-out debounce.0.1.out                =>  plasmac.breakaway
@@ -37,10 +35,18 @@ net plasmac:program-run          plasmac.program-run             =>  halui.progr
 net plasmac:program-stop         plasmac.program-stop            =>  halui.program.stop
 net plasmac:torch-on             plasmac.torch-on
 
-#***** SET THE FOLLOWING TO SUIT YOUR CONFIGURATION ********************
-# the following could be done here or added to your machine hal file
+#**************************************************************************************#
+#** SET THE FOLLOWING TO SUIT YOUR CONFIGURATION                                     **#
+#** IT IS STRONLY RECOMMENDED THAT YOU MOVE THE net plasmac:axis-position LINE       **#
+#** AND THE APPROPRIATE MODE SECTION TO YOUR MACHINE HAL FILE                        **#
+#** THEN EDIT THEM TO SUIT YOUR CONFIGURATION                                        **#
+#** THIS WILL PREVENT YOUR MACHINE CONNECTIONS BEING OVERWRITTEN BY A PLASMAC UPDATE **#
+#**************************************************************************************#
 
-# FOR MODE 0
+# the next line needs to be the joint associated with the Z axis
+net plasmac:axis-position        joint.3.pos-fb                  =>  plasmac.axis-z-position
+
+# FOR MODE 0 **************************************************************************#
 #net plasmac:arc-voltage-in      ***YOUR PLASMA ARC VOLTAGE***   =>  plasmac.arc-voltage-in
 #net plasmac:float-switch        ***YOUR FLOAT SWITCH***         =>  debounce.0.0.in
 #net plasmac:breakaway           ***YOUR BREAKAWAY SWITCH***     =>  debounce.0.1.in
@@ -48,7 +54,7 @@ net plasmac:torch-on             plasmac.torch-on
 #net plasmac:torch-on                                            =>  ***YOUR TORCH ON***
 #net plasmac:ohmic-enable        plasmac.ohmic-enable            =>  ***YOUR OHMIC PROBE ENABLING CIRCUIT***
 
-# FOR MODE 1
+# FOR MODE 1 **************************************************************************#
 #net plasmac:arc-voltage-in      ***YOUR PLASMA ARC VOLTAGE***   =>  plasmac.arc-voltage-in
 #net plasmac:arc-ok-in           ***YOUR PLASMA ARC OK***        =>  plasmac.arc-ok-in
 #net plasmac:float-switch        ***YOUR FLOAT SWITCH***         =>  debounce.0.0.in
@@ -57,7 +63,7 @@ net plasmac:torch-on             plasmac.torch-on
 #net plasmac:torch-on                                            =>  ***YOUR TORCH ON***
 #net plasmac:ohmic-enable        plasmac.ohmic-enable            =>  ***YOUR OHMIC PROBE ENABLING CIRCUIT***
 
-# FOR MODE 2
+# FOR MODE 2 **************************************************************************#
 #net plasmac:arc-ok-in           ***YOUR PLASMA ARC OK***        =>  plasmac.arc-ok-in
 #net plasmac:move-down           ***YOUR MOVE DOWN SIGNAL***     =>  plasmac.move-down
 #net plasmac:move-up             ***YOUR MOVE UP SIGNAL***       =>  plasmac.move-up
