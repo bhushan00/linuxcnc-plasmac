@@ -157,22 +157,22 @@ class HandlerClass:
         self.get_material()
         self.materialUpdate = False
 
-    def on_thc_on_toggled(self,button):
-        if button.get_active():
-            Popen(['halcmd unlinkp plasmac.thc-enable'], stdin=PIPE, shell=True)
-            time.sleep(0.05)
-            hal.set_p('plasmac.thc-enable','1')
-
     def on_thc_auto_toggled(self,button):
         if button.get_active():
-            hal.connect('plasmac.thc-enable','plasmac:thc-enable')
-            print 'AUTO'
+            self.builder.get_object('thc-enable').set_sensitive(True)
+            self.builder.get_object('thc-enable-label').set_text('THC Enable')
+
+    def on_thc_on_toggled(self,button):
+        if button.get_active():
+            self.thcEnable['enable-out'] = 1
+            self.builder.get_object('thc-enable').set_sensitive(False)
+            self.builder.get_object('thc-enable-label').set_text('THC ENABLED')
 
     def on_thc_off_toggled(self,button):
         if button.get_active():
-            Popen(['halcmd unlinkp plasmac.thc-enable'], stdin=PIPE, shell=True)
-            time.sleep(0.05)
-            hal.set_p('plasmac.thc-enable','0')
+            self.thcEnable['enable-out'] = 0
+            self.builder.get_object('thc-enable').set_sensitive(False)
+            self.builder.get_object('thc-enable-label').set_text('THC DISABLED')
 
     def on_material_changed(self,widget):
         if not self.getMaterials:
@@ -274,6 +274,8 @@ class HandlerClass:
             print '*** incorrect [TRAJ]LINEAR_UNITS in ini file'
 
     def periodic(self):
+        if self.builder.get_object('thc-auto').get_active():
+            self.thcEnable['enable-out'] = self.builder.get_object('thc-enable').get_active()
         mode = hal.get_value('plasmac.mode')
         units = hal.get_value('halui.machine.units-per-mm')
         maxPidP = self.thcFeedRate / units * 0.1
@@ -413,10 +415,9 @@ class HandlerClass:
         self.materialNumberPin.connect('value-changed', self.material_change_number_changed)
         self.materialChangePin = hal_glib.GPin(halcomp.newpin('material-change', hal.HAL_S32, hal.HAL_IN))
         self.materialChangePin.connect('value-changed', self.material_change_changed)
-        hal.new_sig('plasmac:thc-enable',hal.HAL_BIT)
-        hal.connect('plasmac_run.thc-enable','plasmac:thc-enable')
-        if self.builder.get_object('thc-auto').get_active():
-            hal.connect('plasmac.thc-enable','plasmac:thc-enable')
+        self.thcEnable = hal.component('plasmac_thc')
+        self.thcEnable.newpin('enable-out', hal.HAL_BIT, hal.HAL_OUT)
+        self.thcEnable.ready()
         self.thcFeedRate = (float(self.i.find('AXIS_Z', 'MAX_VELOCITY')) * \
                               float(self.i.find('AXIS_Z', 'OFFSET_AV_RATIO'))) * 60
         hal.set_p('plasmac.thc-feed-rate','%f' % (self.thcFeedRate))
