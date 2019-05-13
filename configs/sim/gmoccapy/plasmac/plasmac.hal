@@ -36,9 +36,8 @@ net plasmac:program-stop         plasmac.program-stop            =>  halui.progr
 net plasmac:torch-on             plasmac.torch-on
 
 #**************************************************************************************#
-#** FOR A WORKING CONFIG IT IS STRONLY RECOMMENDED THAT YOU MOVE THE                 **#
-#** 1: net plasmac:axis-position LINE                                                **#
-#** 2: APPROPRIATE MODE SECTION                                                      **#
+#** FOR A WORKING CONFIG IT IS STRONLY RECOMMENDED THAT YOU MOVE BOTH THE            **#
+#** net plasmac:axis-position LINE AND THE APPROPRIATE MODE SECTION                  **#
 #** TO YOUR MACHINE HAL FILE THEN EDIT THEM TO SUIT YOUR CONFIGURATION               **#
 #** THIS WILL PREVENT YOUR MACHINE CONNECTIONS BEING OVERWRITTEN BY A PLASMAC UPDATE **#
 #**************************************************************************************#
