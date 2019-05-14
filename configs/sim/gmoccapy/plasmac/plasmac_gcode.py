@@ -21,7 +21,7 @@ f = open(infile, 'r')
 
 for line in f:
     if 'm190' in line.lower():
-        first, last = line.lower().strip().split('p')
+        first, last = line.lower().strip().split('p',1)
         material = ''
         for mNumber in last.strip():
             if mNumber in '0123456789':
