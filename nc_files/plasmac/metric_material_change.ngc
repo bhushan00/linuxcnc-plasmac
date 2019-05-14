@@ -3,7 +3,6 @@
 G21
 G64 P0.01
 M52 P1 ;to enable reverse-run
-F#<_hal[plasmac.cut-feed-rate]> ; feed rate from cut parameters
 
 G0 X15 Y25
 M190 P1 ; tool #1
