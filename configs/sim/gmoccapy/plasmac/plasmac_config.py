@@ -67,6 +67,8 @@ class HandlerClass:
         if self.i.find('TRAJ', 'LINEAR_UNITS').lower() == 'mm':
             self.builder.get_object('float-switch-travel').set_digits(2)
             self.builder.get_object('float-switch-travel-adj').configure(1.5,0,9,0.01,0,0)
+            self.builder.get_object('height-per-volt').set_digits(3)
+            self.builder.get_object('height-per-volt-adj').configure(0.1,0.025,0.2,0.01,0,0)
             self.builder.get_object('probe-feed-rate').set_digits(0)
             self.builder.get_object('probe-feed-rate-adj').configure(1000,1,self.thcFeedRate,1,0,0)
             self.builder.get_object('probe-start-height').set_digits(0)
@@ -80,6 +82,8 @@ class HandlerClass:
         elif self.i.find('TRAJ', 'LINEAR_UNITS').lower() == 'inch':
             self.builder.get_object('float-switch-travel').set_digits(3)
             self.builder.get_object('float-switch-travel-adj').configure(0.06,0,1,0.001,0,0)
+            self.builder.get_object('height-per-volt').set_digits(4)
+            self.builder.get_object('height-per-volt-adj').configure(0.004,0.001,0.008,0.001,0,0)
             self.builder.get_object('probe-feed-rate').set_digits(1)
             self.builder.get_object('probe-feed-rate-adj').configure(40,0.1,self.thcFeedRate,.1,0,0)
             self.builder.get_object('probe-start-height').set_digits(2)
@@ -108,6 +112,7 @@ class HandlerClass:
                 self.builder.get_object('arc-voltage-scale-label').set_text('Voltage Scale')
                 self.builder.get_object('arc-voltage-offset').show()
                 self.builder.get_object('arc-voltage-offset-label').set_text('Voltage Offset')
+                self.builder.get_object('height-per-volt-box').show()
                 self.builder.get_object('pid-i-gain').show()
                 self.builder.get_object('pid-i-label').set_text('PID I GAIN')
                 self.builder.get_object('pid-d-gain').show()
@@ -121,6 +126,7 @@ class HandlerClass:
                 self.builder.get_object('arc-voltage-scale-label').set_text('Voltage -scale')
                 self.builder.get_object('arc-voltage-offset').show()
                 self.builder.get_object('arc-voltage-offset-label').set_text('Voltage -offset')
+                self.builder.get_object('height-per-volt-box').show()
                 self.builder.get_object('pid-i-gain').show()
                 self.builder.get_object('pid-i-label').set_text('PID I GAIN')
                 self.builder.get_object('pid-d-gain').show()
@@ -134,6 +140,7 @@ class HandlerClass:
                 self.builder.get_object('arc-voltage-scale-label').set_text('')
                 self.builder.get_object('arc-voltage-offset').hide()
                 self.builder.get_object('arc-voltage-offset-label').set_text('')
+                self.builder.get_object('height-per-volt-box').hide()
                 self.builder.get_object('pid-i-gain').hide()
                 self.builder.get_object('pid-i-label').set_text('')
                 self.builder.get_object('pid-d-gain').hide()
@@ -191,7 +198,7 @@ class HandlerClass:
                     if item in tmpDict:
                         self.builder.get_object(item).set_value(float(self.configDict.get(item)))
                     else:
-                        self.builder.get_object(item).set_value(0)
+                        #self.builder.get_object(item).set_value(0)
                         print '***', item, 'missing from', self.configFile
                 elif isinstance(self.builder.get_object(item), gladevcp.hal_widgets.HAL_CheckButton):
                     if item in tmpDict:
@@ -199,12 +206,12 @@ class HandlerClass:
                     else:
                         self.builder.get_object(item).set_active(False)
                         print '***', item, 'missing from', self.configFile
-                elif item == 'torchPulseTime':
-                    if item in tmpDict:
-                        self.builder.get_object(item).set_value(float(self.configDict.get(item)))
-                    else:
-                        self.builder.get_object(item).set_value(0)
-                        print '***', item, 'missing from', self.configFile
+#                elif item == 'torchPulseTime':
+#                    if item in tmpDict:
+#                        self.builder.get_object(item).set_value(float(self.configDict.get(item)))
+#                    else:
+#                        self.builder.get_object(item).set_value(0)
+#                        print '***', item, 'missing from', self.configFile
             if convertFile:
                 print '*** converting', self.configFile, 'to new format'
                 self.save_settings()

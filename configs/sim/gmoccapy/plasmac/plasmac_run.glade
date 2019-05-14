@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <!-- interface-requires gladevcp 0.0 -->
-  <requires lib="gtk+" version="2.24"/>
+  <requires lib="gtk+" version="2.18"/>
   <!-- interface-naming-policy project-wide -->
   <object class="GtkAdjustment" id="cornerlock-threshold-adj"/>
   <object class="GtkAdjustment" id="cut-amps-adj"/>
@@ -9,7 +9,7 @@
   <object class="GtkAdjustment" id="cut-height-adj"/>
   <object class="GtkAdjustment" id="cut-volts-adj"/>
   <object class="GtkAdjustment" id="kerf-width-adj"/>
-  <object class="GtkAdjustment" id="kerfcross-threshold-adj"/>
+  <object class="GtkAdjustment" id="kerfcross-override-adj"/>
   <object class="GtkAdjustment" id="material-number-adj"/>
   <object class="GtkListStore" id="materials">
     <columns>
@@ -1189,10 +1189,10 @@ for mode 3 this is the percentage of max velocity used for THC</property>
                                             <property name="visible">True</property>
                                             <property name="can_focus">False</property>
                                             <property name="has_tooltip">True</property>
-                                            <property name="tooltip_text" translatable="yes">THC is locked if voltage change exceeds this level</property>
+                                            <property name="tooltip_text" translatable="yes">percentage of calculated kerfcross threshold to apply</property>
                                             <property name="xalign">0</property>
                                             <property name="xpad">2</property>
-                                            <property name="label" translatable="yes">Threshold (V)</property>
+                                            <property name="label" translatable="yes">Override (%)</property>
                                           </object>
                                           <packing>
                                             <property name="left_attach">2</property>
@@ -1219,11 +1219,11 @@ for mode 3 this is the percentage of max velocity used for THC</property>
                                           </packing>
                                         </child>
                                         <child>
-                                          <object class="HAL_SpinButton" id="kerfcross-threshold">
+                                          <object class="HAL_SpinButton" id="kerfcross-override">
                                             <property name="visible">True</property>
                                             <property name="can_focus">True</property>
                                             <property name="has_tooltip">True</property>
-                                            <property name="tooltip_text" translatable="yes">THC is locked if voltage change exceeds this level</property>
+                                            <property name="tooltip_text" translatable="yes">percentage of calculated kerfcross threshold to apply</property>
                                             <property name="max_length">5</property>
                                             <property name="invisible_char">●</property>
                                             <property name="xalign">1</property>
@@ -1232,7 +1232,7 @@ for mode 3 this is the percentage of max velocity used for THC</property>
                                             <property name="secondary_icon_activatable">False</property>
                                             <property name="primary_icon_sensitive">True</property>
                                             <property name="secondary_icon_sensitive">True</property>
-                                            <property name="adjustment">kerfcross-threshold-adj</property>
+                                            <property name="adjustment">kerfcross-override-adj</property>
                                             <property name="wrap">True</property>
                                           </object>
                                           <packing>

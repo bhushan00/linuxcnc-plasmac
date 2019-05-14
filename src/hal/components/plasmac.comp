@@ -6,6 +6,8 @@ A plasma cutting table control component for use with the linuxcnc master branch
 
 .I VERSIONS:
 .br
+V0.48 - 2019/05/13 - change kerf crossing calculations
+.br
 V0.47 - 2019/05/10 - fix THC active indicator
 .br
 V0.46 - 2019/05/10 - add THC delay
@@ -287,8 +289,9 @@ pin in  float   feed_override               "feed override value from gui (conne
 pin in  bit     float_switch                "float switch input (can also act as breakaway if it actuates when torch breaks away)";
 pin in  float   float_switch_travel         "float switch travel (machine units)";
 pin in  float   height_override             "height override adjustment (volts)";
+pin in  float   height_per_volt             "torch height change per volt (machine units)";
 pin in  bit     kerfcross_enable            "enable kerf crossing [mode 0 & mode 1]";
-pin in  float   kerfcross_threshold         "kerf crossing threshold [mode 0 & mode 1] (volts), changes above this disable THC";
+pin in  float   kerfcross_override          "kerf crossing threshold override as a percentage";
 pin in  s32     mode                        "operating mode";
 pin in  bit     move_down                   "external thc down switch [mode 2])";
 pin in  bit     move_up                     "external thc up switch [mode 2]";
@@ -372,6 +375,8 @@ variable bool   float_detected;             /* float switch detected */
 variable float  height_ovr_counts;          /* number of counts to change height via override */
 variable float  height_ovr_old;             /* old height override value */
 variable bool   initialized;                /* initialization flag */
+variable float  kerf_ratio;                 /* kerf crossing height to distance ratio */
+variable float  kerf_threshold;             /* kerf crossing threshold voltage */
 variable float  last_arc_voltage;           /* last sensed arc voltage */
 variable float  offset_datum;               /* datum for safe height calcs */
 variable float  offset_min;                 /* minimum allowed offset */
@@ -1040,12 +1045,25 @@ FUNCTION(_) {
                             }else{
                                 cornerlock_is_locked = FALSE;
                             }
-                            /* lock thc if voltage change > kerfcross threshold volts */
-                            if(kerfcross_enable == TRUE && last_arc_voltage > 0 && arc_voltage > last_arc_voltage + kerfcross_threshold){
-                                kerfcross_is_locked = TRUE;
-                            }else{
-                                kerfcross_is_locked = FALSE;
-                                last_arc_voltage = arc_voltage;
+                            /* unlock kerfcross lock if voltage reduced to safe level  */
+                            if(kerfcross_is_locked){
+                                if(arc_voltage < last_arc_voltage + (kerf_threshold * 0.05)){
+                                    kerfcross_is_locked = FALSE;
+                                    last_arc_voltage = arc_voltage;
+                                }
+                            /* set kerfcross lock if voltage change > kerfcross threshold volts */
+                            }else if(kerfcross_enable){
+                                if(thc_feed_rate < current_velocity * 60){
+                                    kerf_ratio = thc_feed_rate / (current_velocity * 60);
+                                }else{
+                                    kerf_ratio = 1; /* 45 degree ramp */
+                                }
+                                kerf_threshold = ((kerf_ratio * current_velocity * fperiod) / height_per_volt) * (kerfcross_override * 0.01);
+                                if(arc_voltage > last_arc_voltage + kerf_threshold){
+                                    kerfcross_is_locked = TRUE;
+                                }else{
+                                    last_arc_voltage = arc_voltage;
+                                }
                             }
                             /* do thc if ok to go */
                             if(!cornerlock_is_locked && !kerfcross_is_locked){

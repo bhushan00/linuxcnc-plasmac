@@ -222,7 +222,8 @@ class HandlerClass:
         self.builder.get_object('probe-feed-rate-adj').configure(self.builder.get_object('probe-feed-rate').get_value(),0,self.builder.get_object('setup-feed-rate').get_value(),1,0,0)
 
     def configure_widgets(self):
-        #adj settings are (value, min, max, change, 0, 0)
+        # set_digits = number of digits after decimal
+        # configure  = (value, lower limit, upper limit, step size, 0, 0)
         self.builder.get_object('material-number').hide()
         self.builder.get_object('material-number-label').hide()
         self.builder.get_object('material-name').hide()
@@ -234,8 +235,8 @@ class HandlerClass:
         self.builder.get_object('cut-volts').set_digits(1)
         self.builder.get_object('cut-volts-adj').configure(122,50,300,0.1,0,0)
         self.builder.get_object('kerfcross-enable').set_active(1)
-        self.builder.get_object('kerfcross-threshold').set_digits(1)
-        self.builder.get_object('kerfcross-threshold-adj').configure(3,1,10,0.1,0,0)
+        self.builder.get_object('kerfcross-override').set_digits(0)
+        self.builder.get_object('kerfcross-override-adj').configure(100,10,200,1,0,0)
         self.builder.get_object('pid-p-gain').set_digits(0)
         self.builder.get_object('pid-p-gain-adj').configure(25,0,1000,1,0,0)
         self.builder.get_object('pierce-delay').set_digits(1)
@@ -365,20 +366,20 @@ class HandlerClass:
                     if item in tmpDict:
                         self.builder.get_object(item).set_value(float(self.configDict.get(item)))
                     else:
-                        self.builder.get_object(item).set_value(0)
+                        #self.builder.get_object(item).set_value(0)
                         print '***', item, 'missing from', self.configFile
                 elif isinstance(self.builder.get_object(item), gladevcp.hal_widgets.HAL_CheckButton):
                     if item in tmpDict:
                         self.builder.get_object(item).set_active(int(self.configDict.get(item)))
                     else:
-                        self.builder.get_object(item).set_active(False)
+                        #self.builder.get_object(item).set_active(False)
                         print '***', item, 'missing from', self.configFile
-                elif item == 'torchPulseTime':
-                    if item in tmpDict:
-                        self.builder.get_object(item).set_value(float(self.configDict.get(item)))
-                    else:
-                        self.builder.get_object(item).set_value(0)
-                        print '***', item, 'missing from', self.configFile
+#                elif item == 'torchPulseTime':
+#                    if item in tmpDict:
+#                        self.builder.get_object(item).set_value(float(self.configDict.get(item)))
+#                    else:
+#                        self.builder.get_object(item).set_value(0)
+#                        print '***', item, 'missing from', self.configFile
             if convertFile:
                 print '*** converting', self.configFile, 'to new format'
                 self.save_settings()
