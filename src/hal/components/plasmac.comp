@@ -6,6 +6,8 @@ A plasma cutting table control component for use with the linuxcnc master branch
 
 .I VERSIONS:
 .br
+V0.49 - 2019/05/14 - inhibit IHS skip after an error
+.br
 V0.48 - 2019/05/13 - change kerf crossing calculations
 .br
 V0.47 - 2019/05/10 - fix THC active indicator
@@ -394,6 +396,7 @@ variable float  probe_force;                /* extra movement of probe after fir
 variable float  probe_force_val;            /* distance for probe_force */
 variable bool   probe_inhibit;              /* inhibit probing */
 variable float  probe_offset;               /* offset for active probe */
+variable float  probe_required = 1;         /* a probe sequence is required */
 variable float  probe_start_target;         /* probe start height target */
 variable bool   probe_testing;              /* probe test active */
 variable float  probe_velocity;             /* probe down velocity */
@@ -522,6 +525,7 @@ FUNCTION(_) {
         stop_type = STOP;
         program_stop = TRUE;
         cut_started = FALSE;
+        probe_required = TRUE;
         axis_x_finish = 0;
         axis_y_finish = 0;
         state = MAX_HEIGHT;
@@ -529,6 +533,7 @@ FUNCTION(_) {
         if(program_is_paused){
             torch_on = FALSE;
             stop_type = PAUSE;
+            probe_required = TRUE;
             state = MAX_HEIGHT;
         }else if(!spindle_on){
             if(torch_off_delay > 0){
@@ -549,6 +554,7 @@ FUNCTION(_) {
             torch_on = FALSE;
             program_pause = TRUE;
             stop_type = PAUSE;
+            probe_required = TRUE;
             rtapi_print_msg(RTAPI_MSG_ERR,"breakaway switch activated\n"
                                           "program is paused.");
             probe_inhibit = TRUE;
@@ -557,6 +563,7 @@ FUNCTION(_) {
             torch_on = FALSE;
             program_pause = TRUE;
             stop_type = PAUSE;
+            probe_required = TRUE;
             rtapi_print_msg(RTAPI_MSG_ERR,"float switch activated\n"
                                           "program is paused.");
             probe_inhibit = TRUE;
@@ -565,6 +572,7 @@ FUNCTION(_) {
             torch_on = FALSE;
             program_pause = TRUE;
             stop_type = PAUSE;
+            probe_required = TRUE;
             rtapi_print_msg(RTAPI_MSG_ERR,"ohmic_probe activated\n"
                                           "program is paused.");
             probe_inhibit = TRUE;
@@ -573,6 +581,7 @@ FUNCTION(_) {
             torch_on = FALSE;
             program_pause = TRUE;
             stop_type = PAUSE;
+            probe_required = TRUE;
             rtapi_print_msg(RTAPI_MSG_ERR,"valid arc lost\n"
                                           "program is paused.");
             state = MAX_HEIGHT;
@@ -636,7 +645,7 @@ FUNCTION(_) {
                         axis_x_finish = 0;
                         axis_y_finish = 0;
                     }
-                    if(cut_offset && cut_offset < skip_ihs_distance){
+                    if(cut_offset && cut_offset < skip_ihs_distance && !probe_required){
                         if(thc_enable){
                             cut_target = cut_target + cut_height_last - cut_height_first;
                             pierce_target = pierce_target + cut_height_last - cut_height_first;
@@ -847,6 +856,7 @@ FUNCTION(_) {
             }
             break;
         case ZERO_HEIGHT:
+            probe_required = FALSE;
             if(probe_testing && !probe_test){
                 state = PROBE_TEST;
                 break;
