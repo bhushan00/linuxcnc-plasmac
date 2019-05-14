@@ -214,23 +214,30 @@ Dry Run runs the gcode without starting the torch.
 
 .I CUT FEED RATE
 .br
-Usage of the plasmac.cut-feed-rate input pin requires remapping of the F word, if not using this set the plasmac.cut-feed-rate input pin to 0 which will then use the feed rate from the gcode file.
+Usage of the plasmac.cut-feed-rate input pin requires specifying #<_hal[plasmac.cut-feed-rate]> in the gcode file:  
 .br
-The example configuration has remapping for the F word set up as follows:
-.RS 1
+F#<_hal[plasmac.cut-feed-rate]>  
+
+If you want to use different feed rates throughout the file then set the plasmac.cut-feed-rate input pin to 0 which will then use the feed rate from the gcode file.
 .br
-- If the plasmac.cut-feed-rate input pin is > 0 it will use this value for the feed rate and THC calculations.
+G1 X2 F100
 .br
-- If the plasmac.cut-feed-rate input pin = 0 then the feed rate and THC calculations will be read from the gcode file, scaled and sent to the plasmac.requested-velocity input pin to be used for THC calculations.
-.RE
-The remapped F word is scaled correctly so that both metric and imperial gcode files may be used on both metric and imperial machines.
+blah
+.br
+G1 X3 F125
+.br
+
+There is an example of how it can be done using automatic material handling in the Gmoccapy sim config.
 
 .I IHS SKIP
 .br
 If a value is set in skip_ihs_distance the IHS skipping is performed in one of two ways:
-If THC is disabled then skip IHS if start of cut less than skip-ihs-distance from last succesful probe.
-If THC is enabled then skip IHS if start of cut less than skip-ihs-distance from end of last cut.
-
+.RS 1
+.br
+- If THC is disabled then skip IHS if start of cut less than skip-ihs-distance from last succesful probe.
+.br
+- If THC is enabled then skip IHS if start of cut less than skip-ihs-distance from end of last cut.
+.RE
 This feature is disabled after any error. For example if there is a arc failure while cutting then IHS will be performed regardless of where the cut is.
 
 
