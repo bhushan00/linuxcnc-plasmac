@@ -1,4 +1,4 @@
-;test for skip ihs with thc enabled
+;skip ihs with thc enabled
 
 G21
 G64 P0.01

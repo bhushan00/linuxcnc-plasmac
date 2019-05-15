@@ -1,4 +1,4 @@
-;test for skip ihs with thc disabled
+;skip ihs with thc disabled
 
 G20
 G64 P0.0004
