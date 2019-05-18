@@ -262,11 +262,19 @@ class configurator:
             self.dialog_ok('SUCCESS','\nUpgrade is complete.\n')
             return
         # copy original INI and HAL files for input and backup
-        self.readIniFile = '{0}/_original.{1}'.format(self.newIniPath,os.path.basename(self.orgIniFile))
-        self.readHalFile = '{0}/_original.{1}'.format(self.newIniPath,os.path.basename(self.orgHalFile))
-        shutil.copy(self.orgIniFile,self.readIniFile)
-        shutil.copy(self.orgHalFile,self.readHalFile)
-        # get some info from [TRAJ] section of INI file copy
+        if os.path.dirname(self.orgIniFile) == self.newIniPath and \
+           os.path.basename(self.orgIniFile).startswith('_original_'):
+            self.readIniFile = self.orgIniFile
+        else:
+            self.readIniFile = '{0}/_original_{1}'.format(self.newIniPath,os.path.basename(self.orgIniFile))
+            shutil.copy(self.orgIniFile,self.readIniFile)
+
+        if os.path.dirname(self.orgHalFile) == self.newIniPath and \
+           os.path.basename(self.orgHalFile).startswith('_original_'):
+            self.readHalFile = self.orgHalFile
+        else:
+            self.readHalFile = '{0}/_original_{1}'.format(self.newIniPath,os.path.basename(self.orgHalFile))
+            shutil.copy(self.orgHalFile,self.readHalFile)
         inIni = open(self.readIniFile,'r')
         while 1:
             line = inIni.readline()

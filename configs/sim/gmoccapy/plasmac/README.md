@@ -132,6 +132,7 @@ units_startup.ngc|startup gcode commands.
 plasmac_gcode.py|removes z axis moves from the opened gcode file
 plasmac_stat.var|saved statistics
 materialverter.py|tool table file converter
+configurator.py|configure a new or upgrade an existing plasmac configuration
 
 The .ini files are notated for extra the requirements for these configurations.
 
@@ -158,3 +159,11 @@ These can be commented out or deleted from the ini file and the directory can be
 Example ngc files are in nc_files/plasmac.  
 
 ***  
+#### INSTALLING A WORKING CONFIGURATION  
+
+The easiest way to install a complete configuration is:  
+- make a working configuration for your base machine, this could be done manually or with pncconf for a machine using Mesa hardware or stepconf for a machine using the parallel port.  
+- make a note of the HAL pin connections for machine.  
+- make a git clone of this repo.  
+- run configurator.py in the configs/sim/gmoccapy/plasmac directory of the git clone.  
+You should end up with a working configuration.  
