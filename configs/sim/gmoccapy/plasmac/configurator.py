@@ -37,18 +37,22 @@ class configurator:
         configureType = self.start_dialog()
         if configureType == 1:
             self.upgrade = True
-            if not self.dialog_ok_cancel('Prerequisites',
-                                         '\nThis configurator will upgrade an existing plasmac configuration\n'\
-                                         'with updated application files.\n\n'\
-                                         'Existing machine INI file and HAL file will not be changed\n','Continue','Exit'):
+            if not self.dialog_ok_cancel(\
+                    'Prerequisites',
+                    '\nThis configurator will upgrade an existing plasmac configuration\n'\
+                    'with updated application files.\n\n'\
+                    'Existing machine INI file and HAL file will not be changed\n',
+                    'Continue','Exit'):
                 quit()
         elif configureType == 2:
             self.upgrade = False
-            if not self.dialog_ok_cancel('Prerequisites',
-                                         '\nBefore using this configurator you should already have a\n'\
-                                         'working configuration for the configurator to copy data from.\n\n'\
-                                         'If you don\'t have a working configuration then you need\n'\
-                                         'to exit the configurator and create one.\n','Continue','Exit'):
+            if not self.dialog_ok_cancel(
+                    'Prerequisites',
+                    '\nBefore using this configurator you should already have a\n'\
+                    'working configuration for the configurator to copy data from.\n\n'\
+                    'If you don\'t have a working configuration then you need\n'\
+                    'to exit the configurator and create one.\n',
+                    'Continue','Exit'):
                 quit()
         else:
             quit()
@@ -143,9 +147,9 @@ class configurator:
             self.moveDownVBox.show()
 
     def on_namefile_focus_out_event(self,widget,event):
-        self.configName = self.nameFile.get_text().replace(' ','_')
-        self.newIniFile = '%s/%s/%s.ini' %(self.configPath,self.configName,self.configName)
-        self.newIniPath = os.path.dirname(self.newIniFile)
+        self.machineName = self.nameFile.get_text().replace(' ','_')
+        self.newIniPath = '{0}/{1}'.format(self.configPath,self.machineName.lower())
+        self.newIniFile = '{0}/{1}.ini'.format(self.newIniPath,self.machineName.lower())
 
     def on_inifile_press_event(self,button,event):
         self.dlg = gtk.FileChooserDialog('Open..', None, gtk.FILE_CHOOSER_ACTION_OPEN,
@@ -161,6 +165,8 @@ class configurator:
         else:
             self.iniFile.set_text('')
             self.orgIniFile = ''
+        if self.upgrade:
+            self.machineName = os.path.basename(self.dlg.get_filename()).split('.')[0]
         self.dlg.destroy()
 
     def on_halfile_press_event(self,button,event):
@@ -200,11 +206,11 @@ class configurator:
                 return
             if self.mode == 0 or self.mode == 1:
                 if not self.arcVoltPin.get_text():
-                    self.dialog_ok('ERROR','Arc voltage is required for Mode %d' %(self.mode))
+                    self.dialog_ok('ERROR','Arc voltage is required for Mode {:d}'.format(self.mode))
                     return
             if self.mode == 1 or self.mode == 2:
                 if not self.arcOkPin.get_text():
-                    self.dialog_ok('ERROR','Arc OK is required for Mode %d' %(self.mode))
+                    self.dialog_ok('ERROR','Arc OK is required for Mode {:d}'.format(self.mode))
                     return
             if not self.ohmicInPin.get_text() and not self.floatPin.get_text():
                 self.dialog_ok('ERROR','At least one of ohmic probe or float switch is required')
@@ -217,10 +223,10 @@ class configurator:
                 return
             if self.mode == 2:
                 if not self.moveUpPin.get_text():
-                    self.dialog_ok('ERROR','Move up is required for Mode %d' %(self.mode))
+                    self.dialog_ok('ERROR','Move up is required for Mode {:d}'.format(self.mode))
                     return
                 if not self.moveDownPin.get_text():
-                    self.dialog_ok('ERROR','Move down is required for Mode %d' %(self.mode))
+                    self.dialog_ok('ERROR','Move down is required for Mode {:d}'.format(self.mode))
                     return
         # test if path exists
         if not self.upgrade:
@@ -228,25 +234,25 @@ class configurator:
                 os.makedirs(self.newIniPath)
             else:
                 if not self.dialog_ok_cancel('CONFIGURATION EXISTS',\
-                                             '\nA configuration already exists in %s\n'\
-                                             %(self.newIniPath),'Overwrite','Back'):
-#                                             '\nOK to overwrite existing config\n'\
-#                                             '\nBack to return to entry window'\
+                                             '\nA configuration already exists in {0}\n'\
+                                             .format(self.newIniPath),'Overwrite','Back'):
                     return
         # copy plasmac application files to configuration directory
         for copyFile in self.get_files_to_copy():
             if self.upgrade:
-                shutil.copy('%s/%s' %(self.copyPath,copyFile), '%s' %(os.path.dirname(self.orgIniFile)))
+                shutil.copy('{0}/{1}'.format(self.copyPath,copyFile), os.path.dirname(self.orgIniFile))
             else:
-                shutil.copy('%s/%s' %(self.copyPath,copyFile), '%s' %(self.newIniPath))
+                shutil.copy('{0}/{1}'.format(self.copyPath,copyFile), self.newIniPath)
         # make new plasmac.hal without redundancies
-        inFile = open('%s/plasmac.hal' %(self.copyPath),'r')
+        inFile = open('{0}/plasmac.hal'.format(self.copyPath),'r')
         if self.upgrade:
-            outFile = open('%s/plasmac.hal' %(os.path.dirname(self.orgIniFile)),'w')
+            outFile = open('{0}/plasmac.hal'.format(os.path.dirname(self.orgIniFile)),'w')
         else:
-            outFile = open('%s/plasmac.hal' %(self.newIniPath),'w')
+            outFile = open('{0}/plasmac.hal'.format(self.newIniPath),'w')
         for line in inFile:
-            if line.startswith('#************'):
+            if line.startswith('# make custom'):
+                outFile.write('# make custom changes in {0}_connections.hal\n'.format(self.machineName.lower()))
+            elif line.startswith('#************') and line.strip().endswith('************#'):
                 break
             else:
                 outFile.write(line)
@@ -256,10 +262,10 @@ class configurator:
             self.dialog_ok('SUCCESS','\nUpgrade is complete.\n')
             return
         # copy original INI and HAL files for input and backup
-        self.readIniFile = self.newIniPath + '/_original.' + os.path.basename(self.orgIniFile)
-        self.readHalFile = self.newIniPath + '/_original.' + os.path.basename(self.orgHalFile)
-        shutil.copy('%s' %(self.orgIniFile), '%s' %(self.readIniFile))
-        shutil.copy('%s' %(self.orgHalFile), '%s' %(self.readHalFile))
+        self.readIniFile = '{0}/_original.{1}'.format(self.newIniPath,os.path.basename(self.orgIniFile))
+        self.readHalFile = '{0}/_original.{1}'.format(self.newIniPath,os.path.basename(self.orgHalFile))
+        shutil.copy(self.orgIniFile,self.readIniFile)
+        shutil.copy(self.orgHalFile,self.readHalFile)
         # get some info from [TRAJ] section of INI file copy
         inIni = open(self.readIniFile,'r')
         while 1:
@@ -299,10 +305,10 @@ class configurator:
         self.zVel = self.zAcc = 0
         while 1:
             line = inIni.readline()
-            if '[JOINT_%d]' %(self.zJoint) in line:
+            if '[JOINT_{:d}]'.format(self.zJoint) in line:
                 break
             if not line:
-                self.dialog_ok('ERROR','Cannot find [JOINT_%s] section in INI file' %(self.zJoint))
+                self.dialog_ok('ERROR','Cannot find [JOINT_{d}] section in INI file'.format(self.zJoint))
                 break
         result = 0
         while 1:
@@ -320,13 +326,13 @@ class configurator:
                     break
                 else:
                     if result == 1:
-                        self.dialog_ok('ERROR','Could not find MAX_ACCELERATION in [JOINT_%d] section of INI file' %(self.zJoint))
+                        self.dialog_ok('ERROR','Could not find MAX_ACCELERATION in [JOINT_{:d}] section of INI file'.format(self.zJoint))
                     else:
-                        self.dialog_ok('ERROR','Could not find MAX_VELOCITY in [JOINT_%d] section of INI file' %(self.zJoint))
+                        self.dialog_ok('ERROR','Could not find MAX_VELOCITY in [JOINT_{:d}] section of INI file'.format(self.zJoint))
                     return
         inIni.close()
         #write new hal file with spindle.0.on commented out
-        newHalFile = open('%s/%s.hal' %(self.newIniPath,self.configName),'w')
+        newHalFile = open('{0}/{1}.hal'.format(self.newIniPath,self.machineName.lower()),'w')
         inHal = open(self.readHalFile,'r')
         for line in inHal:
             if 'spindle.0.on' in line:
@@ -336,46 +342,54 @@ class configurator:
         newHalFile.close()
         inHal.close()
         # write a connections.hal file for plasmac connections to the machine
-        with open('%s/%s/%s_connections.hal' %(self.configPath,self.configName,self.configName), 'w') as f_out:
-            f_out.write('# Keep your plasmac i/o connections here to prevent them from\n'\
-                        '# being overwritten by updates or pncconf/stepconf changes\n\n'\
-                        '# Other customisations may be placed here as well\n\n'\
-                        '# the next line needs to be the joint associated with the Z axis\n')
-            f_out.write('net plasmac:axis-position joint.%d.pos-fb => plasmac.axis-z-position\n' %(self.zJoint))
+        with open('{0}/{1}_connections.hal'.format(self.newIniPath,self.machineName.lower()), 'w') as f_out:
+            f_out.write(\
+                '# Keep your plasmac i/o connections here to prevent them from\n'\
+                '# being overwritten by updates or pncconf/stepconf changes\n\n'\
+                '# Other customisations may be placed here as well\n\n'\
+                '#***** debounce for the float switch *****\n'\
+                '# the lower the delay here the better\n'\
+                'loadrt  debounce                cfg=3\n'\
+                'setp    debounce.0.delay        5\n'\
+                'addf    debounce.0              servo-thread\n\n'\
+                '# the next line needs to be the joint associated with the Z axis\n')
+            f_out.write('net plasmac:axis-position joint.{:d}.pos-fb => plasmac.axis-z-position\n'.format(self.zJoint))
             if self.arcVoltPin.get_text() and (self.mode == 0 or self.mode == 1):
-                f_out.write('net plasmac:arc-voltage-in %s => plasmac.arc-voltage-in\n' %(self.arcVoltPin.get_text()))
+                f_out.write('net plasmac:arc-voltage-in {0} => plasmac.arc-voltage-in\n'.format(self.arcVoltPin.get_text()))
             if self.arcOkPin.get_text() and (self.mode == 1 or self.mode == 2):
-                f_out.write('net plasmac:arc-ok-in %s => plasmac.arc-ok-in\n' %(self.arcOkPin.get_text()))
+                f_out.write('net plasmac:arc-ok-in {0} => plasmac.arc-ok-in\n'.format(self.arcOkPin.get_text()))
             if self.floatPin.get_text():
-                f_out.write('net plasmac:float-switch %s => debounce.0.0.in\n' %(self.floatPin.get_text()))
+                f_out.write('net plasmac:float-switch {0} => debounce.0.0.in\n'.format(self.floatPin.get_text()))
             elif not self.floatPin.get_text():
                 f_out.write('# net plasmac:float-switch {YOUR FLOAT SWITCH PIN} => debounce.0.0.in\n')
             if self.breakPin.get_text():
-                f_out.write('net plasmac:breakaway %s => debounce.0.1.in\n' %(self.breakPin.get_text()))
+                f_out.write('net plasmac:breakaway {0} => debounce.0.1.in\n'.format(self.breakPin.get_text()))
             elif not self.breakPin.get_text():
                 f_out.write('# net plasmac:breakaway {YOUR BREAKAWAY PIN} => debounce.0.1.in\n')
             if self.ohmicInPin.get_text():
-                f_out.write('net plasmac:ohmic-probe %s => debounce.0.2.in\n' %(self.ohmicInPin.get_text()))
+                f_out.write('net plasmac:ohmic-probe {0} => debounce.0.2.in\n'.format(self.ohmicInPin.get_text()))
             elif not self.ohmicInPin.get_text():
                 f_out.write('# net plasmac:ohmic-probe {YOUR OHMIC PROBE PIN} => debounce.0.2.in\n')
             if self.ohmicOutPin.get_text():
-                f_out.write('net plasmac:ohmic-enable plasmac.ohmic-enable  => %s\n' %(self.ohmicOutPin.get_text()))
+                f_out.write('net plasmac:ohmic-enable plasmac.ohmic-enable  => {0}\n'.format(self.ohmicOutPin.get_text()))
             elif not self.ohmicOutPin.get_text():
                 f_out.write('# net plasmac:ohmic-enable plasmac.ohmic-enable  => {YOUR OHMIC ENABLE PIN}\n')
             if self.torchPin.get_text():
-                f_out.write('net plasmac:torch-on => %s\n' %(self.torchPin.get_text()))
+                f_out.write('net plasmac:torch-on => {0}\n'.format(self.torchPin.get_text()))
             if self.moveUpPin.get_text() and self.mode == 2:
-                f_out.write('net plasmac:move-up %s => plasmac.move-up\n' %(self.moveUpPin.get_text()))
+                f_out.write('net plasmac:move-up {0} => plasmac.move-up\n'.format(self.moveUpPin.get_text()))
             if self.moveDownPin.get_text() and self.mode == 2:
-                f_out.write('net plasmac:move-down %s => plasmac.move-down\n' %(self.moveDownPin.get_text()))
+                f_out.write('net plasmac:move-down {0} => plasmac.move-down\n'.format(self.moveDownPin.get_text()))
         # create a postgui.hal file if not already present
-        if not os.path.exists('%s/%s/postgui.hal' %(self.configPath,self.configName)):
-            with open('%s/%s/postgui.hal' %(self.configPath,self.configName), 'w') as f_out:
-                f_out.write('# Keep your post GUI customisations here to prevent them from\n'\
-                            '# being overwritten by updates or pncconf/stepconf changes\n\n')
+        if not os.path.exists('{0}/postgui.hal'.format(self.newIniPath)):
+            with open('{0}/postgui.hal'.format(self.newIniPath), 'w') as f_out:
+                f_out.write(\
+                    '# Keep your post GUI customisations here to prevent them from\n'\
+                    '# being overwritten by updates or pncconf/stepconf changes\n\n')
         # create a new INI file from the INI file copy and the plasmac INI file
         plasmacIni = open(self.plasmacIniFile,'r')
         outIni = open(self.newIniFile,'w')
+        # comment out the test panel
         while 1:
             line = plasmacIni.readline()
             if line.startswith('# see notes'):
@@ -386,26 +400,28 @@ class configurator:
                 outIni.write('# ' + line)
             elif not '[HAL]' in line:
                 if line.startswith('MODE'):
-                    outIni.write('MODE = %s\n' %(self.mode))
+                    outIni.write('MODE = {0}\n'.format(self.mode))
                 else:
                     outIni.write(line)
             else:
                 break
         # add the [HAL] section
-        outIni.write('[HAL]\n'\
-                     '# required\n'
-                     'TWOPASS = ON\n'\
-                     '# the base machine\n'\
-                     'HALFILE = %s.hal\n'\
-                     '# the plasmac machine conections\n'\
-                     'HALFILE = %s_connections.hal\n'\
-                     '# the plasmac component connections\n'\
-                     'HALFILE = plasmac.hal\n'\
-                     '# use this for customisation after GUI has loaded\n'\
-                     'POSTGUI_HALFILE = postgui.hal\n'\
-                     '# required\n'\
-                     'HALUI = halui\n'\
-                     '\n' %(self.configName,self.configName))
+        outIni.write(\
+            '[HAL]\n'\
+            '# required\n'
+            'TWOPASS = ON\n'\
+            '# the base machine\n'\
+            'HALFILE = {0}.hal\n'\
+            '# the plasmac machine conections\n'\
+            'HALFILE = {0}_connections.hal\n'\
+            '# the plasmac component connections\n'\
+            'HALFILE = plasmac.hal\n'\
+            '# use this for customisation after GUI has loaded\n'\
+            'POSTGUI_HALFILE = postgui.hal\n'\
+            '# required\n'\
+            'HALUI = halui\n'\
+            '\n'\
+            .format(self.machineName.lower()))
         # add the tabs to the display section
         inIni = open(self.readIniFile, 'r')
         while 1:        
@@ -462,18 +478,22 @@ class configurator:
             if validSection:
                 if newName:
                     if line.startswith('MACHINE'):
-                        outIni.write('MACHINE = %s\n' %(self.configName))
+                        outIni.write('MACHINE = {0}\n'.format(self.machineName))
                     else:
                         outIni.write(line)
                 elif offsetAxis:
                     if line.startswith('MAX_VELOCITY'):
-                        outIni.write('# set to double the value in the corresponding joint\n'\
-                                     'MAX_VELOCITY = %s\n' %(float(self.zVel) * 2))
+                        outIni.write(
+                            '# set to double the value in the corresponding joint\n'\
+                            'MAX_VELOCITY = {0}\n'\
+                            .format(float(self.zVel) * 2))
                     elif line.startswith('MAX_ACCELERATION'):
-                        outIni.write('# set to double the value in the corresponding joint\n'\
-                                     'MAX_ACCELERATION = %s\n'\
-                                     '# shares the above two equally between the joint and the offset\n'\
-                                     'OFFSET_AV_RATIO = 0.5\n' %(float(self.zAcc) * 2))
+                        outIni.write(\
+                            '# set to double the value in the corresponding joint\n'\
+                            'MAX_ACCELERATION = {0}\n'\
+                            '# shares the above two equally between the joint and the offset\n'\
+                            'OFFSET_AV_RATIO = 0.5\n'\
+                            .format(float(self.zAcc) * 2))
                     else:
                         outIni.write(line)
                 else:
@@ -482,15 +502,17 @@ class configurator:
                 break
         outIni.close()
         inIni.close()
-        self.dialog_ok('SUCCESS',\
-                       '\nConfiguration is complete.\n\n'\
-                       'You can run this configuration from a console with:\n\n'\
-                       'Full installation:\n'\
-                       'linuxcnc  '\
-                       '/home/\'USERNAME\'/linuxcnc/configs/{0}/{0}.ini\n\n'\
-                       'Run In Place installation:\n'\
-                       '/home/\'USERNAME\'/\'GIT REPO\'/scripts/linuxcnc  '\
-                       '/home/\'USERNAME\'/linuxcnc/configs/{0}/{0}.ini\n'.format(self.configName))
+        self.dialog_ok(\
+            'SUCCESS',\
+            '\nConfiguration is complete.\n\n'\
+            'You can run this configuration from a console as follows.\n\n'\
+            'Full installation:\n'\
+            'linuxcnc  '\
+            '/home/{1}/linuxcnc/configs/{0}/{0}.ini\n\n'\
+            'Run In Place installation:\n'\
+            '/home/{1}/{2}/scripts/linuxcnc  '\
+            '/home/{1}/linuxcnc/configs/{0}/{0}.ini\n'\
+            .format(self.machineName.lower(),'{USER}','{GIT_REPO}'))
 
     def create_widgets(self):
         self.VB = gtk.VBox()
@@ -515,6 +537,12 @@ class configurator:
             nameLabel.set_alignment(0,0)
             self.nameFile = gtk.Entry()
             self.nameFile.set_width_chars(60)
+            self.nameFile.set_tooltip_markup(\
+                'The <b>name</b> of the new or existing machine.\n'\
+                'If not existing, this creates a directory ~/linuxcnc/configs/<b>name</b>.\n'\
+                '<b>name</b>.ini and <b>name</b>.hal are then written to this directory '\
+                'and all other required files are copied to it.\n'\
+                '<b>name</b> is converted to lowercase and spaces are converted to underscores.')
             nameBlank = gtk.Label('')
             self.nameVBox.pack_start(nameLabel)
             self.nameVBox.pack_start(self.nameFile)

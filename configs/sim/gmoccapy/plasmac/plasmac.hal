@@ -1,12 +1,10 @@
+# do not change the contents of this file as it will be overwiten by updates
+# make custom changes in {machinename}_connections.hal
+# see comment block below
 
-#***** DEBOUNCE FOR THE FLOAT SWITCH ***********************************
-loadrt  debounce                cfg=3
-setp    debounce.0.delay        5
-addf    debounce.0              servo-thread
-
-#***** PLASMAC COMPONENT ***********************************************
+#***** PLASMAC COMPONENT *****
 loadrt  plasmac
-addf    plasmac     servo-thread
+addf    plasmac  servo-thread
 
 # inputs
 net plasmac:axis-x-position      axis.x.pos-cmd                  =>  plasmac.axis-x-position
@@ -35,12 +33,23 @@ net plasmac:program-run          plasmac.program-run             =>  halui.progr
 net plasmac:program-stop         plasmac.program-stop            =>  halui.program.stop
 net plasmac:torch-on             plasmac.torch-on
 
-#**************************************************************************************#
-#** FOR A WORKING CONFIG IT IS STRONLY RECOMMENDED THAT YOU MOVE BOTH THE            **#
-#** net plasmac:axis-position LINE AND THE APPROPRIATE MODE SECTION                  **#
-#** TO YOUR MACHINE HAL FILE THEN EDIT THEM TO SUIT YOUR CONFIGURATION               **#
-#** THIS WILL PREVENT YOUR MACHINE CONNECTIONS BEING OVERWRITTEN BY A PLASMAC UPDATE **#
-#**************************************************************************************#
+#*************************************************************************************#
+# IT IS STRONGLY RECOMMENDED THAT YOU DELETE THIS COMMENT BLOCK AND MOVE EVERYTHING   #
+# BELOW IT TO A HAL FILE NAMED {machinename}_connections.hal                          #
+# EDIT THAT FILE TO SUIT YOUR CONFIGURATION                                           #
+# MAKE SURE HALFILE = {machinename}_connections.hal IS IN YOUR INI FILE               #
+# THIS WILL PREVENT YOUR MACHINE CONNECTIONS BEING OVERWRITTEN BY A LATER UPDATE      #
+#*************************************************************************************#
+
+# Keep your plasmac i/o connections here to prevent them from
+# being overwritten by updates or pncconf/stepconf changes
+# Other customisations may be placed here as well
+
+#***** DEBOUNCE FOR THE FLOAT SWITCH *****
+# the lower the delay here the better
+loadrt  debounce                cfg=3
+setp    debounce.0.delay        5
+addf    debounce.0              servo-thread
 
 # the next line needs to be the joint associated with the Z axis
 net plasmac:axis-position        joint.3.pos-fb                  =>  plasmac.axis-z-position
