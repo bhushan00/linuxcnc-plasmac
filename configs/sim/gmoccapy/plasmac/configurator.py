@@ -185,49 +185,75 @@ class configurator:
             self.orgHalFile = ''
         self.dlg.destroy()
 
-
     def on_cancel_clicked(self,button):
         gtk.main_quit()
 
     def on_create_clicked(self,button):
+        if not self.check_entries(): return
+        if not self.check_new_path(): return
+        if self.upgrade:
+            version = self.check_version()
+            if not version:
+                self.upgrade_connections_hal()
+                self.upgrade_plasmac_hal()
+            if not self.copy_files(): return
+            self.dialog_ok('SUCCESS','\nUpgrade is complete.\n')
+            return
+        else:
+            if not self.create_plasmac_hal_file(): return
+        if not self.copy_ini_and_hal_files(): return
+        if not self.get_traj_info(self.readIniFile): return
+        if not self.get_joint_info(self.readIniFile): return
+        if not self.write_new_hal_file(): return
+        if not self.write_connections_hal_file(): return
+        if not self.write_postgui_hal_file(): return
+        if not self.write_newini_file(): return
+        if not self.copy_files(): return
+        self.print_success()
+
+    def check_entries(self):
+        # check if entries are valid
         if self.upgrade:
             if not self.iniFile.get_text():
                 self.dialog_ok('ERROR','INI file is required')
-                return
+                return False
         else:
             if not self.nameFile.get_text():
                 self.dialog_ok('ERROR','Machine name is required')
-                return
+                return False
             if not self.iniFile.get_text():
                 self.dialog_ok('ERROR','INI file is required')
-                return
+                return False
             if not self.halFile.get_text():
                 self.dialog_ok('ERROR','HAL file is required')
-                return
+                return False
             if self.mode == 0 or self.mode == 1:
                 if not self.arcVoltPin.get_text():
                     self.dialog_ok('ERROR','Arc voltage is required for Mode {:d}'.format(self.mode))
-                    return
+                    return False
             if self.mode == 1 or self.mode == 2:
                 if not self.arcOkPin.get_text():
                     self.dialog_ok('ERROR','Arc OK is required for Mode {:d}'.format(self.mode))
-                    return
+                    return False
             if not self.ohmicInPin.get_text() and not self.floatPin.get_text():
                 self.dialog_ok('ERROR','At least one of ohmic probe or float switch is required')
-                return
+                return False
             if self.ohmicInPin.get_text() and not self.ohmicOutPin.get_text():
                 self.dialog_ok('ERROR','Ohmic enable is required if ohmic probe is specified')
-                return
+                return False
             if not self.torchPin.get_text():
                 self.dialog_ok('ERROR','Torch on is required')
-                return
+                return False
             if self.mode == 2:
                 if not self.moveUpPin.get_text():
                     self.dialog_ok('ERROR','Move up is required for Mode {:d}'.format(self.mode))
-                    return
+                    return False
                 if not self.moveDownPin.get_text():
                     self.dialog_ok('ERROR','Move down is required for Mode {:d}'.format(self.mode))
-                    return
+                    return False
+        return True
+
+    def check_new_path(self):
         # test if path exists
         if not self.upgrade:
             if not os.path.exists(self.newIniPath):
@@ -236,13 +262,126 @@ class configurator:
                 if not self.dialog_ok_cancel('CONFIGURATION EXISTS',\
                                              '\nA configuration already exists in {0}\n'\
                                              .format(self.newIniPath),'Overwrite','Back'):
-                    return
+                    return False
+        return True
+
+    def copy_files(self):
         # copy plasmac application files to configuration directory
         for copyFile in self.get_files_to_copy():
             if self.upgrade:
                 shutil.copy('{0}/{1}'.format(self.copyPath,copyFile), os.path.dirname(self.orgIniFile))
             else:
                 shutil.copy('{0}/{1}'.format(self.copyPath,copyFile), self.newIniPath)
+        return True
+
+    def check_version(self):
+        if os.path.exists('{0}/{1}_connections.hal'.format(os.path.dirname(self.orgIniFile),self.machineName.lower())):
+            return 1
+        else:
+            return 0
+
+    def upgrade_connections_hal(self):
+        inFile = open('{0}/plasmac.hal'.format(os.path.dirname(self.orgIniFile)), 'r')
+        outFile = open('{0}/{1}_connections.hal'.format(os.path.dirname(self.orgIniFile),self.machineName.lower()), 'w')
+        outFile.write(\
+            '# Keep your plasmac i/o connections here to prevent them from\n'\
+            '# being overwritten by updates or pncconf/stepconf changes\n\n'\
+            '# Other customisations may be placed here as well\n\n')
+        for line in inFile:
+            if ' '.join(line.split()).startswith('loadrt debounce'):
+                outFile.write(\
+                    '#***** DEBOUNCE FOR THE FLOAT SWITCH *****\n'\
+                    '# the lower the delay here the better\n'\
+                    + line)
+            elif ' '.join(line.split()).startswith('setp debounce.0.delay'):
+                outFile.write(line)
+            elif ' '.join(line.split()).startswith('addf debounce.0'):
+                outFile.write(line + '\n')
+            elif ' '.join(line.split()).startswith('net plasmac:axis-position '):
+                outFile.write(\
+                    '# the next line needs to be the joint associated with the Z axis\n'\
+                     + line + '\n')
+            elif ' '.join(line.split()).startswith('net plasmac:arc-voltage-in '):
+                outFile.write(line)
+            elif ' '.join(line.split()).startswith('net plasmac:arc-ok-in '):
+                outFile.write(line)
+            elif ' '.join(line.split()).startswith('net plasmac:float-switch '):
+                outFile.write(line)
+            elif ' '.join(line.split()).startswith('net plasmac:breakaway '):
+                outFile.write(line)
+            elif ' '.join(line.split()).startswith('net plasmac:ohmic-probe '):
+                outFile.write(line)
+            elif ' '.join(line.split()).startswith('net plasmac:ohmic-enable '):
+                outFile.write(line)
+            elif ' '.join(line.split()).startswith('net plasmac:torch-on ') and not 'plasmac.torch-on' in line:
+                outFile.write(line)
+            elif ' '.join(line.split()).startswith('net plasmac:move-down '):
+                outFile.write(line)
+            elif ' '.join(line.split()).startswith('net plasmac:move-up '):
+                outFile.write(line)
+        inFile.close()
+        outFile.close()
+
+    def upgrade_plasmac_hal(self):
+        shutil.copy('{0}/plasmac.hal'.format(os.path.dirname(self.orgIniFile)),\
+                    '{0}/plasmac.old'.format(os.path.dirname(self.orgIniFile)))
+        inFile = open('{0}/plasmac.old'.format(os.path.dirname(self.orgIniFile)), 'r')
+        outFile = open('{0}/plasmac.hal'.format(os.path.dirname(self.orgIniFile)), 'w')
+        outFile.write(\
+            '# do not change the contents of this file as it will be overwiten by updates\n'\
+            '# make custom changes in {0}_connections.hal\n\n'\
+            .format(self.machineName.lower()))
+        for line in inFile:
+            if ' '.join(line.split()).startswith('net plasmac:axis-x-position'):
+                outFile.write('#inputs\n' + line)
+            elif ' '.join(line.split()).startswith('net plasmac:axis-y-position'):
+                outFile.write(line)
+            elif ' '.join(line.split()).startswith('net plasmac:breakaway-switch-out'):
+                outFile.write(line)
+            elif ' '.join(line.split()).startswith('net plasmac:current-velocity'):
+                outFile.write(line)
+            elif ' '.join(line.split()).startswith('net plasmac:feed-override'):
+                outFile.write(line)
+            elif ' '.join(line.split()).startswith('net plasmac:float-switch-out'):
+                outFile.write(line)
+            elif ' '.join(line.split()).startswith('net plasmac:offset-current'):
+                outFile.write(line)
+            elif ' '.join(line.split()).startswith('net plasmac:ohmic-probe-out'):
+                outFile.write(line)
+            elif ' '.join(line.split()).startswith('net plasmac:program.is-idle'):
+                outFile.write(line)
+            elif ' '.join(line.split()).startswith('net plasmac:program.is-paused'):
+                outFile.write(line)
+            elif ' '.join(line.split()).startswith('net plasmac:program.is-running'):
+                outFile.write(line)
+            elif ' '.join(line.split()).startswith('net plasmac:spindle-is-on'):
+                outFile.write(line)
+            elif ' '.join(line.split()).startswith('net plasmac:units-per-mm'):
+                outFile.write(line + '\n')
+            elif ' '.join(line.split()).startswith('net plasmac:adaptive-feed'):
+                outFile.write('#outputs\n' + line)
+            elif ' '.join(line.split()).startswith('net plasmac:feed-hold'):
+                outFile.write(line)
+            elif ' '.join(line.split()).startswith('net plasmac:offset-counts'):
+                outFile.write(line)
+            elif ' '.join(line.split()).startswith('net plasmac:offset-enable'):
+                outFile.write(line)
+            elif ' '.join(line.split()).startswith('net plasmac:offset-scale'):
+                outFile.write(line)
+            elif ' '.join(line.split()).startswith('net plasmac:program-pause'):
+                outFile.write(line)
+            elif ' '.join(line.split()).startswith('net plasmac:program-resume'):
+                outFile.write(line)
+            elif ' '.join(line.split()).startswith('net plasmac:program-run'):
+                outFile.write(line)
+            elif ' '.join(line.split()).startswith('net plasmac:program-stop'):
+                outFile.write(line)
+            elif ' '.join(line.split()).startswith('net plasmac:torch-on') and 'plasmac.torch-on' in line:
+                outFile.write(line)
+        inFile.close()
+        outFile.close()
+
+    def create_plasmac_hal_file(self):
         # make new plasmac.hal without redundancies
         inFile = open('{0}/plasmac.hal'.format(self.copyPath),'r')
         if self.upgrade:
@@ -252,15 +391,17 @@ class configurator:
         for line in inFile:
             if line.startswith('# make custom'):
                 outFile.write('# make custom changes in {0}_connections.hal\n'.format(self.machineName.lower()))
+            elif line.startswith('# see comment'):
+                pass
             elif line.startswith('#************') and line.strip().endswith('************#'):
                 break
             else:
                 outFile.write(line)
         outFile.close()
         inFile.close()
-        if self.upgrade:
-            self.dialog_ok('SUCCESS','\nUpgrade is complete.\n')
-            return
+        return True
+
+    def copy_ini_and_hal_files(self):
         # copy original INI and HAL files for input and backup
         if os.path.dirname(self.orgIniFile) == self.newIniPath and \
            os.path.basename(self.orgIniFile).startswith('_original_'):
@@ -275,14 +416,19 @@ class configurator:
         else:
             self.readHalFile = '{0}/_original_{1}'.format(self.newIniPath,os.path.basename(self.orgHalFile))
             shutil.copy(self.orgHalFile,self.readHalFile)
-        inIni = open(self.readIniFile,'r')
+        return True
+
+    def get_traj_info(self,readFile):
+        # get some info from [TRAJ] section of INI file copy
+        inIni = open(readFile,'r')
         while 1:
             line = inIni.readline()
             if '[TRAJ]' in line:
                 break
             if not line:
+                inIni.close()
                 self.dialog_ok('ERROR','Cannot find [TRAJ] section in INI file')
-                return
+                return False
         result = 0
         while 1:
             line = inIni.readline()
@@ -302,22 +448,27 @@ class configurator:
                 if result == 11:
                     break
                 else:
+                    inIni.close()
                     if result == 1:
                         self.dialog_ok('ERROR','Could not find COORDINATES in [TRAJ] section of INI file')
                     else:
                         self.dialog_ok('ERROR','Could not find LINEAR_UNITS in [TRAJ] section of INI file')
-                    return
+                    return False
         inIni.close()
+        return True
+
+    def get_joint_info(self,readFile):
         # get some info from [JOINT_n] section of INI file copy
-        inIni = open(self.orgIniFile,'r')
+        inIni = open(readFile,'r')
         self.zVel = self.zAcc = 0
         while 1:
             line = inIni.readline()
             if '[JOINT_{:d}]'.format(self.zJoint) in line:
                 break
             if not line:
+                inIni.close()
                 self.dialog_ok('ERROR','Cannot find [JOINT_{d}] section in INI file'.format(self.zJoint))
-                break
+                return False
         result = 0
         while 1:
             line = inIni.readline()
@@ -333,12 +484,16 @@ class configurator:
                 if result == 11:
                     break
                 else:
+                    inIni.close()
                     if result == 1:
                         self.dialog_ok('ERROR','Could not find MAX_ACCELERATION in [JOINT_{:d}] section of INI file'.format(self.zJoint))
                     else:
                         self.dialog_ok('ERROR','Could not find MAX_VELOCITY in [JOINT_{:d}] section of INI file'.format(self.zJoint))
-                    return
+                    return False
         inIni.close()
+        return True
+
+    def write_new_hal_file(self):
         #write new hal file with spindle.0.on commented out
         newHalFile = open('{0}/{1}.hal'.format(self.newIniPath,self.machineName.lower()),'w')
         inHal = open(self.readHalFile,'r')
@@ -349,6 +504,9 @@ class configurator:
                 newHalFile.write(line)
         newHalFile.close()
         inHal.close()
+        return True
+
+    def write_connections_hal_file(self):
         # write a connections.hal file for plasmac connections to the machine
         with open('{0}/{1}_connections.hal'.format(self.newIniPath,self.machineName.lower()), 'w') as f_out:
             f_out.write(\
@@ -388,12 +546,18 @@ class configurator:
                 f_out.write('net plasmac:move-up {0} => plasmac.move-up\n'.format(self.moveUpPin.get_text()))
             if self.moveDownPin.get_text() and self.mode == 2:
                 f_out.write('net plasmac:move-down {0} => plasmac.move-down\n'.format(self.moveDownPin.get_text()))
+        return True
+
+    def write_postgui_hal_file(self):
         # create a postgui.hal file if not already present
         if not os.path.exists('{0}/postgui.hal'.format(self.newIniPath)):
             with open('{0}/postgui.hal'.format(self.newIniPath), 'w') as f_out:
                 f_out.write(\
                     '# Keep your post GUI customisations here to prevent them from\n'\
                     '# being overwritten by updates or pncconf/stepconf changes\n\n')
+        return True
+
+    def write_newini_file(self):
         # create a new INI file from the INI file copy and the plasmac INI file
         plasmacIni = open(self.plasmacIniFile,'r')
         outIni = open(self.newIniFile,'w')
@@ -510,6 +674,9 @@ class configurator:
                 break
         outIni.close()
         inIni.close()
+        return True
+
+    def print_success(self):
         self.dialog_ok(\
             'SUCCESS',\
             '\nConfiguration is complete.\n\n'\
