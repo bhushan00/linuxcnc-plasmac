@@ -33,13 +33,13 @@ net plasmac:program-run          plasmac.program-run             =>  halui.progr
 net plasmac:program-stop         plasmac.program-stop            =>  halui.program.stop
 net plasmac:torch-on             plasmac.torch-on
 
-#*************************************************************************************#
-# IT IS STRONGLY RECOMMENDED THAT YOU DELETE THIS COMMENT BLOCK AND MOVE EVERYTHING   #
-# BELOW IT TO A HAL FILE NAMED {machinename}_connections.hal                          #
-# EDIT THAT FILE TO SUIT YOUR CONFIGURATION                                           #
-# MAKE SURE HALFILE = {machinename}_connections.hal IS IN YOUR INI FILE               #
-# THIS WILL PREVENT YOUR MACHINE CONNECTIONS BEING OVERWRITTEN BY A LATER UPDATE      #
-#*************************************************************************************#
+#*********************************************************************************#
+# IT IS HIGHLY RECOMMENDED THAT YOU DELETE THIS COMMENT BLOCK AND MOVE EVERYTHING #
+# BELOW IT TO A HAL FILE NAMED {machinename}_connections.hal                      #
+# EDIT THAT FILE TO SUIT YOUR CONFIGURATION                                       #
+# MAKE SURE HALFILE = {machinename}_connections.hal IS IN YOUR INI FILE           #
+# THIS WILL PREVENT YOUR MACHINE CONNECTIONS BEING OVERWRITTEN BY A LATER UPDATE  #
+#*********************************************************************************#
 
 # Keep your plasmac i/o connections here to prevent them from
 # being overwritten by updates or pncconf/stepconf changes
