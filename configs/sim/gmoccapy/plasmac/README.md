@@ -84,6 +84,7 @@ For manual material handling all you need in the gcode is:
 **M5**  
 
 For automatic material handling in your gcode you need:  
+NOTE: the M66 MUST be after the M190 and the F MUST be after the M66  
 **M190 Pn**  
 **M66 P3 L3 Q1**  
 **F#<_hal[plasmac.cut-feed-rate]>**  
@@ -93,6 +94,8 @@ For automatic material handling in your gcode you need:
 **M5**  
 M190 Pn changes the material to number n  
 M66 P3 L3 Q1 waits for change to be confirmed  
+
+NOTE: If you use Fnn rather than F#<_hal[plasmac.cut-feed-rate]> then if the value of nn is less than 99.9% of the cut-feed-rate parameter in the Run tab then THC will be locked out.  
 
 Material numbers do not need to be consecutive nor do they need to be in numerical order.  
 The maximum allowed material number is 99999 for no particular reason.  
