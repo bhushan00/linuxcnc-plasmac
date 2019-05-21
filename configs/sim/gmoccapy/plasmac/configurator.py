@@ -196,6 +196,7 @@ class configurator:
             if not version:
                 self.upgrade_connections_hal()
                 self.upgrade_plasmac_hal()
+                self.upgrade_ini_file()
             if not self.copy_files(): return
             self.dialog_ok('SUCCESS','\nUpgrade is complete.\n')
             return
@@ -275,12 +276,14 @@ class configurator:
         return True
 
     def check_version(self):
+        # see if this was a version before using {MACHINE}_connections.hal
         if os.path.exists('{0}/{1}_connections.hal'.format(os.path.dirname(self.orgIniFile),self.machineName.lower())):
             return 1
         else:
             return 0
 
     def upgrade_connections_hal(self):
+        # create a {MACHINE}_connections.hal for an upgrade
         inFile = open('{0}/plasmac.hal'.format(os.path.dirname(self.orgIniFile)), 'r')
         outFile = open('{0}/{1}_connections.hal'.format(os.path.dirname(self.orgIniFile),self.machineName.lower()), 'w')
         outFile.write(\
@@ -323,9 +326,10 @@ class configurator:
         outFile.close()
 
     def upgrade_plasmac_hal(self):
+        # create a plasmac.hal for an upgrade
         shutil.copy('{0}/plasmac.hal'.format(os.path.dirname(self.orgIniFile)),\
-                    '{0}/plasmac.old'.format(os.path.dirname(self.orgIniFile)))
-        inFile = open('{0}/plasmac.old'.format(os.path.dirname(self.orgIniFile)), 'r')
+                    '{0}/plasmac.hal.old'.format(os.path.dirname(self.orgIniFile)))
+        inFile = open('{0}/plasmac.hal.old'.format(os.path.dirname(self.orgIniFile)), 'r')
         outFile = open('{0}/plasmac.hal'.format(os.path.dirname(self.orgIniFile)), 'w')
         outFile.write(\
             '# do not change the contents of this file as it will be overwiten by updates\n'\
@@ -377,6 +381,23 @@ class configurator:
             elif ' '.join(line.split()).startswith('net plasmac:program-stop'):
                 outFile.write(line)
             elif ' '.join(line.split()).startswith('net plasmac:torch-on') and 'plasmac.torch-on' in line:
+                outFile.write(line)
+        inFile.close()
+        outFile.close()
+
+    def upgrade_ini_file(self):
+        # create a new ini file for an upgrade
+        shutil.copy(self.orgIniFile,'{0}.old'.format(self.orgIniFile))
+        inFile = open('{0}.old'.format(self.orgIniFile), 'r')
+        outFile = open('{0}'.format(self.orgIniFile), 'w')
+        for line in inFile:
+            if ' '.join(line.strip().split()) == 'HALFILE = plasmac.hal':
+                outFile.write(\
+                    'HALFILE = plasmac.hal\n'\
+                    '# the plasmac machine connections\n'\
+                    'HALFILE = {0}_connections.hal\n'\
+                    .format(self.machineName.lower()))
+            else:
                 outFile.write(line)
         inFile.close()
         outFile.close()
@@ -584,10 +605,10 @@ class configurator:
             'TWOPASS = ON\n'\
             '# the base machine\n'\
             'HALFILE = {0}.hal\n'\
-            '# the plasmac machine conections\n'\
-            'HALFILE = {0}_connections.hal\n'\
             '# the plasmac component connections\n'\
             'HALFILE = plasmac.hal\n'\
+            '# the plasmac machine connections\n'\
+            'HALFILE = {0}_connections.hal\n'\
             '# use this for customisation after GUI has loaded\n'\
             'POSTGUI_HALFILE = postgui.hal\n'\
             '# required\n'\
