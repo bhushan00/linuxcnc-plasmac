@@ -54,7 +54,7 @@ class HandlerClass:
             if halpin.get() != self.CUTTING and self.oldState == self.CUTTING:
                 self.CUT_DISTANCE = self.CUT_DISTANCE + hal.get_value('plasmac.cut-length')
                 if hal.get_value('halui.machine.units-per-mm') == 1:
-                    self.builder.get_object('cut-distance').set_label('%0.2f M' %(self.CUT_DISTANCE))
+                    self.builder.get_object('cut-distance').set_label('%0.2f M' %(self.CUT_DISTANCE * 0.001))
                 else:
                     self.builder.get_object('cut-distance').set_label('%0.2f\"' %(self.CUT_DISTANCE))
                     self.CUT_TIME = self.CUT_TIME + hal.get_value('plasmac.cut-time')
@@ -173,7 +173,7 @@ class HandlerClass:
         self.ini.restore_state(self)
         self.builder.get_object('pierce-count').set_label('%d' %(self.PIERCE_COUNT))
         if hal.get_value('halui.machine.units-per-mm') == 1:
-            self.builder.get_object('cut-distance').set_label('%0.2f M' %(self.CUT_DISTANCE))
+            self.builder.get_object('cut-distance').set_label('%0.2f M' %(self.CUT_DISTANCE * 0.001))
         else:
             self.builder.get_object('cut-distance').set_label('%0.2f\"' %(self.CUT_DISTANCE))
         self.display_time('cut-time', self.CUT_TIME)
