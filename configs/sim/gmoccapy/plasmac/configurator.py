@@ -190,6 +190,8 @@ class configurator:
 
     def on_create_clicked(self,button):
         if not self.check_entries(): return
+        display = self.get_display()
+        if display == None: return
         if not self.check_new_path(): return
         if self.upgrade:
             version = self.check_version()
@@ -209,7 +211,7 @@ class configurator:
         if not self.write_connections_hal_file(): return
         if not self.write_postgui_hal_file(): return
         if not self.write_newini_file(): return
-        if not self.copy_files(): return
+        if not self.copy_files(display): return
         self.print_success()
 
     def check_entries(self):
@@ -254,6 +256,37 @@ class configurator:
                     return False
         return True
 
+    def get_display(self):
+        # get the display GUI
+        inFile = open('{0}'.format(self.orgIniFile), 'r')
+        while 1:
+            line = inFile.readline()
+            print '1',line
+            if line.startswith('[DISPLAY]'):
+                break
+            if not line:
+                inFile.close()
+                self.dialog_ok('ERROR','Cannot find [DISPLAY] section in INI file')
+                return None
+        while 1:
+            print '2',line
+            line = inFile.readline()
+            if line.startswith('DISPLAY'):
+                if 'axis' in line.lower():
+                    inFile.close()
+                    return 'AXIS'
+                elif 'gmoccapy' in line.lower():
+                    inFile.close()
+                    return 'GMOCCAPY'
+                else:
+                    inFile.close()
+                    self.dialog_ok('ERROR','Cannot find a valid display in INI file')
+                    return None
+            elif line.startswith('[') or not line:
+                inFile.close()
+                self.dialog_ok('ERROR','Cannot find \"DISPLAY =\" in INI file')
+                return None
+
     def check_new_path(self):
         # test if path exists
         if not self.upgrade:
@@ -266,9 +299,9 @@ class configurator:
                     return False
         return True
 
-    def copy_files(self):
+    def copy_files(self,display):
         # copy plasmac application files to configuration directory
-        for copyFile in self.get_files_to_copy():
+        for copyFile in self.get_files_to_copy(display):
             if self.upgrade:
                 shutil.copy('{0}/{1}'.format(self.copyPath,copyFile), os.path.dirname(self.orgIniFile))
             else:
@@ -879,33 +912,55 @@ class configurator:
         else:
             self.W.set_title('PlasmaC Upgrader')
 
-    def get_files_to_copy(self):
-        return ['imperial_startup.ngc',\
-                'M190',\
-                'materialverter.py',\
-                'metric_startup.ngc',\
-                'plasmac_buttons.glade',\
-                'plasmac_buttons.hal',\
-                'plasmac_buttons.py',\
-                'plasmac_config.glade',\
-                'plasmac_config.hal',\
-                'plasmac_config.py',\
-                'plasmac_control.glade',\
-                'plasmac_control.hal',\
-                'plasmac_control.py',\
-                'plasmac_gcode.py',\
-                'plasmac_monitor.glade',\
-                'plasmac_monitor.hal',\
-                'plasmac_monitor.py',\
-                'plasmac_run.glade',\
-                'plasmac_run.hal',\
-                'plasmac_run.py',\
-                'plasmac_stats.glade',\
-                'plasmac_stats.hal',\
-                'plasmac_stats.py',\
-                'README.md',\
-                'tool.tbl'\
-                ]
+    def get_files_to_copy(self,display):
+        if display == 'AXIS':
+            return ['imperial_startup.ngc',\
+                    'M190',\
+                    'materialverter.py',\
+                    'metric_startup.ngc',\
+                    'plasmac_axis.py',\
+                    'plasmac_config.glade',\
+                    'plasmac_config.hal',\
+                    'plasmac_config.py',\
+                    'plasmac_gcode.py',\
+                    'plasmac_run.glade',\
+                    'plasmac_run.hal',\
+                    'plasmac_run.py',\
+                    'plasmac_stats.glade',\
+                    'plasmac_stats.hal',\
+                    'plasmac_stats.py',\
+                    'README.md',\
+                    'tool.tbl'\
+                    ]
+        elif display == 'GMOCCAPY':
+            return ['imperial_startup.ngc',\
+                    'M190',\
+                    'materialverter.py',\
+                    'metric_startup.ngc',\
+                    'plasmac_buttons.glade',\
+                    'plasmac_buttons.hal',\
+                    'plasmac_buttons.py',\
+                    'plasmac_config.glade',\
+                    'plasmac_config.hal',\
+                    'plasmac_config.py',\
+                    'plasmac_control.glade',\
+                    'plasmac_control.hal',\
+                    'plasmac_control.py',\
+                    'plasmac_gcode.py',\
+                    'plasmac_monitor.glade',\
+                    'plasmac_monitor.hal',\
+                    'plasmac_monitor.py',\
+                    'plasmac_run.glade',\
+                    'plasmac_run.hal',\
+                    'plasmac_run.py',\
+                    'plasmac_stats.glade',\
+                    'plasmac_stats.hal',\
+                    'plasmac_stats.py',\
+                    'README.md',\
+                    'tool.tbl'\
+                    ]
+        else:
+            return None
 
 if __name__ == '__main__':
     try:
