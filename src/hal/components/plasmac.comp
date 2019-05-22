@@ -252,9 +252,9 @@ This feature is disabled after any error. For example if there is a arc failure 
 There are example configuration files for both metric and imperial located in:
 .RS 1
 .br
-- run in place "configs/sim/   axis/plasmac/   gmoccappy/plasmac   qtvcp_screens/plasmac"
+- run in place "configs/sim/by_machine/axis or configs/sim/by_machine/axisgmoccappy"
 .br
-- installed    "/usr/share/doc/linuxcnc/examples/sample-configs/sim/   axis/plasmac/   gmoccappy/plasmac    qtvcp_screens/plasmac"
+- installed    "/usr/share/doc/linuxcnc/examples/sample-configs/by_machine   axis or gmoccappy"
 .br
 - Example ngc files can be found in "nc_files/plasmac/"
 .RE

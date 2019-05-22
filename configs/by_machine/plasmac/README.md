@@ -168,7 +168,7 @@ The easiest way to install a complete configuration is:
 - make a working configuration for your base machine, this could be done manually or with pncconf for a machine using Mesa hardware or stepconf for a machine using the parallel port.  
 - make a note of the HAL pin connections for machine.  
 - make a git clone of this repo.  
-- run configurator.py in the configs/sim/gmoccapy/plasmac directory of the git clone.  
+- run configurator.py in the configs/by_machine/plasmac directory of the git clone.  
 - select New.  
 You should end up with a working configuration.  
 
@@ -178,7 +178,7 @@ The easiest way to upgrade an existing configuration is:
 - cd to your git clone  
 - git pull  
 - make  
-- run configurator.py in the configs/sim/gmoccapy/plasmac directory of the git clone.  
+- run configurator.py in the configs/by_machine/plasmac directory of the git clone.  
 - select Upgrade  
 You should end up with a working upgraded configuration.  
 
