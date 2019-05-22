@@ -48,6 +48,7 @@ Usage of the **plasmac.cut-feed-rate** input pin requires that a gcode file cont
 **F#<_hal[plasmac.cut-feed-rate]>**  
 This reads the feed rate from the cut parameters on the Run tab and sets the value the component needs for THC calculations.  
 If you don't want to do it this way then use a standard **Fnnn** to set the feed rate but you will need to set the Cut Feed Rate in the run to zero and plasmac will use **motion.requested−vel** for calculations.  
+If you use **Fnnn** and leave Cut Feed Rate then plasmac uses Cut Feed Rate for THC so if **Fnnn** is less than Cut Feed Rate then THC will be in corner locked mode.  
 
 Cut height can be adjusted on the fly by adding an offset to the **plasmac.height-override** input pin.  
 This offset either positive or negative is added to the THC voltage target to lower or raise the torch.  
@@ -120,7 +121,7 @@ If there are requests for other conversion types I would be happy to have a crac
 These example configuration files show examples of how to connect the Gmoccapy GUI with the plasmac HAL component for use in plasma cutting machines.  
 The manual page for the plasmac component is accessed by the command 'man.plasmac'  
 
-
+Files in the example configurations are:
 Filename|Function (units = metric or imperial)
 ---:|---
 units_plasmac_ini|configuration file.
@@ -128,27 +129,34 @@ plasmac.hal|hal connections for the plasmac component.
 plasmac_xxx.glade|a gladevcp panel connecting to the plasmac component.
 plasmac_xxx.hal|hal connections for the panel.
 plasmac_xxx.py|python code for the panel.
-units_plasmac_run.cfg|configuration settings for the run tab.
-units_plasmac_config.cfg|configuration settings for the config tab.
-units_plasmac_material.cfg|material file for cut parameters.
 units_startup.ngc|startup gcode commands.
 plasmac_gcode.py|removes z axis moves from the opened gcode file
-plasmac_stat.var|saved statistics
+plasmac_axis.py|python code to customise the Axis GUI
 materialverter.py|tool table file converter
 configurator.py|configure a new or upgrade an existing plasmac configuration
 
+The configurator copies the required files from above plus:  
+Filename|Function ({MACHINE} = name of machine in ini file)
+---:|---
+{MACHINE}_connections.hal|connections to your i/o hal pins.
+
+After running a new working configuration the first time the following will be created:  
+Filename|Function ({MACHINE} = name of machine in ini file)
+---:|---
+{MACHINE}_config.cfg|configuration settings for the config tab.
+{MACHINE}_run.cfg|configuration settings for the run tab.
+{MACHINE}_material.cfg|material file for cut parameters.
+plasmac_stats.var|saved statistics.
+
+
 The .ini files are notated for extra the requirements for these configurations.
+The .cfg files are plain text and may be edited with any text editor.  
 
 The minimum .ini file requirements for the plasmac component are:
 - [PLASMAC]MODE (only if mode 1 or mode 2)  
 - [AXIS_L]MAX_VELOCITY  
 - [AXIS_L]MAX_ACCELERATION  
-- [AXIS_L]OFFSET_AV_RATIO
-  
-All other .ini file settings are for the example configurations.  
-
-The .cfg files are plain text and may be edited with any text editor.  
-Lines beginning with # are ignored in both these files.  
+- [AXIS_L]OFFSET_AV_RATIO  
 
 ***  
 #### TEST PANEL  
@@ -160,6 +168,10 @@ These can be commented out or deleted from the ini file and the directory can be
 #### NGC EXAMPLES  
 
 Example ngc files are in nc_files/plasmac.  
+
+***
+#### NOTES
+This component and related sim configs are under active development and are being tested by several users
 
 ***  
 #### INSTALLING A WORKING CONFIGURATION  
@@ -180,5 +192,8 @@ The easiest way to upgrade an existing configuration is:
 - make  
 - run configurator.py in the configs/by_machine/plasmac directory of the git clone.  
 - select Upgrade  
-You should end up with a working upgraded configuration.  
+You should end up with an upgraded working configuration.  
 
+***
+#### LICENSE
+plasmac and all its related software is released under GPLv2.  
