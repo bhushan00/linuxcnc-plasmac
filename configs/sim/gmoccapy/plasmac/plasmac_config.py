@@ -161,6 +161,8 @@ class HandlerClass:
                             (item, theme) = line.strip().replace(" ", "").split('=')
             except:
                 print '*** configuration file,', self.prefFile, 'is invalid ***'
+        else:
+            theme = self.i.find('PLASMAC', 'THEME') or gtk.settings_get_default().get_property('gtk-theme-name')
         gtk.settings_get_default().set_property('gtk-theme-name', theme)
 
     def load_settings(self):
@@ -199,7 +201,6 @@ class HandlerClass:
                     if item in tmpDict:
                         self.builder.get_object(item).set_value(float(self.configDict.get(item)))
                     else:
-                        #self.builder.get_object(item).set_value(0)
                         print '***', item, 'missing from', self.configFile
                 elif isinstance(self.builder.get_object(item), gladevcp.hal_widgets.HAL_CheckButton):
                     if item in tmpDict:
@@ -207,12 +208,6 @@ class HandlerClass:
                     else:
                         self.builder.get_object(item).set_active(False)
                         print '***', item, 'missing from', self.configFile
-#                elif item == 'torchPulseTime':
-#                    if item in tmpDict:
-#                        self.builder.get_object(item).set_value(float(self.configDict.get(item)))
-#                    else:
-#                        self.builder.get_object(item).set_value(0)
-#                        print '***', item, 'missing from', self.configFile
             if convertFile:
                 print '*** converting', self.configFile, 'to new format'
                 self.save_settings()
