@@ -210,8 +210,9 @@ class configurator:
         if not self.write_new_hal_file(): return
         if not self.write_connections_hal_file(): return
         if not self.write_postgui_hal_file(): return
-        if not self.write_newini_file(): return
+        if not self.write_newini_file(display): return
         if not self.copy_files(display): return
+        if not self.write_material_file(): return
         self.print_success()
 
     def check_entries(self):
@@ -474,18 +475,18 @@ class configurator:
 
     def get_traj_info(self,readFile,display):
         # get some info from [TRAJ] section of INI file copy
-        inIni = open(readFile,'r')
+        inFile = open(readFile,'r')
         while 1:
-            line = inIni.readline()
+            line = inFile.readline()
             if '[TRAJ]' in line:
                 break
             if not line:
-                inIni.close()
+                inFile.close()
                 self.dialog_ok('ERROR','Cannot find [TRAJ] section in INI file')
                 return False
         result = 0
         while 1:
-            line = inIni.readline()
+            line = inFile.readline()
             if 'LINEAR_UNITS' in line:
                 result += 1
                 a,b = line.strip().replace(' ','').split('=')
@@ -502,30 +503,30 @@ class configurator:
                 if result == 11:
                     break
                 else:
-                    inIni.close()
+                    inFile.close()
                     if result == 1:
                         self.dialog_ok('ERROR','Could not find COORDINATES in [TRAJ] section of INI file')
                     else:
                         self.dialog_ok('ERROR','Could not find LINEAR_UNITS in [TRAJ] section of INI file')
                     return False
-        inIni.close()
+        inFile.close()
         return True
 
     def get_joint_info(self,readFile):
         # get some info from [JOINT_n] section of INI file copy
-        inIni = open(readFile,'r')
+        inFile = open(readFile,'r')
         self.zVel = self.zAcc = 0
         while 1:
-            line = inIni.readline()
+            line = inFile.readline()
             if '[JOINT_{:d}]'.format(self.zJoint) in line:
                 break
             if not line:
-                inIni.close()
+                inFile.close()
                 self.dialog_ok('ERROR','Cannot find [JOINT_{d}] section in INI file'.format(self.zJoint))
                 return False
         result = 0
         while 1:
-            line = inIni.readline()
+            line = inFile.readline()
             if 'MAX_VELOCITY' in line:
                 result += 1
                 a,b = line.strip().replace(' ','').split('=')
@@ -538,13 +539,13 @@ class configurator:
                 if result == 11:
                     break
                 else:
-                    inIni.close()
+                    inFile.close()
                     if result == 1:
                         self.dialog_ok('ERROR','Could not find MAX_ACCELERATION in [JOINT_{:d}] section of INI file'.format(self.zJoint))
                     else:
                         self.dialog_ok('ERROR','Could not find MAX_VELOCITY in [JOINT_{:d}] section of INI file'.format(self.zJoint))
                     return False
-        inIni.close()
+        inFile.close()
         return True
 
     def write_new_hal_file(self):
@@ -562,8 +563,8 @@ class configurator:
 
     def write_connections_hal_file(self):
         # write a connections.hal file for plasmac connections to the machine
-        with open('{0}/{1}_connections.hal'.format(self.newIniPath,self.machineName.lower()), 'w') as f_out:
-            f_out.write(\
+        with open('{0}/{1}_connections.hal'.format(self.newIniPath,self.machineName.lower()), 'w') as outFile:
+            outFile.write(\
                 '# Keep your plasmac i/o connections here to prevent them from\n'\
                 '# being overwritten by updates or pncconf/stepconf changes\n\n'\
                 '# Other customisations may be placed here as well\n\n'\
@@ -573,48 +574,48 @@ class configurator:
                 'setp    debounce.0.delay        5\n'\
                 'addf    debounce.0              servo-thread\n\n'\
                 '# the next line needs to be the joint associated with the Z axis\n')
-            f_out.write('net plasmac:axis-position joint.{:d}.pos-fb => plasmac.axis-z-position\n'.format(self.zJoint))
+            outFile.write('net plasmac:axis-position joint.{:d}.pos-fb => plasmac.axis-z-position\n'.format(self.zJoint))
             if self.arcVoltPin.get_text() and (self.mode == 0 or self.mode == 1):
-                f_out.write('net plasmac:arc-voltage-in {0} => plasmac.arc-voltage-in\n'.format(self.arcVoltPin.get_text()))
+                outFile.write('net plasmac:arc-voltage-in {0} => plasmac.arc-voltage-in\n'.format(self.arcVoltPin.get_text()))
             if self.arcOkPin.get_text() and (self.mode == 1 or self.mode == 2):
-                f_out.write('net plasmac:arc-ok-in {0} => plasmac.arc-ok-in\n'.format(self.arcOkPin.get_text()))
+                outFile.write('net plasmac:arc-ok-in {0} => plasmac.arc-ok-in\n'.format(self.arcOkPin.get_text()))
             if self.floatPin.get_text():
-                f_out.write('net plasmac:float-switch {0} => debounce.0.0.in\n'.format(self.floatPin.get_text()))
+                outFile.write('net plasmac:float-switch {0} => debounce.0.0.in\n'.format(self.floatPin.get_text()))
             elif not self.floatPin.get_text():
-                f_out.write('# net plasmac:float-switch {YOUR FLOAT SWITCH PIN} => debounce.0.0.in\n')
+                outFile.write('# net plasmac:float-switch {YOUR FLOAT SWITCH PIN} => debounce.0.0.in\n')
             if self.breakPin.get_text():
-                f_out.write('net plasmac:breakaway {0} => debounce.0.1.in\n'.format(self.breakPin.get_text()))
+                outFile.write('net plasmac:breakaway {0} => debounce.0.1.in\n'.format(self.breakPin.get_text()))
             elif not self.breakPin.get_text():
-                f_out.write('# net plasmac:breakaway {YOUR BREAKAWAY PIN} => debounce.0.1.in\n')
+                outFile.write('# net plasmac:breakaway {YOUR BREAKAWAY PIN} => debounce.0.1.in\n')
             if self.ohmicInPin.get_text():
-                f_out.write('net plasmac:ohmic-probe {0} => debounce.0.2.in\n'.format(self.ohmicInPin.get_text()))
+                outFile.write('net plasmac:ohmic-probe {0} => debounce.0.2.in\n'.format(self.ohmicInPin.get_text()))
             elif not self.ohmicInPin.get_text():
-                f_out.write('# net plasmac:ohmic-probe {YOUR OHMIC PROBE PIN} => debounce.0.2.in\n')
+                outFile.write('# net plasmac:ohmic-probe {YOUR OHMIC PROBE PIN} => debounce.0.2.in\n')
             if self.ohmicOutPin.get_text():
-                f_out.write('net plasmac:ohmic-enable plasmac.ohmic-enable  => {0}\n'.format(self.ohmicOutPin.get_text()))
+                outFile.write('net plasmac:ohmic-enable plasmac.ohmic-enable  => {0}\n'.format(self.ohmicOutPin.get_text()))
             elif not self.ohmicOutPin.get_text():
-                f_out.write('# net plasmac:ohmic-enable plasmac.ohmic-enable  => {YOUR OHMIC ENABLE PIN}\n')
+                outFile.write('# net plasmac:ohmic-enable plasmac.ohmic-enable  => {YOUR OHMIC ENABLE PIN}\n')
             if self.torchPin.get_text():
-                f_out.write('net plasmac:torch-on => {0}\n'.format(self.torchPin.get_text()))
+                outFile.write('net plasmac:torch-on => {0}\n'.format(self.torchPin.get_text()))
             if self.moveUpPin.get_text() and self.mode == 2:
-                f_out.write('net plasmac:move-up {0} => plasmac.move-up\n'.format(self.moveUpPin.get_text()))
+                outFile.write('net plasmac:move-up {0} => plasmac.move-up\n'.format(self.moveUpPin.get_text()))
             if self.moveDownPin.get_text() and self.mode == 2:
-                f_out.write('net plasmac:move-down {0} => plasmac.move-down\n'.format(self.moveDownPin.get_text()))
+                outFile.write('net plasmac:move-down {0} => plasmac.move-down\n'.format(self.moveDownPin.get_text()))
         return True
 
     def write_postgui_hal_file(self):
         # create a postgui.hal file if not already present
         if not os.path.exists('{0}/postgui.hal'.format(self.newIniPath)):
-            with open('{0}/postgui.hal'.format(self.newIniPath), 'w') as f_out:
-                f_out.write(\
+            with open('{0}/postgui.hal'.format(self.newIniPath), 'w') as outFile:
+                outFile.write(\
                     '# Keep your post GUI customisations here to prevent them from\n'\
                     '# being overwritten by updates or pncconf/stepconf changes\n\n')
         return True
 
-    def write_newini_file(self):
+    def write_newini_file(self,display):
         # create a new INI file from the INI file copy and the plasmac INI file
         plasmacIni = open(self.plasmacIniFile,'r')
-        outIni = open(self.newIniFile,'w')
+        outFile = open(self.newIniFile,'w')
         # comment out the test panel
         while 1:
             line = plasmacIni.readline()
@@ -623,16 +624,16 @@ class configurator:
             elif line.startswith('[APPLICATIONS]') or \
                  line.startswith('DELAY') or \
                  line.startswith('APP'):
-                outIni.write('# ' + line)
+                outFile.write('# ' + line)
             elif not '[HAL]' in line:
                 if line.startswith('MODE'):
-                    outIni.write('MODE = {0}\n'.format(self.mode))
+                    outFile.write('MODE = {0}\n'.format(self.mode))
                 else:
-                    outIni.write(line)
+                    outFile.write(line)
             else:
                 break
         # add the [HAL] section
-        outIni.write(\
+        outFile.write(\
             '[HAL]\n'\
             '# required\n'
             'TWOPASS = ON\n'\
@@ -649,31 +650,35 @@ class configurator:
             '\n'\
             .format(self.machineName.lower()))
         # add the tabs to the display section
-        inIni = open(self.readIniFile, 'r')
+        inFile = open(self.readIniFile, 'r')
         while 1:        
-            line = inIni.readline()
+            line = inFile.readline()
             if '[DISPLAY]' in line:
-                outIni.write(line)
+                outFile.write(line)
                 break
         while 1:
-            line = inIni.readline()
+            line = inFile.readline()
             if not line.startswith('['):
-                outIni.write(line)
+                outFile.write(line)
             else:
-                inIni.close()
+                inFile.close()
                 break
         while 1:        
             line = plasmacIni.readline()
             if line.startswith('EMBED'):
-                outIni.write('# required\n' + line)
+                outFile.write('# required\n' + line)
                 break
         while 1:
             line = plasmacIni.readline()
             if not line.startswith('['):
-                outIni.write(line)
+                outFile.write(line)
             else:
                 break
-        inIni.close()
+        if display == 'axis':
+            outFile.write(\
+                '# required\n'\
+                'USER_COMMAND_FILE       = plasmac_axis.py\n\n')
+        inFile.close()
         plasmacIni.close()
         done = ['[APPLICATIONS]',\
                 '[PLASMAC]',\
@@ -682,12 +687,12 @@ class configurator:
                 '[HAL]',\
                 '[DISPLAY]']
         # iterate through INI file copy to get all missing sections
-        inIni = open(self.readIniFile, 'r')
+        inFile = open(self.readIniFile, 'r')
         validSection = True
         offsetAxis = False
         newName = False
         while 1:
-            line = inIni.readline()
+            line = inFile.readline()
             if line.startswith('['):
                 if line.strip() in done:
                     validSection = False
@@ -704,30 +709,58 @@ class configurator:
             if validSection:
                 if newName:
                     if line.startswith('MACHINE'):
-                        outIni.write('MACHINE = {0}\n'.format(self.machineName))
+                        outFile.write('MACHINE = {0}\n'.format(self.machineName))
                     else:
-                        outIni.write(line)
+                        outFile.write(line)
                 elif offsetAxis:
                     if line.startswith('MAX_VELOCITY'):
-                        outIni.write(
+                        outFile.write(
                             '# set to double the value in the corresponding joint\n'\
                             'MAX_VELOCITY = {0}\n'\
                             .format(float(self.zVel) * 2))
                     elif line.startswith('MAX_ACCELERATION'):
-                        outIni.write(\
+                        outFile.write(\
                             '# set to double the value in the corresponding joint\n'\
                             'MAX_ACCELERATION = {0}\n'\
                             '# shares the above two equally between the joint and the offset\n'\
                             'OFFSET_AV_RATIO = 0.5\n'\
                             .format(float(self.zAcc) * 2))
                     else:
-                        outIni.write(line)
+                        outFile.write(line)
                 else:
-                    outIni.write(line)
+                    outFile.write(line)
             if not line:
                 break
-        outIni.close()
-        inIni.close()
+        outFile.close()
+        inFile.close()
+        return True
+
+    def write_material_file(self):
+        # create a new material file if not existing
+        version = '[VERSION 1]'
+        materialFile = '{0}/{1}_material.cfg'.format(self.newIniPath,self.machineName.lower())
+        if os.path.exists(materialFile):
+            return True
+        else: # create a new material file if it doesn't exist
+            with open(materialFile, 'w') as outFile:
+                outFile.write(\
+                    '#plasmac material file\n'\
+                    '#the next line is required for version checking\n'\
+                    + version + '\n\n'\
+                    '#example only, may be deleted\n'\
+                    '#[MATERIAL_NUMBER_1]  \n'\
+                    '#NAME               = \n'\
+                    '#KERF_WIDTH         = \n'\
+                    '#THC                = (0 = off, 1 = on)\n'\
+                    '#PIERCE_HEIGHT      = \n'\
+                    '#PIERCE_DELAY       = \n'\
+                    '#PUDDLE_JUMP_HEIGHT = (optional, set to 0 or delete if not required)\n'\
+                    '#PUDDLE_JUMP_DELAY  = (optional, set to 0 or delete if not required)\n'\
+                    '#CUT_HEIGHT         = \n'\
+                    '#CUT_SPEED          = \n'\
+                    '#CUT_AMPS           = (optional, only used for operator information)\n'\
+                    '#CUT_VOLTS          = (modes 0 & 1 only, if not using auto voltage sampling)\n'\
+                    '\n')
         return True
 
     def print_success(self):
