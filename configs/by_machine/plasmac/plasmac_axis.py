@@ -42,7 +42,6 @@ w('DynamicHelp::configure','-borderwidth','5','-topbackground','yellow','-bg','y
 # set the window size
 wsize = inifile.find('PLASMAC','MAXIMISED') or '0'
 if wsize == '0':
-    print 'minimised'
     fsizes = ['9','10','11','12','13','14','15','16']
     heights = ['658','680','742','764','786','842','900','932']
     aspect = 1.5
@@ -54,7 +53,6 @@ if wsize == '0':
             ))
 else:
     # change pad_width and pad_height for smaller than fullscreen
-    print 'maximised'
     pad_width=0
     pad_height=0
     maxgeo=w('wm','maxsize','.')
@@ -456,7 +454,6 @@ w('pack',ft + '.text','-fill','both','-expand','1','-side','left','-padx','0','-
 # some new commands for TCL
 
 def button_action(button,pressed):
-    print button, pressed
     if int(pressed):
         user_button_pressed(button,iniButtonCode[int(button)])
     else:

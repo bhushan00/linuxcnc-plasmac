@@ -262,7 +262,6 @@ class configurator:
         inFile = open('{0}'.format(self.orgIniFile), 'r')
         while 1:
             line = inFile.readline()
-            print '1',line
             if line.startswith('[DISPLAY]'):
                 break
             if not line:
@@ -270,7 +269,6 @@ class configurator:
                 self.dialog_ok('ERROR','Cannot find [DISPLAY] section in INI file')
                 return None
         while 1:
-            print '2',line
             line = inFile.readline()
             if line.startswith('DISPLAY'):
                 if 'axis' in line.lower():
@@ -574,7 +572,7 @@ class configurator:
                 'setp    debounce.0.delay        5\n'\
                 'addf    debounce.0              servo-thread\n\n'\
                 '# the next line needs to be the joint associated with the Z axis\n')
-            outFile.write('net plasmac:axis-position joint.{:d}.pos-fb => plasmac.axis-z-position\n'.format(self.zJoint))
+            outFile.write('net plasmac:axis-position joint.{:d}.pos-fb => plasmac.axis-z-position\n\n'.format(self.zJoint))
             if self.arcVoltPin.get_text() and (self.mode == 0 or self.mode == 1):
                 outFile.write('net plasmac:arc-voltage-in {0} => plasmac.arc-voltage-in\n'.format(self.arcVoltPin.get_text()))
             if self.arcOkPin.get_text() and (self.mode == 1 or self.mode == 2):
@@ -609,7 +607,15 @@ class configurator:
             with open('{0}/postgui.hal'.format(self.newIniPath), 'w') as outFile:
                 outFile.write(\
                     '# Keep your post GUI customisations here to prevent them from\n'\
-                    '# being overwritten by updates or pncconf/stepconf changes\n\n')
+                    '# being overwritten by updates or pncconf/stepconf changes\n\n'\
+                    '# As an example:\n'\
+                    '# You may want to connect the plasmac components thc-enable pin\n'\
+                    '# to a switch you have on your machine rather than let it be\n'\
+                    '# controlled from the GUI Run tab.\n\n'\
+                    '# First disconnect the GUI Run tab from the plasmac:thc-enable signal\n'\
+                    '# net unlinkp plasmac_thc.enable-out\n\n'\
+                    '# Then connect your switch input pint to the plasmac:thc-enable signal\n'\
+                    '# net plasmac:thc-enable your.input-pin\n')
         return True
 
     def write_newini_file(self,display):
@@ -656,13 +662,20 @@ class configurator:
             if '[DISPLAY]' in line:
                 outFile.write(line)
                 break
+        openFile = False
         while 1:
             line = inFile.readline()
             if not line.startswith('['):
-                outFile.write(line)
+                if line.startswith('OPEN_FILE'):
+                    outFile.write('OPEN_FILE = \"\"\n')
+                    openFile = True
+                else:
+                    outFile.write(line)
             else:
                 inFile.close()
                 break
+        if not openFile:
+            outFile.write('OPEN_FILE = \"\"\n\n')
         while 1:        
             line = plasmacIni.readline()
             if line.startswith('EMBED'):
