@@ -104,7 +104,7 @@ The maximum allowed material number is 99999 for no particular reason.
 When a material is changed it only changes the cut parameters in the Run tab, LinuxCNC knows nothing of the material nor does plasmac know anything about LinuxCNC tool. (i.e. it does NOT do a tool change)  
 
 To use cutter compensation you will need to use G41.1, G42.1 and G40 with the cut file parameter hal pin **#<_hal[plasmac_run.kerf-width-f]>** like so:  
-- **G41.1 D#<_hal[plasmac_run.kerf-width-f>** ; with cutter compensation  
+- **G41.1 D#<_hal[plasmac_run.kerf-width-f>** ; for left of programmed path  
 - **G42.1 D#<_hal[plasmac_run.kerf-width-f>** for right of programmed path  
 - **G40** to turn compensation off  
 
