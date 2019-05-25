@@ -298,15 +298,6 @@ class configurator:
                     return False
         return True
 
-    def copy_files(self,display):
-        # copy plasmac application files to configuration directory
-        for copyFile in self.get_files_to_copy(display):
-            if self.upgrade:
-                shutil.copy('{0}/{1}'.format(self.copyPath,copyFile), os.path.dirname(self.orgIniFile))
-            else:
-                shutil.copy('{0}/{1}'.format(self.copyPath,copyFile), self.newIniPath)
-        return True
-
     def check_version(self):
         # see if this was a version before using {MACHINE}_connections.hal
         if os.path.exists('{0}/{1}_connections.hal'.format(os.path.dirname(self.orgIniFile),self.machineName.lower())):
@@ -674,7 +665,7 @@ class configurator:
             else:
                 inFile.close()
                 break
-        if not openFile:
+        if not openFile and display == 'axis':
             outFile.write('OPEN_FILE = \"\"\n\n')
         while 1:        
             line = plasmacIni.readline()
@@ -746,6 +737,15 @@ class configurator:
                 break
         outFile.close()
         inFile.close()
+        return True
+
+    def copy_files(self,display):
+        # copy plasmac application files to configuration directory
+        for copyFile in self.get_files_to_copy(display):
+            if self.upgrade:
+                shutil.copy('{0}/{1}'.format(self.copyPath,copyFile), os.path.dirname(self.orgIniFile))
+            else:
+                shutil.copy('{0}/{1}'.format(self.copyPath,copyFile), self.newIniPath)
         return True
 
     def write_material_file(self):
