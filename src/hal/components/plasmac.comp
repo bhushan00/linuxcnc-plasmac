@@ -6,6 +6,8 @@ A plasma cutting table control component for use with the linuxcnc master branch
 
 .I VERSIONS:
 .br
+V0.50 - 2019/05/27 - change kerf crossing calculations
+.br
 V0.49 - 2019/05/14 - inhibit IHS skip after an error
 .br
 V0.48 - 2019/05/13 - change kerf crossing calculations
@@ -1064,7 +1066,8 @@ FUNCTION(_) {
                             }
                             /* unlock kerfcross lock if voltage reduced to safe level  */
                             if(kerfcross_is_locked){
-                                if(arc_voltage < last_arc_voltage + (kerf_threshold * 0.05)){
+//                                if(arc_voltage < last_arc_voltage + (kerf_threshold * 0.05)){
+                                if(arc_voltage < target_volts + (kerf_threshold * 0.5)){
                                     kerfcross_is_locked = FALSE;
                                     last_arc_voltage = arc_voltage;
                                 }
@@ -1076,7 +1079,8 @@ FUNCTION(_) {
                                     kerf_ratio = 1; /* 45 degree ramp */
                                 }
                                 kerf_threshold = ((kerf_ratio * current_velocity * fperiod) / height_per_volt) * (kerfcross_override * 0.01);
-                                if(arc_voltage > last_arc_voltage + kerf_threshold){
+//                                if(arc_voltage > last_arc_voltage + kerf_threshold){
+                                if(arc_voltage > target_volts + kerf_threshold){
                                     kerfcross_is_locked = TRUE;
                                 }else{
                                     last_arc_voltage = arc_voltage;
