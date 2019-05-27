@@ -112,13 +112,20 @@ class plasmacTest:
         self.halcomp = hal.component('plasmactest')
         self.panel = gladevcp.makepins.GladePanel(self.halcomp, self.gui, self.B, None)
         self.halcomp.ready()
-        sp.Popen(['halcmd net p_test:arc-ok-in plasmactest.arcOk plasmac.arc-ok-in'], shell=True)
-        sp.Popen(['halcmd net p_test:arc-voltage-in plasmactest.arcVoltage plasmac.arc-voltage-in'], shell=True)
-        sp.Popen(['halcmd net p_test:ohmic-probe plasmactest.ohmicProbe debounce.0.2.in'], shell=True)
-        sp.Popen(['halcmd net p_test:breakaway-switch plasmactest.breakawaySwitch debounce.0.1.in'], shell=True)
-        sp.Popen(['halcmd net p_test:float-switch plasmactest.floatSwitch debounce.0.0.in'], shell=True)
-        sp.Popen(['halcmd net p_test:move-down plasmactest.moveDown plasmac.move-down'], shell=True)
-        sp.Popen(['halcmd net p_test:move-up plasmactest.moveUp plasmac.move-up'], shell=True)
+        if not hal.pin_has_writer('plasmac.arc-ok-in'):
+            sp.Popen(['halcmd net p_test:arc-ok-in plasmactest.arcOk plasmac.arc-ok-in'], shell=True)
+        if not hal.pin_has_writer('plasmac.arc-voltage-in'):
+            sp.Popen(['halcmd net p_test:arc-voltage-in plasmactest.arcVoltage plasmac.arc-voltage-in'], shell=True)
+        if not hal.pin_has_writer('debounce.0.0.in'):
+            sp.Popen(['halcmd net p_test:float-switch plasmactest.floatSwitch debounce.0.0.in'], shell=True)
+        if not hal.pin_has_writer('debounce.0.1.in'):
+            sp.Popen(['halcmd net p_test:breakaway-switch plasmactest.breakawaySwitch debounce.0.1.in'], shell=True)
+        if not hal.pin_has_writer('debounce.0.2.in'):
+            sp.Popen(['halcmd net p_test:ohmic-probe plasmactest.ohmicProbe debounce.0.2.in'], shell=True)
+        if not hal.pin_has_writer('plasmac.move-down'):
+            sp.Popen(['halcmd net p_test:move-down plasmactest.moveDown plasmac.move-down'], shell=True)
+        if not hal.pin_has_writer('plasmac.move-up'):
+            sp.Popen(['halcmd net p_test:move-up plasmactest.moveUp plasmac.move-up'], shell=True)
         self.W.connect('delete_event', self.ignore)
         self.W.set_type_hint(gdk.WINDOW_TYPE_HINT_MENU)
         self.W.set_keep_above(True)
