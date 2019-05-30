@@ -516,11 +516,11 @@ class configurator:
         result = 0
         while 1:
             line = inFile.readline()
-            if 'MAX_VELOCITY' in line:
+            if line.startswith('MAX_VELOCITY'):
                 result += 1
                 a,b = line.strip().replace(' ','').split('=')
                 self.zVel = b
-            elif 'MAX_ACCELERATION' in line:
+            elif line.startswith('MAX_ACCELERATION'):
                 result += 10
                 a,b = line.strip().replace(' ','').split('=')
                 self.zAcc = b
