@@ -1,4 +1,4 @@
-#### PLASMAC
+## PLASMAC
 
 A plasma control component for linuxcnc using the linuxcnc master branch merged with the feature/reverse-run-master2 branch.  
 
@@ -71,7 +71,7 @@ A dry run is available by running the gcode with the torch disabled.
 Ohmic Test enables the ohmic probe to test for a shorted torch.  
 
 ***
-#### MATERIAL HANDLING
+### MATERIAL HANDLING
 Material handling has nothing at all to do with the LinuxCNC tool table. In fact **M6 Tn** commands should not be used with these configs.  
 There is a material file with its name is derived from **[EMC]MACHINE** in the in file, so a machine named METRIC_PLASMAC would have a material file named metric_plasmac_material.cfg
   
@@ -114,7 +114,7 @@ There is a python program named materialverter.py in the Gmoccapy folder to conv
 If there are requests for other conversion types I would be happy to have a crack at them.
 
 ***
-#### EXAMPLE CONFIGURATIONS  
+### EXAMPLE CONFIGURATIONS  
 - metric_plasmac.ini  
 - imperial_plasmac.ini  
 
@@ -159,41 +159,99 @@ The minimum .ini file requirements for the plasmac component are:
 - [AXIS_L]OFFSET_AV_RATIO  
 
 ***  
-#### TEST PANEL  
+### TEST PANEL  
 
 There is a ./test directory which has a simple test panel and associated python file which can be used to test the example configuration as referenced in the ini file.  
 These can be commented out or deleted from the ini file and the directory can be deleted.
 
 ***  
-#### NGC EXAMPLES  
+### NGC EXAMPLES  
 
 Example ngc files are in nc_files/plasmac.  
 
 ***
-#### NOTES
+### NOTES
 This component and related sim configs are under active development and are being tested by several users
 
-***  
-#### INSTALLING A WORKING CONFIGURATION  
-
-The easiest way to install a complete configuration is:  
-- make a working configuration for your base machine, this could be done manually or with pncconf for a machine using Mesa hardware or stepconf for a machine using the parallel port.  
-- make a note of the HAL pin connections for machine.  
-- make a git clone of this repo.  
-- run configurator.py in the configs/by_machine/plasmac directory of the git clone.  
-- select New.  
-You should end up with a working configuration.  
-
-***  
-#### UPGRADING A WORKING CONFIGURATION  
-The easiest way to upgrade an existing configuration is:  
-- cd to your git clone  
-- git pull  
-- make  
-- run configurator.py in the configs/by_machine/plasmac directory of the git clone.  
-- select Upgrade  
-You should end up with an upgraded working configuration.  
+***
+### LICENSE
+plasmac and all its related software is released under GPLv2.  
 
 ***
-#### LICENSE
-plasmac and all its related software is released under GPLv2.  
+### INSTALLATION  
+
+#### *PART 1 - GET LINUXCNC WITH THE PLASMAC ADD-ONS*
+
+Open a terminal window:  
+do *NOT* use sudo except for the make setuid step  
+
+#### $ git clone https://github.com/phillc54/linuxcnc-plasmac  
+#### $ cd linuxcnc-plasmac/src  
+#### $ ./autogen.sh  
+
+for RTPREEMPT  
+#### $ ./configure --with-realtime=uspace  
+
+For RTAI (mostly for parallel port machines)  
+#### $ ./configure --with-realtime=/usr/realtime-$VERSION  
+
+#### $ make  
+
+If you get errors here have a look at:  
+*http://linuxcnc.org/docs/devel/html/code/building-linuxcnc.html#Satisfying-Build-Dependencies*  
+
+If no errors:  
+#### $ sudo make setuid  
+
+#### $ . ../scripts/rip-environment (that is dot space dot dot slash)  
+
+#### $ linuxcnc  
+The LinuxCNC Configuration Selector should open and there are sample configurations for Axis and Gmoccapy in both metric and imperial units in:  
+Sample Configurations - by_machine - plasmac  
+
+You now have all the requirements to run plasmac, the next step is to get a basic working configuration for your machine, if you already have one skip this part.  
+
+
+#### *PART 2 - MAKE A WORKING BASE MACHINE CONFIGURATION*
+
+if using a parallel port  
+#### $ stepconf  
+
+if using a Mesa Electronics board  
+#### $ pncconf  
+
+if using a Pico Systems board the following forum post may help:  
+*https://forum.linuxcnc.org/27-driver-boards/14977-pico-systems-faq*  
+
+if you have a dual motor gantry configuration you will need to hand edit your configuration to suit, the following forum post may help:  
+*https://forum.linuxcnc.org/49-basic-configuration/33079-how-to-2-or-more-motors-on-one-axis-gantry-linuxcnc-2-8-master?start=0*  
+
+
+#### *PART 3 - MERGING CONFIGURATIONS*
+
+You need to have fully tested the working base machine configuration to ensure that everything is working as it should.  
+Do NOT proceed until this has been done.  
+
+Run the python configurator file:  
+#### $ ~/linuxcnc-plasmac/configs/by_machine/plasmac/configurator.py  
+
+If this doesn't run make sure that the file permissions allow executable  
+
+Select New then fill in the required entries and you should end up with a working plasmac configuration in ~/linuxcnc/configs/{your-machine-name}  
+
+This can be run as follows:  
+#### $ ~/linuxcnc-plasmac/scripts/linuxcnc ~/linuxcnc/configs/{your-machine-name}.{your-machine-name}.ini  
+
+
+#### *PART 4 - UPGRADING*
+
+#### $ cd ~/linuxcnc-plasmac
+#### $ git pull
+#### $ cd src
+#### $ make
+
+Run the python configurator file:
+#### $ ~/linuxcnc-plasmac/configs/by_machine/plasmac/configurator.py
+
+Select Upgrade then select the ini file of the configuration you wish to upgrade.
+
