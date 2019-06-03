@@ -29,6 +29,21 @@ import hal
 class HandlerClass:
 
     def periodic(self):
+        hal.set_p('plasmac_monitor.thc-led','0')
+        if hal.get_value('plasmac.thc-enable'):
+            if hal.get_value('plasmac.thc-active'):
+                self.builder.get_object('thc-label').set_text('THC Active')
+                self.builder.get_object('thc-led').set_color('on','#FFFF00')
+                self.builder.get_object('thc-led').set_active(True)
+                hal.set_p('plasmac_monitor.thc-led','1')
+            else:
+                self.builder.get_object('thc-label').set_text('THC Enabled')
+                self.builder.get_object('thc-led').set_color('on','#00FF00')
+                self.builder.get_object('thc-led').set_active(True)
+                hal.set_p('plasmac_monitor.thc-led','1')
+        else:
+            self.builder.get_object('thc-label').set_text('THC Enabled')
+            hal.set_p('plasmac_monitor.thc-led','0')
         mode = hal.get_value('plasmac.mode')
         if mode != self.oldMode:
             if mode == 0:

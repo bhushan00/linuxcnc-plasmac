@@ -6,6 +6,8 @@ A plasma cutting table control component for use with the linuxcnc master branch
 
 .I VERSIONS:
 .br
+V0.51 - 2019/05/27 - change THC state indicator
+.br
 V0.50 - 2019/05/27 - change kerf crossing calculations
 .br
 V0.49 - 2019/05/14 - inhibit IHS skip after an error
@@ -1189,10 +1191,13 @@ FUNCTION(_) {
             cut_height_last = offset_counts;
             cut_length = cut_length + current_velocity * fperiod;
             cut_time = cut_time + fperiod;
+            if(!thc_enable){thc_active = FALSE;}
             break;
         case SAFE_HEIGHT:
             /* move to safe height */
             feed_hold = TRUE;
+            thc_active = FALSE;
+            cornerlock_is_locked = FALSE;
             if(!probe_test){
                 if(offset_counts - setup_velocity > safe_target){
                     offset_counts -= setup_velocity;
@@ -1213,6 +1218,8 @@ FUNCTION(_) {
         case MAX_HEIGHT:
             /* move to maximum height */
             feed_hold = TRUE;
+            thc_active = FALSE;
+            cornerlock_is_locked = FALSE;
             if(!probe_test){
                 if(offset_counts - setup_velocity > offset_max){
                     offset_counts -= setup_velocity;

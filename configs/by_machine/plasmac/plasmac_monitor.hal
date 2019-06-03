@@ -9,4 +9,3 @@ net plasmac:led-down                plasmac.led-down                =>  plasmac_
 net plasmac:led-up                  plasmac.led-up                  =>  plasmac_monitor.led-up
 net plasmac:ohmic-probe-out                                         =>  plasmac_monitor.ohmic-probe
 net plasmac:torch-on                                                =>  plasmac_monitor.torch-on
-net plasmac:thc_active              plasmac.thc-active              =>  plasmac_monitor.thc-active

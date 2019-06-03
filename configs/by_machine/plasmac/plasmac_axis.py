@@ -669,6 +669,20 @@ def user_live_update():
         w(foverride + '.raise','configure','-state','disabled')
         w(foverride + '.lower','configure','-state','disabled')
         w(foverride + '.reset','configure','-state','disabled')
+    # set thc state indicator
+    if hal.get_value('plasmac.thc-enable'):
+        if hal.get_value('plasmac.thc-active'):
+            w(fmonitor + '.led-thc-active','itemconfigure','thc-led','-fill','#FFFF00')
+            w(fmonitor + '.lAlab','configure','-text','THC Active')
+            hal.set_p('axisui.led-thc-active','1')
+        else:
+            w(fmonitor + '.led-thc-active','itemconfigure','thc-led','-fill','#00FF00')
+            w(fmonitor + '.lAlab','configure','-text','THC Enabled')
+            hal.set_p('axisui.led-thc-active','1')
+    else:
+        w(fmonitor + '.led-thc-active','itemconfigure','thc-led','-fill','#00FF00')
+        w(fmonitor + '.lAlab','configure','-text','THC Enabled')
+        hal.set_p('axisui.led-thc-active','0')
     # decrement probe timer if active
     if probeTimer:
         if time.time() >= probeTimer:
@@ -695,11 +709,10 @@ def user_hal_pins():
                 [1,'plasmac:axis-min-limit','ini.z.min_limit','plasmac.axis-z-min-limit'],\
                 [2,'plasmac:axis-max-limit','ini.z.max_limit','plasmac.axis-z-max-limit'],\
                 [3,'plasmac:arc-ok-out','plasmac.arc-ok-out','axisui.led-arc-ok'],\
-                [4,'plasmac:thc-active','plasmac.thc-active','axisui.led-thc-active'],\
-                [5,'plasmac:led-up','plasmac.led-up','axisui.led-up'],\
-                [6,'plasmac:led-down','plasmac.led-down','axisui.led-down'],\
-                [7,'plasmac:cornerlock-is-locked','plasmac.cornerlock-is-locked','axisui.led-corner-locked'],\
-                [8,'plasmac:kerfcross-is-locked','plasmac.kerfcross-is-locked','axisui.led-kerf-locked'],\
+                [4,'plasmac:led-up','plasmac.led-up','axisui.led-up'],\
+                [5,'plasmac:led-down','plasmac.led-down','axisui.led-down'],\
+                [6,'plasmac:cornerlock-is-locked','plasmac.cornerlock-is-locked','axisui.led-corner-locked'],\
+                [7,'plasmac:kerfcross-is-locked','plasmac.kerfcross-is-locked','axisui.led-kerf-locked'],\
                 ]
     for line in hal_data:
         if line[0] < 3:
